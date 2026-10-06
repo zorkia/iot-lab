@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 01 - ตรวจสอบระบบ Raspberry Pi</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="active" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-01-ตรวจสอบระบบ-raspberry-pi">LAB 01 - ตรวจสอบระบบ Raspberry Pi</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="00-iot-lab-teaching-guide-hub.html">ก่อนหน้า: IoT Lab Teaching Guide - Hub</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">ถัดไป: LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a></nav>
+<h2 id="1-1-แนวคิดของ-lab">1.1 แนวคิดของ LAB</h2>
+<p>LAB แรกใช้สำหรับตรวจสภาพ Raspberry Pi ก่อนเริ่มสร้างระบบ IoT จริง จุดประสงค์ไม่ใช่การติดตั้งโปรแกรมเพิ่ม แต่เป็นการอ่านสภาพเครื่องให้เป็นก่อนว่าเครื่องพร้อมทำหน้าที่เป็น IoT Gateway หรือยัง</p>
+<p>ระบบที่จะต่อยอดใน lab ถัดไปต้องพึ่งพาองค์ประกอบพื้นฐานเหล่านี้:</p>
+<pre class="language-text"><code>Raspberry Pi
+   |
+   +-- Network
+   +-- Time
+   +-- Storage
+   +-- Memory
+   +-- systemd service
+   +-- Port / Log</code></pre>
+<p>ถ้าพื้นฐานเหล่านี้ยังไม่พร้อม ปัญหาใน Mosquitto, Node-RED, SQLite หรือ Cloudflare Tunnel จะวิเคราะห์ยากมาก เพราะอาการจะปนกันระหว่างปัญหาเครื่องกับปัญหา application</p>
+<h2 id="1-2-วัตถุประสงค์">1.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>ตรวจ hostname และ IP address ของ Raspberry Pi</li>
+<li>ตรวจระบบปฏิบัติการ, kernel, architecture และ uptime</li>
+<li>ตรวจ RAM, swap และพื้นที่ disk</li>
+<li>ตรวจเวลาและ timezone ของเครื่อง</li>
+<li>ตรวจ network path พื้นฐาน</li>
+<li>อ่านสถานะ service ด้วย systemd</li>
+<li>ตรวจ port ที่เปิดใช้งาน</li>
+<li>อ่าน log ด้วย journalctl</li>
+<li>สรุปได้ว่าเครื่องพร้อมเข้าสู่ LAB 02 หรือยัง</li>
+</ul>
+<h2 id="1-3-architecture-ของเครื่องใน-lab">1.3 Architecture ของเครื่องใน LAB</h2>
+<pre class="language-text"><code>Student / Teacher Laptop
+          |
+          | SSH / Web / MQTT test
+          v
++----------------------------------+
+| Raspberry Pi                     |
+| hostname: kathu                  |
+| user: piuser                     |
+|                                  |
+| OS + Network + systemd + logs    |
++----------------------------------+</code></pre>
+<p>ในเอกสารนี้ใช้ชื่อ <code>kathu</code> เป็นตัวอย่าง hostname ของ Raspberry Pi เครื่องหลัก ถ้าใช้เครื่องอื่น ให้ใช้ค่าจริงของเครื่องนั้นแทน</p>
+<h2 id="1-4-ตรวจชื่อเครื่องและ-ip-address">1.4 ตรวจชื่อเครื่องและ IP Address</h2>
+<p>ตรวจ hostname:</p>
+<pre class="language-bash"><code>hostname</code></pre>
+<p>ตรวจ IP address แบบสั้น:</p>
+<pre class="language-bash"><code>hostname -I</code></pre>
+<p>ตรวจรายละเอียด interface:</p>
+<pre class="language-bash"><code>ip addr show</code></pre>
+<p>ตรวจ default gateway:</p>
+<pre class="language-bash"><code>ip route</code></pre>
+<p>ผลที่ควรตีความ:</p>
+<table>
+<thead><tr>
+<th>สิ่งที่ตรวจ</th>
+<th>ความหมาย</th>
+</tr></thead><tbody>
+<tr>
+<td><code>hostname</code></td>
+<td>ชื่อเครื่องที่ใช้เรียกใน lab</td>
+</tr>
+<tr>
+<td><code>hostname -I</code></td>
+<td>IP ที่ใช้ SSH, Node-RED, MQTT จากเครื่องอื่น</td>
+</tr>
+<tr>
+<td><code>ip route</code></td>
+<td>เส้นทางออก Internet ของ Pi</td>
+</tr>
+</tbody></table>
+<blockquote>
+ถ้าไม่มี IP address ให้แก้ปัญหา network ก่อน ไม่ควรข้ามไปทำ MQTT หรือ Node-RED
+</blockquote>
+<h2 id="1-5-ตรวจระบบปฏิบัติการและ-hardware">1.5 ตรวจระบบปฏิบัติการและ Hardware</h2>
+<p>ตรวจรุ่นระบบปฏิบัติการ:</p>
+<pre class="language-bash"><code>cat /etc/os-release</code></pre>
+<p>ตรวจ kernel:</p>
+<pre class="language-bash"><code>uname -a</code></pre>
+<p>ตรวจ architecture:</p>
+<pre class="language-bash"><code>uname -m</code></pre>
+<p>ตรวจ uptime และ load:</p>
+<pre class="language-bash"><code>uptime</code></pre>
+<p>ตัวอย่างการอ่านผล:</p>
+<pre class="language-text"><code>uname -m = aarch64  หมายถึงระบบ 64-bit
+uptime สูงมาก       หมายถึงเครื่องเปิดมานาน อาจมี service ค้างได้
+load สูงผิดปกติ     อาจกระทบ Node-RED หรือ SQLite ใน lab หลังๆ</code></pre>
+<h2 id="1-6-ตรวจ-ram-swap-และ-disk">1.6 ตรวจ RAM, Swap และ Disk</h2>
+<p>ตรวจหน่วยความจำ:</p>
+<pre class="language-bash"><code>free -h</code></pre>
+<p>ตรวจพื้นที่เก็บข้อมูล:</p>
+<pre class="language-bash"><code>df -h</code></pre>
+<p>ตรวจพื้นที่เฉพาะ home directory:</p>
+<pre class="language-bash"><code>du -sh /home/piuser</code></pre>
+<p>ค่าที่ควรระวัง:</p>
+<table>
+<thead><tr>
+<th>รายการ</th>
+<th>อาการที่ต้องระวัง</th>
+</tr></thead><tbody>
+<tr>
+<td>RAM เหลือน้อยมาก</td>
+<td>Node-RED อาจช้า หรือ service restart เอง</td>
+</tr>
+<tr>
+<td>Swap ถูกใช้สูง</td>
+<td>เครื่องอาจตอบสนองช้า</td>
+</tr>
+<tr>
+<td>Disk ใกล้เต็ม</td>
+<td>SQLite เขียนข้อมูลไม่ได้</td>
+</tr>
+<tr>
+<td>Home directory โตเร็ว</td>
+<td>log หรือ database อาจขยายตัวผิดปกติ</td>
+</tr>
+</tbody></table>
+<h2 id="1-7-ตรวจเวลาและ-timezone">1.7 ตรวจเวลาและ Timezone</h2>
+<p>ตรวจเวลาระบบ:</p>
+<pre class="language-bash"><code>timedatectl</code></pre>
+<p>ตรวจเวลาแบบ command line:</p>
+<pre class="language-bash"><code>date</code></pre>
+<p>หลักการของ lab นี้:</p>
+<pre class="language-text"><code>System time ถูกต้อง
+      |
+      v
+MQTT timestamp ถูกต้อง
+      |
+      v
+SQLite query ตามเวลาได้ถูกต้อง
+      |
+      v
+Rolling statistics ใน LAB 11 เชื่อถือได้</code></pre>
+<p>ถ้าเวลาผิด ให้บันทึกไว้เป็นปัญหาก่อน เพราะจะมีผลโดยตรงกับ LAB 09 เป็นต้นไป</p>
+<h2 id="1-8-ตรวจ-internet-และ-dns">1.8 ตรวจ Internet และ DNS</h2>
+<p>ทดสอบเชื่อมต่อ IP ภายนอก:</p>
+<pre class="language-bash"><code>ping -c 4 1.1.1.1</code></pre>
+<p>ทดสอบ DNS:</p>
+<pre class="language-bash"><code>ping -c 4 cloudflare.com</code></pre>
+<p>แปลผล:</p>
+<table>
+<thead><tr>
+<th>ผลทดสอบ</th>
+<th>ความหมาย</th>
+</tr></thead><tbody>
+<tr>
+<td>ping IP ได้ แต่ ping domain ไม่ได้</td>
+<td>DNS มีปัญหา</td>
+</tr>
+<tr>
+<td>ping IP ไม่ได้</td>
+<td>network หรือ gateway มีปัญหา</td>
+</tr>
+<tr>
+<td>ping ได้ทั้งสองแบบ</td>
+<td>พร้อมทำ lab ถัดไป</td>
+</tr>
+</tbody></table>
+<h2 id="1-9-ตรวจ-systemd-service">1.9 ตรวจ systemd Service</h2>
+<p>คำสั่งพื้นฐานที่ต้องใช้ตลอดชุด lab:</p>
+<pre class="language-bash"><code>systemctl status ssh --no-pager
+systemctl status mosquitto --no-pager
+systemctl status nodered.service --no-pager</code></pre>
+<p>คำสั่งควบคุม service ที่จะใช้ใน lab ถัดไป:</p>
+<pre class="language-bash"><code>sudo systemctl start mosquitto
+sudo systemctl stop mosquitto
+sudo systemctl restart mosquitto
+sudo systemctl enable mosquitto</code></pre>
+<blockquote>
+LAB นี้ให้เข้าใจความหมายของคำสั่งก่อน ไม่จำเป็นต้อง restart service ถ้ายังไม่มีเหตุผล
+</blockquote>
+<h2 id="1-10-ตรวจ-port-ที่เปิดใช้งาน">1.10 ตรวจ Port ที่เปิดใช้งาน</h2>
+<p>ดู port ที่กำลัง listen:</p>
+<pre class="language-bash"><code>ss -lntp</code></pre>
+<p>ตัวอย่าง port ที่จะพบใน lab นี้และ lab ถัดไป:</p>
+<table>
+<thead><tr>
+<th>Port</th>
+<th>Service</th>
+</tr></thead><tbody>
+<tr>
+<td><code>22</code></td>
+<td>SSH</td>
+</tr>
+<tr>
+<td><code>1883</code></td>
+<td>Mosquitto MQTT</td>
+</tr>
+<tr>
+<td><code>1880</code></td>
+<td>Node-RED</td>
+</tr>
+</tbody></table>
+<p>กรองเฉพาะ port ที่สนใจ:</p>
+<pre class="language-bash"><code>ss -lntp | grep 1883
+ss -lntp | grep 1880</code></pre>
+<h2 id="1-11-อ่าน-log-เบื้องต้น">1.11 อ่าน Log เบื้องต้น</h2>
+<p>อ่าน log ของ service:</p>
+<pre class="language-bash"><code>journalctl -u ssh -n 30 --no-pager</code></pre>
+<p>อ่าน log แบบติดตามต่อเนื่อง:</p>
+<pre class="language-bash"><code>journalctl -u ssh -f</code></pre>
+<p>หลักการอ่าน log:</p>
+<pre class="language-text"><code>status บอกว่า service อยู่หรือไม่
+log บอกว่า service ล้มเพราะอะไร</code></pre>
+<h2 id="1-12-checklist-ก่อนจบ-lab">1.12 Checklist ก่อนจบ LAB</h2>
+<ul>
+<li>รู้ hostname ของเครื่อง</li>
+<li>รู้ IP address ของเครื่อง</li>
+<li>ตรวจ network และ DNS ผ่านแล้ว</li>
+<li>ตรวจ RAM และ disk แล้วไม่มีปัญหารุนแรง</li>
+<li>ตรวจเวลาและ timezone แล้ว</li>
+<li>ใช้ <code>systemctl status</code> เป็น</li>
+<li>ใช้ <code>ss -lntp</code> ตรวจ port เป็น</li>
+<li>ใช้ <code>journalctl</code> อ่าน log เบื้องต้นได้</li>
+</ul>
+<h2 id="1-13-งานส่ง-lab">1.13 งานส่ง LAB</h2>
+<p>ให้บันทึกผลตรวจเป็นตารางสั้นๆ:</p>
+<pre class="language-text"><code>hostname:
+IP address:
+OS version:
+Architecture:
+Disk free:
+Timezone:
+Internet test:
+DNS test:
+ปัญหาที่พบ:</code></pre>
+<h2 id="1-14-เชื่อมไป-lab-ถัดไป">1.14 เชื่อมไป LAB ถัดไป</h2>
+<p>LAB 02 จะใช้ Raspberry Pi เครื่องนี้เป็น MQTT Broker ด้วย Mosquitto ดังนั้นสิ่งที่ต้องพร้อมก่อนเริ่มคือ network, time, service และ port monitoring จาก LAB นี้</p>
+    </main>
+  </div>
+</body>
+</html>

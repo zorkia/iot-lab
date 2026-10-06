@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 15 - Automatic Control</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="active" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-15-automatic-control">LAB 15 - Automatic Control</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="14-lab-14-mqtt-manual-control.html">ก่อนหน้า: LAB 14 - MQTT Manual Control</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">ถัดไป: LAB 16 - MQTT Topic Design for Multi-device IoT</a></nav>
+<h2 id="15-1-แนวคิดของ-lab">15.1 แนวคิดของ LAB</h2>
+<p>LAB 15 ต่อจาก:</p>
+<ul>
+<li><a href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a></li>
+<li><a href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a></li>
+</ul>
+<p>LAB 13 ทำให้ระบบสามารถตัดสินใจจากข้อมูล:</p>
+<pre class="language-text"><code>Sensor → MQTT → Rule → Decision</code></pre>
+<p>LAB 14 ทำให้ผู้ใช้สามารถสั่ง Actuator ผ่าน MQTT:</p>
+<pre class="language-text"><code>Human → Dashboard → MQTT → ESP32 → Actuator</code></pre>
+<p>LAB 15 นำสองส่วนมารวมกัน:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+  MQTT
+   ↓
+Node-RED
+   ↓
+  Rule
+   ↓
+Decision
+   ↓
+MQTT Command
+   ↓
+  ESP32
+   ↓
+Actuator</code></pre>
+<p>ทำให้ระบบสามารถควบคุม Actuator อัตโนมัติตามข้อมูล Sensor เรียกว่า <strong>Automatic Rule-based IoT Control</strong></p>
+<h2 id="15-2-วัตถุประสงค์">15.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>เชื่อม Sensor Data กับ Control Logic</li>
+<li>สร้าง Automatic Control Rule ใน Node-RED</li>
+<li>Publish MQTT Command จากผลของ Rule</li>
+<li>ให้ ESP32 รับ Command และควบคุม Actuator</li>
+<li>อธิบายความแตกต่างระหว่าง Manual และ Automatic Control</li>
+<li>เข้าใจปัญหา Threshold Flapping</li>
+<li>ใช้ Hysteresis ในการควบคุม</li>
+<li>ส่ง Command เฉพาะเมื่อ State เปลี่ยน</li>
+<li>เข้าใจข้อจำกัดของ Commanded State และ Actual State</li>
+</ul>
+<h2 id="15-3-architecture">15.3 Architecture</h2>
+<pre class="language-text"><code>                DATA PATH
+
+ESP32 / Sensor Simulator
+           │
+           │ Sensor Data
+           ▼
+      MQTT Broker
+           │
+           ▼
+        Node-RED
+           │
+           ▼
+          Rule
+           │
+           ▼
+        Decision
+
+                CONTROL PATH
+
+        Decision
+           │
+           │ MQTT Command
+           ▼
+      MQTT Broker
+           │
+           ▼
+         ESP32
+           │
+           ▼
+      LED / Fan / Relay</code></pre>
+<p>รวมเป็น:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Measure
+   ↓
+  MQTT
+   ↓
+Gateway
+   ↓
+  Rule
+   ↓
+Decision
+   ↓
+MQTT Command
+   ↓
+Actuator</code></pre>
+<h2 id="15-4-mqtt-topics">15.4 MQTT Topics</h2>
+<p>Sensor Data Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Command Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>ตัวอย่าง Sensor Payload:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>Command Payload:</p>
+<pre class="language-text"><code>ON
+OFF</code></pre>
+<h2 id="15-5-control-requirement">15.5 Control Requirement</h2>
+<p>ใน LAB นี้ใช้ LED แทน Fan / Actuator กำหนด Rule:</p>
+<table>
+<thead><tr>
+<th>Temperature</th>
+<th>Action</th>
+</tr></thead><tbody>
+<tr>
+<td><code>&gt; 35 °C</code></td>
+<td>ON</td>
+</tr>
+<tr>
+<td><code>30-35 °C</code></td>
+<td>Keep Previous State</td>
+</tr>
+<tr>
+<td><code>&lt; 30 °C</code></td>
+<td>OFF</td>
+</tr>
+</tbody></table>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>temp = 38
+   ↓
+temp &gt; 35
+   ↓
+  ON</code></pre>
+<p>และ:</p>
+<pre class="language-text"><code>temp = 28
+   ↓
+temp &lt; 30
+   ↓
+  OFF</code></pre>
+<p>ช่วง:</p>
+<pre class="language-text"><code>30-35 °C</code></pre>
+<p>ไม่เปลี่ยนสถานะ Actuator</p>
+<h2 id="15-6-ความแตกต่างระหว่าง-status-กับ-control">15.6 ความแตกต่างระหว่าง Status กับ Control</h2>
+<p>LAB 13 ใช้ Rule เพื่อสร้างสถานะ:</p>
+<pre class="language-text"><code>NORMAL
+WARNING
+ALERT</code></pre>
+<p>เช่น:</p>
+<pre class="language-text"><code>temp = 38
+   ↓
+ ALERT</code></pre>
+<p>LAB 15 ใช้ Rule เพื่อสร้าง Control Command:</p>
+<pre class="language-text"><code>ON
+OFF</code></pre>
+<p>เช่น:</p>
+<pre class="language-text"><code>temp = 38
+   ↓
+  ON</code></pre>
+<p>ดังนั้น:</p>
+<pre class="language-text"><code>Status ≠ Command</code></pre>
+<p>Status ใช้อธิบายสถานะของระบบ Command ใช้สั่ง Actuator</p>
+<h2 id="15-7-ปัญหา-threshold-flapping">15.7 ปัญหา Threshold Flapping</h2>
+<p>ถ้าใช้ Rule ง่าย ๆ:</p>
+<pre class="language-text"><code>temp &gt; 35
+    → ON
+
+temp &lt;= 35
+    → OFF</code></pre>
+<p>เมื่อ Sensor อ่านค่า:</p>
+<pre class="language-text"><code>34.9
+35.1
+34.8
+35.2
+34.9
+35.1</code></pre>
+<p>Actuator จะเกิด:</p>
+<pre class="language-text"><code>OFF
+ON
+OFF
+ON
+OFF
+ON</code></pre>
+<p>เรียกว่า <strong>Threshold Flapping</strong> หรือ <strong>State Oscillation</strong></p>
+<p>Actuator จะเปิดและปิดถี่บริเวณ Threshold ซึ่งไม่เหมาะกับอุปกรณ์จริง เช่น Relay, Motor หรือ Compressor</p>
+<h2 id="15-8-hysteresis">15.8 Hysteresis</h2>
+<p>แก้ปัญหา Threshold Flapping ด้วยการใช้ Threshold สองค่า:</p>
+<pre class="language-text"><code>ON Threshold  = 35 °C
+OFF Threshold = 30 °C</code></pre>
+<p>Logic:</p>
+<pre class="language-text"><code>temp &gt; 35
+   ↓
+  ON
+
+temp &lt; 30
+   ↓
+  OFF
+
+temp = 30-35
+   ↓
+KEEP PREVIOUS STATE</code></pre>
+<p>ตัวอย่าง:</p>
+<table>
+<thead><tr>
+<th>Temperature</th>
+<th>Fan</th>
+</tr></thead><tbody>
+<tr>
+<td>28</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>31</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>34</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>36</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>38</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>34</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>32</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>30</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>29</td>
+<td>OFF</td>
+</tr>
+</tbody></table>
+<p>สังเกตว่าเมื่อ Fan เปิดที่ <code>36 °C</code> อุณหภูมิลดลงเป็น:</p>
+<pre class="language-text"><code>34
+32
+30</code></pre>
+<p>Fan ยังคง <code>ON</code> จนกว่า:</p>
+<pre class="language-text"><code>temp &lt; 30</code></pre>
+<p>จึงเปลี่ยนเป็น <code>OFF</code> นี่คือหลักการของ <strong>Hysteresis</strong></p>
+<h2 id="15-9-node-red-flow">15.9 Node-RED Flow</h2>
+<p>สร้าง Flow:</p>
+<pre class="language-text"><code>[MQTT Sensor In]
+        │
+        ▼
+      [JSON]
+        │
+        ▼
+[Automatic Control]
+        │
+        ▼
+    [MQTT Out]</code></pre>
+<p>MQTT Input Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>MQTT Output Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<h2 id="15-10-function-node-automatic-control">15.10 Function Node - Automatic Control</h2>
+<p>สร้าง Function Node แล้วตั้งชื่อ:</p>
+<pre class="language-text"><code>Automatic Control</code></pre>
+<p>ใช้โค้ด:</p>
+<pre class="language-javascript"><code>let temp = Number(msg.payload.temp);
+
+let fan_state = context.get(&quot;fan_state&quot;) || &quot;OFF&quot;;
+
+if (temp &gt; 35) {
+    fan_state = &quot;ON&quot;;
+} else if (temp &lt; 30) {
+    fan_state = &quot;OFF&quot;;
+}
+
+context.set(&quot;fan_state&quot;, fan_state);
+
+msg.payload = fan_state;
+
+return msg;</code></pre>
+<p><code>context.get()</code> ใช้เรียกสถานะเดิม <code>context.set()</code> ใช้บันทึกสถานะใหม่ ทำให้ช่วง:</p>
+<pre class="language-text"><code>30-35 °C</code></pre>
+<p>ระบบสามารถรักษาสถานะเดิมได้</p>
+<h2 id="15-11-ทดสอบ-automatic-control">15.11 ทดสอบ Automatic Control</h2>
+<p>เปิด Terminal:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/001/cmd&quot; \
+  -v</code></pre>
+<p>ทดสอบ <code>28 °C</code>:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:28,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>OFF</code></pre>
+<p>ทดสอบ <code>32 °C</code>:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ยังคง:</p>
+<pre class="language-text"><code>OFF</code></pre>
+<p>ทดสอบ <code>38 °C</code>:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ลดกลับมา <code>33 °C</code>:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:33,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ยังคง:</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ลดเป็น <code>28 °C</code>:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:28,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>OFF</code></pre>
+<p>แสดงว่า Hysteresis ทำงานถูกต้อง</p>
+<h2 id="15-12-ปัญหา-command-ซ้ำ">15.12 ปัญหา Command ซ้ำ</h2>
+<p>Function แบบแรกจะส่ง Command ทุกครั้งที่ Sensor ส่งข้อมูล ตัวอย่าง:</p>
+<pre class="language-text"><code>temp = 36 → ON
+temp = 37 → ON
+temp = 38 → ON
+temp = 39 → ON</code></pre>
+<p>MQTT จะได้รับ:</p>
+<pre class="language-text"><code>ON
+ON
+ON
+ON</code></pre>
+<p>ทั้งที่ Actuator เปิดอยู่แล้ว จึงไม่จำเป็นต้องส่ง Command ซ้ำ</p>
+<p>ควรส่ง Command เฉพาะเมื่อ State เปลี่ยน</p>
+<h2 id="15-13-state-change-based-control">15.13 State-change-based Control</h2>
+<p>ปรับ Function เป็น:</p>
+<pre class="language-javascript"><code>let temp = Number(msg.payload.temp);
+
+let fan_state = context.get(&quot;fan_state&quot;) || &quot;OFF&quot;;
+let new_state = fan_state;
+
+if (temp &gt; 35) {
+    new_state = &quot;ON&quot;;
+} else if (temp &lt; 30) {
+    new_state = &quot;OFF&quot;;
+}
+
+if (new_state === fan_state) {
+    return null;
+}
+
+context.set(&quot;fan_state&quot;, new_state);
+
+msg.payload = new_state;
+
+return msg;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>28 → ไม่ส่ง Command
+32 → ไม่ส่ง Command
+36 → ON
+38 → ไม่ส่ง Command
+39 → ไม่ส่ง Command
+33 → ไม่ส่ง Command
+29 → OFF
+28 → ไม่ส่ง Command</code></pre>
+<p>ระบบส่ง MQTT Command เฉพาะเมื่อเกิด:</p>
+<pre class="language-text"><code>OFF → ON
+ON → OFF</code></pre>
+<p>เรียกว่า <strong>State-change-based Control</strong></p>
+<p>ช่วยลด MQTT Traffic และ Command ที่ไม่จำเป็น</p>
+<h2 id="15-14-ข้อจำกัดของ-initial-state">15.14 ข้อจำกัดของ Initial State</h2>
+<p>ใน Function มี:</p>
+<pre class="language-javascript"><code>context.get(&quot;fan_state&quot;) || &quot;OFF&quot;</code></pre>
+<p>เมื่อ Node-RED เริ่มทำงานใหม่ ระบบจึงสมมติว่า:</p>
+<pre class="language-text"><code>fan_state = OFF</code></pre>
+<p>แต่ ESP32 จริงอาจมีสถานะ:</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ดังนั้น:</p>
+<pre class="language-text"><code>Gateway State</code></pre>
+<p>อาจไม่ตรงกับ:</p>
+<pre class="language-text"><code>Actual Device State</code></pre>
+<p>หรือกล่าวได้ว่า:</p>
+<pre class="language-text"><code>Commanded State ≠ Actual State</code></pre>
+<p>ประเด็นนี้สำคัญสำหรับระบบจริง และจะเชื่อมไปสู่เรื่อง:</p>
+<ul>
+<li>Device Status</li>
+<li>State Feedback</li>
+<li>Offline Detection</li>
+<li>Reconnection</li>
+<li>Recovery</li>
+</ul>
+<p>ใน LAB ขั้นต่อไป</p>
+<h2 id="15-15-sensor-simulator">15.15 Sensor Simulator</h2>
+<p>สามารถจำลอง Sensor บน Raspberry Pi:</p>
+<pre class="language-bash"><code>while true
+do
+    temp=$((25 + RANDOM % 16))
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp,\&quot;humi\&quot;:70,\&quot;light\&quot;:1500}&quot;
+
+    sleep 2
+done</code></pre>
+<p>สร้าง Temperature แบบสุ่ม:</p>
+<pre class="language-text"><code>25-40 °C</code></pre>
+<p>ทุก 2 วินาที Architecture:</p>
+<pre class="language-text"><code>Sensor Simulator
+       ↓
+      MQTT
+       ↓
+    Node-RED
+       ↓
+    Hysteresis
+       ↓
+     Decision
+       ↓
+      MQTT
+       ↓
+     ESP32
+       ↓
+    Actuator</code></pre>
+<h2 id="15-16-dashboard">15.16 Dashboard</h2>
+<p>Dashboard ควรแสดงอย่างน้อย:</p>
+<pre class="language-text"><code>Temperature
+38 °C
+
+Control Mode
+AUTO
+
+Fan State
+ON</code></pre>
+<p>ช่วยให้คุณเห็นความสัมพันธ์:</p>
+<pre class="language-text"><code>Sensor Data
+     ↓
+  Decision
+     ↓
+Actuator State</code></pre>
+<h2 id="15-17-manual-control-vs-automatic-control">15.17 Manual Control vs Automatic Control</h2>
+<h3 id="manual-control-lab-14">Manual Control - LAB 14</h3>
+<pre class="language-text"><code>Sensor
+   ↓
+Dashboard
+   ↓
+ Human
+   ↓
+ Button
+   ↓
+  MQTT
+   ↓
+Actuator</code></pre>
+<p>มนุษย์เป็นผู้ตัดสินใจ</p>
+<h3 id="automatic-control-lab-15">Automatic Control - LAB 15</h3>
+<pre class="language-text"><code>Sensor
+   ↓
+  MQTT
+   ↓
+  Rule
+   ↓
+Decision
+   ↓
+  MQTT
+   ↓
+Actuator</code></pre>
+<p>Gateway เป็นผู้ตัดสินใจตาม Rule</p>
+<h2 id="15-18-manual-auto-mode">15.18 Manual / Auto Mode</h2>
+<p>ไม่ควรคิดว่าเมื่อมี Automatic Control แล้ว Manual Control ไม่มีประโยชน์ Manual Control ยังจำเป็นสำหรับ:</p>
+<ul>
+<li>Testing</li>
+<li>Maintenance</li>
+<li>Override</li>
+<li>Troubleshooting</li>
+</ul>
+<p>แต่ถ้า Manual และ Automatic Control ส่ง Command พร้อมกัน อาจเกิด:</p>
+<pre class="language-text"><code>Manual → OFF
+
+Automatic Rule → ON</code></pre>
+<p>ทำให้เกิด <strong>Command Conflict</strong> จึงควรมีแนวคิด:</p>
+<pre class="language-text"><code>MANUAL / AUTO MODE</code></pre>
+<p>Architecture:</p>
+<pre class="language-text"><code>              ┌──────────────┐
+              │ Control Mode │
+              │ MANUAL/AUTO  │
+              └──────┬───────┘
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+       MANUAL                  AUTO
+          │                     │
+   Dashboard Button        Sensor Rule
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+                   MQTT
+                     │
+                     ▼
+                   ESP32
+                     │
+                     ▼
+                 Actuator</code></pre>
+<h3 id="manual">MANUAL</h3>
+<pre class="language-text"><code>Dashboard
+    ↓
+  Button
+    ↓
+   MQTT
+    ↓
+  ESP32</code></pre>
+<h3 id="auto">AUTO</h3>
+<pre class="language-text"><code>Sensor
+   ↓
+  Rule
+   ↓
+  MQTT
+   ↓
+ ESP32</code></pre>
+<p>การทำ MANUAL / AUTO Mode สามารถใช้เป็น Advanced Exercise ของ LAB นี้</p>
+<h2 id="15-19-แบบฝึกหัด">15.19 แบบฝึกหัด</h2>
+<h3 id="exercise-1-automatic-fan">Exercise 1 - Automatic Fan</h3>
+<p>สร้าง Automatic Control:</p>
+<pre class="language-text"><code>temp &gt; 35 °C
+    → Fan ON
+
+temp &lt; 30 °C
+    → Fan OFF
+
+temp = 30-35 °C
+    → Keep Previous State</code></pre>
+<h3 id="exercise-2-hysteresis-test">Exercise 2 - Hysteresis Test</h3>
+<p>ส่งข้อมูลตามลำดับ:</p>
+<pre class="language-text"><code>28
+31
+34
+36
+38
+34
+32
+30
+29</code></pre>
+<p>ผลที่ควรได้:</p>
+<table>
+<thead><tr>
+<th>Temp</th>
+<th>Fan</th>
+</tr></thead><tbody>
+<tr>
+<td>28</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>31</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>34</td>
+<td>OFF</td>
+</tr>
+<tr>
+<td>36</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>38</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>34</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>32</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>30</td>
+<td>ON</td>
+</tr>
+<tr>
+<td>29</td>
+<td>OFF</td>
+</tr>
+</tbody></table>
+<p>ค่าที่ <code>30 °C</code> ต้องยังเป็น <code>ON</code> เพราะเงื่อนไขปิดคือ:</p>
+<pre class="language-text"><code>temp &lt; 30</code></pre>
+<p>ไม่ใช่:</p>
+<pre class="language-text"><code>temp &lt;= 30</code></pre>
+<p>จึงเป็น Boundary Test ที่สำคัญ</p>
+<h2 id="15-20-งานส่ง-lab-15">15.20 งานส่ง LAB 15</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Node-RED Flow</li>
+<li>Screenshot Dashboard</li>
+<li>Function Code สำหรับ Automatic Control</li>
+<li>ผลการทดสอบ Hysteresis</li>
+<li>Screenshot <code>mosquitto_sub</code> แสดง MQTT Command</li>
+<li>หลักฐานว่า ESP32 / LED เปลี่ยนสถานะตาม Rule</li>
+<li>อธิบายความแตกต่างระหว่าง Manual และ Automatic Control</li>
+<li>อธิบายว่าทำไมต้องใช้ Hysteresis</li>
+</ol>
+<p>ตารางผลการทดลอง:</p>
+<table>
+<thead><tr>
+<th>Temp</th>
+<th>Expected Fan</th>
+<th>Actual Fan</th>
+</tr></thead><tbody>
+<tr>
+<td>28</td>
+<td>OFF</td>
+<td></td>
+</tr>
+<tr>
+<td>31</td>
+<td>OFF</td>
+<td></td>
+</tr>
+<tr>
+<td>34</td>
+<td>OFF</td>
+<td></td>
+</tr>
+<tr>
+<td>36</td>
+<td>ON</td>
+<td></td>
+</tr>
+<tr>
+<td>38</td>
+<td>ON</td>
+<td></td>
+</tr>
+<tr>
+<td>34</td>
+<td>ON</td>
+<td></td>
+</tr>
+<tr>
+<td>32</td>
+<td>ON</td>
+<td></td>
+</tr>
+<tr>
+<td>30</td>
+<td>ON</td>
+<td></td>
+</tr>
+<tr>
+<td>29</td>
+<td>OFF</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="15-21-สิ่งที่ควรเข้าใจ">15.21 สิ่งที่ควรเข้าใจ</h2>
+<p>LAB 13:</p>
+<pre class="language-text"><code>Data
+  ↓
+ Rule
+  ↓
+Decision</code></pre>
+<p>LAB 14:</p>
+<pre class="language-text"><code>Human
+  ↓
+Command
+  ↓
+Actuator</code></pre>
+<p>LAB 15:</p>
+<pre class="language-text"><code>Data
+  ↓
+ Rule
+  ↓
+Decision
+  ↓
+Command
+  ↓
+Actuator</code></pre>
+<p>เส้นทางการเรียนจึงพัฒนาเป็น:</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Communicate
+   ↓
+Process
+   ↓
+Analyze
+   ↓
+Decide
+   ↓
+Control</code></pre>
+<p>ระบบจึงเปลี่ยนจาก:</p>
+<pre class="language-text"><code>IoT Monitoring System</code></pre>
+<p>ไปสู่:</p>
+<pre class="language-text"><code>IoT Monitoring and Control System</code></pre>
+<h2 id="15-22-ข้อจำกัดของระบบใน-lab-นี้">15.22 ข้อจำกัดของระบบใน LAB นี้</h2>
+<p>ระบบ LAB 15 เป็น <strong>Automatic Rule-based IoT Control</strong></p>
+<p>ยังไม่ควรเรียกว่า Closed-loop Control อย่างสมบูรณ์ หาก LED เป็นเพียงตัวแทน Fan และไม่มีผลต่ออุณหภูมิจริง Closed-loop ทางกายภาพต้องมี:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Controller
+   ↓
+Actuator
+   ↓
+Physical Process
+   ↓
+Sensor Feedback
+   └────────────→ Controller</code></pre>
+<p>เช่น:</p>
+<pre class="language-text"><code>Temperature Sensor
+      ↓
+   Controller
+      ↓
+      Fan
+      ↓
+Room Temperature
+      ↓
+Temperature Sensor</code></pre>
+<p>จึงเกิด Feedback Loop จริง</p>
+<h2 id="15-23-เชื่อมไป-lab-16-mqtt-topic-design">15.23 เชื่อมไป LAB 16 - MQTT Topic Design</h2>
+<p>ปัจจุบันใช้:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/cmd</code></pre>
+<p>ระบบยังเป็น Single-device เป็นหลัก เมื่อเพิ่ม:</p>
+<pre class="language-text"><code>ESP32-001
+ESP32-002
+ESP32-003
+...
+ESP32-100</code></pre>
+<p>ต้องเริ่มออกแบบ:</p>
+<ul>
+<li>Topic Hierarchy</li>
+<li>Device ID</li>
+<li>Data Topic</li>
+<li>Status Topic</li>
+<li>Command Topic</li>
+<li>Wildcard Subscription</li>
+<li>Multi-device Communication</li>
+</ul>
+<p>LAB 16 จึงเปลี่ยนแนวคิดจาก:</p>
+<pre class="language-text"><code>Single-device MQTT</code></pre>
+<p>ไปเป็น:</p>
+<pre class="language-text"><code>Scalable Multi-device MQTT Architecture</code></pre>
+<p>และเริ่มใช้ MQTT Wildcard:</p>
+<pre class="language-text"><code>+
+#</code></pre>
+<p>อย่างเป็นระบบ</p>
+    </main>
+  </div>
+</body>
+</html>

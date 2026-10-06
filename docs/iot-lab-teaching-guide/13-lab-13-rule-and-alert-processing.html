@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 13 - Rule &amp; Alert Processing</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="active" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-13-rule-and-alert-processing">LAB 13 - Rule &amp; Alert Processing</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">ก่อนหน้า: LAB 12 - แยก SQLite Write และ Statistics Flow</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="14-lab-14-mqtt-manual-control.html">ถัดไป: LAB 14 - MQTT Manual Control</a></nav>
+<h2 id="13-1-แนวคิดของ-lab">13.1 แนวคิดของ LAB</h2>
+<p>LAB นี้เป็นจุดเปลี่ยนจากระบบ IoT ที่ทำเพียง <strong>Monitoring</strong> ไปสู่ระบบที่สามารถ <strong>ประมวลผลและตัดสินใจจากข้อมูล</strong> จากเดิม:</p>
+<pre class="language-text"><code>Sensor → MQTT → Node-RED → Dashboard
+                         │
+                         └──→ SQLite</code></pre>
+<p>ระบบตอบได้เพียง:</p>
+<pre class="language-text"><code>&quot;เกิดอะไรขึ้น?&quot;</code></pre>
+<p>LAB 13 เพิ่ม Rule Processing:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+ MQTT
+   ↓
+Node-RED
+   ↓
+ Rule
+   ↓
+Status
+ ├── NORMAL
+ ├── WARNING
+ └── ALERT</code></pre>
+<p>ทำให้ระบบสามารถตอบได้เพิ่มว่า:</p>
+<pre class="language-text"><code>&quot;ข้อมูลที่ได้รับมีความหมายอย่างไร?&quot;
+&quot;สถานะของระบบตอนนี้เป็นอย่างไร?&quot;</code></pre>
+<h2 id="13-2-วัตถุประสงค์">13.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>รับข้อมูล Sensor จาก MQTT</li>
+<li>แปลง JSON เป็นข้อมูลสำหรับประมวลผล</li>
+<li>สร้าง Rule จาก Threshold</li>
+<li>ใช้เงื่อนไขในการจำแนกสถานะ</li>
+<li>จำแนก <code>NORMAL</code>, <code>WARNING</code>, <code>ALERT</code></li>
+<li>แสดงสถานะบน Node-RED Dashboard</li>
+<li>แยกความแตกต่างระหว่าง Monitoring และ Decision</li>
+<li>เข้าใจพื้นฐาน Rule Processing ในระบบ IoT</li>
+</ul>
+<h2 id="13-3-architecture">13.3 Architecture</h2>
+<pre class="language-text"><code>Sensor Simulator / ESP32
+          │
+          │ MQTT
+          ▼
+┌─────────────────────┐
+│ Mosquitto Broker    │
+│ Raspberry Pi        │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Node-RED            │
+│                     │
+│ MQTT In             │
+│    ↓                │
+│ JSON                │
+│    ↓                │
+│ Rule Processing     │
+│    ↓                │
+│ Status              │
+└──────────┬──────────┘
+           │
+      ┌────┼─────┐
+      ▼    ▼     ▼
+   NORMAL WARNING ALERT
+           │
+           ▼
+       Dashboard</code></pre>
+<p>LAB นี้ยังไม่มีการสั่งงาน Actuator Control Path จะเริ่มใน LAB 14</p>
+<h2 id="13-4-ข้อมูลที่ใช้ทดลอง">13.4 ข้อมูลที่ใช้ทดลอง</h2>
+<p>MQTT Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ตัวอย่าง Payload:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32.5,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>LAB นี้ใช้ <code>temp</code> เป็นตัวแปรหลักในการทดลอง Rule Processing กำหนด Rule:</p>
+<table>
+<thead><tr>
+<th>Temperature</th>
+<th>Status</th>
+</tr></thead><tbody>
+<tr>
+<td><code>&lt; 30 °C</code></td>
+<td>NORMAL</td>
+</tr>
+<tr>
+<td><code>30-35 °C</code></td>
+<td>WARNING</td>
+</tr>
+<tr>
+<td><code>&gt; 35 °C</code></td>
+<td>ALERT</td>
+</tr>
+</tbody></table>
+<p>สิ่งสำคัญที่ต้องเข้าใจคือ:</p>
+<blockquote>
+Threshold เป็นกฎที่ระบบกำหนดขึ้น ไม่ใช่คุณสมบัติของ Sensor
+</blockquote>
+<p>Sensor มีหน้าที่วัดข้อมูล ส่วน Gateway / Processing Layer มีหน้าที่ตีความข้อมูล</p>
+<h2 id="13-5-ทดสอบ-mqtt-ก่อนสร้าง-rule">13.5 ทดสอบ MQTT ก่อนสร้าง Rule</h2>
+<p>เปิด Terminal บน Raspberry Pi:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost -t &quot;pkru/iot/001/data&quot; -v</code></pre>
+<p>เปิด Terminal อีกหน้าต่าง</p>
+<h3 id="ทดสอบ-normal">ทดสอบ NORMAL</h3>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:28,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:28,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<h3 id="ทดสอบ-warning">ทดสอบ WARNING</h3>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<h3 id="ทดสอบ-alert">ทดสอบ ALERT</h3>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ขั้นตอนนี้ใช้ตรวจสอบ Data Path ก่อนนำ Rule Processing เข้ามาเกี่ยวข้อง</p>
+<h2 id="13-6-สร้าง-node-red-flow">13.6 สร้าง Node-RED Flow</h2>
+<p>สร้าง Flow:</p>
+<pre class="language-text"><code>[MQTT In]
+     │
+     ▼
+   [JSON]
+     │
+     ▼
+[Temperature Rule]
+     │
+     ▼
+   [Debug]</code></pre>
+<p>ตั้งค่า MQTT In:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>รายละเอียด</th>
+</tr></thead><tbody>
+<tr>
+<td>Broker</td>
+<td><code>localhost:1883</code></td>
+</tr>
+<tr>
+<td>Topic</td>
+<td><code>pkru/iot/001/data</code></td>
+</tr>
+</tbody></table>
+<h2 id="13-7-temperature-rule">13.7 Temperature Rule</h2>
+<p>เพิ่ม <code>function</code> node แล้วตั้งชื่อ:</p>
+<pre class="language-text"><code>Temperature Rule</code></pre>
+<p>ใช้โค้ด:</p>
+<pre class="language-javascript"><code>let temp = Number(msg.payload.temp);
+
+if (temp &lt; 30) {
+    msg.status = &quot;NORMAL&quot;;
+} else if (temp &lt;= 35) {
+    msg.status = &quot;WARNING&quot;;
+} else {
+    msg.status = &quot;ALERT&quot;;
+}
+
+return msg;</code></pre>
+<p>ตัวอย่างข้อมูล:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>หลังผ่าน Rule:</p>
+<pre class="language-text"><code>msg.payload.temp = 32
+msg.status = &quot;WARNING&quot;</code></pre>
+<p>ดังนั้นระบบเปลี่ยนจาก Raw Data:</p>
+<pre class="language-text"><code>temp = 32</code></pre>
+<p>เป็นข้อมูลที่ผ่านการตีความแล้ว:</p>
+<pre class="language-text"><code>temp = 32
+status = WARNING</code></pre>
+<p>แนวคิดคือ:</p>
+<pre class="language-text"><code>Raw Data
+    ↓
+Processing
+    ↓
+Information
+    ↓
+System State</code></pre>
+<h2 id="13-8-ทดสอบ-rule">13.8 ทดสอบ Rule</h2>
+<h3 id="normal">NORMAL</h3>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:25,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผลที่คาดหวัง:</p>
+<pre class="language-text"><code>NORMAL</code></pre>
+<h3 id="warning">WARNING</h3>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:33,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผลที่คาดหวัง:</p>
+<pre class="language-text"><code>WARNING</code></pre>
+<h3 id="alert">ALERT</h3>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:40,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผลที่คาดหวัง:</p>
+<pre class="language-text"><code>ALERT</code></pre>
+<h2 id="13-9-แยก-data-flow-ตามสถานะ">13.9 แยก Data Flow ตามสถานะ</h2>
+<p>เพิ่ม <code>switch</code> node:</p>
+<pre class="language-text"><code>                     ┌── NORMAL ──→ Debug
+                     │
+MQTT → JSON → Rule ──┼── WARNING ─→ Debug
+                     │
+                     └── ALERT ───→ Debug</code></pre>
+<p>ตั้ง Property:</p>
+<pre class="language-text"><code>msg.status</code></pre>
+<p>สร้าง 3 Rules:</p>
+<pre class="language-text"><code>== NORMAL
+== WARNING
+== ALERT</code></pre>
+<p>Switch node จะมี 3 Outputs ช่วยให้คุณเห็นว่า Rule ไม่ได้มีหน้าที่เพียงสร้างข้อความสถานะ แต่สามารถใช้กำหนด เส้นทางการทำงานของระบบได้</p>
+<h2 id="13-10-แสดงผลบน-dashboard">13.10 แสดงผลบน Dashboard</h2>
+<p>สร้าง Dashboard สำหรับแสดง:</p>
+<pre class="language-text"><code>Temperature
+32.0 °C
+
+System Status
+WARNING</code></pre>
+<p>Architecture:</p>
+<pre class="language-text"><code>                 ┌── Temperature ──→ Dashboard
+                 │
+MQTT → JSON → Rule
+                 │
+                 └── Status ───────→ Dashboard</code></pre>
+<p>ก่อนส่ง <code>status</code> ไป Dashboard สามารถใช้ Change node กำหนด:</p>
+<pre class="language-text"><code>msg.payload = msg.status</code></pre>
+<p>จากเดิม Dashboard แสดงเพียง:</p>
+<pre class="language-text"><code>Temperature
+32 °C</code></pre>
+<p>หลัง LAB 13 สามารถแสดง:</p>
+<pre class="language-text"><code>Temperature
+32 °C
+
+Status
+WARNING</code></pre>
+<p>จึงเริ่มเปลี่ยนจาก Data Dashboard ไปสู่ Operational Dashboard</p>
+<h2 id="13-11-status-และ-alert">13.11 Status และ Alert</h2>
+<p>ควรแยกแนวคิดระหว่าง <strong>Status</strong> กับ <strong>Alert</strong> ตัวอย่าง:</p>
+<pre class="language-text"><code>temp = 28
+Status = NORMAL
+Alert  = No
+
+temp = 32
+Status = WARNING
+Alert  = No
+
+temp = 38
+Status = ALERT
+Alert  = Yes</code></pre>
+<p>Architecture:</p>
+<pre class="language-text"><code>Sensor Data
+     ↓
+    Rule
+     ↓
+   Status
+     ↓
+Alert Condition
+     ↓
+Alert Event</code></pre>
+<p>ดังนั้นไม่ควรถือว่าทุก Status คือ Alert Alert เป็นเหตุการณ์ที่เกิดขึ้นเมื่อเงื่อนไขที่กำหนดไว้เป็นจริง</p>
+<h2 id="13-12-sensor-simulator">13.12 Sensor Simulator</h2>
+<p>เพื่อไม่ต้องใช้ <code>mosquitto_pub</code> ส่งค่าทีละค่า สามารถจำลอง Sensor บน Raspberry Pi:</p>
+<pre class="language-bash"><code>while true
+do
+    temp=$((25 + RANDOM % 16))
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp,\&quot;humi\&quot;:70,\&quot;light\&quot;:1500}&quot;
+
+    sleep 2
+done</code></pre>
+<p>ระบบจะสร้างค่า Temperature แบบสุ่มประมาณ:</p>
+<pre class="language-text"><code>25-40 °C</code></pre>
+<p>ทุก 2 วินาที Node-RED จะประมวลผลและเปลี่ยนสถานะอัตโนมัติระหว่าง:</p>
+<pre class="language-text"><code>NORMAL
+WARNING
+ALERT</code></pre>
+<p>ทำให้สามารถทดลอง Rule Processing แบบ Real-time ได้</p>
+<h2 id="13-13-boundary-testing">13.13 Boundary Testing</h2>
+<p>การทดสอบ Rule ไม่ควรทดสอบเฉพาะค่าที่อยู่กลางช่วง ต้องทดสอบค่าบริเวณ Boundary ด้วย สำหรับ Rule:</p>
+<pre class="language-text"><code>temp &lt; 30       → NORMAL
+temp &lt;= 35      → WARNING
+temp &gt; 35       → ALERT</code></pre>
+<p>ควรทดสอบอย่างน้อย:</p>
+<table>
+<thead><tr>
+<th>temp</th>
+<th>Expected</th>
+</tr></thead><tbody>
+<tr>
+<td>29</td>
+<td>NORMAL</td>
+</tr>
+<tr>
+<td>30</td>
+<td>WARNING</td>
+</tr>
+<tr>
+<td>35</td>
+<td>WARNING</td>
+</tr>
+<tr>
+<td>36</td>
+<td>ALERT</td>
+</tr>
+</tbody></table>
+<p>Boundary Test ช่วยตรวจสอบความผิดพลาดจากการใช้:</p>
+<pre class="language-text"><code>&lt;
+&lt;=
+&gt;
+&gt;=</code></pre>
+<p>ผิดตำแหน่ง</p>
+<h2 id="13-14-ปัญหา-threshold-flapping">13.14 ปัญหา Threshold Flapping</h2>
+<p>Simple Threshold มีข้อจำกัด สมมติ Sensor อ่านค่า:</p>
+<pre class="language-text"><code>34.9
+35.1
+34.8
+35.2
+34.9
+35.1</code></pre>
+<p>เมื่อใช้ Rule:</p>
+<pre class="language-text"><code>&lt;= 35 → WARNING
+&gt; 35  → ALERT</code></pre>
+<p>ระบบจะเปลี่ยนสถานะ:</p>
+<pre class="language-text"><code>WARNING
+ALERT
+WARNING
+ALERT
+WARNING
+ALERT</code></pre>
+<p>สถานะจึงเปลี่ยนกลับไปกลับมาบริเวณ Threshold เรียกว่า:</p>
+<pre class="language-text"><code>State Flapping
+Threshold Oscillation</code></pre>
+<p>ปัญหานี้สามารถแก้ด้วยแนวคิด เช่น <code>Hysteresis</code> แต่ยังไม่จำเป็นต้องนำมาเป็นแกนหลักของ LAB 13 สามารถใช้เป็น Advanced Exercise ได้</p>
+<h2 id="13-15-แบบฝึกหัด">13.15 แบบฝึกหัด</h2>
+<h3 id="exercise-1-temperature-rule">Exercise 1 - Temperature Rule</h3>
+<p>ปรับ Rule เป็น:</p>
+<pre class="language-text"><code>temp &lt; 28
+    → NORMAL
+
+28 &lt;= temp &lt;= 35
+    → WARNING
+
+temp &gt; 35
+    → ALERT</code></pre>
+<p>ทดสอบ Boundary ของ Rule</p>
+<h3 id="exercise-2-humidity-rule">Exercise 2 - Humidity Rule</h3>
+<p>เพิ่ม Rule สำหรับ Humidity:</p>
+<pre class="language-text"><code>humi &lt;= 80
+    → NORMAL
+
+humi &gt; 80
+    → ALERT</code></pre>
+<h3 id="exercise-3-multiple-conditions">Exercise 3 - Multiple Conditions</h3>
+<p>สร้าง System Status จาก Temperature และ Humidity ตัวอย่าง:</p>
+<pre class="language-text"><code>Temperature = NORMAL
+Humidity    = NORMAL
+         ↓
+   System NORMAL</code></pre>
+<p>แต่ถ้า:</p>
+<pre class="language-text"><code>Temperature = ALERT</code></pre>
+<p>หรือ:</p>
+<pre class="language-text"><code>Humidity = ALERT</code></pre>
+<p>ให้:</p>
+<pre class="language-text"><code>System ALERT</code></pre>
+<p>แนวคิดคือ:</p>
+<pre class="language-text"><code>Multiple Sensor Data
+        ↓
+   Multiple Rules
+        ↓
+   System Status</code></pre>
+<h2 id="13-16-งานส่ง-lab-13">13.16 งานส่ง LAB 13</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Node-RED Flow</li>
+<li>Screenshot Dashboard ขณะเป็น <code>NORMAL</code></li>
+<li>Screenshot Dashboard ขณะเป็น <code>WARNING</code></li>
+<li>Screenshot Dashboard ขณะเป็น <code>ALERT</code></li>
+<li>อธิบาย Rule ที่ใช้</li>
+<li>แสดงผลการทดสอบอย่างน้อย 5 ค่า</li>
+<li>ต้องมี Boundary Test</li>
+</ol>
+<p>ตัวอย่างผลการทดสอบ:</p>
+<table>
+<thead><tr>
+<th>temp</th>
+<th>Expected</th>
+<th>Actual</th>
+</tr></thead><tbody>
+<tr>
+<td>25</td>
+<td>NORMAL</td>
+<td>NORMAL</td>
+</tr>
+<tr>
+<td>29</td>
+<td>NORMAL</td>
+<td>NORMAL</td>
+</tr>
+<tr>
+<td>30</td>
+<td>WARNING</td>
+<td>WARNING</td>
+</tr>
+<tr>
+<td>35</td>
+<td>WARNING</td>
+<td>WARNING</td>
+</tr>
+<tr>
+<td>36</td>
+<td>ALERT</td>
+<td>ALERT</td>
+</tr>
+</tbody></table>
+<h2 id="13-17-สิ่งที่ควรเข้าใจ">13.17 สิ่งที่ควรเข้าใจ</h2>
+<p>ก่อน LAB 13:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+  Data
+   ↓
+Dashboard</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>temp = 38</code></pre>
+<p>ระบบเพียงแสดงข้อมูล หลัง LAB 13:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+  Data
+   ↓
+  Rule
+   ↓
+Decision State
+   ↓
+Dashboard</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>temp = 38
+status = ALERT</code></pre>
+<p>ระบบจึงเริ่มมี Processing / Decision Layer</p>
+<h2 id="13-18-ผลลัพธ์ของ-lab-13">13.18 ผลลัพธ์ของ LAB 13</h2>
+<p>Architecture หลังจบ LAB:</p>
+<pre class="language-text"><code>             MQTT
+               │
+               ▼
+          Sensor Data
+               │
+               ▼
+         ┌───────────┐
+         │ Node-RED  │
+         │   Rule    │
+         └─────┬─────┘
+               │
+      ┌────────┼────────┐
+      ▼        ▼        ▼
+   NORMAL   WARNING    ALERT
+      │        │        │
+      └────────┼────────┘
+               ▼
+           Dashboard</code></pre>
+<p>แนวคิดสำคัญคือ:</p>
+<pre class="language-text"><code>Monitor
+   ↓
+Process
+   ↓
+Evaluate
+   ↓
+Determine State</code></pre>
+<p>IoT Gateway จึงไม่ได้ทำหน้าที่เพียงรับและแสดงข้อมูล แต่สามารถประมวลผลข้อมูลเพื่อสร้าง สถานะและเหตุการณ์สำหรับใช้ในการตัดสินใจได้</p>
+<h2 id="13-19-เชื่อมไป-lab-14">13.19 เชื่อมไป LAB 14</h2>
+<p>LAB 13 สร้างเส้นทาง:</p>
+<pre class="language-text"><code>Sensor → MQTT → Rule → Decision</code></pre>
+<p>แต่ยังไม่มีการควบคุมอุปกรณ์ LAB 14 จะเพิ่ม Control Path:</p>
+<pre class="language-text"><code>Dashboard
+    ↓
+Node-RED
+    ↓
+  MQTT
+    ↓
+  ESP32
+    ↓
+ Actuator</code></pre>
+<p>ทำให้ระบบมีสองเส้นทางหลัก:</p>
+<pre class="language-text"><code>DATA PATH
+
+ESP32 → MQTT → Raspberry Pi → Dashboard
+
+
+CONTROL PATH
+
+Dashboard → Raspberry Pi → MQTT → ESP32</code></pre>
+<p>LAB 14 ยังเป็น Manual Control โดยมนุษย์เป็นผู้ตัดสินใจ จากนั้น LAB 15 จะรวม:</p>
+<pre class="language-text"><code>LAB 13
+Sensor → Rule → Decision
+
+LAB 14
+Command → Actuator</code></pre>
+<p>กลายเป็น:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+  MQTT
+   ↓
+  Rule
+   ↓
+Decision
+   ↓
+MQTT Command
+   ↓
+  ESP32
+   ↓
+Actuator</code></pre>
+<p>หรือ:</p>
+<pre class="language-text"><code>Automatic Control</code></pre>
+    </main>
+  </div>
+</body>
+</html>

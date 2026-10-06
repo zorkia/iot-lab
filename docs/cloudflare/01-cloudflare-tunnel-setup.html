@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-teaching-guide/03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="../iot-lab-teaching-guide/04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="../iot-lab-teaching-guide/05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="../iot-lab-teaching-guide/06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="../iot-lab-teaching-guide/08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="../iot-lab-teaching-guide/10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="../iot-lab-teaching-guide/11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="../iot-lab-teaching-guide/12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="../iot-lab-teaching-guide/13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="../iot-lab-teaching-guide/14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="../iot-lab-teaching-guide/15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="../iot-lab-teaching-guide/16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="../iot-lab-teaching-guide/17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="../iot-lab-teaching-guide/19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="../iot-lab-teaching-guide/20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="../iot-lab-teaching-guide/23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="../iot-lab-teaching-guide/25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="../iot-lab-teaching-guide/26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="active" href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="สร้าง-cloudflare-tunnel-เพื่อเปิด-web-server-บน-raspberry-pi-จาก-internet">สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="02-ssh-cloudflare-tunnel.html">ถัดไป: 02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a></nav>
+<h2 id="ความสัมพันธ์กับเอกสารอื่น">ความสัมพันธ์กับเอกสารอื่น</h2>
+<p>เอกสารนี้เป็นพื้นฐานสำหรับการเปิดบริการบน <code>kathu</code> ผ่าน Internet โดยใช้ Cloudflare Tunnel</p>
+<ul>
+<li><a href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a></li>
+<li><a href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a></li>
+<li><a href="05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a></li>
+<li><a href="04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a></li>
+</ul>
+<aside class="callout callout-note">
+<div class="callout-title">รูปแบบ Tunnel ที่ใช้ในเอกสาร</div>
+<p>เอกสารชุดนี้ใช้ <strong>Locally-managed Tunnel</strong> โดยเก็บ ingress configuration ไว้ที่ <code>/etc/cloudflared/config.yml</code> เพื่อให้คุณเห็นและตรวจสอบ routing ได้จาก command line โดยตรง ส่วน Cloudflare แนะนำ <strong>Remotely-managed Tunnel</strong> สำหรับระบบทั่วไปที่ต้องการจัดการ configuration ผ่าน Dashboard, API หรือ Terraform<br><br>เอกสารอ้างอิง: <a href="https://developers.cloudflare.com/tunnel/features/locally-managed-tunnels/">Locally-managed tunnels</a></p>
+</aside>
+<h2 id="เป้าหมาย">เป้าหมาย</h2>
+<p>เปิด Web Server ที่มีอยู่แล้วบน Raspberry Pi ให้สามารถเข้าจาก Internet โดยไม่ต้องใช้ Public IP, DDNS หรือ Port Forwarding</p>
+<p>ตัวอย่างที่ใช้ในเอกสาร:</p>
+<table>
+<thead><tr>
+<th>รายการ</th>
+<th>ค่า</th>
+</tr></thead><tbody>
+<tr>
+<td>Domain</td>
+<td><code>vodun.cc</code></td>
+</tr>
+<tr>
+<td>Pi hostname</td>
+<td><code>kathu</code></td>
+</tr>
+<tr>
+<td>Public URL</td>
+<td><code>https://pi.vodun.cc</code></td>
+</tr>
+<tr>
+<td>Origin type</td>
+<td>Web service ที่ฟังอยู่บน Pi</td>
+</tr>
+<tr>
+<td>Origin URL</td>
+<td><code>http://localhost:80</code></td>
+</tr>
+</tbody></table>
+<aside class="callout callout-info">
+<div class="callout-title">ชื่อเหล่านี้เป็นคนละค่า</div>
+<p><code>kathu</code> ในช่อง <strong>Pi hostname</strong> คือชื่อเครื่องที่ผู้ดูแลตั้งขึ้น ส่วน Tunnel name และ public hostname เป็นชื่อที่กำหนดแยกกัน ใน เอกสารนี้ตั้งให้คล้ายกันเพื่อให้จำง่าย ดูคำอธิบายทั้งหมดที่ <a href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html#ชื่อที่ใช้ในเอกสาร">ชื่อที่ใช้ในเอกสาร</a></p>
+</aside>
+<h2 id="สถาปัตยกรรม">สถาปัตยกรรม</h2>
+<pre class="language-text"><code>ผู้ใช้จาก Internet
+       │
+       │ HTTPS
+       ▼
+https://pi.vodun.cc
+       │
+       ▼
+ Cloudflare Edge
+       │
+       │ Cloudflare Tunnel
+       │
+       ▼
+ cloudflared
+ Raspberry Pi: kathu
+       │
+       ▼
+http://localhost:80
+       │
+       ▼
+  Web service
+       │
+       ▼
+Local application</code></pre>
+<h2 id="1-ตรวจสอบ-origin-web-service">1. ตรวจสอบ Origin Web Service</h2>
+<p>ไฟล์นี้ถือว่า web service ถูกติดตั้งไว้แล้ว ขั้นนี้ตรวจเพียงว่า origin ที่จะเอาเข้า Cloudflare Tunnel ทำงานจริงบน Pi</p>
+<p>ตรวจ service ที่ใช้จริง เช่น <code>nginx</code> หรือ service อื่น:</p>
+<pre class="language-bash"><code>systemctl status &lt;WEB-SERVICE&gt; --no-pager</code></pre>
+<p>ทดสอบจาก Pi โดยตรง:</p>
+<pre class="language-bash"><code>curl http://localhost</code></pre>
+<p>หรือถ้า origin อยู่ port อื่น ให้เปลี่ยน port ให้ตรงกับบริการจริง:</p>
+<pre class="language-bash"><code>curl -I http://localhost:&lt;PORT&gt;</code></pre>
+<p>ถ้ายังไม่มี web service ให้ติดตั้งและตั้งค่าใน Knowledge Base หรือ Lab ของบริการนั้นก่อน แล้วจึงกลับมาทำเฉพาะส่วน Cloudflare ในไฟล์นี้</p>
+<h2 id="2-ติดตั้ง-cloudflared">2. ติดตั้ง cloudflared</h2>
+<p>สร้าง directory สำหรับ key:</p>
+<pre class="language-bash"><code>sudo mkdir -p --mode=0755 /usr/share/keyrings</code></pre>
+<p>เพิ่ม Cloudflare signing key:</p>
+<pre class="language-bash"><code>curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg \
+  | sudo tee /usr/share/keyrings/cloudflare-main.gpg &gt;/dev/null</code></pre>
+<p>เพิ่ม Cloudflare repository:</p>
+<pre class="language-bash"><code>echo &quot;deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main&quot; \
+  | sudo tee /etc/apt/sources.list.d/cloudflared.list</code></pre>
+<p>ติดตั้ง:</p>
+<pre class="language-bash"><code>sudo apt update
+sudo apt install cloudflared -y</code></pre>
+<p>ตรวจสอบ:</p>
+<pre class="language-bash"><code>cloudflared --version</code></pre>
+<p>ตัวอย่างผลที่ได้:</p>
+<pre class="language-bash"><code>cloudflared version 2026.9.3</code></pre>
+<h2 id="3-ทดลอง-quick-tunnel">3. ทดลอง Quick Tunnel</h2>
+<p>ขั้นนี้ยังไม่ต้องมี Domain หรือ Cloudflare Account</p>
+<p>รัน:</p>
+<pre class="language-bash"><code>cloudflared tunnel --url http://localhost:80</code></pre>
+<p>Cloudflare จะสร้าง URL ชั่วคราว เช่น:</p>
+<p>https://xxxxx.trycloudflare.com</p>
+<p>นำ URL ไปเปิดจาก Internet เช่น โทรศัพท์ที่ใช้ 4G/5G</p>
+<p>ถ้าเห็นหน้า Web ของ Pi แสดงว่า</p>
+<pre class="language-text"><code>Pi
+ │
+ └── Internet
+       │
+       └── Cloudflare Tunnel</code></pre>
+<p>สามารถทำงานผ่านเครือข่ายปัจจุบันได้</p>
+<p>ข้อควรทราบ:</p>
+<p>Quick Tunnel</p>
+<ul>
+<li>URL ถูกสุ่ม</li>
+<li>URL ไม่ถาวร</li>
+<li>เมื่อหยุด cloudflared URL จะหยุดทำงาน</li>
+<li>เหมาะสำหรับทดลองเท่านั้น</li>
+</ul>
+<p>หยุดด้วย:</p>
+<pre class="language-bash"><code>Ctrl + C</code></pre>
+<h2 id="4-login-cloudflare">4. Login Cloudflare</h2>
+<p>ขั้นต่อไปเป็นการสร้าง Named Tunnel แบบถาวร</p>
+<p>ต้องมี:</p>
+<ul>
+<li>Cloudflare Account</li>
+<li>Domain ที่จัดการ DNS ด้วย Cloudflare</li>
+</ul>
+<p>Login:</p>
+<pre class="language-bash"><code>cloudflared tunnel login</code></pre>
+<p>คำสั่งจะแสดง URL จากนั้น:</p>
+<ol>
+<li>เปิด URL ด้วย Browser</li>
+<li>Login Cloudflare</li>
+<li>เลือก Domain</li>
+<li>กด Authorize</li>
+</ol>
+<p>จากนั้นตรวจสอบ:</p>
+<pre class="language-bash"><code>ls -la ~/.cloudflared/</code></pre>
+<p>ควรพบไฟล์ <code>~/.cloudflared/cert.pem</code></p>
+<aside class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p><code>cert.pem</code> เป็น credential ห้ามแจกหรือเผยแพร่</p>
+</aside>
+<h2 id="5-สร้าง-named-tunnel">5. สร้าง Named Tunnel</h2>
+<p>ตัวอย่างสร้าง Tunnel ชื่อ:</p>
+<p>kathu</p>
+<p>คำสั่ง:</p>
+<pre class="language-bash"><code>cloudflared tunnel create kathu</code></pre>
+<p>ตัวอย่างผล:</p>
+<p>Created tunnel kathu with id</p>
+<p>TUNNEL_UUID</p>
+<p>และจะสร้าง credentials file:</p>
+<p>~/.cloudflared/TUNNEL_UUID.json</p>
+<aside class="callout callout-warning">
+<div class="callout-title">WARNING</div>
+<p>ไฟล์ <code>.json</code> เป็น credential เช่นกัน ห้ามเผยแพร่</p>
+</aside>
+<h2 id="6-ตรวจสอบ-tunnel">6. ตรวจสอบ Tunnel</h2>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>ID                                    NAME
+TUNNEL_UUID kathu</code></pre>
+<p>ดูรายละเอียด:</p>
+<pre class="language-bash"><code>cloudflared tunnel info kathu</code></pre>
+<h2 id="7-สร้าง-dns-สำหรับ-tunnel">7. สร้าง DNS สำหรับ Tunnel</h2>
+<p>ต้องการ:</p>
+<p>pi.vodun.cc</p>
+<p>ให้ชี้ไปยัง Tunnel ชื่อ kathu</p>
+<p>ใช้:</p>
+<pre class="language-bash"><code>cloudflared tunnel route dns kathu pi.vodun.cc</code></pre>
+<p>ถ้าสำเร็จจะพบข้อความประมาณ:</p>
+<p>Added CNAME pi.vodun.cc which will route to this tunnel</p>
+<p>โครงสร้าง:</p>
+<pre class="language-text"><code>
+pi.vodun.cc
+       │
+       ▼
+Cloudflare DNS
+       │
+       ▼
+Tunnel: kathu
+</code></pre>
+<h2 id="8-สร้าง-cloudflare-tunnel-configuration">8. สร้าง Cloudflare Tunnel Configuration</h2>
+<p>ระบบ <code>kathu</code> กำหนดให้ systemd ใช้ config กลางที่:</p>
+<pre class="language-text"><code>/etc/cloudflared/config.yml</code></pre>
+<p>สร้าง directory และเปิดไฟล์:</p>
+<pre class="language-bash"><code>sudo mkdir -p /etc/cloudflared
+sudo nano /etc/cloudflared/config.yml</code></pre>
+<p>ใส่:</p>
+<pre class="language-yaml"><code>tunnel: TUNNEL_UUID
+credentials-file: /home/piuser/.cloudflared/TUNNEL_UUID.json
+
+ingress:
+  - hostname: pi.vodun.cc
+    service: http://localhost:80
+
+  - service: http_status:404</code></pre>
+<p>หมายเหตุ:</p>
+<p>Tunnel UUID ของแต่ละเครื่องไม่เหมือนกัน ต้องใช้ UUID ที่ได้จาก:</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<h2 id="9-ตรวจสอบ-configuration">9. ตรวจสอบ Configuration</h2>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel ingress validate</code></pre>
+<p>ถ้าถูกต้องควรได้:</p>
+<pre class="language-text"><code>Validating rules from /etc/cloudflared/config.yml
+OK</code></pre>
+<p>ตรวจว่า hostname จับคู่กับ ingress rule ที่ถูกต้อง:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml \
+  tunnel ingress rule https://pi.vodun.cc</code></pre>
+<h2 id="10-ทดลองรัน-named-tunnel">10. ทดลองรัน Named Tunnel</h2>
+<p>รัน:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel run kathu</code></pre>
+<p>ถ้าทำงานสำเร็จจะพบข้อความลักษณะ:</p>
+<pre class="language-text"><code>Registered tunnel connection</code></pre>
+<p>จากนั้นเปิด:</p>
+<p>https://pi.vodun.cc</p>
+<p>ถ้าเห็นหน้า web service แสดงว่าเส้นทางทั้งหมดทำงานแล้ว:</p>
+<pre class="language-text"><code>Internet
+   │
+   ▼
+pi.vodun.cc
+   │
+   ▼
+Cloudflare
+   │
+   ▼
+Tunnel: kathu
+   │
+   ▼
+cloudflared
+   │
+   ▼
+localhost:80
+   │
+   ▼
+Web service</code></pre>
+<h2 id="11-หยุดการทดสอบ-foreground">11. หยุดการทดสอบ Foreground</h2>
+<p>กด:</p>
+<pre class="language-bash"><code>Ctrl + C</code></pre>
+<p>เมื่อหยุดคำสั่งนี้ Tunnel จะหยุด</p>
+<p>ดังนั้นสำหรับใช้งานจริงต้องทำเป็น systemd service</p>
+<h2 id="12-ติดตั้ง-cloudflared-เป็น-service">12. ติดตั้ง cloudflared เป็น Service</h2>
+<p>ติดตั้ง service โดยระบุ config ที่ระบบจะใช้งานจริง:</p>
+<pre class="language-bash"><code>sudo cloudflared \
+  --config /etc/cloudflared/config.yml \
+  service install</code></pre>
+<p>จากนั้นเปิด service:</p>
+<pre class="language-bash"><code>sudo systemctl enable --now cloudflared</code></pre>
+<h2 id="13-ตรวจสอบ-service">13. ตรวจสอบ Service</h2>
+<pre class="language-bash"><code>systemctl status cloudflared --no-pager</code></pre>
+<p>ควรพบ:</p>
+<p>Active: active (running)</p>
+<p>ตรวจคำสั่งที่ systemd ใช้เริ่ม service:</p>
+<pre class="language-bash"><code>systemctl cat cloudflared</code></pre>
+<p>ใน <code>ExecStart</code> ต้องพบ:</p>
+<pre class="language-text"><code>--config /etc/cloudflared/config.yml</code></pre>
+<p>หากไม่พบ path นี้ อย่าแก้ config ต่อจนกว่าจะยืนยันว่า service ใช้ไฟล์ใด</p>
+<p>ตรวจ Tunnel:</p>
+<pre class="language-bash"><code>cloudflared tunnel info kathu</code></pre>
+<h2 id="14-ทดสอบหลังติดตั้ง-service">14. ทดสอบหลังติดตั้ง Service</h2>
+<p>โดยไม่ต้องรัน:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel run kathu</code></pre>
+<p>ให้เปิด:</p>
+<p>https://pi.vodun.cc</p>
+<p>ถ้าเข้าได้ แสดงว่า systemd service ทำงานถูกต้อง</p>
+<h2 id="15-ทดสอบหลัง-reboot">15. ทดสอบหลัง Reboot</h2>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Pi boot เสร็จ ไม่ต้องรัน cloudflared ด้วยตนเอง</p>
+<p>ทดลองเปิด:</p>
+<p>https://pi.vodun.cc</p>
+<p>ถ้าเข้าได้ แสดงว่าระบบทำงานอัตโนมัติสมบูรณ์</p>
+<h2 id="16-ตรวจสอบ-service-หลัง-reboot">16. ตรวจสอบ Service หลัง Reboot</h2>
+<pre class="language-bash"><code>systemctl status &lt;WEB-SERVICE&gt; --no-pager
+systemctl status cloudflared --no-pager</code></pre>
+<p>ตรวจ process:</p>
+<pre class="language-bash"><code>ps aux | grep cloudflared</code></pre>
+<h2 id="17-ตรวจสอบ-log">17. ตรวจสอบ Log</h2>
+<p>ดู log ของ cloudflared:</p>
+<pre class="language-bash"><code>journalctl -u cloudflared</code></pre>
+<p>ดูแบบล่าสุด:</p>
+<pre class="language-bash"><code>journalctl -u cloudflared -n 50</code></pre>
+<p>ดูแบบ Real-time:</p>
+<pre class="language-bash"><code>journalctl -u cloudflared -f</code></pre>
+<h2 id="18-คำสั่งสำคัญที่ควรรู้">18. คำสั่งสำคัญที่ควรรู้</h2>
+<p>ตรวจ version:</p>
+<pre class="language-bash"><code>cloudflared --version</code></pre>
+<p>ดู Tunnel:</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>ดูรายละเอียด Tunnel:</p>
+<pre class="language-bash"><code>cloudflared tunnel info kathu</code></pre>
+<p>ตรวจ config:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel ingress validate</code></pre>
+<p>รัน Tunnel ด้วยตนเอง:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel run kathu</code></pre>
+<p>ตรวจ service:</p>
+<pre class="language-bash"><code>systemctl status cloudflared</code></pre>
+<p>Restart:</p>
+<pre class="language-bash"><code>sudo systemctl restart cloudflared</code></pre>
+<p>Stop:</p>
+<pre class="language-bash"><code>sudo systemctl stop cloudflared</code></pre>
+<p>Start:</p>
+<pre class="language-bash"><code>sudo systemctl start cloudflared</code></pre>
+<p>ดู log:</p>
+<pre class="language-bash"><code>journalctl -u cloudflared -f</code></pre>
+<h2 id="19-ไฟล์สำคัญ">19. ไฟล์สำคัญ</h2>
+<table>
+<thead><tr>
+<th>ไฟล์</th>
+<th>Path</th>
+<th>หน้าที่</th>
+</tr></thead><tbody>
+<tr>
+<td>Cloudflare certificate</td>
+<td><code>~/.cloudflared/cert.pem</code></td>
+<td>ยืนยันสิทธิ์จัดการ Tunnel ใน Account</td>
+</tr>
+<tr>
+<td>Tunnel credential</td>
+<td><code>~/.cloudflared/TUNNEL_UUID.json</code></td>
+<td>Credential ประจำ Tunnel</td>
+</tr>
+<tr>
+<td>Tunnel configuration</td>
+<td><code>/etc/cloudflared/config.yml</code></td>
+<td>กำหนด Tunnel และ ingress rules</td>
+</tr>
+</tbody></table>
+<h2 id="20-สิ่งที่-cloudflare-tunnel-ไม่ต้องใช้">20. สิ่งที่ Cloudflare Tunnel ไม่ต้องใช้</h2>
+<p>ไม่ต้องมี:</p>
+<ul>
+<li>Public IPv4</li>
+<li>Fixed IP</li>
+<li>Dynamic DNS</li>
+<li>Port Forwarding</li>
+<li>สิทธิ์ตั้งค่า Router</li>
+<li>Inbound Port จาก Internet</li>
+</ul>
+<p>เพราะ cloudflared เป็นฝ่ายสร้าง connection ออกจาก Pi:</p>
+<pre class="language-text"><code>Raspberry Pi
+     │
+     │ Outbound Tunnel
+     ▼
+ Cloudflare
+     ▲
+     │ HTTPS
+     │
+ Internet User</code></pre>
+<p>ดังนั้นสามารถใช้ได้แม้ Pi อยู่หลัง:</p>
+<ul>
+<li>NAT</li>
+<li>CGNAT</li>
+<li>4G/5G Router</li>
+<li>Wi-Fi มหาวิทยาลัย</li>
+</ul>
+<p>ตราบใดที่เครือข่ายนั้นอนุญาตให้ cloudflared เชื่อมต่อออกไปยัง Cloudflare</p>
+<h2 id="21-quick-tunnel-vs-named-tunnel">21. Quick Tunnel vs Named Tunnel</h2>
+<table>
+<thead><tr>
+<th>หัวข้อ</th>
+<th>Quick Tunnel</th>
+<th>Named Tunnel</th>
+</tr></thead><tbody>
+<tr>
+<td>วิธีเริ่ม</td>
+<td><code>cloudflared tunnel --url http://localhost:80</code></td>
+<td>ใช้ Named Tunnel และไฟล์ <code>/etc/cloudflared/config.yml</code></td>
+</tr>
+<tr>
+<td>Public hostname</td>
+<td>สุ่มเป็น <code>xxxxx.trycloudflare.com</code></td>
+<td>กำหนดเอง เช่น <code>pi.vodun.cc</code></td>
+</tr>
+<tr>
+<td>อายุการใช้งาน</td>
+<td>ชั่วคราว หยุดเมื่อ Process หยุด</td>
+<td>ทำงานต่อเนื่องผ่าน systemd</td>
+</tr>
+<tr>
+<td>เหมาะกับ</td>
+<td>ทดลอง, ตรวจ Network, Demo ชั่วคราว</td>
+<td>Lab จริง, Dashboard, IoT Web Application, Production/Test Server</td>
+</tr>
+</tbody></table>
+<h2 id="22-architecture-สุดท้ายของ-lab">22. Architecture สุดท้ายของ Lab</h2>
+<p>เส้นทางการเชื่อมต่อสุดท้าย:</p>
+<pre class="language-text"><code>Internet user
+      │
+      │ HTTPS
+      ▼
+pi.vodun.cc
+      │
+      ▼
+Cloudflare Edge
+      │
+      │ Cloudflare Tunnel: kathu
+      ▼
+cloudflared on Raspberry Pi
+      │
+      ▼
+http://localhost:80
+      │
+      ▼
+Web service / Local application</code></pre>
+<h2 id="23-สำหรับ-pi-หลายเครื่อง">23. สำหรับ Pi หลายเครื่อง</h2>
+<p>สามารถใช้ Domain เดียว แล้วแยก subdomain:</p>
+<table>
+<thead><tr>
+<th>Hostname</th>
+<th>Tunnel</th>
+<th>Raspberry Pi</th>
+</tr></thead><tbody>
+<tr>
+<td><code>pi.vodun.cc</code></td>
+<td><code>kathu</code></td>
+<td>Pi <code>kathu</code></td>
+</tr>
+<tr>
+<td><code>kata.vodun.cc</code></td>
+<td><code>kata</code></td>
+<td>Pi <code>kata</code></td>
+</tr>
+<tr>
+<td><code>karon.vodun.cc</code></td>
+<td><code>karon</code></td>
+<td>Pi <code>karon</code></td>
+</tr>
+<tr>
+<td><code>kathu.vodun.cc</code></td>
+<td><code>kathu</code></td>
+<td>Pi <code>kathu</code></td>
+</tr>
+</tbody></table>
+<p>ตัวอย่าง:</p>
+<p><code>Internet → Cloudflare → Hostname → Tunnel → Raspberry Pi</code></p>
+<p>แต่ละ Pi สามารถอยู่คนละ Network ได้ ตัวอย่าง:</p>
+<table>
+<thead><tr>
+<th>Raspberry Pi</th>
+<th>Network</th>
+</tr></thead><tbody>
+<tr>
+<td><code>kathu</code></td>
+<td>University Wi-Fi หรือ Home Internet</td>
+</tr>
+<tr>
+<td><code>kata</code></td>
+<td>University LAN</td>
+</tr>
+<tr>
+<td><code>karon</code></td>
+<td>4G Router</td>
+</tr>
+</tbody></table>
+<p>ไม่จำเป็นต้องอยู่ LAN เดียวกัน</p>
+<h2 id="ข้อควรระวังด้าน-security">ข้อควรระวังด้าน Security</h2>
+<p>ห้ามเผยแพร่:</p>
+<ul>
+<li><code>~/.cloudflared/cert.pem</code></li>
+<li><code>~/.cloudflared/TUNNEL_UUID.json</code></li>
+</ul>
+<p>อย่านำไฟล์เหล่านี้ขึ้น:</p>
+<ul>
+<li>GitHub</li>
+<li>Google Drive แบบ Public</li>
+<li>Web Server</li>
+<li>ระบบแชร์ไฟล์สาธารณะ</li>
+<li>อย่าส่งให้กลุ่มอื่น</li>
+</ul>
+<p>Cloudflare Tunnel ทำให้ Web Service เข้าถึงจาก Internet ได้ ดังนั้น Application ที่มีความสามารถควบคุมอุปกรณ์หรือข้อมูลสำคัญ ควรเพิ่ม Authentication/Cloudflare Access</p>
+<p>โดยเฉพาะ:</p>
+<ul>
+<li>Node-RED Editor</li>
+<li>Admin Page</li>
+<li>Device Control</li>
+<li>MQTT Management Interface</li>
+</ul>
+<p>ไม่ควรเปิด Public โดยไม่มี Authentication</p>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05 - Multi-Pi Cloudflare Architecture</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-teaching-guide/03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="../iot-lab-teaching-guide/04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="../iot-lab-teaching-guide/05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="../iot-lab-teaching-guide/06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="../iot-lab-teaching-guide/08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="../iot-lab-teaching-guide/10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="../iot-lab-teaching-guide/11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="../iot-lab-teaching-guide/12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="../iot-lab-teaching-guide/13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="../iot-lab-teaching-guide/14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="../iot-lab-teaching-guide/15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="../iot-lab-teaching-guide/16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="../iot-lab-teaching-guide/17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="../iot-lab-teaching-guide/19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="../iot-lab-teaching-guide/20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="../iot-lab-teaching-guide/23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="../iot-lab-teaching-guide/25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="../iot-lab-teaching-guide/26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="active" href="05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="multi-pi-cloudflare-architecture">Multi-Pi Cloudflare Architecture</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="04-root-domain-และ-www-redirect.html">ก่อนหน้า: 04 - Root Domain และ WWW Redirect</a><a class="home" href="../index.html">กลับหน้าแรก</a></nav>
+<p>แนวทางจัดการ Raspberry Pi หลายเครื่องที่อยู่ต่างสถานที่และต่างเครือข่าย แต่ใช้ subdomain ภายใต้โดเมน <code>vodun.cc</code> ร่วมกัน โดยไม่ต้องมี Public IPv4 หรือทำ Port Forwarding</p>
+<h2 id="ภาพรวม">ภาพรวม</h2>
+<pre class="language-text"><code>                    Internet
+                       |
+                  Cloudflare
+                       |
+                    vodun.cc
+                       |
+        +--------------+--------------+
+        |              |              |
+ ranee.vodun.cc  arjun.vodun.cc  kata.vodun.cc
+        |              |              |
+ Tunnel: ranee   Tunnel: arjun   Tunnel: kata
+        |              |              |
+      RPi #1          RPi #2          RPi #3
+     Location A      Location B      Location C</code></pre>
+<p>Raspberry Pi แต่ละเครื่องไม่จำเป็นต้องอยู่ LAN เดียวกัน ขอเพียงเชื่อมต่อ Internet ได้ และ <code>cloudflared</code> สามารถสร้าง outbound connection ไปยัง Cloudflare</p>
+<h2 id="หนึ่ง-pi-ต่อหนึ่ง-tunnel">หนึ่ง Pi ต่อหนึ่ง Tunnel</h2>
+<p>แนะนำให้สร้าง Cloudflare Tunnel แยกสำหรับ Raspberry Pi แต่ละเครื่อง:</p>
+<pre class="language-text"><code>Cloudflare Account
+|
++-- Tunnel: ranee
+|      +-- Pi: ranee
+|
++-- Tunnel: arjun
+|      +-- Pi: arjun
+|
++-- Tunnel: kata
+|      +-- Pi: kata
+|
++-- Tunnel: karon
+|      +-- Pi: karon
+|
++-- Tunnel: kathu
+       +-- Pi: kathu</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>ตรวจสถานะและแก้ปัญหาเป็นรายเครื่อง</li>
+<li>ปิดหรือย้ายเครื่องหนึ่งได้โดยไม่กระทบเครื่องอื่น</li>
+<li>ถอนสิทธิ์ Tunnel เฉพาะเครื่องได้</li>
+<li>แยก credential และลดผลกระทบเมื่อ credential เครื่องหนึ่งรั่ว</li>
+<li>เหมาะกับ Lab ที่แจก Raspberry Pi ให้ผู้ใช้หลายคน</li>
+</ul>
+<h2 id="หนึ่ง-pi-ใช้หลาย-subdomain">หนึ่ง Pi ใช้หลาย Subdomain</h2>
+<p>Tunnel หนึ่งตัวสามารถกำหนด ingress หลาย hostname เพื่อส่งไปยังหลายบริการบน Pi เดียวกัน</p>
+<p>ตัวอย่างเครื่อง <code>ranee</code>:</p>
+<table>
+<thead><tr>
+<th>Public hostname</th>
+<th>Origin บน Pi</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ranee.vodun.cc</code></td>
+<td>Nginx <code>http://localhost:80</code></td>
+</tr>
+<tr>
+<td><code>node-red-ranee.vodun.cc</code></td>
+<td>Node-RED <code>http://localhost:1880</code></td>
+</tr>
+<tr>
+<td><code>ssh-ranee.vodun.cc</code></td>
+<td>SSH <code>ssh://localhost:22</code></td>
+</tr>
+</tbody></table>
+<p>รูปแบบเดียวกันใช้กับเครื่องอื่นได้ เช่น:</p>
+<table>
+<thead><tr>
+<th>Raspberry Pi</th>
+<th>Web</th>
+<th>Node-RED</th>
+<th>SSH</th>
+</tr></thead><tbody>
+<tr>
+<td><code>arjun</code></td>
+<td><code>arjun.vodun.cc</code></td>
+<td><code>node-red-arjun.vodun.cc</code></td>
+<td><code>ssh-arjun.vodun.cc</code></td>
+</tr>
+<tr>
+<td><code>kata</code></td>
+<td><code>kata.vodun.cc</code></td>
+<td><code>node-red-kata.vodun.cc</code></td>
+<td><code>ssh-kata.vodun.cc</code></td>
+</tr>
+</tbody></table>
+<h2 id="naming-convention">Naming Convention</h2>
+<table>
+<thead><tr>
+<th>ประเภท</th>
+<th>รูปแบบ</th>
+<th>ตัวอย่าง</th>
+</tr></thead><tbody>
+<tr>
+<td>Web หลัก</td>
+<td><code>{device}.vodun.cc</code></td>
+<td><code>ranee.vodun.cc</code></td>
+</tr>
+<tr>
+<td>Node-RED</td>
+<td><code>node-red-{device}.vodun.cc</code></td>
+<td><code>node-red-ranee.vodun.cc</code></td>
+</tr>
+<tr>
+<td>SSH</td>
+<td><code>ssh-{device}.vodun.cc</code></td>
+<td><code>ssh-ranee.vodun.cc</code></td>
+</tr>
+<tr>
+<td>Tunnel</td>
+<td><code>{device}</code></td>
+<td><code>ranee</code></td>
+</tr>
+<tr>
+<td>Setup AP</td>
+<td><code>{device}-setup</code></td>
+<td><code>ranee-setup</code></td>
+</tr>
+</tbody></table>
+<p>ใช้ชื่อ device เดียวกันกับ hostname และ Tunnel เมื่อทำได้ เพื่อให้อ่าน log และ Dashboard ง่าย</p>
+<h2 id="การย้าย-pi-ไปเครือข่ายใหม่">การย้าย Pi ไปเครือข่ายใหม่</h2>
+<p>Raspberry Pi แบบ headless อาจขาดการเชื่อมต่อเมื่อ Known Wi-Fi เดิมไม่มีอยู่ในสถานที่ใหม่:</p>
+<pre class="language-text"><code>Known Wi-Fi ไม่พบ
+        |
+        v
+Pi ไม่มี Internet
+        |
+        v
+cloudflared offline
+        |
+        v
+Remote SSH และ Node-RED ใช้ไม่ได้</code></pre>
+<p>จึงควรเตรียมทางกู้คืนอย่างน้อยหนึ่งทาง เช่น LAN แบบ DHCP, จอและคีย์บอร์ดชั่วคราว หรือ Setup AP fallback</p>
+<h2 id="wi-fi-setup-ap-fallback">Wi-Fi Setup AP Fallback</h2>
+<pre class="language-text"><code>                 Raspberry Pi boot
+                        |
+                        v
+                 NetworkManager
+                        |
+                 หา Known Wi-Fi
+                   /          \
+                 พบ           ไม่พบ
+                 |              |
+                 v              v
+              Connect       เปิด Setup AP
+                 |          ranee-setup
+                 |              |
+                 |       Notebook / Mobile
+                 |              |
+                 |       SSH 192.168.50.1
+                 |              |
+                 |       เพิ่ม Wi-Fi ใหม่
+                 +------+-------+
+                        |
+                        v
+                     Internet
+                        |
+                        v
+                   cloudflared</code></pre>
+<aside class="callout callout-important">
+<div class="callout-title">NetworkManager ไม่เปิด fallback AP ให้อัตโนมัติ</div>
+<p>ต้องสร้าง hotspot profile และติดตั้งกลไกตรวจ Known Wi-Fi เช่น systemd service หรือ script ก่อนจึงจะได้พฤติกรรมตาม diagram นี้ หากยังไม่ได้ติดตั้ง ให้ใช้ LAN หรือ local console เป็นช่องทางกู้คืน</p>
+</aside>
+<p>ค่าตัวอย่างของ Setup AP:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>ตัวอย่าง</th>
+</tr></thead><tbody>
+<tr>
+<td>SSID</td>
+<td><code>ranee-setup</code></td>
+</tr>
+<tr>
+<td>Pi address</td>
+<td><code>192.168.50.1</code></td>
+</tr>
+<tr>
+<td>Client address</td>
+<td><code>192.168.50.x</code></td>
+</tr>
+</tbody></table>
+<p>เมื่อ Setup AP ทำงาน:</p>
+<ol>
+<li>เชื่อม Notebook หรือ Mobile เข้ากับ <code>ranee-setup</code></li>
+<li>เข้า Pi ด้วย <code>ssh piuser@192.168.50.1</code></li>
+<li>ตรวจเครือข่ายที่พบด้วย <code>nmcli device wifi list</code></li>
+<li>เพิ่ม Wi-Fi profile ใหม่</li>
+<li>reboot และตรวจว่า Pi กลับมาออนไลน์</li>
+</ol>
+<p>เพิ่ม Wi-Fi โดยไม่ใส่รหัสผ่านไว้ใน command history:</p>
+<pre class="language-bash"><code>sudo nmcli --ask device wifi connect &quot;Hotel-WiFi&quot; \
+  ifname wlan0 \
+  name &quot;Hotel-WiFi&quot;</code></pre>
+<p>กำหนดให้เชื่อมอัตโนมัติและตั้ง priority:</p>
+<pre class="language-bash"><code>sudo nmcli connection modify &quot;Hotel-WiFi&quot; \
+  connection.autoconnect yes \
+  connection.autoconnect-priority 100
+
+sudo reboot</code></pre>
+<p>ถ้า <code>Hotel-WiFi</code> ใช้งานได้ Pi จะเชื่อม Internet และ <code>cloudflared</code> จะกลับมาออนไลน์ ถ้าเชื่อมไม่ได้ กลไก fallback ที่ติดตั้งไว้ต้องกลับมาเปิด Setup AP อีกครั้ง</p>
+<h2 id="ethernet-ใช้-dhcp">Ethernet ใช้ DHCP</h2>
+<p>แนะนำให้ปล่อย <code>eth0</code> รับค่าจาก DHCP แทนการกำหนด maintenance IP แบบคงที่:</p>
+<pre class="language-text"><code>Internet
+   |
+ Router
+   |
+   | DHCP
+   v
+ eth0
+   |
+ Raspberry Pi</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>นำ Pi ไปเสียบ Router หรือ Switch แห่งใหม่ได้ง่าย</li>
+<li>ลดปัญหา static IP อยู่คนละ subnet</li>
+<li>ใช้ LAN ออก Internet ได้โดยไม่แก้ configuration รายสถานที่</li>
+<li>แยกบทบาท LAN ออกจาก Wi-Fi Setup AP ชัดเจน</li>
+</ul>
+<p>ตรวจ interface, address และเส้นทางออก Internet:</p>
+<pre class="language-bash"><code>nmcli device status
+ip -br addr
+ip route get 8.8.8.8</code></pre>
+<h2 id="ลำดับการเลือกเครือข่าย">ลำดับการเลือกเครือข่าย</h2>
+<pre class="language-text"><code>Raspberry Pi
+|
++-- eth0
+|     +-- DHCP
+|          +-- มี LAN -&gt; Network / Internet
+|
++-- wlan0
+      +-- พบ Known Wi-Fi -&gt; Connect
+      |
+      +-- ไม่พบ Known Wi-Fi -&gt; Setup AP: ranee-setup</code></pre>
+<p>ควรกำหนด policy และ metric ให้ชัดเจนเมื่อ LAN กับ Wi-Fi เชื่อมพร้อมกัน ตรวจเส้นทางที่ระบบเลือกจริงด้วย <code>ip route get 8.8.8.8</code></p>
+<h2 id="การควบคุมจากส่วนกลาง">การควบคุมจากส่วนกลาง</h2>
+<p>เจ้าของ Cloudflare account และ DNS zone <code>vodun.cc</code> ยังคงควบคุมสิทธิ์จากส่วนกลางได้</p>
+<h3 id="ยกเลิก-subdomain">ยกเลิก Subdomain</h3>
+<p>ลบ DNS/hostname เช่น <code>arjun.vodun.cc</code>, <code>node-red-arjun.vodun.cc</code> หรือ <code>ssh-arjun.vodun.cc</code> บริการจะเข้าไม่ได้ผ่านชื่อเดิม แม้ Pi ยังรัน <code>cloudflared</code></p>
+<h3 id="ยกเลิก-tunnel-ของเครื่อง">ยกเลิก Tunnel ของเครื่อง</h3>
+<p>เมื่อออกแบบหนึ่ง Pi ต่อหนึ่ง Tunnel สามารถ revoke หรือลบ Tunnel <code>arjun</code> โดยไม่กระทบ Tunnel <code>ranee</code> และ <code>kata</code></p>
+<h3 id="ปิดเฉพาะบริการ">ปิดเฉพาะบริการ</h3>
+<p>ลบเฉพาะ route <code>ssh-arjun.vodun.cc</code> เพื่อปิด Remote SSH โดยยังคง Web หรือ Node-RED ของเครื่องเดิมไว้ได้</p>
+<h2 id="การแยก-credential">การแยก Credential</h2>
+<p>ไม่ควรให้ผู้ใช้ Raspberry Pi ทั่วไปเข้าถึง:</p>
+<ul>
+<li>Cloudflare account หลัก</li>
+<li>DNS zone ของ <code>vodun.cc</code></li>
+<li>Global API Key</li>
+<li>credential ของ Tunnel เครื่องอื่น</li>
+</ul>
+<p>แต่ละเครื่องควรได้รับเฉพาะ token หรือ credential ที่จำเป็นสำหรับ Tunnel ของตนเอง:</p>
+<pre class="language-text"><code>                 Cloudflare Account
+                 เจ้าของ vodun.cc
+                        |
+          +-------------+-------------+
+          |             |             |
+     Tunnel: ranee Tunnel: arjun Tunnel: kata
+          |             |             |
+        Pi #1         Pi #2         Pi #3</code></pre>
+<h2 id="device-lifecycle">Device Lifecycle</h2>
+<pre class="language-text"><code>สร้าง Pi
+   |
+ตั้ง hostname
+   |
+สร้าง Tunnel เฉพาะเครื่อง
+   |
+กำหนด Subdomain
+   |
+นำไปใช้งานหรือย้ายสถานที่
+   |
+   +-- Known Wi-Fi -&gt; Connect
+   +-- ไม่พบ -&gt; Setup AP / LAN recovery
+   |
+หมดโครงการหรือหมดสิทธิ์
+   |
+   +-- ยกเลิก Subdomain
+   +-- Revoke / Delete Tunnel</code></pre>
+<h2 id="architecture-สำหรับ-iot-lab">Architecture สำหรับ IoT Lab</h2>
+<pre class="language-text"><code>                         Internet
+                            |
+                       Cloudflare
+                            |
+                         vodun.cc
+                            |
+       +--------------------+--------------------+
+       |                    |                    |
+  Tunnel: ranee        Tunnel: arjun        Tunnel: kata
+       |                    |                    |
+       v                    v                    v
+    Pi ranee             Pi arjun             Pi kata
+       |                    |                    |
+   +---+----+           +---+----+           +---+----+
+   |        |           |        |           |        |
+Node-RED   SSH       Node-RED   SSH       Node-RED   SSH
+   |                    |                    |
+Mosquitto             Mosquitto             Mosquitto</code></pre>
+<p>Pi แต่ละเครื่องใช้ <code>eth0</code> แบบ DHCP, จำ Known Wi-Fi ได้หลายเครือข่าย และมี Setup AP เป็นช่องทางกู้คืนเมื่อกลไก fallback ถูกติดตั้งแล้ว ส่วน Cloudflare Tunnel และ credential แยกเป็นรายเครื่อง</p>
+<h2 id="สรุป">สรุป</h2>
+<ol>
+<li>ใช้โดเมนกลาง <code>vodun.cc</code> และตั้ง subdomain แยกตามอุปกรณ์และบริการ</li>
+<li>ใช้หลักหนึ่ง Pi ต่อหนึ่ง Cloudflare Tunnel</li>
+<li>แยก Tunnel credential รายเครื่อง</li>
+<li>Pi หนึ่งเครื่องใช้หลาย subdomain ได้</li>
+<li>ปล่อย <code>eth0</code> รับ DHCP เพื่อเคลื่อนย้ายข้ามเครือข่ายได้ง่าย</li>
+<li>เตรียม Known Wi-Fi หลายเครือข่ายและช่องทางกู้คืนเมื่อ Wi-Fi ใช้ไม่ได้</li>
+<li>เมื่อ Internet กลับมา <code>cloudflared</code> จะสร้าง outbound connection ใหม่</li>
+<li>เจ้าของโดเมนควบคุม DNS, service route และ Tunnel lifecycle จากส่วนกลาง</li>
+</ol>
+<aside class="callout callout-summary">
+<div class="callout-title">แนวคิดสำคัญ</div>
+<p>Pi สามารถย้ายไปอยู่ที่ใดก็ได้ตราบใดที่เชื่อมต่อ Internet ได้ ขณะที่เจ้าของโดเมนยังควบคุมสิทธิ์การเข้าถึงจากส่วนกลางผ่าน Cloudflare</p>
+</aside>
+<h2 id="notes-ที่เกี่ยวข้อง">Notes ที่เกี่ยวข้อง</h2>
+<ul>
+<li><a href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a></li>
+<li><a href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a></li>
+<li><a href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a></li>
+<li><a href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">Raspberry Pi Network and Wi-Fi</a></li>
+<li><a href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">Raspberry Pi IoT Architecture</a></li>
+</ul>
+<p>กลับไป <a href="../index.html">IoT Lab Overview</a></p>
+    </main>
+  </div>
+</body>
+</html>

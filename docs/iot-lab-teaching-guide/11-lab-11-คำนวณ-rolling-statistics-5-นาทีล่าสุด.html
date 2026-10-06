@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="active" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">ก่อนหน้า: LAB 10 - สืบค้น Sensor Data ด้วย SQL</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">ถัดไป: LAB 12 - แยก SQLite Write และ Statistics Flow</a></nav>
+<h2 id="11-1-แนวคิดของ-lab">11.1 แนวคิดของ LAB</h2>
+<p>LAB นี้คำนวณสถิติจากข้อมูลช่วงเวลาล่าสุด เช่น 5 นาทีล่าสุด แทนการคำนวณจากข้อมูลทั้งหมดใน database</p>
+<pre class="language-text"><code>Historical data ทั้งหมด = ภาพรวมระยะยาว
+Rolling 5 minutes      = สถานะล่าสุดของระบบ</code></pre>
+<p>Rolling Statistics เป็นพื้นฐานของระบบ monitoring เพราะช่วยตอบว่า “ตอนนี้ระบบกำลังมีแนวโน้มอย่างไร” ไม่ใช่แค่ค่า sensor ล่าสุดค่าเดียว</p>
+<h2 id="11-2-วัตถุประสงค์">11.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>เขียน SQL สำหรับข้อมูล 5 นาทีล่าสุด</li>
+<li>คำนวณ count, average, min และ max</li>
+<li>ใช้ Node-RED trigger query เป็นช่วงเวลา</li>
+<li>แสดงผล statistics บน Dashboard</li>
+<li>แสดง Historical Data จาก SQLite บน Chart</li>
+<li>เข้าใจความต่างระหว่าง latest value และ rolling statistics</li>
+<li>เตรียมแนวคิดสำหรับ Rule &amp; Alert ใน LAB 13</li>
+</ul>
+<h2 id="11-3-architecture">11.3 Architecture</h2>
+<pre class="language-text"><code>SQLite sensor_data
+       |
+       | SELECT last 5 minutes
+       v
+Rolling Statistics
+       |
+       v
+Node-RED Dashboard</code></pre>
+<p>Flow ใน Node-RED:</p>
+<pre class="language-text"><code>[Inject every 10s]
+       |
+       v
+[Prepare Rolling SQL]
+       |
+       v
+[SQLite]
+       |
+       v
+[Format Statistics]
+       |
+       v
+[Dashboard Text / Table]</code></pre>
+<h2 id="11-4-sql-สำหรับ-5-นาทีล่าสุด">11.4 SQL สำหรับ 5 นาทีล่าสุด</h2>
+<pre class="language-sql"><code>SELECT
+  COUNT(*) AS records,
+  ROUND(AVG(temp), 2) AS avg_temp,
+  MIN(temp) AS min_temp,
+  MAX(temp) AS max_temp,
+  ROUND(AVG(humi), 2) AS avg_humi,
+  MIN(humi) AS min_humi,
+  MAX(humi) AS max_humi,
+  ROUND(AVG(light), 2) AS avg_light,
+  MIN(light) AS min_light,
+  MAX(light) AS max_light
+FROM sensor_data
+WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;);</code></pre>
+<p>ทดสอบจาก command line:</p>
+<pre class="language-bash"><code>sqlite3 /home/piuser/iot.db &quot;SELECT COUNT(*) FROM sensor_data WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;);&quot;</code></pre>
+<h2 id="11-5-สร้าง-inject-node">11.5 สร้าง Inject Node</h2>
+<p>ตั้งค่า Inject node:</p>
+<pre class="language-text"><code>Name: Every 10 seconds
+Repeat: interval
+Interval: 10 seconds
+Payload: timestamp หรือ empty</code></pre>
+<p>Inject node ทำหน้าที่เรียก query ซ้ำอัตโนมัติ ไม่ต้องรอ MQTT message ใหม่ทุกครั้ง</p>
+<h2 id="11-6-สร้าง-function-เตรียม-sql">11.6 สร้าง Function เตรียม SQL</h2>
+<p>เพิ่ม function node ชื่อ:</p>
+<pre class="language-text"><code>Prepare Rolling SQL</code></pre>
+<p>ใช้โค้ด:</p>
+<pre class="language-javascript"><code>msg.topic = `
+SELECT
+  COUNT(*) AS records,
+  ROUND(AVG(temp), 2) AS avg_temp,
+  MIN(temp) AS min_temp,
+  MAX(temp) AS max_temp,
+  ROUND(AVG(humi), 2) AS avg_humi,
+  MIN(humi) AS min_humi,
+  MAX(humi) AS max_humi,
+  ROUND(AVG(light), 2) AS avg_light,
+  MIN(light) AS min_light,
+  MAX(light) AS max_light
+FROM sensor_data
+WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;)
+`;
+
+return msg;</code></pre>
+<h2 id="11-7-ต่อ-sqlite-node">11.7 ต่อ SQLite Node</h2>
+<p>ตั้งค่า SQLite node:</p>
+<pre class="language-text"><code>Database: /home/piuser/iot.db
+SQL Query: msg.topic</code></pre>
+<p>หลัง query SQLite node จะคืนผลเป็น array:</p>
+<pre class="language-json"><code>[
+  {
+    &quot;records&quot;: 30,
+    &quot;avg_temp&quot;: 29.4,
+    &quot;min_temp&quot;: 25,
+    &quot;max_temp&quot;: 35,
+    &quot;avg_humi&quot;: 66.2,
+    &quot;min_humi&quot;: 55,
+    &quot;max_humi&quot;: 78,
+    &quot;avg_light&quot;: 1200.5,
+    &quot;min_light&quot;: 500,
+    &quot;max_light&quot;: 2100
+  }
+]</code></pre>
+<h2 id="11-8-format-ผลลัพธ์สำหรับ-dashboard">11.8 Format ผลลัพธ์สำหรับ Dashboard</h2>
+<p>เพิ่ม function node ชื่อ:</p>
+<pre class="language-text"><code>Format Rolling Statistics</code></pre>
+<p>ใช้โค้ด:</p>
+<pre class="language-javascript"><code>let row = msg.payload[0] || {};
+
+msg.payload =
+`Records: ${row.records || 0}\n` +
+`Temp avg/min/max: ${row.avg_temp ?? &quot;-&quot;} / ${row.min_temp ?? &quot;-&quot;} / ${row.max_temp ?? &quot;-&quot;}\n` +
+`Humi avg/min/max: ${row.avg_humi ?? &quot;-&quot;} / ${row.min_humi ?? &quot;-&quot;} / ${row.max_humi ?? &quot;-&quot;}\n` +
+`Light avg/min/max: ${row.avg_light ?? &quot;-&quot;} / ${row.min_light ?? &quot;-&quot;} / ${row.max_light ?? &quot;-&quot;}`;
+
+return msg;</code></pre>
+<p>ต่อเข้ากับ Text widget หรือ Template widget</p>
+<h2 id="11-9-query-ข้อมูลสำหรับ-history-chart">11.9 Query ข้อมูลสำหรับ History Chart</h2>
+<p>Statistics ให้ค่ารวมเพียงหนึ่ง record แต่ History Chart ต้องใช้ข้อมูลหลาย record เรียงตามเวลา ใช้ SQL ต่อไปนี้:</p>
+<pre class="language-sql"><code>SELECT
+  id,
+  created_at AS time_utc,
+  temp,
+  humi,
+  light
+FROM sensor_data
+WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;)
+ORDER BY created_at ASC;</code></pre>
+<p>SQLite node จะคืน <code>msg.payload</code> เป็น Array เรียงจากข้อมูลเก่าไปใหม่</p>
+<h2 id="11-10-แปลงข้อมูลสำหรับ-chart">11.10 แปลงข้อมูลสำหรับ Chart</h2>
+<p>เพิ่ม Function node หลัง SQLite node แล้วแปลงแต่ละ record เป็นหนึ่ง message สำหรับ <code>ui-chart</code>:</p>
+<pre class="language-javascript"><code>const rows = msg.payload;
+
+return [rows.map(row =&gt; ({
+    topic: &quot;Temperature History DB&quot;,
+    payload: row.temp,
+    timestamp: new Date(
+        row.time_utc.replace(&quot; &quot;, &quot;T&quot;) + &quot;Z&quot;
+    ).getTime()
+}))];</code></pre>
+<p><code>created_at</code> ใน LAB 08 เก็บเวลา UTC จึงเติม <code>Z</code> เพื่อบอก JavaScript ว่าค่านี้เป็น UTC จากนั้น Browser จะแสดงเวลาตาม timezone ของผู้ใช้</p>
+<p>Debug node ควรแสดงหลาย message โดยแต่ละ message มีรูปแบบดังนี้:</p>
+<pre class="language-text"><code>msg.topic     = &quot;Temperature History DB&quot;
+msg.payload   = ค่า temperature
+msg.timestamp = เวลาในรูป Unix milliseconds</code></pre>
+<h2 id="11-11-ตั้งค่า-history-chart">11.11 ตั้งค่า History Chart</h2>
+<p>เพิ่ม Chart widget สำหรับข้อมูลย้อนหลังและตั้งค่า:</p>
+<pre class="language-text"><code>Type          : Line
+Interpolation : Linear
+Action        : Append
+Point Style   : Circle
+Radius        : 2
+X-Axis        : Timescale
+Limit         : Last 5 Minutes
+Y             : 0-50
+Series        : msg.topic
+X             : msg.timestamp
+Y             : msg.payload</code></pre>
+<p>เมื่อกด Inject ระบบต้อง Query SQLite แล้วแสดง Temperature History ย้อนหลัง 5 นาทีบน Chart</p>
+<h2 id="11-12-history-และ-live-mqtt">11.12 History และ Live MQTT</h2>
+<p>Historical Data จาก SQLite และ Live Data จาก MQTT สามารถส่งเข้า Chart เดียวกันได้เมื่อใช้รูปแบบ message เดียวกัน:</p>
+<pre class="language-text"><code>SQLite History --------\
+                        +--&gt; Temperature Chart
+MQTT Live -------------/</code></pre>
+<p>รูปแบบกลางที่ทั้งสองเส้นทางต้องสร้างคือ:</p>
+<pre class="language-text"><code>msg.payload   = temperature
+msg.timestamp = timestamp ในหน่วย milliseconds</code></pre>
+<p>สำหรับ Live MQTT สามารถกำหนด timestamp ก่อนส่งเข้า Chart:</p>
+<pre class="language-javascript"><code>msg.timestamp = Date.now();
+return msg;</code></pre>
+<p>การรวม History กับ Live Data ต้องจัดการข้อมูลซ้ำ การล้าง Chart และความแตกต่างระหว่าง Append กับ Replace จึงให้ส่วนนี้เป็นกิจกรรมเพิ่มเติม ไม่ใช่เงื่อนไขหลักของ LAB</p>
+<h2 id="11-13-ตรวจกรณีไม่มีข้อมูล">11.13 ตรวจกรณีไม่มีข้อมูล</h2>
+<p>หยุด simulator แล้วรอเกิน 5 นาที จากนั้น query ใหม่ ผลที่ควรเข้าใจ:</p>
+<pre class="language-text"><code>records = 0
+avg/min/max อาจเป็น null</code></pre>
+<p>นี่คือสัญญาณว่าไม่มีข้อมูลล่าสุด ไม่ใช่ sensor วัดค่าเป็น 0</p>
+<h2 id="11-14-ปัญหาที่พบบ่อย">11.14 ปัญหาที่พบบ่อย</h2>
+<table>
+<thead><tr>
+<th>อาการ</th>
+<th>จุดตรวจ</th>
+</tr></thead><tbody>
+<tr>
+<td>records เป็น 0 ตลอด</td>
+<td>simulator ไม่ส่งข้อมูล หรือเวลาระบบผิด</td>
+</tr>
+<tr>
+<td>dashboard แสดง undefined</td>
+<td>ไม่ได้ตรวจ <code>msg.payload[0]</code></td>
+</tr>
+<tr>
+<td>query ช้า</td>
+<td>database โตมาก หรือไม่มี index เวลา</td>
+</tr>
+<tr>
+<td>ค่าเฉลี่ยไม่เปลี่ยน</td>
+<td>inject interval ไม่ทำงาน</td>
+</tr>
+<tr>
+<td>History Chart ไม่แสดง</td>
+<td>Function ไม่ได้คืน Array ของ messages หรือ timestamp ไม่ใช่ milliseconds</td>
+</tr>
+<tr>
+<td>เวลาใน Chart เหลื่อม</td>
+<td>ไม่ได้ระบุว่า <code>created_at</code> เป็น UTC ก่อนสร้าง JavaScript Date</td>
+</tr>
+</tbody></table>
+<h2 id="11-15-เพิ่ม-index-เพื่อ-query-เร็วขึ้น">11.15 เพิ่ม Index เพื่อ Query เร็วขึ้น</h2>
+<p>ถ้าข้อมูลเริ่มมาก ให้เพิ่ม index:</p>
+<pre class="language-sql"><code>CREATE INDEX IF NOT EXISTS idx_sensor_data_created_at
+ON sensor_data(created_at);</code></pre>
+<p>รันจาก command line:</p>
+<pre class="language-bash"><code>sqlite3 /home/piuser/iot.db &quot;CREATE INDEX IF NOT EXISTS idx_sensor_data_created_at ON sensor_data(created_at);&quot;</code></pre>
+<h2 id="11-16-checklist-ก่อนจบ-lab">11.16 Checklist ก่อนจบ LAB</h2>
+<ul>
+<li>query 5 นาทีล่าสุดได้</li>
+<li>Rolling Statistics แสดง count, avg, min, max</li>
+<li>Node-RED เรียก query ตามเวลาได้</li>
+<li>Dashboard แสดงผล statistics ได้</li>
+<li>History Chart แสดงข้อมูลจาก SQLite เรียงตามเวลาได้</li>
+<li>เข้าใจความหมายของ records = 0</li>
+</ul>
+<h2 id="11-17-งานส่ง-lab">11.17 งานส่ง LAB</h2>
+<p>ให้ส่ง:</p>
+<pre class="language-text"><code>1. SQL rolling 5 minutes
+2. ภาพ flow Inject -&gt; SQLite -&gt; Dashboard
+3. ผล statistics ขณะ simulator ทำงาน
+4. ผล statistics หลังหยุด simulator
+5. ภาพ History Chart ที่อ่านข้อมูลจาก SQLite
+6. อธิบายความต่างระหว่าง latest value, rolling statistics และ historical data</code></pre>
+<h2 id="11-18-เชื่อมไป-lab-ถัดไป">11.18 เชื่อมไป LAB ถัดไป</h2>
+<p>LAB 12 จะปรับโครงสร้าง flow ให้แยกงานเขียน database ออกจากงานอ่าน statistics เพื่อไม่ให้ผลจาก INSERT ไปรบกวน Dashboard</p>
+    </main>
+  </div>
+</body>
+</html>

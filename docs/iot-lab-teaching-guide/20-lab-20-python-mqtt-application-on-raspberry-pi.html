@@ -1,0 +1,1345 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 20 - Python MQTT Application on Raspberry Pi</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="active" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-20-python-mqtt-application-on-raspberry-pi">LAB 20 - Python MQTT Application on Raspberry Pi</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="19-lab-19-data-quality-valid-invalid-stale.html">ก่อนหน้า: LAB 19 - Data Quality: VALID / INVALID / STALE</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">ถัดไป: LAB 21 - systemd Service: Autonomous Python IoT Gateway</a></nav>
+<h2 id="20-1-แนวคิดของ-lab">20.1 แนวคิดของ LAB</h2>
+<p>จนถึง LAB 19 เราใช้</p>
+<pre class="language-text"><code>Node-RED</code></pre>
+<p>เป็น Processing Layer หลักของ Raspberry Pi Architecture เดิม</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Mosquitto
+   ↓
+Node-RED
+   │
+   ├── JSON Parsing
+   ├── Data Validation
+   ├── Rule Processing
+   ├── Dashboard
+   └── MQTT Publish</code></pre>
+<p>LAB 20 จะเปลี่ยน Processing Layer บางส่วนจาก Node-RED มาเป็น</p>
+<pre class="language-text"><code>Python Application</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Mosquitto
+   ↓
+Python Application
+   │
+   ├── Subscribe
+   ├── JSON Parsing
+   ├── Device Identification
+   ├── Data Validation
+   ├── Rule Processing
+   └── Publish</code></pre>
+<p>จุดประสงค์ไม่ใช่การเลิกใช้ Node-RED แต่เป็นการทำความเข้าใจว่า</p>
+<pre class="language-text"><code>Node-RED</code></pre>
+<p>เป็นเครื่องมือหนึ่งสำหรับสร้าง IoT Application ส่วนแกนจริงของระบบคือ</p>
+<pre class="language-text"><code>MQTT
+  +
+Application Logic</code></pre>
+<p>Application Logic สามารถสร้างด้วยภาษาโปรแกรม เช่น Python ได้</p>
+<h2 id="20-2-วัตถุประสงค์">20.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>สร้าง Python Virtual Environment</li>
+<li>ติดตั้ง MQTT Library</li>
+<li>เชื่อม Python กับ Mosquitto Broker</li>
+<li>Subscribe MQTT Topic</li>
+<li>รับ MQTT Message</li>
+<li>Decode MQTT Payload</li>
+<li>Parse JSON</li>
+<li>อ่าน Device ID จาก MQTT Topic</li>
+<li>รองรับหลาย Device ด้วย MQTT Wildcard</li>
+<li>ตรวจสอบ Data Quality</li>
+<li>Publish MQTT Message จาก Python</li>
+<li>สร้าง Automatic Rule-based Control</li>
+<li>จัดการ MQTT Connection และ Error เบื้องต้น</li>
+<li>เข้าใจบทบาทของ Python Application ใน IoT Gateway</li>
+</ul>
+<h2 id="20-3-architecture">20.3 Architecture</h2>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┼──→ MQTT Broker
+ESP32-003 ─┘         │
+                     ▼
+             Python Application
+                     │
+          ┌──────────┼──────────┐
+          │          │          │
+          ▼          ▼          ▼
+        Parse     Validate     Rule
+         JSON       Data      Process
+          │          │          │
+          └──────────┼──────────┘
+                     │
+                     ▼
+                MQTT Publish
+                     │
+                     ▼
+                  ESP32
+                     │
+                     ▼
+                  Actuator</code></pre>
+<h2 id="20-4-mqtt-topics">20.4 MQTT Topics</h2>
+<p>ใช้ Topic Structure เดิมจาก LAB 16–19 Sensor Data</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/data</code></pre>
+<p>Device Status</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/status</code></pre>
+<p>Command</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/cmd</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/status
+pkru/iot/001/cmd</code></pre>
+<p>Python Subscribe</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>ทำให้ Application เดียวสามารถรับข้อมูลจากหลาย Device</p>
+<h2 id="20-5-ตรวจสอบ-python">20.5 ตรวจสอบ Python</h2>
+<p>บน Raspberry Pi</p>
+<pre class="language-bash"><code>python3 --version</code></pre>
+<p>ผลตัวอย่าง</p>
+<pre class="language-text"><code>Python 3.x.x</code></pre>
+<p>ตรวจสอบตำแหน่ง Python</p>
+<pre class="language-bash"><code>which python3</code></pre>
+<p>ผลตัวอย่าง</p>
+<pre class="language-text"><code>/usr/bin/python3</code></pre>
+<h2 id="20-6-ทำไมควรใช้-virtual-environment">20.6 ทำไมควรใช้ Virtual Environment</h2>
+<p>ไม่ควรติดตั้ง Python Package สำหรับ LAB ลง System Python โดยตรง แนะนำให้ใช้</p>
+<pre class="language-text"><code>venv</code></pre>
+<p>ข้อดี</p>
+<ul>
+<li>แยก Package ของ Project</li>
+<li>ลดปัญหา Package Conflict</li>
+<li>ไม่กระทบ System Python</li>
+<li>ลบหรือสร้าง Environment ใหม่ได้ง่าย</li>
+<li>เตรียมพร้อมสำหรับ LAB 21 systemd Service</li>
+</ul>
+<p>Architecture</p>
+<pre class="language-text"><code>Raspberry Pi
+   │
+   ├── System Python
+   │
+   └── IoT Project
+          │
+          └── venv
+               │
+               ├── Python
+               └── paho-mqtt</code></pre>
+<h2 id="20-7-ตรวจสอบ-ติดตั้ง-venv">20.7 ตรวจสอบ/ติดตั้ง venv</h2>
+<p>ติดตั้ง package ที่จำเป็น</p>
+<pre class="language-bash"><code>sudo apt update
+
+sudo apt install python3-venv -y</code></pre>
+<h2 id="20-8-สร้าง-project-directory">20.8 สร้าง Project Directory</h2>
+<p>สร้าง Directory</p>
+<pre class="language-bash"><code>mkdir -p ~/iot-gateway</code></pre>
+<p>เข้า Directory</p>
+<pre class="language-bash"><code>cd ~/iot-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>pwd</code></pre>
+<p>ควรได้ประมาณ</p>
+<pre class="language-text"><code>/home/&lt;username&gt;/iot-gateway</code></pre>
+<h2 id="20-9-สร้าง-virtual-environment">20.9 สร้าง Virtual Environment</h2>
+<pre class="language-bash"><code>python3 -m venv venv</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>ls</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>venv</code></pre>
+<h2 id="20-10-activate-virtual-environment">20.10 Activate Virtual Environment</h2>
+<pre class="language-bash"><code>source venv/bin/activate</code></pre>
+<p>Prompt จะเปลี่ยนเป็นประมาณ</p>
+<pre class="language-text"><code>(venv) piuser@raspberrypi:~/iot-gateway $</code></pre>
+<p>ตรวจสอบ Python</p>
+<pre class="language-bash"><code>which python</code></pre>
+<p>ควรชี้ไปยัง</p>
+<pre class="language-text"><code>/home/&lt;username&gt;/iot-gateway/venv/bin/python</code></pre>
+<h2 id="20-11-upgrade-pip">20.11 Upgrade pip</h2>
+<p>ภายใน venv</p>
+<pre class="language-bash"><code>python -m pip install --upgrade pip</code></pre>
+<h2 id="20-12-ติดตั้ง-mqtt-library">20.12 ติดตั้ง MQTT Library</h2>
+<p>ใช้</p>
+<pre class="language-text"><code>paho-mqtt</code></pre>
+<p>ติดตั้ง</p>
+<pre class="language-bash"><code>pip install paho-mqtt</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>pip show paho-mqtt</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>pip list</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>paho-mqtt</code></pre>
+<h2 id="20-13-ทดสอบ-mqtt-broker-ก่อนเขียน-python">20.13 ทดสอบ MQTT Broker ก่อนเขียน Python</h2>
+<p>Terminal 1</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/data&quot; \
+-v</code></pre>
+<p>Terminal 2</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ควรได้รับ</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>ถ้าขั้นตอนนี้ยังไม่ทำงาน ยังไม่ควรเริ่ม Debug Python ควรตรวจสอบ MQTT Broker ก่อน</p>
+<h2 id="20-14-โปรแกรม-python-แรก-mqtt-subscribe">20.14 โปรแกรม Python แรก - MQTT Subscribe</h2>
+<p>สร้างไฟล์</p>
+<pre class="language-bash"><code>nano mqtt_sub.py</code></pre>
+<p>ใส่</p>
+<pre class="language-python"><code>import paho.mqtt.client as mqtt
+
+
+broker = &quot;localhost&quot;
+port = 1883
+topic = &quot;pkru/iot/+/data&quot;
+
+
+def on_connect(client, userdata, flags, reason_code, properties):
+    print(f&quot;Connected: {reason_code}&quot;)
+    client.subscribe(topic)
+
+
+def on_message(client, userdata, msg):
+    payload = msg.payload.decode(&quot;utf-8&quot;)
+
+    print(f&quot;Topic: {msg.topic}&quot;)
+    print(f&quot;Payload: {payload}&quot;)
+    print()
+
+
+client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;python-gateway&quot;
+)
+
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect(broker, port, 60)
+
+client.loop_forever()</code></pre>
+<p>โปรแกรมนี้ใช้ Callback API VERSION2 ของ Paho MQTT รุ่นปัจจุบัน</p>
+<h2 id="20-15-run-python-application">20.15 Run Python Application</h2>
+<pre class="language-bash"><code>python mqtt_sub.py</code></pre>
+<p>ผล</p>
+<pre class="language-text"><code>Connected: Success</code></pre>
+<p>หรือข้อความ Reason Code ที่แสดงว่าการเชื่อมต่อสำเร็จ จากนั้นเปิดอีก Terminal</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Python ควรแสดง</p>
+<pre class="language-text"><code>Topic: pkru/iot/001/data
+Payload: {&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<h2 id="20-16-callback">20.16 Callback</h2>
+<p>โปรแกรม MQTT ไม่ได้ทำงานแบบ</p>
+<pre class="language-text"><code>Read
+Read
+Read
+Read</code></pre>
+<p>โดยตรง แต่ใช้ Event-driven Programming เมื่อ Connect</p>
+<pre class="language-text"><code>on_connect()</code></pre>
+<p>ถูกเรียก เมื่อ Message เข้ามา</p>
+<pre class="language-text"><code>on_message()</code></pre>
+<p>ถูกเรียก Architecture</p>
+<pre class="language-text"><code>MQTT Event
+    │
+    ├── Connected
+    │      ↓
+    │   on_connect()
+    │
+    └── Message
+           ↓
+       on_message()</code></pre>
+<p>แนวคิดนี้คล้ายกับ Node-RED</p>
+<pre class="language-text"><code>Message arrives
+      ↓
+   Node runs</code></pre>
+<h2 id="20-17-parse-json">20.17 Parse JSON</h2>
+<p>เพิ่ม</p>
+<pre class="language-python"><code>import json</code></pre>
+<p>ปรับ <code>on_message()</code></p>
+<pre class="language-python"><code>def on_message(client, userdata, msg):
+    try:
+        payload = msg.payload.decode(&quot;utf-8&quot;)
+        data = json.loads(payload)
+
+        print(f&quot;Topic: {msg.topic}&quot;)
+        print(f&quot;Temp: {data[&#x27;temp&#x27;]}&quot;)
+        print(f&quot;Humi: {data[&#x27;humi&#x27;]}&quot;)
+        print(f&quot;Light: {data[&#x27;light&#x27;]}&quot;)
+        print()
+
+    except Exception as error:
+        print(f&quot;Error: {error}&quot;)</code></pre>
+<p>ตอนนี้ Python สามารถเปลี่ยน</p>
+<pre class="language-text"><code>MQTT Payload</code></pre>
+<p>จาก String เป็น</p>
+<pre class="language-text"><code>Python Dictionary</code></pre>
+<h2 id="20-18-device-identification">20.18 Device Identification</h2>
+<p>Topic</p>
+<pre class="language-text"><code>pkru/iot/002/data</code></pre>
+<p>สามารถแยกด้วย</p>
+<pre class="language-text"><code>parts = msg.topic.split(&quot;/&quot;)</code></pre>
+<p>จะได้</p>
+<pre class="language-text"><code>parts[0] = pkru
+parts[1] = iot
+parts[2] = 002
+parts[3] = data</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>device_id = parts[2]</code></pre>
+<h2 id="20-19-โปรแกรม-multi-device">20.19 โปรแกรม Multi-device</h2>
+<p>ปรับ <code>on_message()</code></p>
+<pre class="language-python"><code>def on_message(client, userdata, msg):
+    try:
+        parts = msg.topic.split(&quot;/&quot;)
+
+        if len(parts) != 4:
+            print(f&quot;Invalid topic: {msg.topic}&quot;)
+            return
+
+        device_id = parts[2]
+
+        payload = msg.payload.decode(&quot;utf-8&quot;)
+        data = json.loads(payload)
+
+        print(f&quot;Device: {device_id}&quot;)
+        print(f&quot;Temp: {data[&#x27;temp&#x27;]}&quot;)
+        print(f&quot;Humi: {data[&#x27;humi&#x27;]}&quot;)
+        print(f&quot;Light: {data[&#x27;light&#x27;]}&quot;)
+        print()
+
+    except Exception as error:
+        print(f&quot;Error: {error}&quot;)</code></pre>
+<p>Python Application เดียวจึงรองรับ</p>
+<pre class="language-text"><code>Device 001
+Device 002
+Device 003
+...
+Device N</code></pre>
+<p>ผ่าน</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<h2 id="20-20-ทดสอบ-multi-device">20.20 ทดสอบ Multi-device</h2>
+<p>ส่ง Device 001</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}&#x27;</code></pre>
+<p>Device 002</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/002/data&quot; \
+-m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Device 003</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/003/data&quot; \
+-m &#x27;{&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:2000}&#x27;</code></pre>
+<p>Python ควรแสดงข้อมูลของทั้ง 3 Device</p>
+<h2 id="20-21-data-validation">20.21 Data Validation</h2>
+<p>นำแนวคิด LAB 19 มาเขียนเป็น Python Function สร้าง</p>
+<pre class="language-text"><code>validate_data()</code></pre>
+<p>ใช้</p>
+<pre class="language-python"><code>def validate_data(data):
+    required_fields = [&quot;temp&quot;, &quot;humi&quot;, &quot;light&quot;]
+
+    for field in required_fields:
+        if field not in data:
+            return False
+
+        if data[field] is None:
+            return False
+
+    try:
+        temp = float(data[&quot;temp&quot;])
+        humi = float(data[&quot;humi&quot;])
+        light = float(data[&quot;light&quot;])
+
+    except (TypeError, ValueError):
+        return False
+
+    if temp == -99 or humi == -99 or light == -99:
+        return False
+
+    if temp &lt; -20 or temp &gt; 80:
+        return False
+
+    if humi &lt; 0 or humi &gt; 100:
+        return False
+
+    if light &lt; 0 or light &gt; 100000:
+        return False
+
+    return True</code></pre>
+<h2 id="20-22-ใช้-validation">20.22 ใช้ Validation</h2>
+<p>ใน <code>on_message()</code></p>
+<pre class="language-python"><code>if validate_data(data):
+    quality = &quot;VALID&quot;
+else:
+    quality = &quot;INVALID&quot;</code></pre>
+<p>แล้วแสดง</p>
+<pre class="language-python"><code>print(f&quot;Device: {device_id}&quot;)
+print(f&quot;Quality: {quality}&quot;)</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>Device: 001
+Quality: VALID</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>Device: 002
+Quality: INVALID</code></pre>
+<h2 id="20-23-ทดสอบ-invalid">20.23 ทดสอบ INVALID</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/002/data&quot; \
+-m &#x27;{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Python ควรแสดง</p>
+<pre class="language-text"><code>Device: 002
+Quality: INVALID</code></pre>
+<h2 id="20-24-json-error-handling">20.24 JSON Error Handling</h2>
+<p>ส่ง Payload ที่ไม่ใช่ JSON</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;HELLO&#x27;</code></pre>
+<p>ถ้าไม่มี Error Handling Application อาจเกิด Exception จึงควรแยก</p>
+<pre class="language-text"><code>JSONDecodeError</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-python"><code>try:
+    data = json.loads(payload)
+
+except json.JSONDecodeError:
+    print(
+        f&quot;Invalid JSON from device topic: {msg.topic}&quot;
+    )
+    return</code></pre>
+<p>Application ต้องไม่หยุดเพียงเพราะได้รับ Message ผิดหนึ่ง Message</p>
+<p>นี่เป็นหลักสำคัญของ Gateway Application</p>
+<h2 id="20-25-mqtt-publish-ด้วย-python">20.25 MQTT Publish ด้วย Python</h2>
+<p>Python ไม่ได้ทำได้เฉพาะ Subscribe สามารถ Publish ได้ด้วย</p>
+<pre class="language-python"><code>client.publish()</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-python"><code>client.publish(
+    &quot;pkru/iot/001/cmd&quot;,
+    &quot;ON&quot;
+)</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>Python
+   │
+   │ ON
+   ▼
+ MQTT
+   │
+   ▼
+ESP32-001
+   │
+   ▼
+Actuator</code></pre>
+<h2 id="20-26-ทดสอบ-python-publish">20.26 ทดสอบ Python Publish</h2>
+<p>เปิด Terminal</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/cmd&quot; \
+-v</code></pre>
+<p>จาก Python</p>
+<pre class="language-python"><code>client.publish(
+    &quot;pkru/iot/001/cmd&quot;,
+    &quot;ON&quot;
+)</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<h2 id="20-27-automatic-control-ด้วย-python">20.27 Automatic Control ด้วย Python</h2>
+<p>นำ Rule จาก LAB 15 มาใช้</p>
+<pre class="language-text"><code>temp &gt; 35
+    → ON
+
+temp &lt; 30
+    → OFF
+
+30–35
+    → Keep Previous State</code></pre>
+<p>ต้องเก็บ State ของแต่ละ Device เช่น</p>
+<pre class="language-python"><code>fan_states = {}</code></pre>
+<h2 id="20-28-function-automatic-control">20.28 Function - Automatic Control</h2>
+<p>ใช้</p>
+<pre class="language-python"><code>fan_states = {}
+
+
+def automatic_control(
+    client,
+    device_id,
+    temp
+):
+    old_state = fan_states.get(
+        device_id,
+        &quot;OFF&quot;
+    )
+
+    new_state = old_state
+
+    if temp &gt; 35:
+        new_state = &quot;ON&quot;
+
+    elif temp &lt; 30:
+        new_state = &quot;OFF&quot;
+
+    if new_state == old_state:
+        return
+
+    fan_states[device_id] = new_state
+
+    command_topic = (
+        f&quot;pkru/iot/{device_id}/cmd&quot;
+    )
+
+    client.publish(
+        command_topic,
+        new_state
+    )
+
+    print(
+        f&quot;Command: {device_id} &quot;
+        f&quot;{new_state}&quot;
+    )</code></pre>
+<p>นี่คือ</p>
+<pre class="language-text"><code>State-change-based Control</code></pre>
+<p>เหมือน LAB 15</p>
+<h2 id="20-29-ปัญหา-initial-state">20.29 ปัญหา Initial State</h2>
+<p>โค้ด</p>
+<pre class="language-text"><code>fan_states.get(device_id, &quot;OFF&quot;)</code></pre>
+<p>สมมติว่า Actuator เริ่มต้นเป็น</p>
+<pre class="language-text"><code>OFF</code></pre>
+<p>แต่ Device จริงอาจเป็น</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>Python State</code></pre>
+<p>อาจไม่ตรงกับ</p>
+<pre class="language-text"><code>Actual Device State</code></pre>
+<p>นี่เป็นปัญหาเดียวกับ LAB 15</p>
+<pre class="language-text"><code>Commanded State ≠ Actual State</code></pre>
+<p>ในระบบจริงควรมี</p>
+<pre class="language-text"><code>State Feedback</code></pre>
+<p>จาก Device แต่ LAB นี้ยังใช้ Internal State เพื่อให้เข้าใจ Application Logic ก่อน</p>
+<h2 id="20-30-ใช้-validation-ก่อน-control">20.30 ใช้ Validation ก่อน Control</h2>
+<p>สำคัญมาก ไม่ควรทำ</p>
+<pre class="language-text"><code>MQTT
+  ↓
+Control</code></pre>
+<p>โดยตรง ควรทำ</p>
+<pre class="language-text"><code>MQTT
+  ↓
+JSON Parse
+  ↓
+Validation
+  ↓
+VALID?
+  │
+  ├── YES → Control
+  │
+  └── NO  → Reject</code></pre>
+<p>ดังนั้นใน Python</p>
+<pre class="language-python"><code>if not validate_data(data):
+    print(
+        f&quot;Device {device_id}: INVALID&quot;
+    )
+    return
+
+temp = float(data[&quot;temp&quot;])
+
+automatic_control(
+    client,
+    device_id,
+    temp
+)</code></pre>
+<p>INVALID Data จะไม่ถูกใช้ควบคุม Actuator</p>
+<h2 id="20-31-complete-python-application">20.31 Complete Python Application</h2>
+<p>สร้างไฟล์</p>
+<pre class="language-bash"><code>nano gateway.py</code></pre>
+<p>ใช้</p>
+<pre class="language-python"><code>import json
+
+import paho.mqtt.client as mqtt
+
+
+broker = &quot;localhost&quot;
+port = 1883
+
+data_topic = &quot;pkru/iot/+/data&quot;
+
+fan_states = {}
+
+
+def validate_data(data):
+    required_fields = [
+        &quot;temp&quot;,
+        &quot;humi&quot;,
+        &quot;light&quot;
+    ]
+
+    for field in required_fields:
+        if field not in data:
+            return False
+
+        if data[field] is None:
+            return False
+
+    try:
+        temp = float(data[&quot;temp&quot;])
+        humi = float(data[&quot;humi&quot;])
+        light = float(data[&quot;light&quot;])
+
+    except (TypeError, ValueError):
+        return False
+
+    if (
+        temp == -99 or
+        humi == -99 or
+        light == -99
+    ):
+        return False
+
+    if temp &lt; -20 or temp &gt; 80:
+        return False
+
+    if humi &lt; 0 or humi &gt; 100:
+        return False
+
+    if light &lt; 0 or light &gt; 100000:
+        return False
+
+    return True
+
+
+def automatic_control(
+    client,
+    device_id,
+    temp
+):
+    old_state = fan_states.get(
+        device_id,
+        &quot;OFF&quot;
+    )
+
+    new_state = old_state
+
+    if temp &gt; 35:
+        new_state = &quot;ON&quot;
+
+    elif temp &lt; 30:
+        new_state = &quot;OFF&quot;
+
+    if new_state == old_state:
+        return
+
+    fan_states[device_id] = new_state
+
+    command_topic = (
+        f&quot;pkru/iot/{device_id}/cmd&quot;
+    )
+
+    client.publish(
+        command_topic,
+        new_state
+    )
+
+    print(
+        f&quot;COMMAND &quot;
+        f&quot;device={device_id} &quot;
+        f&quot;fan={new_state}&quot;
+    )
+
+
+def on_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    print(
+        f&quot;MQTT connected: &quot;
+        f&quot;{reason_code}&quot;
+    )
+
+    client.subscribe(
+        data_topic
+    )
+
+    print(
+        f&quot;Subscribed: &quot;
+        f&quot;{data_topic}&quot;
+    )
+
+
+def on_message(
+    client,
+    userdata,
+    msg
+):
+    try:
+        parts = msg.topic.split(&quot;/&quot;)
+
+        if (
+            len(parts) != 4 or
+            parts[0] != &quot;pkru&quot; or
+            parts[1] != &quot;iot&quot; or
+            parts[3] != &quot;data&quot;
+        ):
+            print(
+                f&quot;Invalid topic: &quot;
+                f&quot;{msg.topic}&quot;
+            )
+            return
+
+        device_id = parts[2]
+
+        payload = msg.payload.decode(
+            &quot;utf-8&quot;
+        )
+
+        try:
+            data = json.loads(
+                payload
+            )
+
+        except json.JSONDecodeError:
+            print(
+                f&quot;INVALID JSON &quot;
+                f&quot;device={device_id}&quot;
+            )
+            return
+
+        if not isinstance(data, dict):
+            print(
+                f&quot;INVALID PAYLOAD &quot;
+                f&quot;device={device_id}&quot;
+            )
+            return
+
+        if not validate_data(data):
+            print(
+                f&quot;INVALID DATA &quot;
+                f&quot;device={device_id} &quot;
+                f&quot;payload={data}&quot;
+            )
+            return
+
+        temp = float(data[&quot;temp&quot;])
+        humi = float(data[&quot;humi&quot;])
+        light = float(data[&quot;light&quot;])
+
+        print(
+            f&quot;VALID &quot;
+            f&quot;device={device_id} &quot;
+            f&quot;temp={temp} &quot;
+            f&quot;humi={humi} &quot;
+            f&quot;light={light}&quot;
+        )
+
+        automatic_control(
+            client,
+            device_id,
+            temp
+        )
+
+    except Exception as error:
+        print(
+            f&quot;ERROR: {error}&quot;
+        )
+
+
+client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;python-gateway&quot;
+)
+
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect(
+    broker,
+    port,
+    60
+)
+
+print(
+    &quot;Python IoT Gateway started&quot;
+)
+
+client.loop_forever()</code></pre>
+<h2 id="20-32-run-gateway">20.32 Run Gateway</h2>
+<p>ตรวจสอบว่าอยู่ใน venv</p>
+<pre class="language-bash"><code>source ~/iot-gateway/venv/bin/activate</code></pre>
+<p>เข้า Project</p>
+<pre class="language-bash"><code>cd ~/iot-gateway</code></pre>
+<p>Run</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<p>ผลเริ่มต้นควรประมาณ</p>
+<pre class="language-text"><code>Python IoT Gateway started
+MQTT connected: Success
+Subscribed: pkru/iot/+/data</code></pre>
+<h2 id="20-33-เปิด-command-monitor">20.33 เปิด Command Monitor</h2>
+<p>Terminal อีกหน้าต่าง</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/cmd&quot; \
+-v</code></pre>
+<p>ใช้ดูว่า Python ส่ง Command อะไรออกมา</p>
+<h2 id="20-34-test-case-1-valid-off">20.34 Test Case 1 - VALID / OFF</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:28,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Python แสดง</p>
+<pre class="language-text"><code>VALID device=001 ...</code></pre>
+<p>เนื่องจาก Internal State เริ่มต้นเป็น OFF อาจไม่มี MQTT Command ถูกส่งออกมา เพราะ</p>
+<pre class="language-text"><code>old_state = OFF
+new_state = OFF</code></pre>
+<p>ไม่มี State Change นี่เป็นพฤติกรรมที่ตั้งใจไว้ของตัวอย่างนี้</p>
+<h2 id="20-35-test-case-2-fan-on">20.35 Test Case 2 - Fan ON</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Python</p>
+<pre class="language-text"><code>VALID device=001 ...</code></pre>
+<p>จากนั้น</p>
+<pre class="language-text"><code>COMMAND device=001 fan=ON</code></pre>
+<p>Command Monitor</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<h2 id="20-36-test-case-3-hysteresis">20.36 Test Case 3 - Hysteresis</h2>
+<p>หลังจาก Fan ON ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:33,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ไม่มี Command ใหม่ Fan State ยังคง</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>เพราะ</p>
+<pre class="language-text"><code>30–35 °C
+    → Keep Previous State</code></pre>
+<h2 id="20-37-test-case-4-fan-off">20.37 Test Case 4 - Fan OFF</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:28,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Python ส่ง</p>
+<pre class="language-text"><code>COMMAND device=001 fan=OFF</code></pre>
+<p>MQTT</p>
+<pre class="language-text"><code>pkru/iot/001/cmd OFF</code></pre>
+<h2 id="20-38-test-case-5-invalid">20.38 Test Case 5 - INVALID</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Python แสดง</p>
+<pre class="language-text"><code>INVALID DATA device=001 ...</code></pre>
+<p>และต้อง</p>
+<pre class="language-text"><code>ไม่ส่ง ON
+ไม่ส่ง OFF</code></pre>
+<p>ไปยัง Actuator</p>
+<h2 id="20-39-test-case-6-invalid-json">20.39 Test Case 6 - Invalid JSON</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;HELLO&#x27;</code></pre>
+<p>Python แสดง</p>
+<pre class="language-text"><code>INVALID JSON device=001</code></pre>
+<p>Application ต้องยังทำงานต่อ จากนั้นส่ง Valid Message ใหม่ Application ต้องรับได้ตามปกติ</p>
+<h2 id="20-40-test-case-7-multi-device">20.40 Test Case 7 - Multi-device</h2>
+<p>Device 001</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1000}&#x27;</code></pre>
+<p>Device 002</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/002/data&quot; \
+-m &#x27;{&quot;temp&quot;:28,&quot;humi&quot;:75,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Device 003</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/003/data&quot; \
+-m &#x27;{&quot;temp&quot;:39,&quot;humi&quot;:80,&quot;light&quot;:2000}&#x27;</code></pre>
+<p>Python ต้องสามารถแยก</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>จาก MQTT Topic และเก็บ</p>
+<pre class="language-text"><code>fan_states</code></pre>
+<p>แยกแต่ละ Device</p>
+<h2 id="20-41-python-dictionary-สำหรับ-multi-device-state">20.41 Python Dictionary สำหรับ Multi-device State</h2>
+<p>ตัวอย่างหลังระบบทำงาน</p>
+<pre class="language-python"><code>fan_states = {
+    &quot;001&quot;: &quot;ON&quot;,
+    &quot;002&quot;: &quot;OFF&quot;,
+    &quot;003&quot;: &quot;ON&quot;
+}</code></pre>
+<p>จึงสามารถมี Control State แยกแต่ละ Device ได้ นี่เป็นแนวคิดเดียวกับ</p>
+<pre class="language-text"><code>flow context</code></pre>
+<p>ใน Node-RED แต่เขียนด้วย Python Data Structure</p>
+<h2 id="20-42-node-red-กับ-python-ทำงานร่วมกันได้">20.42 Node-RED กับ Python ทำงานร่วมกันได้</h2>
+<p>LAB นี้ไม่จำเป็นต้องปิด Node-RED สามารถออกแบบ</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Mosquitto
+   │
+   ├────────→ Python
+   │             │
+   │          Processing
+   │          Validation
+   │          Control
+   │
+   └────────→ Node-RED
+                 │
+              Dashboard</code></pre>
+<p>Python ทำ</p>
+<pre class="language-text"><code>Application Logic</code></pre>
+<p>Node-RED ทำ</p>
+<pre class="language-text"><code>Dashboard</code></pre>
+<p>ทั้งสองใช้ MQTT เป็นตัวกลาง นี่เป็น Architecture ที่เหมาะสมและยืดหยุ่น</p>
+<h2 id="20-43-mqtt-เป็น-decoupling-layer">20.43 MQTT เป็น Decoupling Layer</h2>
+<p>ข้อดีของ Architecture นี้คือ Python ไม่ต้องรู้ว่า Dashboard ใช้อะไร Node-RED ไม่ต้องรู้ว่า Python เขียนอย่างไร ESP32 ไม่ต้องรู้ว่า Processing ใช้ Node-RED หรือ Python ทุก Component รู้เพียง</p>
+<pre class="language-text"><code>MQTT Topic
+Payload Format</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>Device
+   ↓
+  MQTT
+   ├──→ Python
+   ├──→ Node-RED
+   ├──→ Database
+   └──→ Other Applications</code></pre>
+<p>เรียกว่า</p>
+<pre class="language-text"><code>Loose Coupling</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>Decoupled Architecture</code></pre>
+<h2 id="20-44-หลีกเลี่ยง-command-conflict">20.44 หลีกเลี่ยง Command Conflict</h2>
+<p>ถ้า LAB 15 Node-RED Automatic Control ยังทำงานอยู่ และ LAB 20 Python Automatic Control ก็ทำงานพร้อมกัน อาจเกิด</p>
+<pre class="language-text"><code>Node-RED → ON</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Python → OFF</code></pre>
+<p>ไปยัง Topic เดียวกัน</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>ดังนั้นในการทดลอง LAB 20 ควรปิดหรือ Disable Automatic Control Flow เดิมใน Node-RED หรือกำหนดให้มี</p>
+<pre class="language-text"><code>Single Control Authority</code></pre>
+<p>เพียงตัวเดียว เช่น</p>
+<pre class="language-text"><code>Python = Control Logic
+Node-RED = Dashboard</code></pre>
+<p>เพื่อหลีกเลี่ยง Command Conflict</p>
+<h2 id="20-45-mqtt-authentication">20.45 MQTT Authentication</h2>
+<p>ถ้า Mosquitto ของระบบเปิด Authentication แล้ว Python ต้องใช้ Username/Password เพิ่มก่อน <code>connect()</code></p>
+<pre class="language-python"><code>client.username_pw_set(
+    &quot;iotuser&quot;,
+    &quot;your_password&quot;
+)</code></pre>
+<p>จากนั้น</p>
+<pre class="language-python"><code>client.connect(
+    broker,
+    port,
+    60
+)</code></pre>
+<p>ไม่ควร Hard-code Password ใน Source Code สำหรับระบบจริง แต่ใน LAB เบื้องต้นสามารถใช้เพื่ออธิบายหลักการก่อน เรื่อง Security จะขยายต่อใน LAB 24</p>
+<h2 id="20-46-หยุด-application">20.46 หยุด Application</h2>
+<p>ขณะ</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<p>ทำงาน กด</p>
+<pre class="language-text"><code>Ctrl+C</code></pre>
+<p>Application จะหยุด ปัญหาคือ ถ้า Raspberry Pi Reboot Python Application จะไม่เริ่มเอง ต้อง SSH เข้า Pi แล้ว Run</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<p>ใหม่ นี่เป็นข้อจำกัดสำคัญของ LAB 20</p>
+<h2 id="20-47-ทำไมยังไม่ใช่-autonomous-gateway">20.47 ทำไมยังไม่ใช่ Autonomous Gateway</h2>
+<p>ตอนนี้ Architecture คือ</p>
+<pre class="language-text"><code>Raspberry Pi Boot
+      ↓
+Mosquitto starts
+      ↓
+Python Application
+      X</code></pre>
+<p>เพราะ Python ไม่ได้ Start อัตโนมัติ ต้องมีมนุษย์</p>
+<pre class="language-text"><code>SSH
+  ↓
+source venv
+  ↓
+python gateway.py</code></pre>
+<p>ดังนั้นระบบยังไม่เป็น</p>
+<pre class="language-text"><code>Autonomous IoT Gateway</code></pre>
+<p>อย่างสมบูรณ์</p>
+<h2 id="20-48-แบบฝึกหัดที่-1-mqtt-subscribe">20.48 แบบฝึกหัดที่ 1 - MQTT Subscribe</h2>
+<p>สร้าง Python Program ที่ Subscribe</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>และแสดง</p>
+<pre class="language-text"><code>Topic
+Payload</code></pre>
+<h2 id="20-49-แบบฝึกหัดที่-2-json-parsing">20.49 แบบฝึกหัดที่ 2 - JSON Parsing</h2>
+<p>แสดง</p>
+<pre class="language-text"><code>Device ID
+Temp
+Humi
+Light</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>Device: 002
+Temp: 32
+Humi: 75
+Light: 1500</code></pre>
+<h2 id="20-50-แบบฝึกหัดที่-3-data-validation">20.50 แบบฝึกหัดที่ 3 - Data Validation</h2>
+<p>ทดสอบ</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>ด้วย</p>
+<pre class="language-json"><code>{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>ทดสอบ</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>ด้วย</p>
+<pre class="language-json"><code>{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>ทดสอบ Invalid JSON</p>
+<pre class="language-text"><code>HELLO</code></pre>
+<p>Application ต้องไม่หยุด</p>
+<h2 id="20-51-แบบฝึกหัดที่-4-multi-device">20.51 แบบฝึกหัดที่ 4 - Multi-device</h2>
+<p>ส่งข้อมูลจาก</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>Python Application เดียวต้องรับข้อมูลทุก Device ผ่าน</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<h2 id="20-52-แบบฝึกหัดที่-5-python-publish">20.52 แบบฝึกหัดที่ 5 - Python Publish</h2>
+<p>ให้ Python ส่ง</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ไปยัง</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>ตรวจสอบด้วย</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/cmd&quot; \
+-v</code></pre>
+<h2 id="20-53-แบบฝึกหัดที่-6-automatic-control">20.53 แบบฝึกหัดที่ 6 - Automatic Control</h2>
+<p>ใช้ Rule</p>
+<pre class="language-text"><code>temp &gt; 35
+    → ON
+
+temp &lt; 30
+    → OFF
+
+30–35
+    → Keep Previous State</code></pre>
+<p>ทดสอบ</p>
+<pre class="language-text"><code>28
+32
+36
+38
+33
+29</code></pre>
+<p>และบันทึก Command ที่เกิดขึ้น</p>
+<h2 id="20-54-แบบฝึกหัดที่-7-error-recovery">20.54 แบบฝึกหัดที่ 7 - Error Recovery</h2>
+<p>ขณะที่ Python ทำงาน ส่ง</p>
+<pre class="language-text"><code>HELLO</code></pre>
+<p>จากนั้นส่ง</p>
+<pre class="language-json"><code>{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>Application ต้อง</p>
+<ol>
+<li>แจ้ง Invalid JSON</li>
+<li>ไม่ Crash</li>
+<li>รับ Message ถัดไปได้</li>
+<li>ประมวลผล Valid Message ได้ตามปกติ</li>
+</ol>
+<p>นี่เป็นพื้นฐานของ</p>
+<pre class="language-text"><code>Fault-tolerant Application</code></pre>
+<h2 id="20-55-งานส่ง-lab-20">20.55 งานส่ง LAB 20</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Virtual Environment</li>
+</ol>
+<pre class="language-bash"><code>   which python</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   pip show paho-mqtt</code></pre>
+<ol>
+<li>Source Code</li>
+</ol>
+<pre class="language-text"><code>   gateway.py</code></pre>
+<ol>
+<li>Screenshot Python รับ MQTT จาก Device 001</li>
+</ol>
+<ol>
+<li>Screenshot Python รับข้อมูลอย่างน้อย 3 Device</li>
+</ol>
+<pre class="language-text"><code>   001
+   002
+   003</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-text"><code>   VALID DATA</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-text"><code>   INVALID DATA</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-text"><code>   INVALID JSON</code></pre>
+<p>และแสดงว่า Application ยังทำงานต่อ</p>
+<ol>
+<li>Screenshot <code>mosquitto_sub</code> แสดง Python Publish</li>
+</ol>
+<pre class="language-text"><code>   ON
+   OFF</code></pre>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   Node-RED</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   Python MQTT Application</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใดควรใช้</li>
+</ol>
+<pre class="language-text"><code>   venv</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด INVALID Data ไม่ควรถูกนำไปควบคุม Actuator</li>
+</ol>
+<h2 id="20-56-สิ่งที่ต้องเข้าใจ">20.56 สิ่งที่ต้องเข้าใจ</h2>
+<p>ก่อน LAB 20</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Node-RED
+   ↓
+Processing</code></pre>
+<p>หลัง LAB 20</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Python Application
+   ↓
+Processing</code></pre>
+<p>จึงเข้าใจว่า</p>
+<pre class="language-text"><code>Node-RED ≠ IoT Gateway ทั้งหมด</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Python ≠ MQTT Broker</code></pre>
+<p>แต่แต่ละ Component มีหน้าที่ต่างกัน</p>
+<pre class="language-text"><code>Mosquitto
+   → Message Broker
+
+Python
+   → Application Logic
+
+Node-RED
+   → Flow Processing / Dashboard
+
+SQLite
+   → Data Storage
+
+ESP32
+   → IoT Node
+
+Raspberry Pi
+   → IoT Gateway / Edge Computer</code></pre>
+<h2 id="20-57-architecture-หลัง-lab-20">20.57 Architecture หลัง LAB 20</h2>
+<pre class="language-text"><code>                IoT NODES
+
+ESP32-001 ─┐
+ESP32-002 ─┼──────────────┐
+ESP32-003 ─┘              │
+                          ▼
+                   ┌─────────────┐
+                   │ Mosquitto   │
+                   │ MQTT Broker │
+                   └──────┬──────┘
+                          │
+                ┌─────────┴─────────┐
+                │                   │
+                ▼                   ▼
+         ┌─────────────┐     ┌─────────────┐
+         │ Python      │     │ Node-RED    │
+         │ Application │     │ Dashboard   │
+         │             │     │             │
+         │ Parse       │     │ Monitoring  │
+         │ Validate    │     │ Charts      │
+         │ Rule        │     │ UI          │
+         │ Control     │     │             │
+         └──────┬──────┘     └─────────────┘
+                │
+                │ MQTT Command
+                ▼
+         ┌─────────────┐
+         │ ESP32       │
+         │ Actuator    │
+         └─────────────┘</code></pre>
+<h2 id="20-58-ความสัมพันธ์ของ-lab-18-20">20.58 ความสัมพันธ์ของ LAB 18–20</h2>
+<p>LAB 18</p>
+<pre class="language-text"><code>Device
+  ↓
+Availability
+  ↓
+ONLINE / OFFLINE</code></pre>
+<p>LAB 19</p>
+<pre class="language-text"><code>Sensor Data
+    ↓
+Data Validation
+    ↓
+VALID / INVALID / STALE</code></pre>
+<p>LAB 20</p>
+<pre class="language-text"><code>MQTT Data
+    ↓
+Python Application
+    ↓
+Validation
+    ↓
+Application Logic
+    ↓
+MQTT Command</code></pre>
+<p>เส้นทางการเรียนจึงพัฒนาเป็น</p>
+<pre class="language-text"><code>Monitor Device
+      ↓
+Verify Data
+      ↓
+Program Gateway Logic</code></pre>
+<h2 id="20-59-จุดสำคัญที่สุดของ-lab">20.59 จุดสำคัญที่สุดของ LAB</h2>
+<p>คุณควรเข้าใจ Processing Pipeline</p>
+<pre class="language-text"><code>MQTT Message
+     ↓
+Topic Validation
+     ↓
+  Decode
+     ↓
+JSON Parsing
+     ↓
+Data Validation
+     ↓
+  VALID?
+   /   \
+ YES    NO
+  │      │
+  ▼      ▼
+ Rule   Reject
+  │
+  ▼
+Decision
+  │
+  ▼
+MQTT Command</code></pre>
+<p>ไม่ควรเขียนระบบแบบ</p>
+<pre class="language-text"><code>MQTT
+  ↓
+Sensor Value
+  ↓
+Actuator</code></pre>
+<p>โดยไม่มี Validation และ Error Handling</p>
+<h2 id="เชื่อมไป-lab-21-systemd-service">เชื่อมไป LAB 21 - systemd Service</h2>
+<p>ปัจจุบันต้อง Run</p>
+<pre class="language-bash"><code>source ~/iot-gateway/venv/bin/activate</code></pre>
+<p>แล้ว</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<p>ถ้า</p>
+<pre class="language-text"><code>Raspberry Pi Reboot</code></pre>
+<p>Application หยุด ถ้า</p>
+<pre class="language-text"><code>Python Process Crash</code></pre>
+<p>Application หยุด ถ้าผู้ดูแลไม่ได้ SSH เข้าเครื่อง Gateway Application จะไม่กลับมาทำงานเอง LAB 21 จะแก้ปัญหานี้ด้วย</p>
+<pre class="language-text"><code>systemd</code></pre>
+<p>Architecture จะเปลี่ยนจาก</p>
+<pre class="language-text"><code>Raspberry Pi
+    ↓
+  Boot
+    ↓
+  Human
+    ↓
+   SSH
+    ↓
+python gateway.py</code></pre>
+<p>เป็น</p>
+<pre class="language-text"><code>Raspberry Pi
+    ↓
+  Boot
+    ↓
+ systemd
+    ↓
+Python Gateway
+    ↓
+MQTT Processing</code></pre>
+<p>และสามารถกำหนด</p>
+<pre class="language-text"><code>Restart=always</code></pre>
+<p>หรือ Policy ที่เหมาะสม เพื่อให้ Application กลับมาทำงานหลัง Process Failure เป้าหมายคือเปลี่ยนจาก</p>
+<pre class="language-text"><code>Python Script</code></pre>
+<p>ไปเป็น</p>
+<pre class="language-text"><code>Managed Linux Service</code></pre>
+<p>และเปลี่ยน Raspberry Pi จาก</p>
+<pre class="language-text"><code>Gateway ที่ต้องมีคนเปิดโปรแกรม</code></pre>
+<p>ไปสู่</p>
+<pre class="language-text"><code>Autonomous IoT Gateway</code></pre>
+    </main>
+  </div>
+</body>
+</html>

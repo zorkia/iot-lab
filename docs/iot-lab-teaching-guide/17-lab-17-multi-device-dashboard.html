@@ -1,0 +1,986 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 17 - Multi-device Dashboard</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="active" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-17-multi-device-dashboard">LAB 17 - Multi-device Dashboard</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">ก่อนหน้า: LAB 16 - MQTT Topic Design for Multi-device IoT</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="18-lab-18-device-status-and-offline-detection.html">ถัดไป: LAB 18 - Device Status and Offline Detection</a></nav>
+<h2 id="17-1-แนวคิดของ-lab">17.1 แนวคิดของ LAB</h2>
+<p>LAB 16 ทำให้ระบบ MQTT รองรับหลาย Device ด้วย Topic Structure:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/002/data
+pkru/iot/003/data</code></pre>
+<p>และสามารถ Subscribe ข้อมูลทุก Device ด้วย:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>LAB 17 นำข้อมูลจากหลาย Device มาแสดงบน Dashboard เดียว จากเดิม:</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Node-RED
+   ↓
+Dashboard</code></pre>
+<p>เปลี่ยนเป็น:</p>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┼──→ MQTT ──→ Node-RED ──→ Multi-device Dashboard
+ESP32-003 ─┘</code></pre>
+<p>เป้าหมายสำคัญคือเปลี่ยนจาก Dashboard ที่ผูกกับ Device เพียงตัวเดียว ไปสู่แนวคิดต่อไปนี้:</p>
+<pre class="language-text"><code>Multi-device Monitoring
+Device Identification
+Device Selection
+Device Comparison
+Shared Dashboard</code></pre>
+<h2 id="17-2-วัตถุประสงค์">17.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>รับข้อมูลจาก ESP32 หลาย Device ด้วย MQTT Wildcard</li>
+<li>แยก Device ID จาก MQTT Topic</li>
+<li>จัดเก็บค่าล่าสุดของแต่ละ Device ใน Node-RED</li>
+<li>แสดงข้อมูลหลาย Device บน Dashboard</li>
+<li>เลือก Device ที่ต้องการดู</li>
+<li>เปรียบเทียบ Sensor จากหลาย Device</li>
+<li>เข้าใจความแตกต่างระหว่าง Single-device และ Multi-device Dashboard</li>
+<li>ออกแบบ Dashboard ที่ไม่ต้องสร้าง Flow ใหม่ทั้งหมดเมื่อเพิ่ม Device</li>
+</ul>
+<h2 id="17-3-architecture">17.3 Architecture</h2>
+<pre class="language-text"><code>ESP32-001
+   │
+   │ pkru/iot/001/data
+   │
+   ├──────────────────┐
+                      │
+ESP32-002             │
+   │                  │
+   │ pkru/iot/002/data│
+   │                  │
+   ├──────────────────┤
+                      ▼
+                MQTT Broker
+                      │
+                      │
+               pkru/iot/+/data
+                      │
+                      ▼
+                  Node-RED
+                      │
+                      ▼
+               Extract Device ID
+                      │
+                      ▼
+               Common Processing
+                      │
+                      ▼
+            Multi-device Dashboard
+                │       │       │
+                ▼       ▼       ▼
+               Temp    Humi    Light</code></pre>
+<h2 id="17-4-mqtt-topic">17.4 MQTT Topic</h2>
+<p>ใช้ Topic Structure จาก LAB 16 Device 001:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Device 002:</p>
+<pre class="language-text"><code>pkru/iot/002/data</code></pre>
+<p>Device 003:</p>
+<pre class="language-text"><code>pkru/iot/003/data</code></pre>
+<p>Node-RED Subscribe:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>Payload:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 30,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<h2 id="17-5-ทดสอบ-multi-device-mqtt">17.5 ทดสอบ Multi-device MQTT</h2>
+<p>เปิด Terminal:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/data&quot; \
+  -v</code></pre>
+<p>ส่งข้อมูล Device 001:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}&#x27;</code></pre>
+<p>Device 002:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/002/data&quot; \
+  -m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Device 003:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/003/data&quot; \
+  -m &#x27;{&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:2000}&#x27;</code></pre>
+<p>ผลที่ควรได้รับ:</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}
+pkru/iot/002/data {&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}
+pkru/iot/003/data {&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:2000}</code></pre>
+<p>เมื่อขั้นตอนนี้ทำงาน แสดงว่า Data Path จากหลาย Device มาถึง Gateway แล้ว</p>
+<h2 id="17-6-node-red-input-flow">17.6 Node-RED Input Flow</h2>
+<p>สร้าง Flow:</p>
+<pre class="language-text"><code>[MQTT In]
+     │
+     ▼
+   [JSON]
+     │
+     ▼
+[Process Device Data]
+     │
+     ▼
+   [Debug]</code></pre>
+<p>ตั้ง MQTT In:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>รายละเอียด</th>
+</tr></thead><tbody>
+<tr>
+<td>Broker</td>
+<td><code>localhost:1883</code></td>
+</tr>
+<tr>
+<td>Topic</td>
+<td><code>pkru/iot/+/data</code></td>
+</tr>
+</tbody></table>
+<h2 id="17-7-แยก-device-id">17.7 แยก Device ID</h2>
+<p>MQTT Topic ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/002/data</code></pre>
+<p>Node-RED เก็บ Topic ไว้ใน:</p>
+<pre class="language-text"><code>msg.topic</code></pre>
+<p>เพิ่ม Function Node ชื่อ:</p>
+<pre class="language-text"><code>Process Device Data</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+
+msg.device_id = parts[2];
+
+return msg;</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>msg.topic = &quot;pkru/iot/002/data&quot;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>msg.device_id = &quot;002&quot;</code></pre>
+<p>ดังนั้น Flow เดียวสามารถรู้ได้ว่าข้อมูลมาจาก Device ใด</p>
+<h2 id="17-8-ตรวจสอบ-payload">17.8 ตรวจสอบ Payload</h2>
+<p>หลัง JSON Node:</p>
+<pre class="language-text"><code>msg.payload.temp
+msg.payload.humi
+msg.payload.light</code></pre>
+<p>และหลัง Process Device Data:</p>
+<pre class="language-text"><code>msg.device_id</code></pre>
+<p>ดังนั้น Message มีข้อมูลสำคัญ:</p>
+<pre class="language-text"><code>device_id = 002
+temp      = 32
+humi      = 75
+light     = 1500</code></pre>
+<h2 id="17-9-เก็บ-latest-data-ของแต่ละ-device">17.9 เก็บ Latest Data ของแต่ละ Device</h2>
+<p>ถ้าต้องการ Dashboard ที่สามารถเลือก Device ได้ ระบบต้องจำค่าล่าสุดของแต่ละ Device ใช้ Node-RED Flow Context เพิ่ม Function Node ชื่อ:</p>
+<pre class="language-text"><code>Store Latest Device Data</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+let devices = flow.get(&quot;devices&quot;) || {};
+
+devices[device_id] = {
+    temp: Number(msg.payload.temp),
+    humi: Number(msg.payload.humi),
+    light: Number(msg.payload.light),
+    timestamp: Date.now()
+};
+
+flow.set(&quot;devices&quot;, devices);
+
+msg.device_id = device_id;
+
+return msg;</code></pre>
+<p>ตัวอย่างข้อมูลภายใน <code>flow.devices</code>:</p>
+<pre class="language-json"><code>{
+  &quot;001&quot;: {
+    &quot;temp&quot;: 30,
+    &quot;humi&quot;: 70,
+    &quot;light&quot;: 1000,
+    &quot;timestamp&quot;: 1780000000000
+  },
+  &quot;002&quot;: {
+    &quot;temp&quot;: 32,
+    &quot;humi&quot;: 75,
+    &quot;light&quot;: 1500,
+    &quot;timestamp&quot;: 1780000001000
+  },
+  &quot;003&quot;: {
+    &quot;temp&quot;: 35,
+    &quot;humi&quot;: 80,
+    &quot;light&quot;: 2000,
+    &quot;timestamp&quot;: 1780000002000
+  }
+}</code></pre>
+<p>ค่าของ <code>timestamp</code> ด้านบนเป็นเพียงตัวอย่าง ค่าจริงจะมาจาก:</p>
+<pre class="language-javascript"><code>Date.now()</code></pre>
+<h2 id="17-10-ทำไมต้องเก็บ-latest-data">17.10 ทำไมต้องเก็บ Latest Data</h2>
+<p>ถ้า Dashboard แสดงเฉพาะ Message ล่าสุด:</p>
+<pre class="language-text"><code>Device 001 ส่งข้อมูล → Dashboard แสดง Device 001
+Device 002 ส่งข้อมูล → Dashboard แสดง Device 002
+Device 003 ส่งข้อมูล → Dashboard แสดง Device 003</code></pre>
+<p>ค่าบน Dashboard จะเปลี่ยนตาม Device ที่ส่งข้อมูลล่าสุด ทำให้ผู้ใช้ไม่สามารถเลือกดู Device ได้อย่างชัดเจน ดังนั้นต้องมี:</p>
+<pre class="language-text"><code>Latest State Store</code></pre>
+<p>เช่น:</p>
+<pre class="language-text"><code>flow.devices</code></pre>
+<p>เพื่อจำค่าล่าสุดของทุก Device</p>
+<h2 id="17-11-dashboard-แบบที่-1-แสดงทุก-device">17.11 Dashboard แบบที่ 1 - แสดงทุก Device</h2>
+<p>รูปแบบง่ายที่สุดคือแสดง Device ทั้งหมด:</p>
+<pre class="language-text"><code>┌───────────────────────────────────┐
+│ Device 001                        │
+│ Temp  : 30 °C                     │
+│ Humi  : 70 %                      │
+│ Light : 1000 lx                   │
+├───────────────────────────────────┤
+│ Device 002                        │
+│ Temp  : 32 °C                     │
+│ Humi  : 75 %                      │
+│ Light : 1500 lx                   │
+├───────────────────────────────────┤
+│ Device 003                        │
+│ Temp  : 35 °C                     │
+│ Humi  : 80 %                      │
+│ Light : 2000 lx                   │
+└───────────────────────────────────┘</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>เข้าใจง่าย</li>
+<li>เห็นทุก Device พร้อมกัน</li>
+<li>เหมาะกับ Device จำนวนน้อย</li>
+</ul>
+<p>ข้อเสีย:</p>
+<ul>
+<li>Dashboard ใหญ่มากเมื่อมี Device จำนวนมาก</li>
+</ul>
+<p>ดังนั้นวิธีนี้เหมาะกับ:</p>
+<pre class="language-text"><code>3-5 Devices</code></pre>
+<p>มากกว่าระบบที่มี Device จำนวนมาก</p>
+<h2 id="17-12-dashboard-แบบที่-2-device-selection">17.12 Dashboard แบบที่ 2 - Device Selection</h2>
+<p>วิธีที่ Scale ได้ดีกว่าคือให้ผู้ใช้เลือก Device ตัวอย่าง:</p>
+<pre class="language-text"><code>Device
+
+[ 001 ▼ ]</code></pre>
+<p>จากนั้น Dashboard แสดง:</p>
+<pre class="language-text"><code>Temperature
+30 °C
+
+Humidity
+70 %
+
+Light
+1000 lx</code></pre>
+<p>เมื่อเลือก:</p>
+<pre class="language-text"><code>002</code></pre>
+<p>Dashboard เปลี่ยนเป็น:</p>
+<pre class="language-text"><code>Temperature
+32 °C
+
+Humidity
+75 %
+
+Light
+1500 lx</code></pre>
+<p>ข้อดีคือใช้ Dashboard ชุดเดียวกับหลาย Device</p>
+<h2 id="17-13-สร้าง-device-selector">17.13 สร้าง Device Selector</h2>
+<p>ใช้ Dashboard Dropdown ตัวเลือก:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>กำหนด Payload ของ Dropdown ให้เป็น:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>Flow:</p>
+<pre class="language-text"><code>[Device Dropdown]
+       │
+       ▼
+[Select Device Data]
+       │
+       ├──→ Temperature
+       ├──→ Humidity
+       └──→ Light</code></pre>
+<h2 id="17-14-function-select-device-data">17.14 Function - Select Device Data</h2>
+<p>เพิ่ม Function Node ชื่อ:</p>
+<pre class="language-text"><code>Select Device Data</code></pre>
+<p>ตั้ง Function Node ให้มี 3 Outputs ใช้โค้ด:</p>
+<pre class="language-javascript"><code>let device_id = String(msg.payload);
+
+let devices = flow.get(&quot;devices&quot;) || {};
+
+let device = devices[device_id];
+
+if (!device) {
+    return null;
+}
+
+let temp_msg = {
+    payload: device.temp
+};
+
+let humi_msg = {
+    payload: device.humi
+};
+
+let light_msg = {
+    payload: device.light
+};
+
+return [
+    temp_msg,
+    humi_msg,
+    light_msg
+];</code></pre>
+<p>Output 1:</p>
+<pre class="language-text"><code>Temperature</code></pre>
+<p>Output 2:</p>
+<pre class="language-text"><code>Humidity</code></pre>
+<p>Output 3:</p>
+<pre class="language-text"><code>Light</code></pre>
+<h2 id="17-15-dashboard-flow">17.15 Dashboard Flow</h2>
+<p>Flow จะเป็น:</p>
+<pre class="language-text"><code>MQTT
+  │
+  ▼
+ JSON
+  │
+  ▼
+Store Latest Device Data
+  │
+  └───────────────→ flow.devices
+
+
+Device Dropdown
+      │
+      ▼
+Select Device Data
+   │     │     │
+   │     │     │
+   ▼     ▼     ▼
+ Temp   Humi  Light
+   │     │     │
+   ▼     ▼     ▼
+        Dashboard</code></pre>
+<h2 id="17-16-ข้อจำกัดของ-selector-แบบนี้">17.16 ข้อจำกัดของ Selector แบบนี้</h2>
+<p>ถ้าผู้ใช้เลือก:</p>
+<pre class="language-text"><code>Device 002</code></pre>
+<p>Dashboard จะแสดงค่าของ Device 002 ณ เวลาที่กดเลือก แต่เมื่อ Device 002 ส่งข้อมูลใหม่ Dashboard จะยังไม่ Update อัตโนมัติ หาก Flow ยังไม่ได้เชื่อม ข้อมูลใหม่เข้ากับ Selected Device ดังนั้นต้องเพิ่ม:</p>
+<pre class="language-text"><code>selected_device</code></pre>
+<p>เพื่อให้ Dashboard Update แบบ Real-time</p>
+<h2 id="17-17-เก็บ-selected-device">17.17 เก็บ Selected Device</h2>
+<p>เมื่อผู้ใช้เลือก Device จาก Dropdown เพิ่ม Function:</p>
+<pre class="language-text"><code>Set Selected Device</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let device_id = String(msg.payload);
+
+flow.set(&quot;selected_device&quot;, device_id);
+
+return msg;</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>selected_device = &quot;002&quot;</code></pre>
+<h2 id="17-18-real-time-selected-device">17.18 Real-time Selected Device</h2>
+<p>ปรับ Function ที่รับ MQTT:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+let devices = flow.get(&quot;devices&quot;) || {};
+
+devices[device_id] = {
+    temp: Number(msg.payload.temp),
+    humi: Number(msg.payload.humi),
+    light: Number(msg.payload.light),
+    timestamp: Date.now()
+};
+
+flow.set(&quot;devices&quot;, devices);
+
+let selected_device = flow.get(&quot;selected_device&quot;);
+
+if (device_id !== selected_device) {
+    return null;
+}
+
+msg.device_id = device_id;
+
+return msg;</code></pre>
+<p>ตอนนี้ถ้าเลือก:</p>
+<pre class="language-text"><code>002</code></pre>
+<p>ข้อมูลจาก:</p>
+<pre class="language-text"><code>001
+003</code></pre>
+<p>ยังถูกเก็บใน:</p>
+<pre class="language-text"><code>flow.devices</code></pre>
+<p>แต่ไม่ส่งไป Update Dashboard เฉพาะ:</p>
+<pre class="language-text"><code>002</code></pre>
+<p>เท่านั้นที่จะ Update Dashboard แบบ Real-time</p>
+<h2 id="17-19-แยก-sensor-สำหรับ-dashboard">17.19 แยก Sensor สำหรับ Dashboard</h2>
+<p>หลังจากกรอง Selected Device แล้ว ใช้ Function Node 3 Outputs ชื่อ:</p>
+<pre class="language-text"><code>Dashboard Data</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let temp_msg = {
+    payload: Number(msg.payload.temp)
+};
+
+let humi_msg = {
+    payload: Number(msg.payload.humi)
+};
+
+let light_msg = {
+    payload: Number(msg.payload.light)
+};
+
+return [
+    temp_msg,
+    humi_msg,
+    light_msg
+];</code></pre>
+<p>Flow:</p>
+<pre class="language-text"><code>MQTT
+  ↓
+ JSON
+  ↓
+Store / Filter Selected Device
+  ↓
+Dashboard Data
+  ├──→ Temp
+  ├──→ Humi
+  └──→ Light</code></pre>
+<h2 id="17-20-complete-selected-device-architecture">17.20 Complete Selected-device Architecture</h2>
+<pre class="language-text"><code>                ESP32-001
+                    │
+                ESP32-002
+                    │
+                ESP32-003
+                    │
+                    ▼
+                 MQTT
+                    │
+             pkru/iot/+/data
+                    │
+                    ▼
+                 Node-RED
+                    │
+                    ▼
+              Store Latest
+                    │
+                    ▼
+              flow.devices
+                    │
+                    │
+            ┌───────┴────────┐
+            │                │
+            ▼                ▼
+      Device Selector    Incoming Data
+            │                │
+            ▼                ▼
+     selected_device     Compare ID
+            │                │
+            └───────┬────────┘
+                    ▼
+             Selected Device
+                    │
+                    ▼
+             Dashboard Data
+              │      │      │
+              ▼      ▼      ▼
+            Temp    Humi   Light</code></pre>
+<h2 id="17-21-เปรียบเทียบ-temperature-หลาย-device">17.21 เปรียบเทียบ Temperature หลาย Device</h2>
+<p>อีกความสามารถสำคัญคือ:</p>
+<pre class="language-text"><code>Device Comparison</code></pre>
+<p>เช่นกราฟ Temperature:</p>
+<pre class="language-text"><code>Temperature
+
+001 ─────────────
+002 ─────────────
+003 ─────────────</code></pre>
+<p>แทนที่จะเลือกดูทีละ Device ใช้ MQTT Input เดิม:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>แล้วกำหนดชื่อ Series จาก Device ID</p>
+<h2 id="17-22-function-สำหรับ-temperature-comparison">17.22 Function สำหรับ Temperature Comparison</h2>
+<p>เพิ่ม Function ชื่อ:</p>
+<pre class="language-text"><code>Temperature Comparison</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+msg.topic = device_id;
+msg.payload = Number(msg.payload.temp);
+
+return msg;</code></pre>
+<p>ตัวอย่าง Device 001 Input:</p>
+<pre class="language-text"><code>Topic:
+pkru/iot/001/data
+
+Payload:
+{
+  &quot;temp&quot;: 30
+}</code></pre>
+<p>Output:</p>
+<pre class="language-text"><code>msg.topic = &quot;001&quot;
+msg.payload = 30</code></pre>
+<p>Device 002:</p>
+<pre class="language-text"><code>msg.topic = &quot;002&quot;
+msg.payload = 32</code></pre>
+<p>Device 003:</p>
+<pre class="language-text"><code>msg.topic = &quot;003&quot;
+msg.payload = 35</code></pre>
+<p>เมื่อส่งเข้า Chart ที่รองรับการแยก series ตาม <code>msg.topic</code> จะสามารถแสดงข้อมูลหลาย Device เป็นคนละ Series ได้</p>
+<h2 id="17-23-temperature-comparison-flow">17.23 Temperature Comparison Flow</h2>
+<pre class="language-text"><code>MQTT
+  │
+  ▼
+ JSON
+  │
+  ▼
+Temperature Comparison
+  │
+  ▼
+Temperature Chart</code></pre>
+<p>Series:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>ทำให้เปรียบเทียบ Temperature ของหลาย Device ได้ในกราฟเดียว</p>
+<h2 id="17-24-humidity-comparison">17.24 Humidity Comparison</h2>
+<p>ใช้แนวคิดเดียวกัน:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+msg.topic = device_id;
+msg.payload = Number(msg.payload.humi);
+
+return msg;</code></pre>
+<p>Flow:</p>
+<pre class="language-text"><code>MQTT
+  ↓
+ JSON
+  ↓
+Humidity Comparison
+  ↓
+Humidity Chart</code></pre>
+<h2 id="17-25-light-comparison">17.25 Light Comparison</h2>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+msg.topic = device_id;
+msg.payload = Number(msg.payload.light);
+
+return msg;</code></pre>
+<p>Flow:</p>
+<pre class="language-text"><code>MQTT
+  ↓
+ JSON
+  ↓
+Light Comparison
+  ↓
+Light Chart</code></pre>
+<h2 id="17-26-dashboard-structure-ที่แนะนำ">17.26 Dashboard Structure ที่แนะนำ</h2>
+<p>Dashboard ไม่ควรซับซ้อนเกินไป แนะนำให้มี 2 ส่วน</p>
+<h3 id="ส่วนที่-1-selected-device">ส่วนที่ 1 - Selected Device</h3>
+<pre class="language-text"><code>┌───────────────────────────────┐
+│ DEVICE MONITOR               │
+│                               │
+│ Device: [ 002 ▼ ]            │
+│                               │
+│ Temp     Humi      Light      │
+│ 32 °C    75 %      1500 lx    │
+└───────────────────────────────┘</code></pre>
+<h3 id="ส่วนที่-2-device-comparison">ส่วนที่ 2 - Device Comparison</h3>
+<pre class="language-text"><code>┌───────────────────────────────┐
+│ TEMPERATURE COMPARISON        │
+│                               │
+│ 001 ─────────                 │
+│ 002 ─────────                 │
+│ 003 ─────────                 │
+└───────────────────────────────┘
+
+┌───────────────────────────────┐
+│ HUMIDITY COMPARISON           │
+│                               │
+│ 001 ─────────                 │
+│ 002 ─────────                 │
+│ 003 ─────────                 │
+└───────────────────────────────┘
+
+┌───────────────────────────────┐
+│ LIGHT COMPARISON              │
+│                               │
+│ 001 ─────────                 │
+│ 002 ─────────                 │
+│ 003 ─────────                 │
+└───────────────────────────────┘</code></pre>
+<h2 id="17-27-multi-device-simulator">17.27 Multi-device Simulator</h2>
+<p>ใช้ Raspberry Pi จำลอง ESP32 จำนวน 3 ตัว:</p>
+<pre class="language-bash"><code>while true
+do
+    temp1=$((25 + RANDOM % 11))
+    temp2=$((25 + RANDOM % 11))
+    temp3=$((25 + RANDOM % 11))
+
+    humi1=$((60 + RANDOM % 21))
+    humi2=$((60 + RANDOM % 21))
+    humi3=$((60 + RANDOM % 21))
+
+    light1=$((500 + RANDOM % 1501))
+    light2=$((500 + RANDOM % 1501))
+    light3=$((500 + RANDOM % 1501))
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp1,\&quot;humi\&quot;:$humi1,\&quot;light\&quot;:$light1}&quot;
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/002/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp2,\&quot;humi\&quot;:$humi2,\&quot;light\&quot;:$light2}&quot;
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/003/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp3,\&quot;humi\&quot;:$humi3,\&quot;light\&quot;:$light3}&quot;
+
+    sleep 2
+done</code></pre>
+<p>Simulator จะส่งข้อมูลจาก:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>ทุกประมาณ 2 วินาทีต่อรอบ</p>
+<h2 id="17-28-ตรวจสอบ-simulator">17.28 ตรวจสอบ Simulator</h2>
+<p>เปิดอีก Terminal:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/data&quot; \
+  -v</code></pre>
+<p>ควรเห็น:</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:...,&quot;humi&quot;:...,&quot;light&quot;:...}
+pkru/iot/002/data {&quot;temp&quot;:...,&quot;humi&quot;:...,&quot;light&quot;:...}
+pkru/iot/003/data {&quot;temp&quot;:...,&quot;humi&quot;:...,&quot;light&quot;:...}</code></pre>
+<p>และข้อมูลเปลี่ยนทุกประมาณ 2 วินาที</p>
+<h2 id="17-29-ปัญหาใหม่ที่เริ่มเห็นใน-lab-นี้">17.29 ปัญหาใหม่ที่เริ่มเห็นใน LAB นี้</h2>
+<p>สมมติ Dashboard แสดง:</p>
+<pre class="language-text"><code>Device 001
+Temp = 30 °C</code></pre>
+<p>คำถามคือ:</p>
+<pre class="language-text"><code>Device 001 ยัง Online อยู่หรือไม่?</code></pre>
+<p>ถ้า Device 001 หยุดส่งข้อมูล Dashboard อาจยังแสดง:</p>
+<pre class="language-text"><code>Temp = 30 °C</code></pre>
+<p>ทำให้ผู้ใช้เข้าใจผิดว่าค่านี้เป็นค่าปัจจุบัน ทั้งที่อาจเป็นข้อมูลจาก 10 นาทีที่แล้ว ดังนั้น:</p>
+<pre class="language-text"><code>Value Exists</code></pre>
+<p>ไม่ได้หมายความว่า:</p>
+<pre class="language-text"><code>Device Online</code></pre>
+<p>และ:</p>
+<pre class="language-text"><code>Last Value</code></pre>
+<p>ไม่ได้หมายความว่า:</p>
+<pre class="language-text"><code>Current Value</code></pre>
+<p>นี่เป็นประเด็นสำคัญที่จะนำไปสู่ LAB 18</p>
+<h2 id="17-30-timestamp-ของแต่ละ-device">17.30 Timestamp ของแต่ละ Device</h2>
+<p>ใน LAB นี้จึงควรเก็บ:</p>
+<pre class="language-text"><code>timestamp</code></pre>
+<p>ของข้อมูลล่าสุดด้วย ตัวอย่าง:</p>
+<pre class="language-javascript"><code>devices[device_id] = {
+    temp: Number(msg.payload.temp),
+    humi: Number(msg.payload.humi),
+    light: Number(msg.payload.light),
+    timestamp: Date.now()
+};</code></pre>
+<p>ทำให้ Gateway รู้ว่า:</p>
+<pre class="language-text"><code>Device 001
+Last Update = ...
+
+Device 002
+Last Update = ...
+
+Device 003
+Last Update = ...</code></pre>
+<p>แต่ใน LAB 17 ยังไม่ต้องตัดสิน ONLINE / OFFLINE เพราะจะเป็นแกนหลักของ LAB 18</p>
+<h2 id="17-31-อย่าสับสน-device-status-กับ-sensor-data">17.31 อย่าสับสน Device Status กับ Sensor Data</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ใช้สำหรับ:</p>
+<pre class="language-text"><code>temp
+humi
+light</code></pre>
+<p>ส่วน:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>ควรใช้สำหรับ:</p>
+<pre class="language-text"><code>ONLINE
+OFFLINE</code></pre>
+<p>ไม่ควรใช้ Sensor Value เป็นหลักฐานเดียวว่า Device Online เพราะ Device อาจหยุดส่งข้อมูลไปแล้ว แต่ Dashboard ยังเก็บค่าล่าสุดอยู่</p>
+<h2 id="17-32-แบบฝึกหัดที่-1-multi-device-monitoring">17.32 แบบฝึกหัดที่ 1 - Multi-device Monitoring</h2>
+<p>จำลอง Device:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>ให้ส่ง:</p>
+<pre class="language-text"><code>temp
+humi
+light</code></pre>
+<p>ผ่าน:</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/data</code></pre>
+<p>สร้าง Dashboard ที่สามารถเลือก:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>และแสดงค่าของ Device ที่เลือก</p>
+<h2 id="17-33-แบบฝึกหัดที่-2-real-time-device-selection">17.33 แบบฝึกหัดที่ 2 - Real-time Device Selection</h2>
+<p>เลือก:</p>
+<pre class="language-text"><code>Device 002</code></pre>
+<p>จาก Dashboard ตรวจสอบว่า:</p>
+<ul>
+<li>ข้อมูล Device 002 Update แบบ Real-time</li>
+<li>Device 001 ยังถูกเก็บใน <code>flow.devices</code></li>
+<li>Device 003 ยังถูกเก็บใน <code>flow.devices</code></li>
+<li>ข้อมูลจาก 001 และ 003 ไม่ไปเปลี่ยนค่าที่กำลังแสดงของ Device 002</li>
+</ul>
+<h2 id="17-34-แบบฝึกหัดที่-3-device-comparison">17.34 แบบฝึกหัดที่ 3 - Device Comparison</h2>
+<p>สร้าง Temperature Chart แสดง:</p>
+<pre class="language-text"><code>Device 001
+Device 002
+Device 003</code></pre>
+<p>ในกราฟเดียวกัน จากนั้นเพิ่ม:</p>
+<pre class="language-text"><code>Humidity Comparison
+Light Comparison</code></pre>
+<h2 id="17-35-แบบฝึกหัดที่-4-device-หยุดส่งข้อมูล">17.35 แบบฝึกหัดที่ 4 - Device หยุดส่งข้อมูล</h2>
+<p>ขณะ Simulator ทำงาน ให้หยุด Simulator แล้วสังเกต Dashboard จะพบว่า Sensor Value ยังคงแสดงค่าล่าสุดแม้ Device จะไม่ส่งข้อมูลแล้ว อธิบายว่า:</p>
+<pre class="language-text"><code>ทำไม Dashboard จึงยังแสดงค่า?
+ทำไม Last Value จึงไม่สามารถยืนยันว่า Device Online?</code></pre>
+<p>นี่เป็นโจทย์เชื่อมไป LAB 18</p>
+<h2 id="17-36-งานส่ง-lab-17">17.36 งานส่ง LAB 17</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Node-RED Flow</li>
+<li>Screenshot MQTT Messages จากอย่างน้อย 3 Device</li>
+<li>Screenshot Dashboard ที่สามารถเลือก <code>001</code>, <code>002</code>, <code>003</code></li>
+<li>แสดงค่าของ Device ที่เลือก: <code>temp</code>, <code>humi</code>, <code>light</code></li>
+<li>Screenshot Temperature Comparison Chart ที่มีอย่างน้อย 3 Device</li>
+<li>Screenshot Humidity หรือ Light Comparison อย่างน้อย 1 กราฟ</li>
+<li>อธิบายหน้าที่ของ <code>msg.topic</code>, <code>device_id</code>, <code>flow.devices</code>, <code>selected_device</code></li>
+<li>อธิบายว่าเหตุใด Last Sensor Value จึงไม่สามารถยืนยันว่า Device ยัง Online</li>
+</ol>
+<h2 id="17-37-สิ่งที่ต้องเข้าใจ">17.37 สิ่งที่ต้องเข้าใจ</h2>
+<p>LAB 16 ทำให้ระบบสามารถ:</p>
+<pre class="language-text"><code>Receive Multiple Devices</code></pre>
+<p>LAB 17 ทำให้ระบบสามารถ:</p>
+<pre class="language-text"><code>Monitor Multiple Devices</code></pre>
+<p>เส้นทางคือ:</p>
+<pre class="language-text"><code>Multiple Devices
+      ↓
+Structured MQTT Topics
+      ↓
+Wildcard Subscription
+      ↓
+Device Identification
+      ↓
+Latest State Storage
+      ↓
+Device Selection
+      ↓
+Device Comparison
+      ↓
+Multi-device Dashboard</code></pre>
+<h2 id="17-38-architecture-หลัง-lab-17">17.38 Architecture หลัง LAB 17</h2>
+<pre class="language-text"><code>┌───────────┐
+│ ESP32-001 │
+└─────┬─────┘
+      │
+┌───────────┐
+│ ESP32-002 │
+└─────┬─────┘
+      │
+┌───────────┐
+│ ESP32-003 │
+└─────┬─────┘
+      │
+      ▼
+┌─────────────────────┐
+│ MQTT Broker         │
+│                     │
+│ pkru/iot/+/data     │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Node-RED            │
+│                     │
+│ Device ID           │
+│ Latest Data         │
+│ Selected Device     │
+│ Common Processing   │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Dashboard           │
+│                     │
+│ Device Selector     │
+│ Temp / Humi / Light │
+│ Comparison Charts   │
+└─────────────────────┘</code></pre>
+<h2 id="17-39-ความสัมพันธ์ของ-lab-13-17">17.39 ความสัมพันธ์ของ LAB 13-17</h2>
+<p>LAB 13 - Rule &amp; Alert:</p>
+<pre class="language-text"><code>Data
+  ↓
+ Rule
+  ↓
+Decision</code></pre>
+<p>LAB 14 - Manual Control:</p>
+<pre class="language-text"><code>Human
+  ↓
+Command
+  ↓
+Actuator</code></pre>
+<p>LAB 15 - Automatic Control:</p>
+<pre class="language-text"><code>Sensor
+  ↓
+ Rule
+  ↓
+Decision
+  ↓
+Command
+  ↓
+Actuator</code></pre>
+<p>LAB 16 - MQTT Topic Design:</p>
+<pre class="language-text"><code>Device 001 ─┐
+Device 002 ─┼──→ Structured MQTT
+Device 003 ─┘</code></pre>
+<p>LAB 17 - Multi-device Dashboard:</p>
+<pre class="language-text"><code>Multiple Devices
+      ↓
+     MQTT
+      ↓
+Device Identification
+      ↓
+Multi-device Monitoring
+      ↓
+Dashboard</code></pre>
+<p>เส้นทางจึงพัฒนาเป็น:</p>
+<pre class="language-text"><code>Decide
+  ↓
+Control
+  ↓
+Automate
+  ↓
+Scale
+  ↓
+Monitor Multiple Devices</code></pre>
+<h2 id="17-40-เชื่อมไป-lab-18-device-status-and-offline-detection">17.40 เชื่อมไป LAB 18 - Device Status &amp; Offline Detection</h2>
+<p>หลัง LAB 17 ระบบสามารถแสดง:</p>
+<pre class="language-text"><code>Device 001
+Temp = 30 °C
+
+Device 002
+Temp = 32 °C
+
+Device 003
+Temp = 35 °C</code></pre>
+<p>แต่ยังตอบคำถามสำคัญไม่ได้ว่า:</p>
+<pre class="language-text"><code>Device ไหนยังทำงานอยู่?</code></pre>
+<p>ถ้า ESP32-002 ปิดเครื่อง Dashboard อาจยังแสดง:</p>
+<pre class="language-text"><code>Device 002
+Temp = 32 °C</code></pre>
+<p>เพราะนั่นคือค่าล่าสุดที่เก็บไว้ จึงต้องเพิ่มแนวคิด:</p>
+<pre class="language-text"><code>Device Status
+Heartbeat
+Last Seen
+Timeout
+MQTT Last Will and Testament (LWT)</code></pre>
+<p>LAB 18 จะสร้างเส้นทาง:</p>
+<pre class="language-text"><code>Device
+   │
+   ├── Data
+   │
+   └── Status / Heartbeat
+            ↓
+          MQTT
+            ↓
+         Gateway
+            ↓
+    Last Seen / Timeout
+            ↓
+      ONLINE / OFFLINE</code></pre>
+<p>ทำให้ระบบเปลี่ยนจาก:</p>
+<pre class="language-text"><code>&quot;มีข้อมูลของ Device&quot;</code></pre>
+<p>ไปสู่:</p>
+<pre class="language-text"><code>&quot;รู้ว่า Device ยังทำงานอยู่หรือไม่&quot;</code></pre>
+<p>ซึ่งเป็นพื้นฐานสำคัญของระบบ IoT ที่สามารถตรวจสอบความพร้อมใช้งานของอุปกรณ์ได้จริง</p>
+    </main>
+  </div>
+</body>
+</html>

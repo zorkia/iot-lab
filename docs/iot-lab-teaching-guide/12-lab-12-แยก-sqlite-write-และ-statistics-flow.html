@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 12 - แยก SQLite Write และ Statistics Flow</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="active" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-12-แยก-sqlite-write-และ-statistics-flow">LAB 12 - แยก SQLite Write และ Statistics Flow</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">ก่อนหน้า: LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="13-lab-13-rule-and-alert-processing.html">ถัดไป: LAB 13 - Rule &amp; Alert Processing</a></nav>
+<h2 id="12-1-แนวคิดของ-lab">12.1 แนวคิดของ LAB</h2>
+<p>LAB นี้จัดระเบียบ Node-RED flow ให้แยกหน้าที่ชัดเจนระหว่างการเขียนข้อมูลลง database และการอ่านข้อมูลมาทำ statistics</p>
+<p>ปัญหาที่พบบ่อยคือเอา flow ทุกอย่างต่อเป็นสายเดียว:</p>
+<pre class="language-text"><code>MQTT -&gt; JSON -&gt; INSERT -&gt; SQLite -&gt; SELECT -&gt; Dashboard</code></pre>
+<p>เมื่อ SQLite node ทำ <code>INSERT</code> ผลลัพธ์อาจเป็น empty output หรือข้อความที่ไม่ใช่ statistics ทำให้ Dashboard ถูกเขียนทับด้วยข้อมูลผิดชนิด หลักของ LAB นี้คือ:</p>
+<pre class="language-text"><code>Write path แยกจาก Read path</code></pre>
+<h2 id="12-2-วัตถุประสงค์">12.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>แยก flow ตามหน้าที่</li>
+<li>อธิบายความต่างระหว่าง write path และ read path</li>
+<li>ป้องกันผลลัพธ์จาก INSERT ไปรบกวน Dashboard</li>
+<li>ใช้ Inject trigger สำหรับ statistics</li>
+<li>จัด flow ให้พร้อมต่อยอดไป Rule &amp; Alert Processing</li>
+<li>ตรวจ debug แต่ละ path ได้อย่างเป็นระบบ</li>
+</ul>
+<h2 id="12-3-architecture-เดิมที่มีปัญหา">12.3 Architecture เดิมที่มีปัญหา</h2>
+<pre class="language-text"><code>[MQTT In]
+    |
+    v
+  [JSON]
+    |
+    v
+[Prepare INSERT]
+    |
+    v
+ [SQLite]
+    |
+    v
+[Dashboard]</code></pre>
+<p>ปัญหา:</p>
+<pre class="language-text"><code>INSERT ไม่ได้คืน sensor value
+Dashboard จึงอาจได้ empty output หรือข้อมูลที่ไม่ต้องการ</code></pre>
+<h2 id="12-4-architecture-ใหม่">12.4 Architecture ใหม่</h2>
+<pre class="language-text"><code>                   +--&gt; [Split Fields] --&gt; [Gauge / Chart]
+                   |
+[MQTT In] -&gt; [JSON]+--&gt; [Prepare INSERT] -&gt; [SQLite]
+                   |
+                   +--&gt; [Debug Raw Data]
+
+[Inject every 10s] -&gt; [Prepare SELECT] -&gt; [SQLite] -&gt; [Format Stats] -&gt; [Dashboard]</code></pre>
+<p>แบ่งเป็น 2 path หลัก:</p>
+<table>
+<thead><tr>
+<th>Path</th>
+<th>หน้าที่</th>
+</tr></thead><tbody>
+<tr>
+<td>Write Path</td>
+<td>รับ MQTT แล้วเขียนลง SQLite</td>
+</tr>
+<tr>
+<td>Read Path</td>
+<td>อ่าน SQLite แล้วทำ statistics</td>
+</tr>
+</tbody></table>
+<h2 id="12-5-write-path">12.5 Write Path</h2>
+<p>ต่อ flow สำหรับเขียนข้อมูล:</p>
+<pre class="language-text"><code>[MQTT In]
+    |
+    v
+  [JSON]
+    |
+    v
+[Prepare SQLite INSERT]
+    |
+    v
+[SQLite Write]
+    |
+    v
+[Debug Write Result]</code></pre>
+<p>Function <code>Prepare SQLite INSERT</code> ใช้แนวทางจาก LAB 08:</p>
+<pre class="language-javascript"><code>let data = msg.payload;
+
+msg.topic = `
+INSERT INTO sensor_data (device_id, temp, humi, light)
+VALUES ($device_id, $temp, $humi, $light)
+`;
+
+msg.params = {
+    $device_id: data.device_id || &quot;001&quot;,
+    $temp: Number(data.temp),
+    $humi: Number(data.humi),
+    $light: Number(data.light)
+};
+
+return msg;</code></pre>
+<h2 id="12-6-dashboard-path-สำหรับค่าล่าสุด">12.6 Dashboard Path สำหรับค่าล่าสุด</h2>
+<p>ต่อ flow สำหรับแสดงค่าล่าสุด:</p>
+<pre class="language-text"><code>[MQTT In]
+    |
+    v
+  [JSON]
+    |
+    v
+[Split Sensor Fields]
+    |          |          |
+    v          v          v
+ [Gauge]    [Gauge]    [Gauge]</code></pre>
+<p>เส้นนี้ไม่ต้องรอ SQLite เพราะ dashboard ล่าสุดควรตอบสนองทันทีเมื่อ MQTT message เข้ามา</p>
+<h2 id="12-7-read-path-สำหรับ-statistics">12.7 Read Path สำหรับ Statistics</h2>
+<p>ต่อ flow สำหรับอ่าน statistics:</p>
+<pre class="language-text"><code>[Inject every 10s]
+       |
+       v
+[Prepare Rolling SQL]
+       |
+       v
+[SQLite Read]
+       |
+       v
+[Format Rolling Statistics]
+       |
+       v
+[Dashboard Text]</code></pre>
+<p>Function <code>Prepare Rolling SQL</code>:</p>
+<pre class="language-javascript"><code>msg.topic = `
+SELECT
+  COUNT(*) AS records,
+  ROUND(AVG(temp), 2) AS avg_temp,
+  MIN(temp) AS min_temp,
+  MAX(temp) AS max_temp,
+  ROUND(AVG(humi), 2) AS avg_humi,
+  ROUND(AVG(light), 2) AS avg_light
+FROM sensor_data
+WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;)
+`;
+
+return msg;</code></pre>
+<h2 id="12-8-เหตุผลที่ต้องแยก-sqlite-write-และ-read">12.8 เหตุผลที่ต้องแยก SQLite Write และ Read</h2>
+<table>
+<thead><tr>
+<th>เหตุผล</th>
+<th>รายละเอียด</th>
+</tr></thead><tbody>
+<tr>
+<td>ลดผลข้างเคียง</td>
+<td>INSERT ไม่ไปรบกวน Dashboard</td>
+</tr>
+<tr>
+<td>debug ง่าย</td>
+<td>รู้ว่า error อยู่ path ไหน</td>
+</tr>
+<tr>
+<td>ขยายระบบง่าย</td>
+<td>เพิ่ม Rule หรือ Alert ได้โดยไม่พังทั้ง flow</td>
+</tr>
+<tr>
+<td>อ่านง่าย</td>
+<td>เห็นหน้าที่ของแต่ละส่วนได้ชัดเจน</td>
+</tr>
+</tbody></table>
+<h2 id="12-9-วิธีจัดหน้า-flow-ใน-node-red">12.9 วิธีจัดหน้า Flow ใน Node-RED</h2>
+<p>จัดกลุ่ม node ด้วย comment หรือ group:</p>
+<pre class="language-text"><code>Group 1: MQTT Input
+Group 2: Latest Dashboard
+Group 3: SQLite Write
+Group 4: Rolling Statistics</code></pre>
+<p>ตั้งชื่อ node ให้บอกหน้าที่:</p>
+<pre class="language-text"><code>Prepare SQLite INSERT
+SQLite Write
+Prepare Rolling SQL
+SQLite Read
+Format Rolling Statistics</code></pre>
+<h2 id="12-10-ทดสอบทั้งระบบ">12.10 ทดสอบทั้งระบบ</h2>
+<p>เปิด subscriber เพื่อดู MQTT:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost -t &quot;pkru/iot/001/data&quot; -v</code></pre>
+<p>ส่ง payload:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:31,&quot;humi&quot;:66,&quot;light&quot;:1400}&#x27;</code></pre>
+<p>ตรวจ database:</p>
+<pre class="language-bash"><code>sqlite3 /home/piuser/iot.db &quot;SELECT * FROM sensor_data ORDER BY id DESC LIMIT 3;&quot;</code></pre>
+<p>ตรวจ dashboard:</p>
+<pre class="language-text"><code>Gauge เปลี่ยนทันที
+Statistics เปลี่ยนตามรอบ Inject</code></pre>
+<h2 id="12-11-ปัญหาที่พบบ่อย">12.11 ปัญหาที่พบบ่อย</h2>
+<table>
+<thead><tr>
+<th>อาการ</th>
+<th>จุดตรวจ</th>
+</tr></thead><tbody>
+<tr>
+<td>Dashboard ค่าหายหลัง INSERT</td>
+<td>เอา output SQLite Write ไปต่อ widget</td>
+</tr>
+<tr>
+<td>Statistics ไม่อัปเดต</td>
+<td>Inject ไม่ทำงาน หรือ SQLite Read query ผิด</td>
+</tr>
+<tr>
+<td>Database มีข้อมูลแต่ Gauge ไม่เปลี่ยน</td>
+<td>Dashboard path ไม่ได้ต่อจาก MQTT/JSON</td>
+</tr>
+<tr>
+<td>Gauge เปลี่ยนแต่ DB ไม่เพิ่ม</td>
+<td>Write path มี error</td>
+</tr>
+<tr>
+<td>Debug สับสน</td>
+<td>node ไม่ได้ตั้งชื่อชัดเจน</td>
+</tr>
+</tbody></table>
+<h2 id="12-12-checklist-ก่อนจบ-lab">12.12 Checklist ก่อนจบ LAB</h2>
+<ul>
+<li>แยก Write Path และ Read Path แล้ว</li>
+<li>Dashboard latest value ไม่ต่อจาก SQLite Write</li>
+<li>Rolling Statistics ใช้ Inject trigger</li>
+<li>ตรวจ DB ได้ว่ามีข้อมูลเพิ่ม</li>
+<li>Dashboard แสดงทั้งค่าล่าสุดและ statistics ได้</li>
+<li>Flow พร้อมต่อยอดไป Rule &amp; Alert</li>
+</ul>
+<h2 id="12-13-งานส่ง-lab">12.13 งานส่ง LAB</h2>
+<p>ให้ส่ง:</p>
+<pre class="language-text"><code>1. ภาพ flow ที่แยกเป็น Write Path และ Read Path
+2. คำอธิบายหน้าที่ของแต่ละ path
+3. ผล SELECT ข้อมูลล่าสุดจาก SQLite
+4. ภาพ Dashboard ที่มีทั้ง Gauge และ Rolling Statistics
+5. อธิบายว่าทำไมไม่ควรต่อ Dashboard หลัง SQLite INSERT โดยตรง</code></pre>
+<h2 id="12-14-เชื่อมไป-lab-ถัดไป">12.14 เชื่อมไป LAB ถัดไป</h2>
+<p>LAB 13 จะเพิ่ม Rule &amp; Alert Processing โดยใช้ flow ที่จัดระเบียบแล้วจาก LAB นี้ เพื่อเปลี่ยนระบบจาก monitoring ไปสู่การตัดสินใจจากข้อมูล</p>
+    </main>
+  </div>
+</body>
+</html>

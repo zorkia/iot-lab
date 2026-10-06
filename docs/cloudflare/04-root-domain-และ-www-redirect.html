@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 - Root Domain และ WWW Redirect</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-teaching-guide/03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="../iot-lab-teaching-guide/04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="../iot-lab-teaching-guide/05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="../iot-lab-teaching-guide/06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="../iot-lab-teaching-guide/08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="../iot-lab-teaching-guide/10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="../iot-lab-teaching-guide/11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="../iot-lab-teaching-guide/12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="../iot-lab-teaching-guide/13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="../iot-lab-teaching-guide/14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="../iot-lab-teaching-guide/15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="../iot-lab-teaching-guide/16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="../iot-lab-teaching-guide/17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="../iot-lab-teaching-guide/19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="../iot-lab-teaching-guide/20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="../iot-lab-teaching-guide/23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="../iot-lab-teaching-guide/25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="../iot-lab-teaching-guide/26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="active" href="04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="root-domain-และ-www-redirect">Root Domain และ WWW Redirect</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="03-node-red-cloudflare-tunnel.html">ก่อนหน้า: 03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="05-multi-pi-cloudflare-architecture.html">ถัดไป: 05 - Multi-Pi Cloudflare Architecture</a></nav>
+<p>ตั้งค่า <code>vodun.cc</code> ให้เชื่อมต่อ Nginx บน Raspberry Pi <code>ranee</code> ผ่าน Cloudflare Tunnel และให้  <code>www.vodun.cc</code> redirect มายังโดเมนหลัก</p>
+<h2 id="ความสัมพันธ์กับเอกสารอื่น">ความสัมพันธ์กับเอกสารอื่น</h2>
+<ul>
+<li><a href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a></li>
+<li><a href="05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a></li>
+<li><a href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a></li>
+<li><a href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a></li>
+</ul>
+<h2 id="เป้าหมาย">เป้าหมาย</h2>
+<pre class="language-text"><code>https://vodun.cc
+        │
+        ▼
+   Cloudflare
+        │
+        ▼
+Tunnel: ranee
+        │
+        ▼
+http://localhost:80
+        │
+        ▼
+      Nginx
+
+https://www.vodun.cc
+        │
+        ▼
+   Cloudflare
+        │ 301 Redirect
+        ▼
+https://vodun.cc</code></pre>
+<p>เว็บไซต์จริงให้บริการที่ <code>https://vodun.cc</code> เพียงแห่งเดียว ส่วน <code>https://www.vodun.cc</code> ทำหน้าที่ redirect ไปยังโดเมนหลัก</p>
+<h2 id="tunnel-ที่ใช้">Tunnel ที่ใช้</h2>
+<table>
+<thead><tr>
+<th>รายการ</th>
+<th>ค่า</th>
+</tr></thead><tbody>
+<tr>
+<td>Raspberry Pi hostname</td>
+<td><code>ranee</code></td>
+</tr>
+<tr>
+<td>Tunnel name</td>
+<td><code>ranee</code></td>
+</tr>
+<tr>
+<td>Tunnel ID</td>
+<td>ตรวจด้วย <code>cloudflared tunnel list</code> (ตัวอย่างของ <code>ranee</code>: <code>65e7de67-4655-4ab3-b2b4-5cf25b116a9d</code>)</td>
+</tr>
+<tr>
+<td>Tunnel type</td>
+<td>Locally-managed</td>
+</tr>
+<tr>
+<td>Configuration file</td>
+<td><code>/etc/cloudflared/config.yml</code></td>
+</tr>
+</tbody></table>
+<p>Locally-managed Tunnel กำหนด Published Applications หรือ ingress routes จากไฟล์ configuration บน Raspberry Pi ไม่ได้แก้รายการ routes จาก Cloudflare Dashboard โดยตรง</p>
+<p>ตรวจชื่อและ ID ของ Tunnel ที่มีอยู่ในระบบ:</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>Tunnel ID เป็นค่าประจำ Tunnel แต่ไม่ใช่ credentials อย่างไรก็ตามไม่ควรคัดลอก ID จากเอกสารไปใช้กับเครื่องอื่น ให้ใช้ค่าที่คำสั่งด้านบนแสดงสำหรับ Tunnel <code>ranee</code></p>
+<p>ก่อนเพิ่ม root domain มี Published Applications ดังนี้:</p>
+<table>
+<thead><tr>
+<th>Public hostname</th>
+<th>Origin service</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ranee.vodun.cc</code></td>
+<td><code>http://localhost:80</code></td>
+</tr>
+<tr>
+<td><code>node-red-ranee.vodun.cc</code></td>
+<td><code>http://localhost:1880</code></td>
+</tr>
+<tr>
+<td><code>ssh-ranee.vodun.cc</code></td>
+<td><code>ssh://localhost:22</code></td>
+</tr>
+</tbody></table>
+<h2 id="เพิ่ม-root-domain">เพิ่ม Root Domain</h2>
+<p>เปิดไฟล์ configuration บน Raspberry Pi <code>ranee</code>:</p>
+<pre class="language-bash"><code>sudo nano /etc/cloudflared/config.yml</code></pre>
+<p>คงบรรทัด <code>tunnel</code> และ <code>credentials-file</code> เดิมของเครื่องไว้ จากนั้นแก้เฉพาะส่วน <code>ingress</code> โดยเพิ่ม <code>vodun.cc</code> เป็น rule แรก และคง fallback rule ไว้เป็นรายการสุดท้าย:</p>
+<pre class="language-yaml"><code>ingress:
+  - hostname: vodun.cc
+    service: http://localhost:80
+
+  - hostname: ranee.vodun.cc
+    service: http://localhost:80
+
+  - hostname: node-red-ranee.vodun.cc
+    service: http://localhost:1880
+
+  - hostname: ssh-ranee.vodun.cc
+    service: ssh://localhost:22
+
+  - service: http_status:404</code></pre>
+<aside class="callout callout-important">
+<div class="callout-title">IMPORTANT</div>
+<p><code>http_status:404</code> ต้องอยู่ท้ายสุด เพราะ cloudflared ตรวจ ingress rules จากบนลงล่าง</p>
+</aside>
+<h2 id="ตรวจสอบ-configuration">ตรวจสอบ Configuration</h2>
+<p>ตรวจ syntax และลำดับ ingress rules:</p>
+<pre class="language-bash"><code>sudo cloudflared \
+  --config /etc/cloudflared/config.yml \
+  tunnel ingress validate</code></pre>
+<p>ผลที่ต้องการคือ <code>OK</code></p>
+<h2 id="สร้าง-dns-route">สร้าง DNS Route</h2>
+<p>สร้าง DNS route ให้ root domain ชี้เข้า Tunnel <code>ranee</code>:</p>
+<pre class="language-bash"><code>cloudflared tunnel route dns ranee vodun.cc</code></pre>
+<p>เส้นทางที่ได้:</p>
+<pre class="language-text"><code>vodun.cc
+   │
+   ▼
+Cloudflare
+   │
+   ▼
+Tunnel: ranee</code></pre>
+<h2 id="restart-tunnel">Restart Tunnel</h2>
+<p>นำ configuration ใหม่ไปใช้:</p>
+<pre class="language-bash"><code>sudo systemctl restart cloudflared
+sudo systemctl status cloudflared --no-pager</code></pre>
+<p>สถานะที่ต้องการคือ <code>Active: active (running)</code></p>
+<p>ทดสอบ root domain จากเครื่อง Client:</p>
+<pre class="language-bash"><code>curl -I https://vodun.cc</code></pre>
+<p>ผลที่ได้ควรเดินทางผ่าน Cloudflare และ Tunnel <code>ranee</code> ไปยัง Nginx ที่ <code>localhost:80</code></p>
+<h2 id="สร้าง-dns-สำหรับ-www">สร้าง DNS สำหรับ WWW</h2>
+<p>ใน Cloudflare Dashboard ไปที่ <strong>Domains &gt; vodun.cc &gt; DNS &gt; Records &gt; Add record</strong> แล้วกำหนดค่า:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>กำหนดเป็น</th>
+</tr></thead><tbody>
+<tr>
+<td>Type</td>
+<td><code>CNAME</code></td>
+</tr>
+<tr>
+<td>Name</td>
+<td><code>www</code></td>
+</tr>
+<tr>
+<td>Target</td>
+<td><code>vodun.cc</code></td>
+</tr>
+<tr>
+<td>Proxy status</td>
+<td>Proxied</td>
+</tr>
+<tr>
+<td>TTL</td>
+<td>Auto</td>
+</tr>
+</tbody></table>
+<p><code>www.vodun.cc</code> ต้องผ่าน Cloudflare Proxy เพื่อให้ Redirect Rule ทำงานที่ Cloudflare Edge</p>
+<h2 id="สร้าง-www-redirect">สร้าง WWW Redirect</h2>
+<p>ใน Cloudflare Dashboard ไปที่ <strong>Rules &gt; Redirect Rules &gt; Create new Single Redirect</strong> แล้วเลือก Template <strong>Redirect from WWW to root</strong></p>
+<p>กำหนดค่า:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>กำหนดเป็น</th>
+</tr></thead><tbody>
+<tr>
+<td>Rule name</td>
+<td><code>Redirect www.vodun.cc to vodun.cc</code></td>
+</tr>
+<tr>
+<td>Matching type</td>
+<td>Wildcard pattern</td>
+</tr>
+<tr>
+<td>Request URL</td>
+<td><code>https://www.vodun.cc/*</code></td>
+</tr>
+<tr>
+<td>Target URL</td>
+<td><code>https://vodun.cc/${1}</code></td>
+</tr>
+<tr>
+<td>Status code</td>
+<td><code>301 - Permanent Redirect</code></td>
+</tr>
+<tr>
+<td>Preserve query string</td>
+<td>เปิด</td>
+</tr>
+</tbody></table>
+<p>ตรวจให้พบข้อความ <code>Rule validation passed</code> แล้วกด <strong>Deploy</strong></p>
+<h2 id="ผลของ-redirect">ผลของ Redirect</h2>
+<p>Redirect ต้องรักษา path และ query string เดิมไว้:</p>
+<table>
+<thead><tr>
+<th>URL ที่เรียก</th>
+<th>URL ปลายทาง</th>
+</tr></thead><tbody>
+<tr>
+<td><code>https://www.vodun.cc/</code></td>
+<td><code>https://vodun.cc/</code></td>
+</tr>
+<tr>
+<td><code>https://www.vodun.cc/test</code></td>
+<td><code>https://vodun.cc/test</code></td>
+</tr>
+<tr>
+<td><code>https://www.vodun.cc/lab/01</code></td>
+<td><code>https://vodun.cc/lab/01</code></td>
+</tr>
+<tr>
+<td><code>https://www.vodun.cc/test?id=123</code></td>
+<td><code>https://vodun.cc/test?id=123</code></td>
+</tr>
+</tbody></table>
+<h2 id="ทดสอบ-redirect">ทดสอบ Redirect</h2>
+<p>ทดสอบหน้าแรก:</p>
+<pre class="language-bash"><code>curl -I https://www.vodun.cc</code></pre>
+<p>ควรพบ HTTP status <code>301</code> และ header ต่อไปนี้:</p>
+<pre class="language-text"><code>location: https://vodun.cc/</code></pre>
+<p>ทดสอบ path และ query string:</p>
+<pre class="language-bash"><code>curl -I &quot;https://www.vodun.cc/test/page?id=123&quot;</code></pre>
+<p>ค่า <code>location</code> ควรเป็น <code>https://vodun.cc/test/page?id=123</code></p>
+<h2 id="โครงสร้าง-domain">โครงสร้าง Domain</h2>
+<pre class="language-text"><code>vodun.cc
+│
+├── vodun.cc
+│   └── Tunnel: ranee
+│       └── Nginx :80
+│
+├── www.vodun.cc
+│   └── 301 Redirect
+│       └── https://vodun.cc
+│
+├── ranee.vodun.cc
+│   └── Tunnel: ranee
+│       └── Nginx :80
+│
+├── node-red-ranee.vodun.cc
+│   └── Tunnel: ranee
+│       └── Node-RED :1880
+│
+└── ssh-ranee.vodun.cc
+    └── Tunnel: ranee
+        └── SSH :22</code></pre>
+<h2 id="เหตุผลที่ใช้-redirect">เหตุผลที่ใช้ Redirect</h2>
+<ul>
+<li>มี Canonical Domain เพียงชื่อเดียว</li>
+<li>ไม่ต้องดูแลเว็บไซต์ซ้ำสองชุด</li>
+<li>URL ไม่ซ้ำกัน</li>
+<li>Nginx ไม่ต้องมีเว็บไซต์สำหรับ <code>www</code> แยก</li>
+<li>ไม่ต้องเพิ่ม <code>www</code> เป็น ingress rule ของ cloudflared</li>
+<li>Redirect เกิดที่ Cloudflare Edge ก่อนถึง Raspberry Pi</li>
+</ul>
+<h2 id="ผลลัพธ์">ผลลัพธ์</h2>
+<table>
+<thead><tr>
+<th>บริการ</th>
+<th>URL</th>
+</tr></thead><tbody>
+<tr>
+<td>เว็บไซต์หลัก</td>
+<td><code>https://vodun.cc</code></td>
+</tr>
+<tr>
+<td>WWW redirect</td>
+<td><code>https://www.vodun.cc</code> → <code>https://vodun.cc</code></td>
+</tr>
+<tr>
+<td>Raspberry Pi web</td>
+<td><code>https://ranee.vodun.cc</code></td>
+</tr>
+<tr>
+<td>Node-RED</td>
+<td><code>https://node-red-ranee.vodun.cc</code></td>
+</tr>
+<tr>
+<td>SSH</td>
+<td><code>ssh-ranee.vodun.cc</code></td>
+</tr>
+</tbody></table>
+<p>แนวทางนี้ทำให้ <code>vodun.cc</code> เป็นโดเมนหลัก ขณะที่ Raspberry Pi และบริการแต่ละประเภทใช้ subdomain แยกกันภายใต้โดเมนเดียวกัน</p>
+    </main>
+  </div>
+</body>
+</html>

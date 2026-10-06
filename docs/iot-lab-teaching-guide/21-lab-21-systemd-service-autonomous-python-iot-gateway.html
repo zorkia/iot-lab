@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 21 - systemd Service: Autonomous Python IoT Gateway</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="active" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-21-systemd-service-autonomous-python-iot-gateway">LAB 21 - systemd Service: Autonomous Python IoT Gateway</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">ก่อนหน้า: LAB 20 - Python MQTT Application on Raspberry Pi</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">ถัดไป: LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a></nav>
+<h2 id="21-1-แนวคิดของ-lab">21.1 แนวคิดของ LAB</h2>
+<p>LAB 20 สร้าง Python MQTT Application บน Raspberry Pi Architecture</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Mosquitto
+   ↓
+gateway.py
+   │
+   ├── Subscribe
+   ├── JSON Parsing
+   ├── Validation
+   ├── Rule Processing
+   └── MQTT Publish</code></pre>
+<p>แต่ยังมีข้อจำกัดสำคัญ ทุกครั้งที่ Raspberry Pi เปิดเครื่องใหม่ ต้องมีผู้ใช้ SSH เข้าเครื่องแล้วสั่ง</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+source venv/bin/activate
+python gateway.py</code></pre>
+<p>ถ้า Python Process หยุดทำงาน</p>
+<pre class="language-text"><code>Gateway Application
+      ↓
+    STOP</code></pre>
+<p>และจะไม่กลับมาทำงานเอง ระบบลักษณะนี้ยังไม่เหมาะกับ IoT Gateway ที่ต้องทำงานต่อเนื่อง LAB 21 จะเปลี่ยน</p>
+<pre class="language-text"><code>Python Script</code></pre>
+<p>ให้เป็น</p>
+<pre class="language-text"><code>Linux Service</code></pre>
+<p>โดยใช้</p>
+<pre class="language-text"><code>systemd</code></pre>
+<p>เพื่อให้ Application สามารถ</p>
+<ul>
+<li>Start อัตโนมัติหลัง Boot</li>
+<li>Stop</li>
+<li>Start</li>
+<li>Restart</li>
+<li>ตรวจสอบ Status</li>
+<li>Restart อัตโนมัติเมื่อ Process ล้ม</li>
+<li>เก็บ Log ผ่าน journal</li>
+<li>ทำงานโดยไม่ต้องเปิด Terminal</li>
+<li>ทำงานโดยไม่ต้อง Activate venv ด้วยมือ</li>
+</ul>
+<p>เป้าหมายคือ</p>
+<pre class="language-text"><code>Python Script
+     ↓
+Managed Service
+     ↓
+Autonomous IoT Gateway</code></pre>
+<h2 id="21-2-วัตถุประสงค์">21.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>อธิบายบทบาทของ systemd</li>
+<li>สร้าง systemd Service</li>
+<li>Run Python จาก Virtual Environment</li>
+<li>Start / Stop / Restart Service</li>
+<li>Enable Service ให้ทำงานหลัง Boot</li>
+<li>ตรวจสอบ Service Status</li>
+<li>ดู Log ด้วย journalctl</li>
+<li>ตั้ง Automatic Restart</li>
+<li>ทดสอบ Process Failure</li>
+<li>ทดสอบ Raspberry Pi Reboot</li>
+<li>เข้าใจความแตกต่างระหว่าง Process, Service และ Application</li>
+<li>สร้าง IoT Gateway ที่ทำงานโดยไม่ต้อง SSH เข้าไป Run Program</li>
+</ul>
+<h2 id="21-3-architecture-ก่อน-lab-21">21.3 Architecture ก่อน LAB 21</h2>
+<pre class="language-text"><code>Raspberry Pi
+     │
+     ▼
+    Boot
+     │
+     ▼
+ Mosquitto
+     │
+     ▼
+    User
+     │
+     ▼
+    SSH
+     │
+     ▼
+Activate venv
+     │
+     ▼
+python gateway.py
+     │
+     ▼
+ IoT Gateway</code></pre>
+<p>ปัญหา</p>
+<pre class="language-text"><code>Human Dependency</code></pre>
+<p>ถ้าไม่มีคน Run</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>ระบบไม่ทำงาน</p>
+<h2 id="21-4-architecture-หลัง-lab-21">21.4 Architecture หลัง LAB 21</h2>
+<pre class="language-text"><code>Raspberry Pi
+     │
+     ▼
+    Boot
+     │
+     ▼
+  systemd
+     │
+     ▼
+iot-gateway.service
+     │
+     ▼
+Python Virtual Environment
+     │
+     ▼
+  gateway.py
+     │
+     ▼
+   MQTT
+     │
+     ▼
+  IoT Nodes</code></pre>
+<p>ไม่ต้อง</p>
+<pre class="language-text"><code>SSH
+source venv/bin/activate
+python gateway.py</code></pre>
+<p>ทุกครั้งหลัง Boot</p>
+<h2 id="21-5-systemd-คืออะไร">21.5 systemd คืออะไร</h2>
+<p>systemd เป็น Service Manager ที่ใช้ใน Linux หลาย Distribution รวมถึง Raspberry Pi OS / Debian ใช้จัดการ Service เช่น</p>
+<pre class="language-text"><code>ssh
+mosquitto
+NetworkManager</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<p>Mosquitto ที่เราใช้มาตั้งแต่ LAB ก่อนหน้าก็ทำงานเป็น Service ดังนั้นใน LAB นี้เราจะทำให้</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>ทำงานในลักษณะเดียวกัน</p>
+<h2 id="21-6-ตรวจสอบ-systemd">21.6 ตรวจสอบ systemd</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>systemctl --version</code></pre>
+<p>ควรเห็นข้อมูลประมาณ</p>
+<pre class="language-text"><code>systemd xxx</code></pre>
+<p>ตรวจสอบ Mosquitto</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<p>จะเห็น</p>
+<pre class="language-text"><code>Active: active (running)</code></pre>
+<p>นี่คือตัวอย่าง Service ที่ systemd กำลังจัดการ</p>
+<h2 id="21-7-ตรวจสอบ-project-จาก-lab-20">21.7 ตรวจสอบ Project จาก LAB 20</h2>
+<p>สมมติ Project อยู่ที่</p>
+<pre class="language-text"><code>~/iot-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+
+ls</code></pre>
+<p>ควรมีอย่างน้อย</p>
+<pre class="language-text"><code>gateway.py
+venv/</code></pre>
+<p>ตรวจสอบ Python ใน venv</p>
+<pre class="language-bash"><code>./venv/bin/python --version</code></pre>
+<p>ตรวจสอบ Paho MQTT</p>
+<pre class="language-bash"><code>./venv/bin/python -c &quot;import paho.mqtt.client; print(&#x27;OK&#x27;)&quot;</code></pre>
+<p>ผล</p>
+<pre class="language-text"><code>OK</code></pre>
+<h2 id="21-8-ทดสอบ-program-ก่อนสร้าง-service">21.8 ทดสอบ Program ก่อนสร้าง Service</h2>
+<p>สำคัญมาก ต้องยืนยันว่า Program ทำงานด้วยคำสั่งตรงก่อน</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+
+./venv/bin/python gateway.py</code></pre>
+<p>ถ้า Program ยัง Error อย่าเพิ่งสร้าง systemd Service ควรแก้ Python Application ให้ทำงานก่อน กด</p>
+<pre class="language-text"><code>Ctrl+C</code></pre>
+<p>เมื่อทดสอบเสร็จ</p>
+<h2 id="21-9-หา-username">21.9 หา Username</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>whoami</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>piuser</code></pre>
+<p>หรืออาจเป็นชื่ออื่นตาม Raspberry Pi ของแต่ละเครื่อง จำ Username นี้ไว้ เพราะต้องใช้ใน Service File</p>
+<h2 id="21-10-หา-absolute-path">21.10 หา Absolute Path</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>pwd</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>/home/piuser/iot-gateway</code></pre>
+<p>ดังนั้น Python Interpreter คือ</p>
+<pre class="language-text"><code>/home/piuser/iot-gateway/venv/bin/python</code></pre>
+<p>และ Program คือ</p>
+<pre class="language-text"><code>/home/piuser/iot-gateway/gateway.py</code></pre>
+<p>systemd ควรใช้</p>
+<pre class="language-text"><code>Absolute Path</code></pre>
+<p>ไม่ใช้</p>
+<pre class="language-text"><code>~/iot-gateway</code></pre>
+<p>เพราะ <code>~</code> ไม่ควรถูกพึ่งพาใน Service File</p>
+<h2 id="21-11-สร้าง-systemd-service">21.11 สร้าง systemd Service</h2>
+<p>สร้างไฟล์</p>
+<pre class="language-bash"><code>sudo nano /etc/systemd/system/iot-gateway.service</code></pre>
+<p>ใส่</p>
+<pre class="language-ini"><code>[Unit]
+Description=Python IoT Gateway
+After=network-online.target mosquitto.service
+Wants=network-online.target
+Requires=mosquitto.service
+
+[Service]
+Type=simple
+User=piuser
+WorkingDirectory=/home/piuser/iot-gateway
+ExecStart=/home/piuser/iot-gateway/venv/bin/python -u /home/piuser/iot-gateway/gateway.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<p>ต้องเปลี่ยน</p>
+<pre class="language-text"><code>piuser</code></pre>
+<p>ให้ตรงกับ Username จริงของ Raspberry Pi</p>
+<h2 id="21-12-อธิบาย-unit">21.12 อธิบาย [Unit]</h2>
+<p>ส่วน</p>
+<pre class="language-ini"><code>[Unit]</code></pre>
+<p>กำหนดข้อมูลและ Dependency ของ Service</p>
+<pre class="language-text"><code>Description=Python IoT Gateway</code></pre>
+<p>คือคำอธิบาย Service</p>
+<pre class="language-text"><code>After=network-online.target mosquitto.service</code></pre>
+<p>หมายถึงให้เริ่ม Service นี้หลังจาก systemd ดำเนินการถึง Network Online Target และหลัง Mosquitto Service แต่ต้องเข้าใจว่า</p>
+<pre class="language-text"><code>After=</code></pre>
+<p>กำหนดลำดับการ Start ไม่ได้รับประกันว่า Internet หรือ MQTT Application จะพร้อมใช้งานสมบูรณ์ทุกกรณี ดังนั้น Python Application ยังควรมี Reconnect/Error Handling ของตัวเอง</p>
+<pre class="language-text"><code>Wants=network-online.target</code></pre>
+<p>บอก systemd ว่า Service นี้ต้องการ Network Online Target</p>
+<pre class="language-text"><code>Requires=mosquitto.service</code></pre>
+<p>หมายถึง Service นี้มี Dependency กับ Mosquitto ถ้าใช้ MQTT Broker ภายใน Raspberry Pi เครื่องเดียวกัน แนวทางนี้เหมาะกับ LAB ถ้าใช้ Remote Broker อาจไม่จำเป็นต้องใช้</p>
+<pre class="language-text"><code>Requires=mosquitto.service</code></pre>
+<h2 id="21-13-อธิบาย-service">21.13 อธิบาย [Service]</h2>
+<pre class="language-text"><code>Type=simple</code></pre>
+<p>เหมาะกับ Python Application ที่ทำงานเป็น Foreground Process</p>
+<pre class="language-text"><code>User=piuser</code></pre>
+<p>กำหนดว่า Process จะทำงานในสิทธิ์ของ User</p>
+<pre class="language-text"><code>piuser</code></pre>
+<p>ไม่จำเป็นต้อง Run Python Gateway เป็น</p>
+<pre class="language-text"><code>root</code></pre>
+<pre class="language-text"><code>WorkingDirectory=/home/piuser/iot-gateway</code></pre>
+<p>กำหนด Working Directory สำคัญเมื่อ Program ใช้ Relative Path เช่น</p>
+<pre class="language-text"><code>data.db
+config.json
+logs/</code></pre>
+<h2 id="21-14-execstart">21.14 ExecStart</h2>
+<pre class="language-text"><code>ExecStart=/home/piuser/iot-gateway/venv/bin/python -u /home/piuser/iot-gateway/gateway.py</code></pre>
+<p>นี่คือคำสั่งที่ systemd ใช้ Run Application สังเกตว่าไม่ต้อง</p>
+<pre class="language-bash"><code>source venv/bin/activate</code></pre>
+<p>เพราะเราเรียก Python Interpreter ภายใน venv โดยตรง</p>
+<pre class="language-text"><code>/home/piuser/iot-gateway/venv/bin/python</code></pre>
+<p>นี่เป็นวิธีที่เหมาะสมกว่าสำหรับ systemd</p>
+<h2 id="21-15-ทำไมใช้-python-u">21.15 ทำไมใช้ <code>python -u</code></h2>
+<p>Option</p>
+<pre class="language-text"><code>-u</code></pre>
+<p>ทำให้ Python ใช้ Unbuffered Output ช่วยให้</p>
+<pre class="language-text"><code>print()</code></pre>
+<p>ปรากฏใน</p>
+<pre class="language-text"><code>journalctl</code></pre>
+<p>ทันทีมากขึ้น เหมาะสำหรับ Service ที่ใช้ Console Output เป็น Log ใน LAB</p>
+<h2 id="21-16-automatic-restart">21.16 Automatic Restart</h2>
+<p>ใช้</p>
+<pre class="language-text"><code>Restart=on-failure</code></pre>
+<p>หมายถึง systemd จะพยายาม Restart Service เมื่อ Process จบแบบ Failure เช่น</p>
+<pre class="language-text"><code>Python Crash
+Unhandled Exception
+Process exit ด้วย Error</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>RestartSec=5</code></pre>
+<p>หมายถึงรอประมาณ</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>ก่อน Restart</p>
+<h2 id="21-17-ทำไมเลือก-restart-on-failure">21.17 ทำไมเลือก <code>Restart=on-failure</code></h2>
+<p>ใน LAB นี้ใช้</p>
+<pre class="language-text"><code>Restart=on-failure</code></pre>
+<p>แทน</p>
+<pre class="language-text"><code>Restart=always</code></pre>
+<p>เพื่อให้คุณเห็นความแตกต่างระหว่าง</p>
+<pre class="language-text"><code>Failure</code></pre>
+<p>กับ</p>
+<pre class="language-text"><code>Intentional Stop</code></pre>
+<p>เมื่อสั่ง</p>
+<pre class="language-bash"><code>sudo systemctl stop iot-gateway</code></pre>
+<p>systemd จะไม่พยายามเปิด Service กลับขึ้นมาทันที</p>
+<p>จึงเหมาะกับการเรียนและการดูแล Service</p>
+<h2 id="21-18-install">21.18 [Install]</h2>
+<pre class="language-ini"><code>[Install]</code></pre>
+<p>ใช้กำหนดว่า Service จะถูกผูกเข้ากับ Target ใดเมื่อ Enable</p>
+<pre class="language-text"><code>WantedBy=multi-user.target</code></pre>
+<p>ทำให้สามารถ</p>
+<pre class="language-text"><code>enable</code></pre>
+<p>Service เพื่อ Start ระหว่าง Boot ตามปกติ</p>
+<h2 id="21-19-reload-systemd">21.19 Reload systemd</h2>
+<p>หลังสร้างหรือแก้ Service File ต้องสั่ง</p>
+<pre class="language-bash"><code>sudo systemctl daemon-reload</code></pre>
+<p>เพื่อให้ systemd อ่าน Configuration ใหม่ ถ้าลืมขั้นตอนนี้ systemd อาจยังใช้ Configuration เดิม</p>
+<h2 id="21-20-start-service">21.20 Start Service</h2>
+<p>สั่ง</p>
+<pre class="language-bash"><code>sudo systemctl start iot-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ควรเห็นประมาณ</p>
+<pre class="language-text"><code>Active: active (running)</code></pre>
+<p>และ Process</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>กำลังทำงาน</p>
+<h2 id="21-21-ตรวจสอบ-mqtt">21.21 ตรวจสอบ MQTT</h2>
+<p>เปิด Terminal ส่งข้อมูล</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ถ้า Python Gateway จาก LAB 20 ทำ Automatic Control ตรวจสอบ Command</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/cmd&quot; \
+-v</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<p>หมายความว่า</p>
+<pre class="language-text"><code>systemd
+   ↓
+gateway.py
+   ↓
+MQTT Processing</code></pre>
+<p>ทำงานจริง</p>
+<h2 id="21-22-stop-service">21.22 Stop Service</h2>
+<pre class="language-bash"><code>sudo systemctl stop iot-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ควรเห็นว่า Service ไม่ได้ Running หลังจากนั้นส่ง Sensor Data Python Gateway ไม่ควรประมวลผล Message</p>
+<h2 id="21-23-start-ใหม่">21.23 Start ใหม่</h2>
+<pre class="language-bash"><code>sudo systemctl start iot-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ควรกลับเป็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<h2 id="21-24-restart-service">21.24 Restart Service</h2>
+<p>เมื่อแก้ไข</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>สามารถใช้</p>
+<pre class="language-bash"><code>sudo systemctl restart iot-gateway</code></pre>
+<p>แทนการ</p>
+<pre class="language-text"><code>stop
+start</code></pre>
+<p>สองครั้ง คำสั่งนี้จะถูกใช้บ่อยมากในการพัฒนา Gateway</p>
+<h2 id="21-25-คำสั่งพื้นฐานที่ต้องจำ">21.25 คำสั่งพื้นฐานที่ต้องจำ</h2>
+<p>Start</p>
+<pre class="language-bash"><code>sudo systemctl start iot-gateway</code></pre>
+<p>Stop</p>
+<pre class="language-bash"><code>sudo systemctl stop iot-gateway</code></pre>
+<p>Restart</p>
+<pre class="language-bash"><code>sudo systemctl restart iot-gateway</code></pre>
+<p>Status</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>Enable</p>
+<pre class="language-bash"><code>sudo systemctl enable iot-gateway</code></pre>
+<p>Disable</p>
+<pre class="language-bash"><code>sudo systemctl disable iot-gateway</code></pre>
+<h2 id="21-26-enable-service">21.26 Enable Service</h2>
+<p>ตอนนี้ Service สามารถ Start ได้ แต่ยังต้องทดสอบว่า Start หลัง Boot หรือไม่ สั่ง</p>
+<pre class="language-bash"><code>sudo systemctl enable iot-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl is-enabled iot-gateway</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>enabled</code></pre>
+<h2 id="21-27-enable-start-พร้อมกัน">21.27 Enable + Start พร้อมกัน</h2>
+<p>สามารถใช้</p>
+<pre class="language-bash"><code>sudo systemctl enable --now iot-gateway</code></pre>
+<p>คำสั่งนี้ทำสองอย่าง</p>
+<pre class="language-text"><code>enable
+  +
+start</code></pre>
+<p>เหมาะเมื่อสร้าง Service เสร็จแล้ว แต่ใน LAB แนะนำให้ทดลอง</p>
+<pre class="language-text"><code>start
+status
+stop
+restart</code></pre>
+<p>ก่อน เพื่อให้คุณเข้าใจแต่ละคำสั่ง</p>
+<h2 id="21-28-ดู-log-ด้วย-journalctl">21.28 ดู Log ด้วย journalctl</h2>
+<p>ไม่จำเป็นต้องเปิด Terminal ค้างไว้ดู</p>
+<pre class="language-text"><code>print()</code></pre>
+<p>เพราะ systemd เก็บ Output ไว้ใน Journal ใช้</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway</code></pre>
+<p>ดู Log ล่าสุด</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -n 50</code></pre>
+<p>ดู Log แบบ Real-time</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -f</code></pre>
+<p>คล้ายกับ</p>
+<pre class="language-text"><code>tail -f</code></pre>
+<h2 id="21-29-ทดสอบ-log">21.29 ทดสอบ Log</h2>
+<p>เปิด</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -f</code></pre>
+<p>อีก Terminal ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ควรเห็น Log จาก</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>VALID device=001 temp=38.0 humi=70.0 light=1500.0</code></pre>
+<p>และเมื่อ State เปลี่ยน</p>
+<pre class="language-text"><code>COMMAND device=001 fan=ON</code></pre>
+<h2 id="21-30-ดู-log-ตั้งแต่-boot-ปัจจุบัน">21.30 ดู Log ตั้งแต่ Boot ปัจจุบัน</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -b</code></pre>
+<p><code>-b</code> หมายถึง</p>
+<pre class="language-text"><code>Current Boot</code></pre>
+<p>เหมาะสำหรับ Debug ปัญหาหลัง Reboot</p>
+<h2 id="21-31-ทดสอบ-automatic-restart">21.31 ทดสอบ Automatic Restart</h2>
+<p>จุดสำคัญของ LAB คือพิสูจน์ว่า</p>
+<pre class="language-text"><code>Process Crash
+     ↓
+  systemd
+     ↓
+  Restart</code></pre>
+<p>ไม่ใช่เพียงอ่าน Configuration</p>
+<h2 id="21-32-หา-process-id">21.32 หา Process ID</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>pgrep -af gateway.py</code></pre>
+<p>จะเห็น Process ของ</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<h2 id="21-33-จำลอง-process-failure">21.33 จำลอง Process Failure</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sudo pkill -f gateway.py</code></pre>
+<p>เนื่องจาก Process ถูก Kill จากภายนอก systemd จะตรวจพบว่า Service Process หาย เมื่อใช้</p>
+<pre class="language-text"><code>Restart=on-failure</code></pre>
+<p>systemd จะ Start ใหม่หลัง</p>
+<pre class="language-text"><code>RestartSec=5</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -f</code></pre>
+<p>ควรเห็นลำดับประมาณ</p>
+<pre class="language-text"><code>Process stopped
+    ↓
+Service failed
+    ↓
+Restart scheduled
+    ↓
+Python IoT Gateway started</code></pre>
+<h2 id="21-34-ตรวจสอบ-pid-ก่อนและหลัง">21.34 ตรวจสอบ PID ก่อนและหลัง</h2>
+<p>ก่อน Kill</p>
+<pre class="language-bash"><code>pgrep -af gateway.py</code></pre>
+<p>จด PID จากนั้น</p>
+<pre class="language-bash"><code>sudo pkill -f gateway.py</code></pre>
+<p>รอมากกว่า 5 วินาที แล้ว</p>
+<pre class="language-bash"><code>pgrep -af gateway.py</code></pre>
+<p>PID ใหม่ควรแตกต่างจาก PID เดิม แสดงว่า Process ถูก Restart จริง</p>
+<h2 id="21-35-systemctl-stop-ต่างจาก-process-crash">21.35 <code>systemctl stop</code> ต่างจาก Process Crash</h2>
+<p>ถ้าสั่ง</p>
+<pre class="language-bash"><code>sudo systemctl stop iot-gateway</code></pre>
+<p>นี่คือ</p>
+<pre class="language-text"><code>Intentional Stop</code></pre>
+<p>systemd รู้ว่า Administrator ต้องการหยุด Service</p>
+<p>จึงไม่ควร Restart กลับทันทีเพียงเพราะตั้ง</p>
+<pre class="language-text"><code>Restart=on-failure</code></pre>
+<p>แต่ถ้า Process จบผิดปกติ</p>
+<pre class="language-text"><code>Crash
+Kill
+Error Exit</code></pre>
+<p>systemd สามารถ Restart ตาม Policy นี่เป็นความแตกต่างสำคัญ</p>
+<h2 id="21-36-ทดสอบ-reboot">21.36 ทดสอบ Reboot</h2>
+<p>ตรวจสอบก่อนว่า</p>
+<pre class="language-bash"><code>systemctl is-enabled iot-gateway</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>enabled</code></pre>
+<p>จากนั้น</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>SSH Connection จะขาด รอ Raspberry Pi Boot กลับมา SSH เข้าใหม่ แล้วใช้</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ต้องเห็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<p>โดยไม่ต้องสั่ง</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<h2 id="21-37-ทดสอบ-gateway-หลัง-reboot">21.37 ทดสอบ Gateway หลัง Reboot</h2>
+<p>หลัง Reboot ไม่ต้อง Activate venv ไม่ต้อง Run Python เปิด MQTT Command Monitor</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/cmd&quot; \
+-v</code></pre>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Gateway ต้องทำงานและส่ง</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<p>ถ้าได้ผลนี้ แสดงว่า</p>
+<pre class="language-text"><code>Raspberry Pi Boot
+      ↓
+  Mosquitto
+      ↓
+   systemd
+      ↓
+Python Gateway
+      ↓
+MQTT Processing</code></pre>
+<p>ทำงานโดยอัตโนมัติ</p>
+<h2 id="21-38-ตรวจสอบ-service-dependency">21.38 ตรวจสอบ Service Dependency</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<p>และ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ควรเห็นทั้งสอง</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>systemd
+   │
+   ├── mosquitto.service
+   │
+   └── iot-gateway.service</code></pre>
+<p>ทำให้ Raspberry Pi มี Service หลักสำหรับ IoT Gateway อย่างน้อยสองส่วน</p>
+<h2 id="21-39-ปัญหา-service-ทำงานใน-terminal-แต่ไม่ทำงานใน-systemd">21.39 ปัญหา: Service ทำงานใน Terminal แต่ไม่ทำงานใน systemd</h2>
+<p>นี่เป็นปัญหาที่พบได้บ่อย ตัวอย่าง</p>
+<pre class="language-bash"><code>./venv/bin/python gateway.py</code></pre>
+<p>ทำงาน แต่</p>
+<pre class="language-bash"><code>systemctl start iot-gateway</code></pre>
+<p>ไม่ทำงาน ให้ตรวจสอบตามลำดับ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>จากนั้น</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -n 50</code></pre>
+<p>สาเหตุที่พบบ่อย</p>
+<ul>
+<li>Path ผิด</li>
+<li>Username ผิด</li>
+<li>Permission</li>
+<li>WorkingDirectory ผิด</li>
+<li>Python Interpreter ผิด</li>
+<li>Package ไม่ได้ติดตั้งใน venv</li>
+<li>File ที่ Program ต้องใช้หาไม่เจอ</li>
+<li>Environment Variable ไม่มี</li>
+<li>Broker ยังไม่พร้อม</li>
+</ul>
+<h2 id="21-40-ตรวจสอบ-service-file">21.40 ตรวจสอบ Service File</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sudo systemctl cat iot-gateway</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>cat /etc/systemd/system/iot-gateway.service</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-text"><code>User
+WorkingDirectory
+ExecStart</code></pre>
+<p>ให้ตรงกับเครื่องจริง</p>
+<h2 id="21-41-ตรวจสอบ-service-configuration">21.41 ตรวจสอบ Service Configuration</h2>
+<p>สามารถใช้</p>
+<pre class="language-bash"><code>systemd-analyze verify \
+/etc/systemd/system/iot-gateway.service</code></pre>
+<p>เพื่อช่วยตรวจสอบ Service Unit File ถ้ามี Syntax หรือ Configuration Problem บางประเภท systemd จะแจ้งออกมา</p>
+<h2 id="21-42-หลังแก้-service-file">21.42 หลังแก้ Service File</h2>
+<p>ทุกครั้งที่แก้</p>
+<pre class="language-text"><code>/etc/systemd/system/iot-gateway.service</code></pre>
+<p>ต้อง</p>
+<pre class="language-bash"><code>sudo systemctl daemon-reload</code></pre>
+<p>จากนั้น</p>
+<pre class="language-bash"><code>sudo systemctl restart iot-gateway</code></pre>
+<p>แล้วตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<h2 id="21-43-หลังแก้เฉพาะ-python-code">21.43 หลังแก้เฉพาะ Python Code</h2>
+<p>ถ้าแก้เฉพาะ</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>ไม่จำเป็นต้อง</p>
+<pre class="language-text"><code>daemon-reload</code></pre>
+<p>เพราะ Service File ไม่ได้เปลี่ยน ใช้เพียง</p>
+<pre class="language-bash"><code>sudo systemctl restart iot-gateway</code></pre>
+<h2 id="21-44-environment-ของ-systemd">21.44 Environment ของ systemd</h2>
+<p>อย่าสมมติว่า Environment ของ systemd เหมือน Terminal ของ User ใน Terminal อาจมี</p>
+<pre class="language-text"><code>PATH
+HOME
+Environment Variables</code></pre>
+<p>ที่เกิดจาก Shell Configuration แต่ Service อาจไม่มีค่าบางอย่าง ดังนั้นควรใช้</p>
+<pre class="language-text"><code>Absolute Path</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>/home/piuser/iot-gateway/venv/bin/python</code></pre>
+<p>แทน</p>
+<pre class="language-text"><code>python</code></pre>
+<p>และใช้</p>
+<pre class="language-text"><code>WorkingDirectory=</code></pre>
+<p>อย่างชัดเจน</p>
+<h2 id="21-45-ไม่ต้อง-activate-venv">21.45 ไม่ต้อง Activate venv</h2>
+<p>สำหรับ Interactive Shell ใช้</p>
+<pre class="language-bash"><code>source venv/bin/activate</code></pre>
+<p>แต่สำหรับ systemd ไม่ต้องใช้</p>
+<pre class="language-text"><code>source</code></pre>
+<p>เพียงกำหนด</p>
+<pre class="language-text"><code>ExecStart=/home/piuser/iot-gateway/venv/bin/python ...</code></pre>
+<p>เพราะกำลังเรียก Python จาก Virtual Environment โดยตรง</p>
+<h2 id="21-46-service-กับ-process">21.46 Service กับ Process</h2>
+<p>ต้องแยกสองคำนี้</p>
+<h3 id="process">Process</h3>
+<p>คือ Program ที่กำลังทำงาน เช่น</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<p>มี</p>
+<pre class="language-text"><code>PID</code></pre>
+<p>เมื่อ Process จบ Program ก็หยุด</p>
+<h3 id="service">Service</h3>
+<p>คือ Workload ที่ Service Manager ดูแล เช่น</p>
+<pre class="language-text"><code>iot-gateway.service</code></pre>
+<p>systemd สามารถ</p>
+<pre class="language-text"><code>Start
+Stop
+Restart
+Monitor</code></pre>
+<p>Process ให้ ดังนั้น</p>
+<pre class="language-text"><code>Python Process</code></pre>
+<p>ถูกจัดการโดย</p>
+<pre class="language-text"><code>systemd Service</code></pre>
+<h2 id="21-47-ตรวจสอบ-process">21.47 ตรวจสอบ Process</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>ps aux | grep gateway.py</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>pgrep -af gateway.py</code></pre>
+<p>ควรเห็น Python Process แต่การบริหาร Service ควรใช้</p>
+<pre class="language-text"><code>systemctl</code></pre>
+<p>ไม่ควรใช้</p>
+<pre class="language-text"><code>kill</code></pre>
+<p>เป็นวิธีปกติในการ Start/Stop Service</p>
+<p><code>kill</code> ใช้ใน LAB นี้เพื่อจำลอง Failure เท่านั้น</p>
+<h2 id="21-48-restart-policy">21.48 Restart Policy</h2>
+<p>ตัวอย่าง Policy ที่พบบ่อย</p>
+<pre class="language-text"><code>Restart=no</code></pre>
+<p>ไม่ Restart อัตโนมัติ</p>
+<pre class="language-text"><code>Restart=on-failure</code></pre>
+<p>Restart เมื่อ Process จบแบบ Failure เหมาะกับ LAB นี้</p>
+<pre class="language-text"><code>Restart=always</code></pre>
+<p>Restart เกือบทุกกรณีที่ Process จบ โดย systemd ยังแยกแยะการสั่ง Stop Service ตามกลไกของมัน เหมาะกับบาง Long-running Service แต่ต้องเลือกให้เหมาะกับ Application ไม่ควรใช้</p>
+<pre class="language-text"><code>Restart=always</code></pre>
+<p>โดยไม่เข้าใจพฤติกรรมของ Service</p>
+<h2 id="21-49-restart-loop">21.49 Restart Loop</h2>
+<p>ถ้า Program มี Error ตั้งแต่เริ่ม เช่น</p>
+<pre class="language-text"><code>Syntax Error</code></pre>
+<p>แล้วตั้ง</p>
+<pre class="language-text"><code>Restart=on-failure</code></pre>
+<p>อาจเกิด</p>
+<pre class="language-text"><code>Start
+  ↓
+Crash
+  ↓
+Restart
+  ↓
+Crash
+  ↓
+Restart
+  ↓
+ ...</code></pre>
+<p>จึงต้องดู</p>
+<pre class="language-text"><code>journalctl</code></pre>
+<p>เพื่อหาสาเหตุ ไม่ควรคิดว่า Automatic Restart สามารถแก้ Software Bug ได้</p>
+<h2 id="21-50-systemd-ไม่แทน-error-handling">21.50 systemd ไม่แทน Error Handling</h2>
+<p>systemd ช่วย</p>
+<pre class="language-text"><code>Process Recovery</code></pre>
+<p>แต่ Python ยังต้องมี</p>
+<pre class="language-text"><code>try/except
+MQTT reconnect
+JSON validation
+Data validation</code></pre>
+<p>เพราะไม่ควรให้ Application Crash ทุกครั้งที่เจอข้อมูลผิด Architecture ที่ดีคือ</p>
+<pre class="language-text"><code>Application-level Recovery
+          +
+   Service-level Recovery</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>Invalid JSON
+    ↓
+Python handles it
+    ↓
+Process continues</code></pre>
+<p>แต่ถ้า</p>
+<pre class="language-text"><code>Python crashes unexpectedly
+    ↓
+systemd restarts process</code></pre>
+<h2 id="21-51-systemd-ไม่แทน-mqtt-reconnect">21.51 systemd ไม่แทน MQTT Reconnect</h2>
+<p>ถ้า Broker หายชั่วคราว ไม่ควรออกแบบให้</p>
+<pre class="language-text"><code>Python Crash
+    ↓
+systemd Restart</code></pre>
+<p>เป็นกลไกเดียว Application ควรมี MQTT Reconnection Strategy ส่วน systemd เป็น Recovery Layer อีกระดับหนึ่ง แนวคิดนี้จะถูกขยายใน LAB 27 Fault-Tolerant IoT</p>
+<h2 id="21-52-logging-architecture">21.52 Logging Architecture</h2>
+<p>ก่อนใช้ systemd</p>
+<pre class="language-text"><code>gateway.py
+    ↓
+Terminal
+    ↓
+print()</code></pre>
+<p>หลังใช้ systemd</p>
+<pre class="language-text"><code>gateway.py
+    ↓
+stdout / stderr
+    ↓
+systemd journal
+    ↓
+journalctl</code></pre>
+<p>จึงสามารถตรวจสอบ Application ได้แม้ไม่มี Terminal เปิดค้างไว้</p>
+<h2 id="21-53-ดู-log-ล่าสุด">21.53 ดู Log ล่าสุด</h2>
+<p>คำสั่งที่ควรจำ</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -n 50</code></pre>
+<p>ติดตาม Real-time</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -f</code></pre>
+<p>เฉพาะ Boot ปัจจุบัน</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -b</code></pre>
+<h2 id="21-54-ทดสอบ-full-autonomous-operation">21.54 ทดสอบ Full Autonomous Operation</h2>
+<p>การทดสอบ LAB ไม่ควรจบแค่</p>
+<pre class="language-bash"><code>systemctl status</code></pre>
+<p>ต้องพิสูจน์การทำงานจริง ขั้นตอน</p>
+<ol>
+<li>Enable Service</li>
+</ol>
+<pre class="language-bash"><code>   sudo systemctl enable iot-gateway</code></pre>
+<ol>
+<li>Reboot</li>
+</ol>
+<pre class="language-bash"><code>   sudo reboot</code></pre>
+<ol>
+<li>ห้าม Run Python ด้วยมือ</li>
+</ol>
+<ol>
+<li>หลัง Boot ตรวจสอบ</li>
+</ol>
+<pre class="language-bash"><code>   systemctl status iot-gateway</code></pre>
+<ol>
+<li>ส่ง MQTT Sensor Data</li>
+</ol>
+<ol>
+<li>ตรวจสอบ MQTT Command</li>
+</ol>
+<ol>
+<li>Kill Python Process</li>
+</ol>
+<ol>
+<li>รอ Automatic Restart</li>
+</ol>
+<ol>
+<li>ส่ง Sensor Data ใหม่</li>
+</ol>
+<ol>
+<li>ตรวจสอบว่า Gateway กลับมาทำงาน</li>
+</ol>
+<p>นี่จึงถือว่าผ่าน LAB</p>
+<h2 id="21-55-autonomous-gateway-test">21.55 Autonomous Gateway Test</h2>
+<p>Architecture ที่ต้องพิสูจน์</p>
+<pre class="language-text"><code>POWER ON
+   │
+   ▼
+Raspberry Pi
+   │
+   ▼
+ Linux
+   │
+   ▼
+ systemd
+   │
+   ├──→ Mosquitto
+   │
+   └──→ Python Gateway
+             │
+             ▼
+            MQTT
+             │
+             ▼
+        IoT Processing</code></pre>
+<p>โดย</p>
+<pre class="language-text"><code>Human Intervention = 0</code></pre>
+<p>ในขั้นตอน Startup ปกติ</p>
+<h2 id="21-56-แบบฝึกหัดที่-1-create-service">21.56 แบบฝึกหัดที่ 1 - Create Service</h2>
+<p>สร้าง</p>
+<pre class="language-text"><code>iot-gateway.service</code></pre>
+<p>ให้ Run</p>
+<pre class="language-text"><code>gateway.py</code></pre>
+<p>จาก LAB 20 ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ต้องเป็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<h2 id="21-57-แบบฝึกหัดที่-2-service-control">21.57 แบบฝึกหัดที่ 2 - Service Control</h2>
+<p>ทดลอง</p>
+<pre class="language-text"><code>start
+stop
+restart</code></pre>
+<p>ด้วย</p>
+<pre class="language-text"><code>systemctl</code></pre>
+<p>และตรวจสอบผลทุกครั้ง</p>
+<h2 id="21-58-แบบฝึกหัดที่-3-logging">21.58 แบบฝึกหัดที่ 3 - Logging</h2>
+<p>เปิด</p>
+<pre class="language-bash"><code>journalctl -u iot-gateway -f</code></pre>
+<p>ส่ง</p>
+<pre class="language-text"><code>VALID Data
+
+INVALID Data</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Invalid JSON</code></pre>
+<p>ตรวจสอบว่า Log แสดงเหตุการณ์แต่ละประเภท และ Application ยังทำงานต่อ</p>
+<h2 id="21-59-แบบฝึกหัดที่-4-automatic-restart">21.59 แบบฝึกหัดที่ 4 - Automatic Restart</h2>
+<p>ตรวจสอบ PID</p>
+<pre class="language-bash"><code>pgrep -af gateway.py</code></pre>
+<p>จากนั้น</p>
+<pre class="language-bash"><code>sudo pkill -f gateway.py</code></pre>
+<p>รอประมาณ</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>ตรวจสอบ PID ใหม่</p>
+<pre class="language-bash"><code>pgrep -af gateway.py</code></pre>
+<p>ต้องมี Process กลับมา</p>
+<h2 id="21-60-แบบฝึกหัดที่-5-reboot-recovery">21.60 แบบฝึกหัดที่ 5 - Reboot Recovery</h2>
+<p>สั่ง</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot ห้าม Run Python ด้วยมือ ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>จากนั้นส่ง MQTT Sensor Data Gateway ต้องทำงานได้ทันที</p>
+<h2 id="21-61-แบบฝึกหัดที่-6-mqtt-processing-หลัง-recovery">21.61 แบบฝึกหัดที่ 6 - MQTT Processing หลัง Recovery</h2>
+<p>ทำให้ Process Crash รอ systemd Restart จากนั้นส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:38,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<p>เพื่อยืนยันว่าไม่ใช่เพียง Process Running แต่ Application Function กลับมาทำงานจริง</p>
+<h2 id="21-62-งานส่ง-lab-21">21.62 งานส่ง LAB 21</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Service File</li>
+</ol>
+<pre class="language-text"><code>   iot-gateway.service</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   systemctl status iot-gateway</code></pre>
+<p>แสดง</p>
+<pre class="language-text"><code>   active (running)</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   systemctl is-enabled iot-gateway</code></pre>
+<p>แสดง</p>
+<pre class="language-text"><code>   enabled</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   journalctl -u iot-gateway</code></pre>
+<ol>
+<li>Screenshot PID ก่อนจำลอง Failure</li>
+</ol>
+<ol>
+<li>Screenshot PID หลัง Automatic Restart</li>
+</ol>
+<ol>
+<li>Screenshot Service หลัง Reboot</li>
+</ol>
+<ol>
+<li>หลักฐาน MQTT Processing หลัง Reboot</li>
+</ol>
+<ol>
+<li>หลักฐาน MQTT Processing หลัง Process Failure และ Recovery</li>
+</ol>
+<ol>
+<li>อธิบายความหมายของ</li>
+</ol>
+<pre class="language-text"><code>   ExecStart
+   WorkingDirectory
+   User
+   Restart
+   RestartSec</code></pre>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   Process</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   Service</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด systemd ไม่สามารถแทน</li>
+</ol>
+<pre class="language-text"><code>   Error Handling</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   MQTT Reconnect</code></pre>
+<p>ภายใน Application ได้</p>
+<h2 id="21-63-checklist-ก่อนถือว่าผ่าน-lab">21.63 Checklist ก่อนถือว่าผ่าน LAB</h2>
+<p>ต้องผ่านทุกข้อ</p>
+<pre class="language-bash"><code>[ ] gateway.py ทำงานด้วย Python โดยตรง
+
+[ ] systemd สามารถ Start gateway.py
+
+[ ] systemctl status = active (running)
+
+[ ] Service ถูก Enable
+
+[ ] journalctl แสดง Application Log
+
+[ ] MQTT Sensor Data ถูกประมวลผล
+
+[ ] Python สามารถ Publish MQTT Command
+
+[ ] Kill Process แล้ว systemd Restart
+
+[ ] Reboot แล้ว Service Start เอง
+
+[ ] หลัง Reboot MQTT Processing ทำงานจริง</code></pre>
+<p>ถ้าผ่านทั้งหมด Raspberry Pi สามารถทำงานเป็น</p>
+<pre class="language-text"><code>Autonomous Python IoT Gateway</code></pre>
+<p>ในระดับพื้นฐานได้</p>
+<h2 id="21-64-สิ่งที่ต้องเข้าใจ">21.64 สิ่งที่ต้องเข้าใจ</h2>
+<p>ก่อน LAB 21</p>
+<pre class="language-text"><code>Raspberry Pi
+    ↓
+  Human
+    ↓
+   SSH
+    ↓
+Start Python
+    ↓
+  Gateway</code></pre>
+<p>หลัง LAB 21</p>
+<pre class="language-text"><code>Raspberry Pi
+    ↓
+  systemd
+    ↓
+Start Python
+    ↓
+  Gateway</code></pre>
+<p>และเมื่อ Process Failure</p>
+<pre class="language-text"><code>Python
+   X
+   │
+   ▼
+systemd
+   │
+   ▼
+Restart
+   │
+   ▼
+Python
+   │
+   ▼
+Gateway</code></pre>
+<p>นี่คือการลด</p>
+<pre class="language-text"><code>Human Dependency</code></pre>
+<p>และเพิ่ม</p>
+<pre class="language-text"><code>Automatic Recovery</code></pre>
+<h2 id="21-65-ความสัมพันธ์ของ-lab-20-21">21.65 ความสัมพันธ์ของ LAB 20–21</h2>
+<p>LAB 20</p>
+<pre class="language-text"><code>MQTT
+  ↓
+Python Application
+  ↓
+Application Logic</code></pre>
+<p>LAB 21</p>
+<pre class="language-text"><code>systemd
+  ↓
+Python Application
+  ↓
+Managed Service
+  ↓
+Auto Start / Restart</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>LAB 20
+Python IoT Application
+
+      +
+
+LAB 21
+Linux Service Management
+
+      ↓
+
+Autonomous IoT Gateway</code></pre>
+<h2 id="21-66-architecture-หลัง-lab-21">21.66 Architecture หลัง LAB 21</h2>
+<pre class="language-text"><code>             IoT DEVICES
+
+ESP32-001 ─┐
+ESP32-002 ─┼──────────────┐
+ESP32-003 ─┘              │
+                          ▼
+                   ┌─────────────┐
+                   │ Mosquitto   │
+                   │ MQTT Broker │
+                   └──────┬──────┘
+                          │
+                          ▼
+                   ┌─────────────┐
+                   │ Python      │
+                   │ Gateway     │
+                   │             │
+                   │ Parse       │
+                   │ Validate    │
+                   │ Rule        │
+                   │ Control     │
+                   └──────┬──────┘
+                          ▲
+                          │ manages
+                   ┌──────┴──────┐
+                   │ systemd     │
+                   │             │
+                   │ Start       │
+                   │ Stop        │
+                   │ Restart     │
+                   │ Auto Start  │
+                   │ Logging     │
+                   └─────────────┘</code></pre>
+<p>Node-RED สามารถทำงานคู่ขนาน</p>
+<pre class="language-text"><code>                   Mosquitto
+                       │
+                ┌──────┴──────┐
+                ▼             ▼
+             Python        Node-RED
+             Gateway       Dashboard</code></pre>
+<h2 id="21-67-จุดสำคัญที่สุดของ-lab">21.67 จุดสำคัญที่สุดของ LAB</h2>
+<p>LAB นี้ไม่ใช่แค่การเรียนคำสั่ง</p>
+<pre class="language-text"><code>systemctl</code></pre>
+<p>แต่เป็นการเปลี่ยนแนวคิดจาก</p>
+<pre class="language-text"><code>&quot;เปิดโปรแกรมให้ทำงาน&quot;</code></pre>
+<p>เป็น</p>
+<pre class="language-text"><code>&quot;ออกแบบ Service ให้ระบบดูแลโปรแกรม&quot;</code></pre>
+<p>Reliability Layers เริ่มเป็น</p>
+<pre class="language-text"><code>Layer 1
+Python Error Handling
+
+      ↓
+
+Layer 2
+MQTT Reconnect
+
+      ↓
+
+Layer 3
+systemd Process Restart
+
+      ↓
+
+Layer 4
+Boot Recovery</code></pre>
+<p>ระบบจึงเริ่มมีคุณสมบัติ</p>
+<pre class="language-text"><code>Autonomous
+Recoverable
+Continuously Running</code></pre>
+<p>มากขึ้น</p>
+<h2 id="เชื่อมไป-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation">เชื่อมไป LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</h2>
+<p>จนถึง LAB 21 Raspberry Pi รับข้อมูลหลักผ่าน</p>
+<pre class="language-text"><code>MQTT</code></pre>
+<p>แต่ IoT Device จริงไม่ได้ใช้ MQTT ทุกตัว ตัวอย่าง</p>
+<pre class="language-text"><code>Mijia LYWSD03MMC
+    ↓
+BLE / BTHome</code></pre>
+<p>หรือ ESP32 บางระบบอาจส่ง</p>
+<pre class="language-text"><code>UDP</code></pre>
+<p>ดังนั้น Raspberry Pi ต้องสามารถทำหน้าที่</p>
+<pre class="language-text"><code>Protocol Gateway</code></pre>
+<p>Architecture ใน LAB 22 จะเป็น</p>
+<pre class="language-text"><code>Mijia
+  │
+  │ BLE / BTHome
+  ▼
+Raspberry Pi
+  │
+  │ Decode
+  ▼
+ MQTT
+  │
+  ├──→ Node-RED
+  ├──→ SQLite
+  └──→ Dashboard</code></pre>
+<p>และอีกเส้นทาง</p>
+<pre class="language-text"><code>ESP32
+  │
+  │ UDP
+  ▼
+Raspberry Pi
+  │
+  │ Protocol Translation
+  ▼
+ MQTT</code></pre>
+<p>รวมเป็น</p>
+<pre class="language-text"><code>BLE Device ────┐
+               │
+UDP Device ────┼──→ Raspberry Pi Gateway
+               │          │
+MQTT Device ───┘          ▼
+                         MQTT
+                          │
+                ┌─────────┼─────────┐
+                ▼         ▼         ▼
+             Node-RED   SQLite   Dashboard</code></pre>
+<p>LAB 22 จึงจะเปลี่ยน Raspberry Pi จาก</p>
+<pre class="language-text"><code>MQTT Application Host</code></pre>
+<p>ไปเป็น</p>
+<pre class="language-text"><code>Multi-protocol IoT Gateway</code></pre>
+<p>ซึ่งเป็นบทบาทของ Raspberry Pi ใน Edge/IoT Architecture ที่ชัดเจนยิ่งขึ้น</p>
+    </main>
+  </div>
+</body>
+</html>

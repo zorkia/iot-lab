@@ -1,0 +1,1036 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 18 - Device Status and Offline Detection</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="active" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-18-device-status-and-offline-detection">LAB 18 - Device Status and Offline Detection</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="17-lab-17-multi-device-dashboard.html">ก่อนหน้า: LAB 17 - Multi-device Dashboard</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="19-lab-19-data-quality-valid-invalid-stale.html">ถัดไป: LAB 19 - Data Quality: VALID / INVALID / STALE</a></nav>
+<h2 id="18-1-แนวคิดของ-lab">18.1 แนวคิดของ LAB</h2>
+<p>LAB 17 ทำให้ระบบสามารถรับและแสดงข้อมูลจากหลาย Device</p>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┼──→ MQTT → Node-RED → Multi-device Dashboard
+ESP32-003 ─┘</code></pre>
+<p>แต่ยังมีปัญหาสำคัญ สมมติ Dashboard แสดง:</p>
+<pre class="language-text"><code>Device 001
+Temp = 30 °C</code></pre>
+<p>ถ้า ESP32-001 ปิดเครื่อง Dashboard อาจยังแสดง:</p>
+<pre class="language-text"><code>Temp = 30 °C</code></pre>
+<p>เพราะเป็นค่าล่าสุดที่ระบบเก็บไว้ ดังนั้น:</p>
+<pre class="language-text"><code>มี Sensor Value</code></pre>
+<p>ไม่ได้หมายความว่า:</p>
+<pre class="language-text"><code>Device ยัง Online</code></pre>
+<p>LAB 18 เพิ่มความสามารถให้ Gateway ตรวจสอบว่าแต่ละ Device <code>ONLINE</code> หรือ <code>OFFLINE</code> โดยใช้แนวคิด:</p>
+<ul>
+<li>Device Status</li>
+<li>Heartbeat</li>
+<li>Last Seen</li>
+<li>Timeout</li>
+<li>MQTT Last Will and Testament (LWT)</li>
+</ul>
+<p>เป้าหมายคือเปลี่ยนจาก:</p>
+<pre class="language-text"><code>Data Monitoring</code></pre>
+<p>ไปสู่:</p>
+<pre class="language-text"><code>Device Availability Monitoring</code></pre>
+<h2 id="18-2-วัตถุประสงค์">18.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>อธิบายความแตกต่างระหว่าง Sensor Data และ Device Status</li>
+<li>ใช้ MQTT Status Topic</li>
+<li>สร้าง Heartbeat</li>
+<li>บันทึก Last Seen ของแต่ละ Device</li>
+<li>ตรวจจับ Device ที่หยุดส่งข้อมูลด้วย Timeout</li>
+<li>แสดง ONLINE / OFFLINE บน Dashboard</li>
+<li>เข้าใจหลักการ MQTT Last Will and Testament (LWT)</li>
+<li>อธิบายข้อดีและข้อจำกัดของ Heartbeat และ LWT</li>
+<li>เข้าใจว่า Last Value ไม่ได้หมายถึง Current Value</li>
+</ul>
+<h2 id="18-3-architecture">18.3 Architecture</h2>
+<pre class="language-text"><code>ESP32-001
+   │
+   ├── data ──────────────┐
+   │                      │
+   └── status/heartbeat ──┤
+                          │
+ESP32-002                 │
+   │                      │
+   ├── data ──────────────┤
+   │                      │
+   └── status/heartbeat ──┤
+                          ▼
+                     MQTT Broker
+                          │
+                          ▼
+                       Node-RED
+                          │
+                 ┌────────┴────────┐
+                 │                 │
+                 ▼                 ▼
+             Sensor Data       Last Seen
+                                   │
+                                   ▼
+                                Timeout
+                                   │
+                           ┌───────┴───────┐
+                           ▼               ▼
+                        ONLINE          OFFLINE
+                           │               │
+                           └───────┬───────┘
+                                   ▼
+                               Dashboard</code></pre>
+<h2 id="18-4-mqtt-topic-structure">18.4 MQTT Topic Structure</h2>
+<p>ต่อจาก LAB 16-17 Device 001:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/status
+pkru/iot/001/cmd</code></pre>
+<p>Device 002:</p>
+<pre class="language-text"><code>pkru/iot/002/data
+pkru/iot/002/status
+pkru/iot/002/cmd</code></pre>
+<p>Device 003:</p>
+<pre class="language-text"><code>pkru/iot/003/data
+pkru/iot/003/status
+pkru/iot/003/cmd</code></pre>
+<p>ความหมาย:</p>
+<pre class="language-text"><code>data
+  → Sensor Data / Telemetry
+
+status
+  → Device Availability
+
+cmd
+  → Control Command</code></pre>
+<h2 id="18-5-sensor-data-ไม่เท่ากับ-device-status">18.5 Sensor Data ไม่เท่ากับ Device Status</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Payload:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 30,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>ข้อมูลนี้บอกว่า:</p>
+<pre class="language-text"><code>Device เคยส่งค่า 30 °C</code></pre>
+<p>แต่ไม่ได้ยืนยันว่า:</p>
+<pre class="language-text"><code>Device ยัง Online อยู่ในขณะนี้</code></pre>
+<p>จึงต้องมีข้อมูลเพิ่มเติม เช่น:</p>
+<pre class="language-text"><code>Last Seen
+Heartbeat
+Status
+LWT</code></pre>
+<h2 id="18-6-วิธีที่-1-heartbeat">18.6 วิธีที่ 1 - Heartbeat</h2>
+<p>Heartbeat คือ Message ที่ Device ส่งเป็นระยะเพื่อบอก Gateway ว่า:</p>
+<pre class="language-text"><code>&quot;ฉันยังทำงานอยู่&quot;</code></pre>
+<p>ตัวอย่าง Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>Payload:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>Device ส่ง <code>ONLINE</code> ทุกช่วงเวลาที่กำหนด เช่นทุก 5 วินาที Architecture:</p>
+<pre class="language-text"><code>ESP32
+  │
+  │ ONLINE
+  │ every 5 s
+  ▼
+ MQTT
+  │
+  ▼
+Gateway
+  │
+  ▼
+Last Seen</code></pre>
+<p>ถ้า Gateway ไม่ได้รับ Heartbeat ภายในเวลาที่กำหนด ให้ถือว่า:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<h2 id="18-7-ทดสอบ-heartbeat-ด้วย-command-line">18.7 ทดสอบ Heartbeat ด้วย Command Line</h2>
+<p>เปิด Subscriber:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/status&quot; \
+  -v</code></pre>
+<p>เปิด Terminal อีกหน้าต่าง จำลอง Device 001:</p>
+<pre class="language-bash"><code>while true
+do
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/status&quot; \
+        -m &quot;ONLINE&quot;
+
+    sleep 5
+done</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>pkru/iot/001/status ONLINE
+pkru/iot/001/status ONLINE
+pkru/iot/001/status ONLINE
+...</code></pre>
+<p>ทุกประมาณ 5 วินาที</p>
+<h2 id="18-8-จำลองหลาย-device">18.8 จำลองหลาย Device</h2>
+<p>เปิด Simulator:</p>
+<pre class="language-bash"><code>while true
+do
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/status&quot; \
+        -m &quot;ONLINE&quot;
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/002/status&quot; \
+        -m &quot;ONLINE&quot;
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/003/status&quot; \
+        -m &quot;ONLINE&quot;
+
+    sleep 5
+done</code></pre>
+<p>Subscriber:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/status&quot; \
+  -v</code></pre>
+<p>จะเห็น:</p>
+<pre class="language-text"><code>pkru/iot/001/status ONLINE
+pkru/iot/002/status ONLINE
+pkru/iot/003/status ONLINE</code></pre>
+<h2 id="18-9-node-red-รับ-heartbeat">18.9 Node-RED รับ Heartbeat</h2>
+<p>สร้าง Flow:</p>
+<pre class="language-text"><code>[MQTT In]
+     │
+     ▼
+[Update Last Seen]
+     │
+     ▼
+   [Debug]</code></pre>
+<p>MQTT Topic:</p>
+<pre class="language-text"><code>pkru/iot/+/status</code></pre>
+<p>Broker:</p>
+<pre class="language-text"><code>localhost:1883</code></pre>
+<h2 id="18-10-function-update-last-seen">18.10 Function - Update Last Seen</h2>
+<p>สร้าง Function Node ชื่อ:</p>
+<pre class="language-text"><code>Update Last Seen</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+let device_status = flow.get(&quot;device_status&quot;) || {};
+
+device_status[device_id] = {
+    status: &quot;ONLINE&quot;,
+    last_seen: Date.now()
+};
+
+flow.set(&quot;device_status&quot;, device_status);
+
+msg.device_id = device_id;
+msg.status = &quot;ONLINE&quot;;
+
+return msg;</code></pre>
+<p>เมื่อได้รับ:</p>
+<pre class="language-text"><code>pkru/iot/002/status ONLINE</code></pre>
+<p>จะบันทึก:</p>
+<pre class="language-javascript"><code>device_status[&quot;002&quot;] = {
+    status: &quot;ONLINE&quot;,
+    last_seen: Date.now()
+};</code></pre>
+<h2 id="18-11-last-seen">18.11 Last Seen</h2>
+<p><code>last_seen</code> คือเวลาล่าสุดที่ Gateway ได้รับ Heartbeat จาก Device ตัวอย่าง:</p>
+<pre class="language-text"><code>Device 001
+Last Seen = 10:20:05
+
+Device 002
+Last Seen = 10:20:07
+
+Device 003
+Last Seen = 10:20:06</code></pre>
+<p>Gateway สามารถคำนวณ:</p>
+<pre class="language-text"><code>Current Time - Last Seen</code></pre>
+<p>เพื่อดูว่า Device หายไปนานเท่าใด</p>
+<h2 id="18-12-กำหนด-timeout">18.12 กำหนด Timeout</h2>
+<p>สมมติ Device ส่ง Heartbeat ทุก:</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>กำหนด Offline Timeout:</p>
+<pre class="language-text"><code>15 seconds</code></pre>
+<p>หมายความว่า:</p>
+<pre class="language-text"><code>Last Seen &lt;= 15 s
+    → ONLINE
+
+Last Seen &gt; 15 s
+    → OFFLINE</code></pre>
+<p>ไม่ควรกำหนด Timeout เท่ากับ Heartbeat Interval พอดี เช่น:</p>
+<pre class="language-text"><code>Heartbeat = 5 s
+Timeout   = 5 s</code></pre>
+<p>เพราะ Network Delay หรือ Packet Loss เพียงเล็กน้อยอาจทำให้ Device ถูกมองว่า OFFLINE สำหรับ LAB ใช้:</p>
+<pre class="language-text"><code>Heartbeat = 5 s
+Timeout   = 15 s</code></pre>
+<p>เพื่อให้เห็นพฤติกรรมชัดเจน</p>
+<h2 id="18-13-สร้าง-periodic-offline-check">18.13 สร้าง Periodic Offline Check</h2>
+<p>ใช้ Inject Node ตั้งให้ทำงานทุก:</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>Flow:</p>
+<pre class="language-text"><code>[Inject every 5 s]
+         │
+         ▼
+[Check Device Timeout]
+         │
+         ▼
+       [Debug]</code></pre>
+<h2 id="18-14-function-check-device-timeout">18.14 Function - Check Device Timeout</h2>
+<p>สร้าง Function Node ชื่อ:</p>
+<pre class="language-text"><code>Check Device Timeout</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let device_status = flow.get(&quot;device_status&quot;) || {};
+
+let now = Date.now();
+let timeout = 15000;
+
+for (let device_id in device_status) {
+
+    let elapsed = now - device_status[device_id].last_seen;
+
+    if (elapsed &gt; timeout) {
+        device_status[device_id].status = &quot;OFFLINE&quot;;
+    } else {
+        device_status[device_id].status = &quot;ONLINE&quot;;
+    }
+}
+
+flow.set(&quot;device_status&quot;, device_status);
+
+msg.payload = device_status;
+
+return msg;</code></pre>
+<p><code>15000</code> หมายถึง:</p>
+<pre class="language-text"><code>15000 ms
+= 15 seconds</code></pre>
+<h2 id="18-15-ทดสอบ-offline-detection">18.15 ทดสอบ Offline Detection</h2>
+<p>เริ่ม Heartbeat Simulator:</p>
+<pre class="language-bash"><code>while true
+do
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/status&quot; \
+        -m &quot;ONLINE&quot;
+
+    sleep 5
+done</code></pre>
+<p>Node-RED จะเห็น:</p>
+<pre class="language-text"><code>Device 001
+ONLINE</code></pre>
+<p>จากนั้นหยุด Simulator ด้วย:</p>
+<pre class="language-text"><code>Ctrl+C</code></pre>
+<p>รอมากกว่า:</p>
+<pre class="language-text"><code>15 seconds</code></pre>
+<p>Node-RED จะเปลี่ยน:</p>
+<pre class="language-text"><code>Device 001</code></pre>
+<p>จาก:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>เป็น:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<h2 id="18-16-architecture-ของ-timeout-detection">18.16 Architecture ของ Timeout Detection</h2>
+<pre class="language-text"><code>Device
+   │
+   │ Heartbeat every 5 s
+   ▼
+ MQTT
+   │
+   ▼
+Node-RED
+   │
+   ▼
+last_seen
+   │
+   ▼
+current_time - last_seen
+   │
+   ├── &lt;= 15 s → ONLINE
+   │
+   └── &gt; 15 s  → OFFLINE</code></pre>
+<p>นี่คือพื้นฐานของ <strong>Timeout-based Offline Detection</strong></p>
+<h2 id="18-17-เชื่อมกับ-multi-device-dashboard">18.17 เชื่อมกับ Multi-device Dashboard</h2>
+<p>จาก LAB 17 มี:</p>
+<pre class="language-text"><code>flow.devices</code></pre>
+<p>สำหรับเก็บ Sensor Data LAB 18 เพิ่ม:</p>
+<pre class="language-text"><code>flow.device_status</code></pre>
+<p>สำหรับเก็บ Device Availability ตัวอย่าง <code>flow.devices</code>:</p>
+<pre class="language-json"><code>{
+  &quot;001&quot;: {
+    &quot;temp&quot;: 30,
+    &quot;humi&quot;: 70,
+    &quot;light&quot;: 1000
+  },
+  &quot;002&quot;: {
+    &quot;temp&quot;: 32,
+    &quot;humi&quot;: 75,
+    &quot;light&quot;: 1500
+  }
+}</code></pre>
+<p>และ <code>flow.device_status</code>:</p>
+<pre class="language-json"><code>{
+  &quot;001&quot;: {
+    &quot;status&quot;: &quot;ONLINE&quot;,
+    &quot;last_seen&quot;: 1780000000000
+  },
+  &quot;002&quot;: {
+    &quot;status&quot;: &quot;OFFLINE&quot;,
+    &quot;last_seen&quot;: 1780000010000
+  }
+}</code></pre>
+<p>ค่าตัวเลข timestamp ด้านบนเป็นเพียงตัวอย่าง</p>
+<h2 id="18-18-dashboard-ที่ควรได้">18.18 Dashboard ที่ควรได้</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>┌──────────────────────────────────┐
+│ DEVICE 001                       │
+│                                  │
+│ Status      ONLINE               │
+│ Temp        30 °C                │
+│ Humi        70 %                 │
+│ Light       1000 lx              │
+│ Last Seen   3 s ago              │
+└──────────────────────────────────┘
+
+
+┌──────────────────────────────────┐
+│ DEVICE 002                       │
+│                                  │
+│ Status      OFFLINE              │
+│ Temp        32 °C                │
+│ Humi        75 %                 │
+│ Light       1500 lx              │
+│ Last Seen   47 s ago             │
+└──────────────────────────────────┘</code></pre>
+<p>จุดสำคัญคือ Device 002 ยังมี:</p>
+<pre class="language-text"><code>Temp = 32 °C</code></pre>
+<p>แต่:</p>
+<pre class="language-text"><code>Status = OFFLINE</code></pre>
+<p>ดังนั้นผู้ใช้รู้ว่า <code>32 °C</code> เป็น Last Known Value ไม่ใช่ค่าที่ควรถือว่าเป็นข้อมูลสดในขณะนั้น</p>
+<h2 id="18-19-heartbeat-กับ-sensor-data">18.19 Heartbeat กับ Sensor Data</h2>
+<p>อีกแนวทางหนึ่งคือใช้ Sensor Data เป็น Heartbeat เช่น Device ส่ง:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ทุก 5 วินาที Gateway สามารถถือว่า:</p>
+<pre class="language-text"><code>ทุกครั้งที่ได้รับ Data
+    → Update last_seen</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>ไม่ต้องส่ง Heartbeat Message เพิ่ม</li>
+<li>MQTT Traffic ลดลง</li>
+</ul>
+<p>ข้อเสีย: ถ้า Sensor ถูกออกแบบให้ส่งเฉพาะเมื่อค่ามีการเปลี่ยนแปลง Device อาจยัง Online แต่ไม่มี Data ใหม่ Gateway อาจเข้าใจผิดว่า Device Offline ดังนั้นต้องแยกแนวคิด:</p>
+<pre class="language-text"><code>Device Alive</code></pre>
+<p>ออกจาก:</p>
+<pre class="language-text"><code>Sensor Value Changed</code></pre>
+<h2 id="18-20-dedicated-heartbeat">18.20 Dedicated Heartbeat</h2>
+<p>ระบบที่ต้องการตรวจสอบ Availability ชัดเจนสามารถใช้:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>หรือ:</p>
+<pre class="language-text"><code>pkru/iot/001/heartbeat</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/001/status
+ONLINE</code></pre>
+<p>ทุก 5 วินาที ข้อดีคือ:</p>
+<pre class="language-text"><code>Device Availability</code></pre>
+<p>ไม่ขึ้นกับ Sensor Reporting Policy จึงเหมาะกับการสอนแนวคิด Device Monitoring</p>
+<h2 id="18-21-mqtt-last-will-and-testament-lwt">18.21 MQTT Last Will and Testament - LWT</h2>
+<p>Heartbeat สามารถตรวจจับ Device Offline ด้วย Timeout แต่ MQTT มีความสามารถอีกอย่างคือ <strong>Last Will and Testament</strong> หรือ:</p>
+<pre class="language-text"><code>LWT</code></pre>
+<p>แนวคิดคือ ตอน Device เชื่อมต่อกับ Broker จะบอก Broker ล่วงหน้าว่า:</p>
+<blockquote>
+ถ้าการเชื่อมต่อของฉันขาดแบบผิดปกติ ให้ Broker Publish Message นี้แทนฉัน
+</blockquote>
+<p>ตัวอย่าง Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>Will Message:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<p>เมื่อ Device เชื่อมต่อสำเร็จ Device Publish:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>เมื่อ Device หลุดผิดปกติ Broker Publish:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<h2 id="18-22-lwt-architecture">18.22 LWT Architecture</h2>
+<p>ตอนเชื่อมต่อ:</p>
+<pre class="language-text"><code>ESP32
+  │
+  │ Connect MQTT
+  │
+  │ Will Topic:
+  │ pkru/iot/001/status
+  │
+  │ Will Message:
+  │ OFFLINE
+  ▼
+Broker</code></pre>
+<p>เมื่อเชื่อมต่อสำเร็จ:</p>
+<pre class="language-text"><code>ESP32
+  │
+  │ ONLINE
+  ▼
+Broker</code></pre>
+<p>ถ้า ESP32 หายไปแบบผิดปกติ:</p>
+<pre class="language-text"><code>ESP32
+  X
+  │
+  │ Connection Lost
+  ▼
+
+Broker
+  │
+  │ Publish LWT
+  ▼
+
+pkru/iot/001/status
+OFFLINE</code></pre>
+<h2 id="18-23-lwt-ต่างจาก-heartbeat-อย่างไร">18.23 LWT ต่างจาก Heartbeat อย่างไร</h2>
+<h3 id="heartbeat">Heartbeat</h3>
+<p>Device ส่ง:</p>
+<pre class="language-text"><code>ONLINE
+ONLINE
+ONLINE
+ONLINE</code></pre>
+<p>เป็นระยะ Gateway ตรวจ:</p>
+<pre class="language-text"><code>Last Seen + Timeout</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>Gateway รู้ว่า Device ยังส่งสัญญาณเป็นระยะ</li>
+<li>สามารถคำนวณ Last Seen ได้</li>
+<li>เข้าใจง่าย</li>
+<li>ใช้ตรวจ Application-level Activity ได้</li>
+</ul>
+<p>ข้อเสีย:</p>
+<ul>
+<li>มี Message เพิ่ม</li>
+<li>ต้องมี Timeout Logic</li>
+</ul>
+<h3 id="lwt">LWT</h3>
+<p>Device ตั้ง:</p>
+<pre class="language-text"><code>Will = OFFLINE</code></pre>
+<p>ไว้กับ Broker เมื่อ Connection ขาดผิดปกติ Broker ส่ง:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>เป็นความสามารถของ MQTT โดยตรง</li>
+<li>ไม่ต้อง Publish Heartbeat ถี่ ๆ เพียงเพื่อบอกสถานะ</li>
+<li>Broker ช่วยแจ้ง Connection Failure</li>
+</ul>
+<p>ข้อจำกัด:</p>
+<ul>
+<li>การตรวจจับขึ้นกับ MQTT Connection และ Keep Alive</li>
+<li>ไม่ได้หมายความว่า Sensor / Application ทุกส่วนของ Device ทำงานถูกต้อง</li>
+<li>Graceful Disconnect อาจต้องให้ Device Publish OFFLINE เองตามการออกแบบ</li>
+<li>Network Failure อาจไม่ได้ถูกประกาศทันที เพราะ Broker ต้องตรวจพบว่า Connection หายก่อน</li>
+</ul>
+<h2 id="18-24-lwt-ไม่ใช่-heartbeat-replacement-ทุกกรณี">18.24 LWT ไม่ใช่ Heartbeat Replacement ทุกกรณี</h2>
+<p>ไม่ควรคิดว่า:</p>
+<pre class="language-text"><code>LWT ดีกว่า Heartbeat เสมอ</code></pre>
+<p>ทั้งสองตรวจคนละมุม LWT ตอบคำถามประมาณว่า:</p>
+<pre class="language-text"><code>MQTT Client Connection ยังอยู่หรือไม่?</code></pre>
+<p>Heartbeat ตอบคำถามประมาณว่า:</p>
+<pre class="language-text"><code>Device/Application ยังส่งสัญญาณตามที่คาดไว้หรือไม่?</code></pre>
+<p>ระบบจริงสามารถใช้ร่วมกัน:</p>
+<pre class="language-text"><code>LWT
+  +
+Heartbeat
+  +
+Timeout</code></pre>
+<p>เพื่อเพิ่มความน่าเชื่อถือของ Device Monitoring</p>
+<h2 id="18-25-retained-status">18.25 Retained Status</h2>
+<p>Status Topic มักเหมาะกับ MQTT Retained Message ตัวอย่าง Device Publish:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>ไปยัง:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>พร้อม:</p>
+<pre class="language-text"><code>retain = true</code></pre>
+<p>Broker จะเก็บ Status ล่าสุดไว้ เมื่อ Dashboard หรือ Node-RED เชื่อมต่อใหม่ Subscriber สามารถได้รับ Status ล่าสุดทันที โดยไม่ต้องรอ Device Publish รอบใหม่ แนวคิด:</p>
+<pre class="language-text"><code>Device
+   │
+   │ ONLINE + retain
+   ▼
+ Broker
+   │
+   │ stores latest status
+   ▼
+New Subscriber
+   │
+   ▼
+ ONLINE</code></pre>
+<h2 id="18-26-ข้อควรระวังของ-retained-status">18.26 ข้อควรระวังของ Retained Status</h2>
+<p>Retained Message คือ:</p>
+<pre class="language-text"><code>Last Published State</code></pre>
+<p>ไม่ใช่หลักฐานว่า Device ยัง Online ณ วินาทีนี้ ตัวอย่าง:</p>
+<pre class="language-text"><code>Device เคย Publish ONLINE แบบ Retained
+จากนั้น Device หายไป</code></pre>
+<p>ถ้าไม่มี:</p>
+<pre class="language-text"><code>LWT
+Timeout
+OFFLINE Update</code></pre>
+<p>Broker อาจยังเก็บ:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>อยู่ ดังนั้น <code>Retained ONLINE</code> เพียงอย่างเดียวไม่เพียงพอสำหรับ Offline Detection แนวทางที่เหมาะสมคือใช้ร่วมกับ <code>LWT</code> หรือ <code>Timeout</code></p>
+<h2 id="18-27-แนวทาง-status-ที่เหมาะสม">18.27 แนวทาง Status ที่เหมาะสม</h2>
+<p>สำหรับระบบจริงสามารถออกแบบ ตอน MQTT Connect:</p>
+<pre class="language-text"><code>Device → ONLINE</code></pre>
+<p>Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>ตั้ง Retain:</p>
+<pre class="language-text"><code>true</code></pre>
+<p>ตั้ง LWT:</p>
+<pre class="language-text"><code>Topic:
+pkru/iot/001/status
+
+Message:
+OFFLINE
+
+Retain:
+true</code></pre>
+<p>Architecture:</p>
+<pre class="language-text"><code>              MQTT CONNECT
+                   │
+                   ▼
+             ┌──────────┐
+             │  Broker  │
+             └────┬─────┘
+                  │
+           Device ONLINE
+            retain = true
+                  │
+                  ▼
+              Dashboard
+
+ถ้า Device หาย
+
+             Device
+                X
+                │
+                ▼
+             Broker
+                │
+                │ LWT
+                ▼
+             OFFLINE
+            retain = true</code></pre>
+<p>ทำให้ Status ล่าสุดของ Broker เปลี่ยนเป็น:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<h2 id="18-28-status-state-model">18.28 Status State Model</h2>
+<p>สามารถมอง Device Status เป็น State Machine ง่าย ๆ:</p>
+<pre class="language-text"><code>               MQTT Connect
+                   │
+                   ▼
+                ONLINE
+                   │
+                   │ Heartbeat/Data
+                   │
+                   └──────→ ONLINE
+                   │
+                   │ Timeout / LWT
+                   ▼
+                OFFLINE
+                   │
+                   │ Reconnect
+                   ▼
+                ONLINE</code></pre>
+<p>นี่เป็นพื้นฐานของ:</p>
+<pre class="language-text"><code>Device State Management</code></pre>
+<h2 id="18-29-device-reconnection">18.29 Device Reconnection</h2>
+<p>เมื่อ Device ที่ <code>OFFLINE</code> กลับมาเชื่อมต่อ Device Publish:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>Gateway ต้องเปลี่ยน:</p>
+<pre class="language-text"><code>OFFLINE
+   ↓
+ONLINE</code></pre>
+<p>และ Update:</p>
+<pre class="language-text"><code>last_seen</code></pre>
+<p>ดังนั้น Device Status ไม่ใช่สถานะถาวร แต่เป็น Dynamic State:</p>
+<pre class="language-text"><code>ONLINE
+  ↕
+OFFLINE</code></pre>
+<h2 id="18-30-multi-device-offline-detection">18.30 Multi-device Offline Detection</h2>
+<p>ระบบต้องตรวจแต่ละ Device แยกกัน ตัวอย่าง:</p>
+<pre class="language-text"><code>Device 001
+Last Seen = 2 s
+Status = ONLINE
+
+Device 002
+Last Seen = 25 s
+Status = OFFLINE
+
+Device 003
+Last Seen = 4 s
+Status = ONLINE</code></pre>
+<p>Architecture:</p>
+<pre class="language-text"><code>Device 001 ─┐
+Device 002 ─┼──→ MQTT
+Device 003 ─┘
+                 │
+                 ▼
+             Node-RED
+                 │
+                 ▼
+          Device Registry
+                 │
+      ┌──────────┼──────────┐
+      ▼          ▼          ▼
+     001        002        003
+   ONLINE     OFFLINE     ONLINE</code></pre>
+<h2 id="18-31-device-registry">18.31 Device Registry</h2>
+<p>หลัง LAB นี้ Gateway เริ่มมีข้อมูลลักษณะ:</p>
+<pre class="language-text"><code>Device Registry</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-json"><code>{
+  &quot;001&quot;: {
+    &quot;status&quot;: &quot;ONLINE&quot;,
+    &quot;last_seen&quot;: 1780000000000
+  },
+  &quot;002&quot;: {
+    &quot;status&quot;: &quot;OFFLINE&quot;,
+    &quot;last_seen&quot;: 1780000010000
+  },
+  &quot;003&quot;: {
+    &quot;status&quot;: &quot;ONLINE&quot;,
+    &quot;last_seen&quot;: 1780000020000
+  }
+}</code></pre>
+<p>แนวคิดนี้จะมีประโยชน์ต่อ:</p>
+<ul>
+<li>Multi-device Dashboard</li>
+<li>Offline Alert</li>
+<li>Data Quality</li>
+<li>Device Management</li>
+<li>Fault Detection</li>
+</ul>
+<h2 id="18-32-data-path-หลัง-lab-18">18.32 Data Path หลัง LAB 18</h2>
+<p>ตอนนี้ Device มีอย่างน้อย 3 เส้นทาง</p>
+<h3 id="sensor-data">Sensor Data</h3>
+<pre class="language-text"><code>Device
+   │
+   ▼
+/data
+   │
+   ▼
+Gateway</code></pre>
+<h3 id="device-status">Device Status</h3>
+<pre class="language-text"><code>Device
+   │
+   ▼
+/status
+   │
+   ▼
+Gateway</code></pre>
+<h3 id="command">Command</h3>
+<pre class="language-text"><code>Gateway
+   │
+   ▼
+ /cmd
+   │
+   ▼
+Device</code></pre>
+<p>ดังนั้น Topic Structure:</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/data
+pkru/iot/{device_id}/status
+pkru/iot/{device_id}/cmd</code></pre>
+<p>เริ่มมีความหมายในระดับ Architecture ชัดเจนขึ้น</p>
+<h2 id="18-33-แบบฝึกหัดที่-1-heartbeat">18.33 แบบฝึกหัดที่ 1 - Heartbeat</h2>
+<p>จำลอง Device 001 ส่ง:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>ทุก 5 วินาทีผ่าน:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>ให้ Node-RED บันทึก:</p>
+<pre class="language-text"><code>last_seen</code></pre>
+<p>และแสดง:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<h2 id="18-34-แบบฝึกหัดที่-2-offline-detection">18.34 แบบฝึกหัดที่ 2 - Offline Detection</h2>
+<p>กำหนด:</p>
+<pre class="language-text"><code>Heartbeat = 5 seconds
+Timeout = 15 seconds</code></pre>
+<p>หยุด Heartbeat Simulator ตรวจสอบว่าหลังเกิน 15 วินาที Node-RED เปลี่ยน:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>เป็น:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<h2 id="18-35-แบบฝึกหัดที่-3-multi-device">18.35 แบบฝึกหัดที่ 3 - Multi-device</h2>
+<p>จำลอง:</p>
+<pre class="language-text"><code>Device 001
+Device 002
+Device 003</code></pre>
+<p>ให้ทุก Device ส่ง Heartbeat จากนั้นหยุดเฉพาะ Device 002 ผลที่ต้องได้:</p>
+<pre class="language-text"><code>001 → ONLINE
+002 → OFFLINE
+003 → ONLINE</code></pre>
+<p>โดย Device อื่นต้องไม่ได้รับผลกระทบ</p>
+<h2 id="18-36-แบบฝึกหัดที่-4-dashboard">18.36 แบบฝึกหัดที่ 4 - Dashboard</h2>
+<p>เพิ่มใน Dashboard:</p>
+<pre class="language-text"><code>Device
+Status
+Last Seen
+Temp
+Humi
+Light</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>Device 001
+
+Status
+ONLINE
+
+Last Seen
+3 seconds ago
+
+Temp
+30 °C</code></pre>
+<h2 id="18-37-แบบฝึกหัดที่-5-last-value">18.37 แบบฝึกหัดที่ 5 - Last Value</h2>
+<p>หยุด Device 002 Dashboard อาจยังมี:</p>
+<pre class="language-text"><code>Temp = 32 °C</code></pre>
+<p>แต่ต้องแสดง:</p>
+<pre class="language-text"><code>Status = OFFLINE</code></pre>
+<p>อธิบายว่า:</p>
+<pre class="language-text"><code>Temp = 32 °C</code></pre>
+<p>คือ:</p>
+<pre class="language-text"><code>Last Known Value</code></pre>
+<p>ไม่ใช่การยืนยันว่าค่านี้ยังเป็นค่าปัจจุบัน</p>
+<h2 id="18-38-แบบฝึกหัดขั้นสูง-lwt">18.38 แบบฝึกหัดขั้นสูง - LWT</h2>
+<p>ศึกษาและทดลอง MQTT Client ที่รองรับ LWT โดยกำหนด Will Topic เป็น:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>Will Message:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<p>เมื่อ Client เชื่อมต่อ Publish:</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>จากนั้นจำลอง Connection Failure สังเกตว่า Broker Publish:</p>
+<pre class="language-text"><code>OFFLINE</code></pre>
+<p>แทน Device เปรียบเทียบกับ Heartbeat + Timeout</p>
+<h2 id="18-39-งานส่ง-lab-18">18.39 งานส่ง LAB 18</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Node-RED Flow: <code>MQTT Status → Update Last Seen → Timeout Detection → ONLINE / OFFLINE</code></li>
+<li>Screenshot MQTT Heartbeat: <code>pkru/iot/001/status ONLINE</code></li>
+<li>Screenshot Dashboard ขณะ Device ONLINE</li>
+<li>Screenshot Dashboard หลัง Device OFFLINE</li>
+<li>ทดสอบ Device อย่างน้อย 3 ตัว: <code>001</code>, <code>002</code>, <code>003</code></li>
+<li>ทำให้ Device 002 Offline โดย Device อื่นยัง Online</li>
+<li>อธิบายความหมายของ <code>Heartbeat</code>, <code>Last Seen</code>, <code>Timeout</code>, <code>LWT</code>, <code>Retained Message</code></li>
+<li>อธิบายว่าเหตุใด Last Sensor Value จึงไม่สามารถใช้ยืนยันว่า Device Online</li>
+<li>อธิบายความแตกต่างระหว่าง Heartbeat และ LWT</li>
+</ol>
+<h2 id="18-40-สิ่งที่ต้องเข้าใจ">18.40 สิ่งที่ต้องเข้าใจ</h2>
+<p>ก่อน LAB 18:</p>
+<pre class="language-text"><code>Device
+   ↓
+  Data
+   ↓
+Dashboard</code></pre>
+<p>ระบบรู้เพียง:</p>
+<pre class="language-text"><code>&quot;ค่าล่าสุดคืออะไร?&quot;</code></pre>
+<p>หลัง LAB 18:</p>
+<pre class="language-text"><code>Device
+   ├── Data
+   └── Status
+         ↓
+        MQTT
+         ↓
+      Gateway
+         ↓
+      Last Seen
+         ↓
+      Timeout
+         ↓
+  ONLINE / OFFLINE</code></pre>
+<p>ระบบสามารถตอบเพิ่มว่า:</p>
+<pre class="language-text"><code>&quot;Device ยังทำงานอยู่หรือไม่?&quot;</code></pre>
+<h2 id="18-41-ความสัมพันธ์ของ-lab-16-18">18.41 ความสัมพันธ์ของ LAB 16-18</h2>
+<p>LAB 16:</p>
+<pre class="language-text"><code>Structured MQTT
+      ↓
+Multi-device Communication</code></pre>
+<p>LAB 17:</p>
+<pre class="language-text"><code>Multi-device Data
+      ↓
+Multi-device Dashboard</code></pre>
+<p>LAB 18:</p>
+<pre class="language-text"><code>Multi-device
+      ↓
+Device Availability
+      ↓
+ONLINE / OFFLINE</code></pre>
+<p>เส้นทางคือ:</p>
+<pre class="language-text"><code>Communicate
+    ↓
+  Scale
+    ↓
+ Monitor
+    ↓
+Detect Device Failure</code></pre>
+<h2 id="18-42-architecture-หลัง-lab-18">18.42 Architecture หลัง LAB 18</h2>
+<pre class="language-text"><code>┌────────────┐
+│ ESP32-001  │
+│            │
+│ data       │
+│ status     │
+│ cmd        │
+└─────┬──────┘
+      │
+┌────────────┐
+│ ESP32-002  │
+│            │
+│ data       │
+│ status     │
+│ cmd        │
+└─────┬──────┘
+      │
+┌────────────┐
+│ ESP32-003  │
+│            │
+│ data       │
+│ status     │
+│ cmd        │
+└─────┬──────┘
+      │
+      ▼
+┌─────────────────────┐
+│ Mosquitto           │
+│ Raspberry Pi        │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Node-RED            │
+│                     │
+│ Sensor Processing   │
+│ Device Registry     │
+│ Last Seen           │
+│ Timeout Detection   │
+│ ONLINE / OFFLINE    │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Dashboard           │
+│                     │
+│ Sensor Values       │
+│ Device Status       │
+│ Last Seen           │
+└─────────────────────┘</code></pre>
+<h2 id="18-43-จุดสำคัญที่สุดของ-lab">18.43 จุดสำคัญที่สุดของ LAB</h2>
+<p>ประเด็นสำคัญที่ต้องเข้าใจ:</p>
+<pre class="language-text"><code>Value ≠ Availability
+Last Value ≠ Current Value
+MQTT Connected ≠ Sensor Valid</code></pre>
+<p>Device อาจ <code>ONLINE</code> แต่ Sensor เสียและส่ง:</p>
+<pre class="language-text"><code>-99
+null
+ค่าที่ผิดปกติ</code></pre>
+<p>ในทางกลับกัน Device อาจ <code>OFFLINE</code> แต่ Dashboard ยังมี Sensor Value เก่าค้างอยู่ ดังนั้นระบบ IoT ที่เชื่อถือได้ต้องตรวจสอบอย่างน้อยสองเรื่องแยกกัน:</p>
+<pre class="language-text"><code>Device Availability
+Data Quality</code></pre>
+<p>LAB 18 รับผิดชอบ:</p>
+<pre class="language-text"><code>Device Availability</code></pre>
+<p>ส่วน LAB 19 จะรับผิดชอบ:</p>
+<pre class="language-text"><code>Data Quality</code></pre>
+<h2 id="18-44-เชื่อมไป-lab-19-data-quality">18.44 เชื่อมไป LAB 19 - Data Quality</h2>
+<p>หลัง LAB 18 ระบบสามารถรู้ว่า:</p>
+<pre class="language-text"><code>Device 001 = ONLINE</code></pre>
+<p>แต่ยังมีคำถามต่อว่า:</p>
+<pre class="language-text"><code>ข้อมูลจาก Device 001 เชื่อถือได้หรือไม่?</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>Device 001
+Status = ONLINE
+
+temp = -99</code></pre>
+<p>Device ยัง Online แต่ Sensor Data ผิด อีกกรณี:</p>
+<pre class="language-text"><code>Device 001
+Status = ONLINE
+
+temp = 32 °C</code></pre>
+<p>แต่ข้อมูล Temperature ไม่ Update มานานเกินกำหนด ข้อมูลจึงอาจเป็น:</p>
+<pre class="language-text"><code>STALE</code></pre>
+<p>ดังนั้น LAB 19 จะเพิ่ม Data Quality State:</p>
+<pre class="language-text"><code>VALID
+INVALID
+STALE</code></pre>
+<p>Architecture จะพัฒนาเป็น:</p>
+<pre class="language-text"><code>Device
+   │
+   ├── Device Availability
+   │      ↓
+   │   ONLINE / OFFLINE
+   │
+   └── Sensor Data
+          ↓
+     Data Validation
+          ↓
+   VALID / INVALID / STALE</code></pre>
+<p>ทำให้ Gateway สามารถตอบได้สองคำถามแยกกัน:</p>
+<pre class="language-text"><code>Device ยังทำงานอยู่หรือไม่?
+ข้อมูลที่ได้รับยังเชื่อถือได้หรือไม่?</code></pre>
+<p>นี่คือพื้นฐานของระบบ IoT ที่สามารถตรวจสอบทั้งอุปกรณ์และคุณภาพข้อมูลได้อย่างเป็นระบบ</p>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>03 - Raspberry Pi Network and Wi-Fi</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-teaching-guide/03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="../iot-lab-teaching-guide/04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="../iot-lab-teaching-guide/05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="../iot-lab-teaching-guide/06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="../iot-lab-teaching-guide/08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="../iot-lab-teaching-guide/10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="../iot-lab-teaching-guide/11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="../iot-lab-teaching-guide/12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="../iot-lab-teaching-guide/13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="../iot-lab-teaching-guide/14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="../iot-lab-teaching-guide/15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="../iot-lab-teaching-guide/16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="../iot-lab-teaching-guide/17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="../iot-lab-teaching-guide/19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="../iot-lab-teaching-guide/20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="../iot-lab-teaching-guide/23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="../iot-lab-teaching-guide/25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="../iot-lab-teaching-guide/26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="active" href="03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="raspberry-pi-network-and-wi-fi">Raspberry Pi Network and Wi-Fi</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="02-raspberry-pi-setup.html">ก่อนหน้า: 02 - Raspberry Pi Setup</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="04-raspberry-pi-iot-architecture.html">ถัดไป: 04 - Raspberry Pi IoT Architecture</a></nav>
+<p>คำสั่งตรวจการเชื่อมต่อ LAN/Wi-Fi, IP address, default route และการจัดการ Wi-Fi profile บน Raspberry Pi ที่ใช้ NetworkManager</p>
+<aside class="callout callout-important">
+<div class="callout-title">ตรวจ Network Manager ก่อน</div>
+<p>คำสั่ง <code>nmcli</code> ใช้ได้เมื่อ interface ถูกจัดการโดย NetworkManager ตรวจด้วย<br><code>systemctl is-active NetworkManager</code> หากใช้ระบบอื่น เช่น <code>dhcpcd</code> หรือ<br><code>systemd-networkd</code> ขั้นตอนจัดการ profile จะแตกต่างกัน</p>
+</aside>
+<h2 id="ตรวจสถานะเครือข่าย">ตรวจสถานะเครือข่าย</h2>
+<p>ดูว่า LAN/Wi-Fi interface ใดเชื่อมต่ออยู่:</p>
+<pre class="language-bash"><code>nmcli device status</code></pre>
+<p>ดู IP ของแต่ละ interface แบบย่อ:</p>
+<pre class="language-bash"><code>ip -br addr</code></pre>
+<p>ดูว่า traffic ไป Internet จะออกทาง interface และ gateway ใด:</p>
+<pre class="language-bash"><code>ip route get 8.8.8.8</code></pre>
+<p>ผลลัพธ์จะมี <code>via GATEWAY</code> และ <code>dev INTERFACE</code> เช่น <code>dev eth0</code> หมายถึงออกทาง LAN และ <code>dev wlan0</code> หมายถึงออกทาง Wi-Fi คำสั่งนี้ตรวจเส้นทางที่ kernel เลือก แต่ไม่ได้ยืนยันว่าปลายทาง Internet ตอบกลับ</p>
+<p>ดู SSID ที่เชื่อมอยู่:</p>
+<pre class="language-bash"><code>iwgetid -r</code></pre>
+<p>ถ้าไม่มี <code>iwgetid</code> ใช้ NetworkManager แทน:</p>
+<pre class="language-bash"><code>nmcli -t -f ACTIVE,SSID device wifi | grep &#x27;^yes:&#x27;</code></pre>
+<p>ดู hostname และ IP address ของ Raspberry Pi:</p>
+<pre class="language-bash"><code>hostname
+hostname -I</code></pre>
+<p><code>kathu</code> ที่ใช้ในคู่มือคือ hostname ที่ผู้ดูแลตั้งให้ Raspberry Pi เครื่องหลักของ Lab ไม่ใช่ชื่อที่ Raspberry Pi ทุกเครื่องต้องใช้ ส่วน <code>192.168.1.50</code> เป็น IP ตัวอย่างตรวจคำอธิบายความต่างระหว่าง hostname, Tunnel name, public hostname และ IP ได้ที่ <a href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html#ชื่อที่ใช้ในเอกสาร">ชื่อที่ใช้ในเอกสาร</a></p>
+<p><code>hostname -I</code> อาจแสดงหลาย address ให้เทียบกับ <code>ip -br addr</code> ก่อนเลือก IP ที่อยู่ใน subnet เดียวกับเครื่อง client</p>
+<h2 id="สร้าง-wi-fi-profile">สร้าง Wi-Fi Profile</h2>
+<p>กำหนดค่าต่อไปนี้ให้ตรงกับระบบ:</p>
+<pre class="language-text"><code>PROFILE_NAME  ชื่อ profile เช่น phuket-iot
+WIFI_SSID     ชื่อเครือข่าย Wi-Fi
+WIFI_PASSWORD รหัสผ่าน Wi-Fi</code></pre>
+<p>สร้างและตั้งค่า profile:</p>
+<pre class="language-bash"><code>sudo nmcli connection add \
+  type wifi \
+  ifname wlan0 \
+  con-name &quot;PROFILE_NAME&quot; \
+  ssid &quot;WIFI_SSID&quot;
+
+sudo nmcli connection modify &quot;PROFILE_NAME&quot; \
+  wifi-sec.key-mgmt wpa-psk \
+  wifi-sec.psk &quot;WIFI_PASSWORD&quot; \
+  connection.autoconnect yes
+
+sudo nmcli connection up &quot;PROFILE_NAME&quot;</code></pre>
+<aside class="callout callout-warning">
+<div class="callout-title">รักษาความลับของรหัสผ่าน</div>
+<p>อย่าใส่รหัสผ่านจริงลงในโน้ต, screenshot หรือ repository คำสั่งที่มีรหัสผ่านอาจถูกเก็บ ใน shell history หากไม่ต้องการพิมพ์รหัสผ่านบน command line ให้ใช้<br><code>sudo nmcli --ask device wifi connect &quot;WIFI_SSID&quot; ifname wlan0 name &quot;PROFILE_NAME&quot;</code></p>
+</aside>
+<h2 id="ตรวจ-profile-ที่บันทึกไว้">ตรวจ Profile ที่บันทึกไว้</h2>
+<pre class="language-bash"><code>nmcli connection show
+nmcli -f NAME,TYPE,AUTOCONNECT connection show | grep wifi
+nmcli device status</code></pre>
+<p>ตรวจรายละเอียด profile โดยไม่แสดง secret:</p>
+<pre class="language-bash"><code>nmcli connection show &quot;PROFILE_NAME&quot;</code></pre>
+<h2 id="ลบ-wi-fi-configuration-เก่าจาก-netplan">ลบ Wi-Fi Configuration เก่าจาก Netplan</h2>
+<aside class="callout callout-danger">
+<div class="callout-title">อาจทำให้ SSH หลุด</div>
+<p>ถ้า SSH ผ่าน Wi-Fi ที่กำลังแก้ การเชื่อมต่ออาจหลุดทันที ควรทำผ่านจอ/คีย์บอร์ด,serial console หรือเชื่อม LAN ไว้เป็นทางสำรอง และอย่าลบไฟล์จนกว่าจะระบุเจ้าของ configuration ได้แน่ชัด</p>
+</aside>
+<h3 id="1-บันทึกสถานะก่อนแก้">1. บันทึกสถานะก่อนแก้</h3>
+<pre class="language-bash"><code>nmcli -f NAME,TYPE,AUTOCONNECT connection show | grep wifi
+nmcli device status
+ip -br addr
+ip route</code></pre>
+<h3 id="2-ตรวจไฟล์-netplan">2. ตรวจไฟล์ Netplan</h3>
+<pre class="language-bash"><code>ls -l /etc/netplan/
+sudo cat /etc/netplan/*.yaml</code></pre>
+<p>ตรวจชื่อ interface, SSID และ renderer ในแต่ละไฟล์ เลือกเฉพาะไฟล์ Wi-Fi เก่าที่ต้องการเอาออก</p>
+<h3 id="3-ย้ายไฟล์ไปสำรองแทนการลบทันที">3. ย้ายไฟล์ไปสำรองแทนการลบทันที</h3>
+<pre class="language-bash"><code>sudo install -d -m 700 /etc/netplan/backup
+sudo cp -a /etc/netplan/&lt;OLD-WIFI-FILE&gt;.yaml /etc/netplan/backup/
+sudo mv /etc/netplan/&lt;OLD-WIFI-FILE&gt;.yaml /etc/netplan/backup/</code></pre>
+<h3 id="4-ตรวจ-syntax-แล้วจึงใช้-configuration">4. ตรวจ syntax แล้วจึงใช้ configuration</h3>
+<pre class="language-bash"><code>sudo netplan generate
+sudo netplan apply</code></pre>
+<p>ถ้า <code>netplan generate</code> แจ้ง error ให้คืนไฟล์ก่อน apply:</p>
+<pre class="language-bash"><code>sudo mv /etc/netplan/backup/&lt;OLD-WIFI-FILE&gt;.yaml /etc/netplan/
+sudo netplan generate
+sudo netplan apply</code></pre>
+<h3 id="4-ลบ-networkmanager-profile-ที่ไม่ใช้">4. ลบ NetworkManager Profile ที่ไม่ใช้</h3>
+<p>ไฟล์ Netplan และ NetworkManager connection profile เป็นคนละชั้นกัน หลังเชื่อมกลับมา ให้ตรวจว่ามี profile เก่าค้างอยู่หรือไม่ แล้วลบด้วยชื่อที่ตรวจสอบแล้วเท่านั้น:</p>
+<pre class="language-bash"><code>nmcli connection show
+sudo nmcli connection delete &quot;&lt;OLD-PROFILE-NAME&gt;&quot;</code></pre>
+<h3 id="5-ตรวจผลสุดท้าย">5. ตรวจผลสุดท้าย</h3>
+<pre class="language-bash"><code>nmcli device status
+nmcli connection show
+ip -br addr
+ip route get 8.8.8.8</code></pre>
+<h2 id="notes-ที่เกี่ยวข้อง">Notes ที่เกี่ยวข้อง</h2>
+<ul>
+<li><a href="02-raspberry-pi-setup.html">Raspberry Pi Setup</a></li>
+<li><a href="17-ssh-from-mac-or-windows-over-direct-lan.html">SSH from Mac or Windows over Direct LAN</a></li>
+<li><a href="../cloudflare/05-multi-pi-cloudflare-architecture.html">Multi-Pi Cloudflare Architecture</a></li>
+<li><a href="15-troubleshooting.html">Troubleshooting</a></li>
+<li><a href="../cloudflare/01-cloudflare-tunnel-setup.html">Cloudflare Tunnel Setup</a></li>
+</ul>
+<p>กลับไป <a href="../index.html">IoT Lab Overview</a></p>
+    </main>
+  </div>
+</body>
+</html>

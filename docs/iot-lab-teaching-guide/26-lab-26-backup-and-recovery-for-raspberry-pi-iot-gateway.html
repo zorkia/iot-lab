@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="active" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">ก่อนหน้า: LAB 25 - Remote Access with Cloudflare Tunnel</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="27-lab-27-fault-tolerant-iot-gateway.html">ถัดไป: LAB 27 - Fault-Tolerant IoT Gateway</a></nav>
+<h2 id="26-1-แนวคิดของ-lab">26.1 แนวคิดของ LAB</h2>
+<p>เป้าหมาย: ทำให้ Raspberry Pi IoT Gateway สามารถสำรองข้อมูลและกู้คืนระบบได้เมื่อ SD Card, Configuration หรือ Gateway เกิดปัญหา โดยต้องทดสอบ Restore จริง ไม่ใช่เพียงสร้างไฟล์ Backup แนวคิดหลัก:</p>
+<pre class="language-text"><code>Raspberry Pi IoT Gateway
+        │
+        ├── Mosquitto
+        ├── Node-RED
+        ├── Python Gateway
+        ├── SQLite
+        ├── systemd
+        └── Cloudflare Tunnel
+                │
+                ▼
+              Backup
+                │
+                ▼
+        External Storage</code></pre>
+<p>เมื่อเกิด Failure:</p>
+<pre class="language-text"><code>Failure
+   ↓
+Fresh OS / Replacement Pi
+   ↓
+Install Required Packages
+   ↓
+Restore Configuration
+   ↓
+Restore Application
+   ↓
+Restore Database
+   ↓
+Restore Services
+   ↓
+Start Services
+   ↓
+Verify End-to-End
+   ↓
+System Operational</code></pre>
+<p>สิ่งที่ต้อง Backup:</p>
+<pre class="language-text"><code>1. Mosquitto
+   - /etc/mosquitto/
+   - mosquitto.conf
+   - conf.d/
+   - passwd
+   - acl
+
+2. Node-RED
+   - ~/.node-red/
+   - flows
+   - settings
+   - credentials/configuration ที่เกี่ยวข้อง
+
+3. Python Gateway
+   - gateway.py
+   - store_forward.py
+   - Python source/configuration อื่น
+   - requirements.txt
+
+4. SQLite
+   - sensor_data.db
+   - store_forward.db
+
+5. systemd
+   - iot-gateway.service
+   - store-forward.service
+   - Custom service อื่นของโครงการ
+   - Environment File เช่น /etc/iot-gateway.env
+
+6. Cloudflare Tunnel
+   - /etc/cloudflared/config.yml
+   - Tunnel Credential</code></pre>
+<p>หมายเหตุ: Password, Environment File, Cloudflare Credential และ SSH Private Key ถือเป็น Secret ต้องไม่เผยแพร่หรือเก็บใน Public Repository</p>
+<h2 id="26-2-สร้าง-backup-directory">26.2 สร้าง Backup Directory</h2>
+<pre class="language-bash"><code>sudo mkdir -p /var/backups/iot-gateway
+sudo chmod 700 /var/backups/iot-gateway</code></pre>
+<p>สร้าง Timestamp:</p>
+<pre class="language-bash"><code>timestamp=$(date +&quot;%Y%m%d-%H%M%S&quot;)
+echo &quot;$timestamp&quot;</code></pre>
+<p>ตัวอย่างโครงสร้าง:</p>
+<pre class="language-text"><code>/var/backups/iot-gateway/
+└── 20261002-073000/
+    ├── mosquitto/
+    ├── node-red/
+    ├── python/
+    ├── sqlite/
+    ├── systemd/
+    ├── cloudflared/
+    ├── manifest.txt
+    └── checksums.sha256</code></pre>
+<h2 id="26-3-backup-mosquitto">26.3 Backup Mosquitto</h2>
+<pre class="language-bash"><code>sudo cp -a /etc/mosquitto BACKUP_DIRECTORY/</code></pre>
+<p>ต้อง Backup ทั้ง</p>
+<pre class="language-text"><code>mosquitto.conf
+passwd
+acl
+conf.d/</code></pre>
+<p>เพราะการ Backup เฉพาะ Configuration แต่ไม่มี passwd/ACL จะไม่สามารถ Restore MQTT Security จาก LAB 24 ได้ครบ</p>
+<h2 id="26-4-backup-node-red">26.4 Backup Node-RED</h2>
+<p>ตรวจสอบ:</p>
+<pre class="language-bash"><code>ls -la ~/.node-red</code></pre>
+<p>Backup:</p>
+<pre class="language-bash"><code>cp -a ~/.node-red BACKUP_DIRECTORY/node-red</code></pre>
+<p>Node-RED ควร Backup User Directory ไม่ใช่เพียง flows.json เพราะอาจมี Configuration และ Credential ที่สัมพันธ์กัน</p>
+<h2 id="26-5-backup-python-gateway">26.5 Backup Python Gateway</h2>
+<p>เก็บ Source Code เช่น</p>
+<pre class="language-text"><code>gateway.py
+store_forward.py</code></pre>
+<p>ไม่จำเป็นต้อง Backup venv เป็นหลัก ให้สร้าง requirements.txt:</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+source venv/bin/activate</code></pre>
+<pre class="language-bash"><code>pip freeze &gt; requirements.txt</code></pre>
+<p>ตอน Recovery ให้สร้าง venv ใหม่:</p>
+<pre class="language-bash"><code>python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt</code></pre>
+<h2 id="26-6-backup-sqlite">26.6 Backup SQLite</h2>
+<p>ควรใช้ SQLite .backup แทนการ Copy Database ขณะที่ระบบกำลังเขียนข้อมูล ตัวอย่าง:</p>
+<pre class="language-bash"><code>sqlite3 sensor_data.db \
+&quot;.backup &#x27;/var/backups/iot-gateway/TIMESTAMP/sqlite/sensor_data.db&#x27;&quot;</code></pre>
+<p>และ</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;.backup &#x27;/var/backups/iot-gateway/TIMESTAMP/sqlite/store_forward.db&#x27;&quot;</code></pre>
+<p>ตรวจสอบ Backup:</p>
+<pre class="language-bash"><code>sqlite3 BACKUP_DATABASE \
+&quot;PRAGMA integrity_check;&quot;</code></pre>
+<p>ผลที่ต้องการ: ok ตรวจจำนวนข้อมูล เช่น:</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;SELECT COUNT(*) FROM queue;&quot;</code></pre>
+<h2 id="26-7-backup-systemd">26.7 Backup systemd</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-bash"><code>sudo cp \
+/etc/systemd/system/iot-gateway.service \
+BACKUP_DIRECTORY/systemd/</code></pre>
+<pre class="language-bash"><code>sudo cp \
+/etc/systemd/system/store-forward.service \
+BACKUP_DIRECTORY/systemd/</code></pre>
+<p>ถ้ามี Environment File:</p>
+<pre class="language-bash"><code>sudo cp \
+/etc/iot-gateway.env \
+BACKUP_DIRECTORY/systemd/</code></pre>
+<p>Environment File ที่มี Password ต้องถือเป็น Secret</p>
+<h2 id="26-8-backup-cloudflare-tunnel">26.8 Backup Cloudflare Tunnel</h2>
+<p>Backup:</p>
+<pre class="language-bash"><code>sudo cp -a \
+/etc/cloudflared \
+BACKUP_DIRECTORY/</code></pre>
+<p>ประกอบด้วย</p>
+<pre class="language-text"><code>config.yml
+Tunnel Credential</code></pre>
+<p>Credential ต้องไม่ส่งขึ้น GitHub หรือแนบในรายงาน</p>
+<h2 id="26-9-manifest">26.9 Manifest</h2>
+<p>สร้าง manifest.txt เพื่อบันทึกว่า Backup ชุดนั้นมีอะไร ตัวอย่าง:</p>
+<pre class="language-text"><code>Backup Time: 2026-10-02 07:30
+Hostname: kathu</code></pre>
+<pre class="language-text"><code>Components:
+- Mosquitto
+- MQTT passwd
+- MQTT ACL
+- Node-RED
+- Python Gateway
+- SQLite
+- systemd
+- cloudflared</code></pre>
+<h2 id="26-10-ตรวจสอบความสมบูรณ์ด้วย-sha-256">26.10 ตรวจสอบความสมบูรณ์ด้วย SHA-256</h2>
+<p>สร้าง:</p>
+<pre class="language-bash"><code>find BACKUP_DIRECTORY \
+-type f \
+! -name &quot;checksums.sha256&quot; \
+-exec sha256sum {} \; \
+&gt; BACKUP_DIRECTORY/checksums.sha256</code></pre>
+<p>ตรวจสอบ:</p>
+<pre class="language-bash"><code>sha256sum -c checksums.sha256</code></pre>
+<p>ผลควรเป็น: OK</p>
+<h2 id="26-11-สร้าง-backup-script">26.11 สร้าง Backup Script</h2>
+<p>สร้าง:</p>
+<pre class="language-bash"><code>sudo nano /usr/local/sbin/iot-backup.sh</code></pre>
+<p>Script ทำหน้าที่</p>
+<pre class="language-text"><code>Mosquitto
+    ↓
+Node-RED
+    ↓
+Python
+    ↓
+SQLite .backup
+    ↓
+systemd
+    ↓
+cloudflared
+    ↓
+Manifest
+    ↓
+SHA-256</code></pre>
+<p>กำหนด Permission:</p>
+<pre class="language-bash"><code>sudo chmod 700 /usr/local/sbin/iot-backup.sh</code></pre>
+<p>ทดสอบ:</p>
+<pre class="language-bash"><code>sudo /usr/local/sbin/iot-backup.sh</code></pre>
+<h2 id="26-12-backup-automation">26.12 Backup Automation</h2>
+<p>สร้าง systemd Service:</p>
+<pre class="language-text"><code>/etc/systemd/system/iot-backup.service</code></pre>
+<pre class="language-ini"><code>[Unit]
+Description=IoT Gateway Backup</code></pre>
+<pre class="language-ini"><code>[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/iot-backup.sh</code></pre>
+<p>สร้าง Timer:</p>
+<pre class="language-text"><code>/etc/systemd/system/iot-backup.timer</code></pre>
+<pre class="language-ini"><code>[Unit]
+Description=Daily IoT Gateway Backup</code></pre>
+<pre class="language-ini"><code>[Timer]
+OnCalendar=daily
+Persistent=true</code></pre>
+<pre class="language-ini"><code>[Install]
+WantedBy=timers.target</code></pre>
+<p>เปิดใช้งาน:</p>
+<pre class="language-bash"><code>sudo systemctl daemon-reload</code></pre>
+<pre class="language-bash"><code>sudo systemctl enable --now iot-backup.timer</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl list-timers</code></pre>
+<p>ทดสอบ Backup โดยไม่ต้องรอ:</p>
+<pre class="language-bash"><code>sudo systemctl start iot-backup.service</code></pre>
+<p>ตรวจ Log:</p>
+<pre class="language-bash"><code>journalctl \
+-u iot-backup.service \
+-n 50 \
+--no-pager</code></pre>
+<h2 id="26-13-backup-ต้องอยู่นอก-raspberry-pi-ด้วย">26.13 Backup ต้องอยู่นอก Raspberry Pi ด้วย</h2>
+<p>ถ้า Original และ Backup อยู่บน SD Card เดียวกัน:</p>
+<pre class="language-text"><code>SD Card Failure
+      ↓
+Original Lost
+      +
+Backup Lost</code></pre>
+<p>ดังนั้นควร Copy Backup ไปยัง</p>
+<pre class="language-text"><code>USB Drive
+NAS
+Another Server
+Secure Remote Storage</code></pre>
+<p>แนวคิด:</p>
+<pre class="language-text"><code>Raspberry Pi
+    │
+    ├── Local Backup
+    │
+    └── External Backup</code></pre>
+<h2 id="26-14-recovery">26.14 Recovery</h2>
+<p>ลำดับ Recovery:</p>
+<pre class="language-text"><code>Fresh OS
+   ↓
+Network
+   ↓
+Install Packages
+   ↓
+Restore Mosquitto
+   ↓
+Restore Node-RED
+   ↓
+Restore Python
+   ↓
+Restore SQLite
+   ↓
+Restore systemd
+   ↓
+Restore cloudflared
+   ↓
+Start Services
+   ↓
+Verify</code></pre>
+<h2 id="26-15-restore-mosquitto">26.15 Restore Mosquitto</h2>
+<p>หยุด Service:</p>
+<pre class="language-bash"><code>sudo systemctl stop mosquitto</code></pre>
+<p>Restore:</p>
+<pre class="language-bash"><code>sudo cp -a \
+BACKUP/mosquitto/. \
+/etc/mosquitto/</code></pre>
+<p>Start:</p>
+<pre class="language-bash"><code>sudo systemctl restart mosquitto</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<pre class="language-bash"><code>journalctl -u mosquitto -n 50 --no-pager</code></pre>
+<p>หลัง Restore ต้องทดสอบ MQTT Security:</p>
+<pre class="language-text"><code>Anonymous
+    → DENY</code></pre>
+<pre class="language-text"><code>sensor001 → 001/data
+    → ALLOW</code></pre>
+<pre class="language-text"><code>sensor001 → 002/data
+    → DENY</code></pre>
+<h2 id="26-16-restore-node-red">26.16 Restore Node-RED</h2>
+<pre class="language-bash"><code>sudo systemctl stop nodered</code></pre>
+<pre class="language-bash"><code>cp -a \
+BACKUP/node-red/. \
+/home/piuser/.node-red/</code></pre>
+<pre class="language-bash"><code>sudo chown -R \
+piuser:piuser \
+/home/piuser/.node-red</code></pre>
+<pre class="language-bash"><code>sudo systemctl start nodered</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status nodered</code></pre>
+<p>จากนั้นตรวจ</p>
+<pre class="language-text"><code>Flows
+Dashboard
+MQTT Nodes
+SQLite Nodes</code></pre>
+<h2 id="26-17-restore-python-gateway">26.17 Restore Python Gateway</h2>
+<pre class="language-bash"><code>mkdir -p ~/iot-gateway</code></pre>
+<pre class="language-bash"><code>cp -a \
+BACKUP/python/. \
+~/iot-gateway/</code></pre>
+<p>สร้าง venv ใหม่:</p>
+<pre class="language-bash"><code>cd ~/iot-gateway</code></pre>
+<pre class="language-bash"><code>python3 -m venv venv</code></pre>
+<pre class="language-bash"><code>source venv/bin/activate</code></pre>
+<pre class="language-bash"><code>python -m pip install --upgrade pip</code></pre>
+<pre class="language-bash"><code>pip install -r requirements.txt</code></pre>
+<h2 id="26-18-restore-sqlite">26.18 Restore SQLite</h2>
+<p>หยุด Application ที่กำลังใช้ Database ก่อน Restore:</p>
+<pre class="language-bash"><code>cp \
+BACKUP/sqlite/store_forward.db \
+~/iot-gateway/store_forward.db</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>sqlite3 \
+~/iot-gateway/store_forward.db \
+&quot;PRAGMA integrity_check;&quot;</code></pre>
+<p>ต้องได้: ok จากนั้นตรวจจำนวน Record</p>
+<h2 id="26-19-restore-systemd">26.19 Restore systemd</h2>
+<pre class="language-bash"><code>sudo cp \
+BACKUP/systemd/*.service \
+/etc/systemd/system/</code></pre>
+<pre class="language-bash"><code>sudo systemctl daemon-reload</code></pre>
+<pre class="language-bash"><code>sudo systemctl enable iot-gateway
+sudo systemctl enable store-forward</code></pre>
+<p>จากนั้น Start/Restart Service</p>
+<h2 id="26-20-restore-cloudflare">26.20 Restore Cloudflare</h2>
+<pre class="language-bash"><code>sudo systemctl stop cloudflared</code></pre>
+<pre class="language-bash"><code>sudo cp -a \
+BACKUP/cloudflared/. \
+/etc/cloudflared/</code></pre>
+<p>ตรวจ Configuration:</p>
+<pre class="language-bash"><code>cloudflared tunnel \
+--config /etc/cloudflared/config.yml \
+ingress validate</code></pre>
+<p>Start:</p>
+<pre class="language-bash"><code>sudo systemctl start cloudflared</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status cloudflared</code></pre>
+<h2 id="26-21-recovery-verification">26.21 Recovery Verification</h2>
+<p>Recovery ไม่ถือว่าสำเร็จเพียงเพราะ</p>
+<pre class="language-bash"><code>systemctl status = active</code></pre>
+<p>ต้องทดสอบ End-to-End:</p>
+<pre class="language-text"><code>ESP32 / Simulator
+       ↓
+      MQTT
+       ↓
+Python / Node-RED
+       ↓
+     SQLite
+       ↓
+   Dashboard</code></pre>
+<p>และ Control Path:</p>
+<pre class="language-text"><code>Dashboard / Rule
+       ↓
+ MQTT Command
+       ↓
+     ESP32</code></pre>
+<p>ต้องตรวจระบบจาก LAB ก่อนหน้าด้วย:</p>
+<pre class="language-text"><code>LAB 18
+ONLINE / OFFLINE</code></pre>
+<pre class="language-text"><code>LAB 19
+VALID / INVALID / STALE</code></pre>
+<pre class="language-text"><code>LAB 23
+PENDING → SENT</code></pre>
+<pre class="language-text"><code>LAB 24
+Authentication + ACL</code></pre>
+<pre class="language-text"><code>LAB 25
+Web / Node-RED / SSH Remote Access</code></pre>
+<h2 id="26-22-rpo">26.22 RPO</h2>
+<p>RPO = Recovery Point Objective ตอบคำถาม: &quot;ยอมสูญเสียข้อมูลย้อนหลังได้มากเท่าไร?&quot; ตัวอย่าง: Backup ทุก 24 ชั่วโมง อาจสูญเสียข้อมูลได้สูงสุดประมาณ 24 ชั่วโมง ดังนั้น Backup Frequency มีผลต่อ RPO</p>
+<h2 id="26-23-rto">26.23 RTO</h2>
+<p>RTO = Recovery Time Objective ตอบคำถาม: &quot;หลังระบบเสีย ต้องกู้กลับมาได้เร็วแค่ไหน?&quot; ตัวอย่าง: RTO = 30 นาที หมายถึงตั้งเป้าให้ระบบกลับมาใช้งานได้ภายในประมาณ 30 นาที</p>
+<h2 id="26-24-recovery-drill">26.24 Recovery Drill</h2>
+<p>กระบวนการทดสอบ:</p>
+<pre class="language-text"><code>Create Backup
+      ↓
+Verify Backup
+      ↓
+Prepare Fresh/Test System
+      ↓
+Restore
+      ↓
+Start Services
+      ↓
+End-to-End Test
+      ↓
+Record Recovery Time</code></pre>
+<p>ควรใช้ Test Pi / Test SD Card ไม่ควรลบระบบหลักเพียงเพื่อทดสอบ Recovery</p>
+<h2 id="26-25-งานส่ง-lab-26">26.25 งานส่ง LAB 26</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Backup Architecture</li>
+<li>รายการ Component ที่ Backup</li>
+<li>Backup Directory Structure</li>
+<li>manifest.txt</li>
+<li>iot-backup.sh</li>
+<li>ผลการ Run Backup</li>
+<li>ผล SQLite integrity_check = ok</li>
+<li>ผล SHA-256 Verification</li>
+<li>systemd Backup Timer</li>
+<li>หลักฐาน Restore Mosquitto</li>
+<li>หลักฐาน Restore Node-RED</li>
+<li>หลักฐาน Restore Python</li>
+<li>หลักฐาน Restore SQLite</li>
+<li>หลักฐาน Restore systemd</li>
+<li>หลักฐาน Restore Cloudflare</li>
+<li>MQTT Security Test หลัง Restore</li>
+<li>Store-and-Forward Test หลัง Restore</li>
+<li>Remote Access Test หลัง Restore</li>
+<li>End-to-End Test</li>
+<li>Recovery Time</li>
+<li>กำหนด RPO</li>
+<li>กำหนด RTO</li>
+</ol>
+<p>ห้ามส่ง:</p>
+<pre class="language-text"><code>MQTT Password
+Cloudflare Credential
+SSH Private Key</code></pre>
+<h2 id="26-26-แนวคิดสำคัญที่สุด">26.26 แนวคิดสำคัญที่สุด</h2>
+<p>Backup Process:</p>
+<pre class="language-text"><code>Identify
+   ↓
+Backup
+   ↓
+Protect
+   ↓
+Verify
+   ↓
+Restore
+   ↓
+Test</code></pre>
+<p>ประโยคสำคัญ: Backup ≠ Recovery จนกว่าจะสามารถ:</p>
+<pre class="language-text"><code>Restore
+   ↓
+Start Services
+   ↓
+Verify End-to-End
+   ↓
+System Operational</code></pre>
+<p>ได้จริง</p>
+<h2 id="26-27-ความสัมพันธ์กับ-lab-ก่อนหน้า">26.27 ความสัมพันธ์กับ LAB ก่อนหน้า</h2>
+<pre class="language-text"><code>LAB 23
+Store-and-Forward
+    ↓
+รับมือ Network Failure</code></pre>
+<pre class="language-text"><code>LAB 24
+Authentication + ACL
+    ↓
+รับมือ Unauthorized MQTT Access</code></pre>
+<pre class="language-text"><code>LAB 25
+Cloudflare Tunnel
+    ↓
+Remote Access ผ่าน NAT/CGNAT</code></pre>
+<pre class="language-text"><code>LAB 26
+Backup &amp; Recovery
+    ↓
+รับมือ Storage / Configuration / Gateway Failure</code></pre>
+<h2 id="26-28-เชื่อมไป-lab-27">26.28 เชื่อมไป LAB 27</h2>
+<p>LAB 26 เน้นการกู้ระบบหลัง Failure LAB 27 จะพัฒนาไปสู่: Fault-Tolerant IoT ตัวอย่าง:</p>
+<pre class="language-text"><code>Wi-Fi หลุด
+    → reconnect</code></pre>
+<pre class="language-text"><code>MQTT หลุด
+    → reconnect / retry</code></pre>
+<pre class="language-text"><code>Internet หาย
+    → Store-and-Forward</code></pre>
+<pre class="language-text"><code>Python Crash
+    → systemd restart</code></pre>
+<pre class="language-text"><code>Device หาย
+    → OFFLINE</code></pre>
+<pre class="language-text"><code>ข้อมูลไม่อัปเดต
+    → STALE</code></pre>
+<pre class="language-text"><code>ข้อมูลผิด
+    → INVALID</code></pre>
+<pre class="language-text"><code>Service Hang
+    → watchdog / recovery</code></pre>
+<p>แนวคิด LAB 27:</p>
+<pre class="language-text"><code>Detect
+   ↓
+Recover
+   ↓
+Continue Operation</code></pre>
+<p>เป้าหมายคือเปลี่ยน IoT Gateway จาก &quot;ระบบที่ทำงานได้เมื่อทุกอย่างปกติ&quot; เป็น &quot;ระบบที่ตรวจพบความผิดปกติ ฟื้นตัว และให้บริการที่จำเป็นต่อไปได้&quot;</p>
+    </main>
+  </div>
+</body>
+</html>

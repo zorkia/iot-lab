@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 09 - จัดการเวลา UTC และเวลาไทย</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="active" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-09-จัดการเวลา-utc-และเวลาไทย">LAB 09 - จัดการเวลา UTC และเวลาไทย</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">ก่อนหน้า: LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">ถัดไป: LAB 10 - สืบค้น Sensor Data ด้วย SQL</a></nav>
+<h2 id="9-1-แนวคิดของ-lab">9.1 แนวคิดของ LAB</h2>
+<p>LAB นี้อธิบายการจัดการเวลาในระบบ IoT โดยเฉพาะเมื่อบันทึกข้อมูลลง SQLite ระบบควรเก็บเวลาแบบคงที่และตีความได้ ไม่ใช่ผูกกับ timezone ของหน้าจอเพียงอย่างเดียว หลักที่ใช้ในชุด lab นี้:</p>
+<pre class="language-text"><code>เก็บในฐานข้อมูลเป็น UTC
+แสดงผลให้ผู้ใช้เป็นเวลาไทยเมื่อต้องนำเสนอ</code></pre>
+<p>แนวคิดนี้ช่วยลดปัญหาเมื่อนำข้อมูลไปวิเคราะห์ย้อนหลัง หรือเมื่ออุปกรณ์อยู่คนละ timezone</p>
+<h2 id="9-2-วัตถุประสงค์">9.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>ตรวจเวลาระบบของ Raspberry Pi</li>
+<li>เข้าใจ UTC และเวลาไทย</li>
+<li>ใช้ SQLite query แปลงเวลาได้</li>
+<li>แยกเวลาสำหรับจัดเก็บออกจากเวลาสำหรับแสดงผล</li>
+<li>เตรียมข้อมูลเวลาให้พร้อมสำหรับ query แบบย้อนหลัง</li>
+</ul>
+<h2 id="9-3-architecture-เรื่องเวลา">9.3 Architecture เรื่องเวลา</h2>
+<pre class="language-text"><code>Sensor data arrives
+        |
+        v
+Node-RED / SQLite INSERT
+        |
+        v
+created_at stored as UTC
+        |
+        v
+SQL SELECT converts to Thai time for display</code></pre>
+<h2 id="9-4-ตรวจเวลาระบบ">9.4 ตรวจเวลาระบบ</h2>
+<p>ตรวจด้วย <code>timedatectl</code>:</p>
+<pre class="language-bash"><code>timedatectl</code></pre>
+<p>ตรวจด้วย <code>date</code>:</p>
+<pre class="language-bash"><code>date</code></pre>
+<p>ตรวจเวลา UTC:</p>
+<pre class="language-bash"><code>date -u</code></pre>
+<p>สิ่งที่ต้องดู:</p>
+<table>
+<thead><tr>
+<th>รายการ</th>
+<th>ความหมาย</th>
+</tr></thead><tbody>
+<tr>
+<td>Local time</td>
+<td>เวลาท้องถิ่นของเครื่อง</td>
+</tr>
+<tr>
+<td>Universal time</td>
+<td>เวลา UTC</td>
+</tr>
+<tr>
+<td>Time zone</td>
+<td>timezone ที่ตั้งไว้</td>
+</tr>
+<tr>
+<td>NTP service</td>
+<td>การ sync เวลา</td>
+</tr>
+</tbody></table>
+<h2 id="9-5-ตรวจเวลาใน-sqlite">9.5 ตรวจเวลาใน SQLite</h2>
+<p>เปิด SQLite:</p>
+<pre class="language-bash"><code>sqlite3 /home/piuser/iot.db</code></pre>
+<p>ทดลอง query เวลา:</p>
+<pre class="language-sql"><code>SELECT
+  datetime(&#x27;now&#x27;) AS utc_time,
+  datetime(&#x27;now&#x27;, &#x27;+7 hours&#x27;) AS thai_time;</code></pre>
+<p>ตัวอย่างผล:</p>
+<pre class="language-text"><code>utc_time             thai_time
+-------------------  -------------------
+2026-10-02 02:00:00  2026-10-02 09:00:00</code></pre>
+<h2 id="9-6-ปรับ-query-ให้แสดงเวลาไทย">9.6 ปรับ Query ให้แสดงเวลาไทย</h2>
+<p>ข้อมูลใน table ใช้ <code>created_at</code> เป็น UTC:</p>
+<pre class="language-sql"><code>SELECT
+  id,
+  device_id,
+  temp,
+  humi,
+  light,
+  created_at AS utc_time,
+  datetime(created_at, &#x27;+7 hours&#x27;) AS thai_time
+FROM sensor_data
+ORDER BY id DESC
+LIMIT 10;</code></pre>
+<h2 id="9-7-แสดงเฉพาะข้อมูลในช่วงเวลาล่าสุด">9.7 แสดงเฉพาะข้อมูลในช่วงเวลาล่าสุด</h2>
+<p>ข้อมูล 5 นาทีล่าสุดจากเวลา UTC:</p>
+<pre class="language-sql"><code>SELECT
+  id,
+  temp,
+  humi,
+  light,
+  created_at
+FROM sensor_data
+WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;)
+ORDER BY created_at DESC;</code></pre>
+<p>แสดงเวลาไทยพร้อมกัน:</p>
+<pre class="language-sql"><code>SELECT
+  id,
+  temp,
+  humi,
+  light,
+  datetime(created_at, &#x27;+7 hours&#x27;) AS thai_time
+FROM sensor_data
+WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;)
+ORDER BY created_at DESC;</code></pre>
+<h2 id="9-8-ทำไมไม่ควรเก็บเวลาไทยลงฐานข้อมูลโดยตรง">9.8 ทำไมไม่ควรเก็บเวลาไทยลงฐานข้อมูลโดยตรง</h2>
+<p>เหตุผล:</p>
+<table>
+<thead><tr>
+<th>เหตุผล</th>
+<th>รายละเอียด</th>
+</tr></thead><tbody>
+<tr>
+<td>วิเคราะห์ข้าม timezone ง่ายกว่า</td>
+<td>UTC เป็นมาตรฐานกลาง</td>
+</tr>
+<tr>
+<td>ลดปัญหา daylight saving</td>
+<td>บางประเทศมีการเปลี่ยนเวลา</td>
+</tr>
+<tr>
+<td>query ย้อนหลังแม่นกว่า</td>
+<td>ไม่ปนเวลานำเสนอเข้ากับเวลาจริง</td>
+</tr>
+<tr>
+<td>ย้ายระบบง่ายกว่า</td>
+<td>database ไม่ผูกกับ locale เดิม</td>
+</tr>
+</tbody></table>
+<p>แม้ประเทศไทยไม่มี daylight saving แต่การเก็บ UTC ยังเป็นแนวปฏิบัติที่ดีสำหรับระบบ IoT</p>
+<h2 id="9-9-ปรับ-dashboard-ให้แสดงเวลาอ่านง่าย">9.9 ปรับ Dashboard ให้แสดงเวลาอ่านง่าย</h2>
+<p>ถ้าต้องส่งเวลาไทยไป Dashboard ให้เตรียมข้อความใน Function node หรือ query SQL แล้วส่งเฉพาะเวลาที่ต้องการแสดง ตัวอย่างข้อความ:</p>
+<pre class="language-text"><code>ล่าสุด: 2026-10-02 09:00:00</code></pre>
+<p>หลักคิด:</p>
+<pre class="language-text"><code>Database stores UTC
+Dashboard displays local time</code></pre>
+<h2 id="9-10-ปัญหาที่พบบ่อย">9.10 ปัญหาที่พบบ่อย</h2>
+<table>
+<thead><tr>
+<th>อาการ</th>
+<th>สาเหตุ</th>
+</tr></thead><tbody>
+<tr>
+<td>เวลาดูช้ากว่าไทย 7 ชั่วโมง</td>
+<td>กำลังดู UTC โดยตรง</td>
+</tr>
+<tr>
+<td>query 5 นาทีล่าสุดไม่เจอข้อมูล</td>
+<td>system time ผิด หรือข้อมูลเก่า</td>
+</tr>
+<tr>
+<td>เวลาใน Dashboard ไม่ตรง SQLite</td>
+<td>แปลงเวลาคนละชั้น</td>
+</tr>
+<tr>
+<td>created_at เป็น null</td>
+<td>schema table ไม่มี default เวลา</td>
+</tr>
+</tbody></table>
+<h2 id="9-11-checklist-ก่อนจบ-lab">9.11 Checklist ก่อนจบ LAB</h2>
+<ul>
+<li>ตรวจเวลาเครื่องได้</li>
+<li>รู้ความต่างระหว่าง UTC และเวลาไทย</li>
+<li>query เวลา UTC จาก SQLite ได้</li>
+<li>query แปลงเป็นเวลาไทยได้</li>
+<li>query ข้อมูลย้อนหลังตามช่วงเวลาได้</li>
+<li>เข้าใจหลักเก็บ UTC และแสดง local time</li>
+</ul>
+<h2 id="9-12-งานส่ง-lab">9.12 งานส่ง LAB</h2>
+<p>ให้ส่ง:</p>
+<pre class="language-text"><code>1. ผล timedatectl
+2. SQL ที่แสดง utc_time และ thai_time
+3. SQL ที่ดึงข้อมูล 5 นาทีล่าสุด
+4. สรุปว่าทำไมควรเก็บเวลาแบบ UTC</code></pre>
+<h2 id="9-13-เชื่อมไป-lab-ถัดไป">9.13 เชื่อมไป LAB ถัดไป</h2>
+<p>LAB 10 จะใช้ข้อมูลที่มี timestamp แล้วมาฝึกสืบค้นด้วย SQL เพื่อหาค่า count, average, minimum และ maximum</p>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1381 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 19 - Data Quality: VALID / INVALID / STALE</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="active" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-19-data-quality-valid-invalid-stale">LAB 19 - Data Quality: VALID / INVALID / STALE</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="18-lab-18-device-status-and-offline-detection.html">ก่อนหน้า: LAB 18 - Device Status and Offline Detection</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">ถัดไป: LAB 20 - Python MQTT Application on Raspberry Pi</a></nav>
+<h2 id="19-1-แนวคิดของ-lab">19.1 แนวคิดของ LAB</h2>
+<p>LAB 18 ทำให้ Gateway สามารถตรวจสอบสถานะของ Device ได้ว่า</p>
+<pre class="language-text"><code>ONLINE
+OFFLINE</code></pre>
+<p>แต่</p>
+<pre class="language-text"><code>Device ONLINE</code></pre>
+<p>ไม่ได้หมายความว่า</p>
+<pre class="language-text"><code>Sensor Data ถูกต้อง</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>Device 001
+Status = ONLINE
+temp = -99</code></pre>
+<p>Device ยังเชื่อมต่อ MQTT และทำงานอยู่ แต่ Sensor อาจอ่านค่าผิดพลาด อีกกรณี</p>
+<pre class="language-text"><code>Device 001
+Status = ONLINE
+temp = 32</code></pre>
+<p>แต่ Temperature ไม่ได้ Update มาเป็นเวลานาน ค่าที่แสดงอยู่จึงอาจเป็นข้อมูลเก่า ดังนั้นระบบ IoT ต้องแยกตรวจสอบ</p>
+<pre class="language-text"><code>Device Availability</code></pre>
+<p>ออกจาก</p>
+<pre class="language-text"><code>Data Quality</code></pre>
+<p>LAB 19 กำหนด Data Quality State เป็น</p>
+<pre class="language-text"><code>VALID
+INVALID
+STALE</code></pre>
+<p>เพื่อให้ Gateway สามารถตอบได้ว่า</p>
+<pre class="language-text"><code>&quot;ข้อมูลนี้ยังเชื่อถือได้หรือไม่?&quot;</code></pre>
+<h2 id="19-2-วัตถุประสงค์">19.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>อธิบายความแตกต่างระหว่าง Device Status และ Data Quality</li>
+<li>ตรวจสอบโครงสร้างและค่าของ Sensor Data</li>
+<li>ตรวจจับค่าที่ผิดพลาด</li>
+<li>กำหนด Valid Range</li>
+<li>ตรวจจับข้อมูลที่ไม่ Update</li>
+<li>ใช้ Timestamp และ Timeout ตรวจสอบ STALE</li>
+<li>จำแนกข้อมูลเป็น VALID / INVALID / STALE</li>
+<li>แสดง Data Quality บน Dashboard</li>
+<li>แยก Last Value ออกจาก Trusted Current Value</li>
+<li>เข้าใจว่าระบบ IoT ไม่ควรใช้ข้อมูลโดยไม่ตรวจสอบคุณภาพก่อน</li>
+</ul>
+<h2 id="19-3-architecture">19.3 Architecture</h2>
+<pre class="language-text"><code>ESP32
+   │
+   │ Sensor Data
+   ▼
+  MQTT
+   │
+   ▼
+Node-RED
+   │
+   ▼
+Data Validation
+   │
+   ├── Format Check
+   ├── Missing Value Check
+   ├── Range Check
+   └── Freshness Check
+           │
+           ▼
+    Data Quality State
+      │      │      │
+      ▼      ▼      ▼
+    VALID INVALID STALE
+           │
+           ▼
+       Dashboard</code></pre>
+<h2 id="19-4-device-status-กับ-data-quality-เป็นคนละเรื่อง">19.4 Device Status กับ Data Quality เป็นคนละเรื่อง</h2>
+<p>หลัง LAB 18 เรามี</p>
+<pre class="language-text"><code>Device Status</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>ONLINE
+OFFLINE</code></pre>
+<p>LAB 19 เพิ่ม</p>
+<pre class="language-text"><code>Data Quality</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>VALID
+INVALID
+STALE</code></pre>
+<p>ตัวอย่าง</p>
+<table>
+<thead><tr>
+<th>Device</th>
+<th>Device Status</th>
+<th>Data Quality</th>
+</tr></thead><tbody>
+<tr>
+<td>001</td>
+<td>ONLINE</td>
+<td>VALID</td>
+</tr>
+<tr>
+<td>002</td>
+<td>ONLINE</td>
+<td>INVALID</td>
+</tr>
+<tr>
+<td>003</td>
+<td>ONLINE</td>
+<td>STALE</td>
+</tr>
+<tr>
+<td>004</td>
+<td>OFFLINE</td>
+<td>STALE</td>
+</tr>
+</tbody></table>
+<p>ดังนั้น Device อาจ</p>
+<pre class="language-text"><code>ONLINE + VALID</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>ONLINE + INVALID</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>ONLINE + STALE</code></pre>
+<p>ได้</p>
+<h2 id="19-5-ความหมายของ-valid">19.5 ความหมายของ VALID</h2>
+<p>VALID หมายถึง</p>
+<ul>
+<li>ได้รับข้อมูลตามรูปแบบที่กำหนด</li>
+<li>Sensor Value มีอยู่</li>
+<li>สามารถแปลงเป็นตัวเลขได้</li>
+<li>ค่าอยู่ในช่วงที่ระบบยอมรับ</li>
+<li>ข้อมูลยังใหม่ตาม Freshness Requirement</li>
+</ul>
+<p>ตัวอย่าง</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>ถ้าผ่าน Validation</p>
+<pre class="language-text"><code>Quality = VALID</code></pre>
+<h2 id="19-6-ความหมายของ-invalid">19.6 ความหมายของ INVALID</h2>
+<p>INVALID หมายถึง</p>
+<pre class="language-text"><code>ได้รับข้อมูลใหม่แล้ว</code></pre>
+<p>แต่ข้อมูลนั้นไม่ผ่าน Validation ตัวอย่าง</p>
+<pre class="language-text"><code>temp = -99</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>temp = null</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>temp = &quot;ERROR&quot;</code></pre>
+<p>หรือ Payload ไม่มี</p>
+<pre class="language-text"><code>temp</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-json"><code>{
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>ถ้าระบบคาดว่าต้องมี Temperature ให้กำหนด</p>
+<pre class="language-text"><code>Quality = INVALID</code></pre>
+<h2 id="19-7-ความหมายของ-stale">19.7 ความหมายของ STALE</h2>
+<p>STALE หมายถึง</p>
+<pre class="language-text"><code>เคยมีข้อมูล</code></pre>
+<p>แต่ไม่มีข้อมูลใหม่ภายในเวลาที่กำหนด ตัวอย่าง</p>
+<pre class="language-text"><code>Last Temperature = 32 °C</code></pre>
+<p>แต่</p>
+<pre class="language-text"><code>Last Update = 30 seconds ago</code></pre>
+<p>ถ้ากำหนด</p>
+<pre class="language-text"><code>Stale Timeout = 15 seconds</code></pre>
+<p>จะได้</p>
+<pre class="language-text"><code>Quality = STALE</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>32 °C</code></pre>
+<p>ยังสามารถเก็บไว้เป็น Last Known Value ได้ แต่ไม่ควรถือว่าเป็น Current Trusted Value</p>
+<h2 id="19-8-invalid-กับ-stale-ต่างกันอย่างไร">19.8 INVALID กับ STALE ต่างกันอย่างไร</h2>
+<p>INVALID</p>
+<pre class="language-text"><code>มีข้อมูลใหม่เข้ามา
+      ↓
+แต่ข้อมูลผิด</code></pre>
+<p>STALE</p>
+<pre class="language-text"><code>ไม่มีข้อมูลใหม่เข้ามา
+      ↓
+ข้อมูลเดิมเก่าเกินกำหนด</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>temp = -99
+received now</code></pre>
+<p>คือ</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>แต่</p>
+<pre class="language-text"><code>temp = 32
+received 30 seconds ago</code></pre>
+<p>คือ</p>
+<pre class="language-text"><code>STALE</code></pre>
+<p>นี่เป็นความแตกต่างสำคัญมาก</p>
+<h2 id="19-9-data-quality-state-model">19.9 Data Quality State Model</h2>
+<p>สามารถมองเป็น State ง่าย ๆ</p>
+<pre class="language-text"><code>                New Data
+                   │
+                   ▼
+              Validation
+               /       \
+            Pass       Fail
+             │           │
+             ▼           ▼
+           VALID      INVALID
+             │
+             │ No New Data
+             │ &gt; Timeout
+             ▼
+           STALE
+             │
+             │ New Valid Data
+             ▼
+           VALID</code></pre>
+<p>ถ้ามีข้อมูลใหม่แต่ผิด</p>
+<pre class="language-text"><code>STALE
+  ↓
+INVALID</code></pre>
+<p>ถ้ามีข้อมูลใหม่และถูกต้อง</p>
+<pre class="language-text"><code>STALE
+  ↓
+VALID</code></pre>
+<h2 id="19-10-mqtt-topic">19.10 MQTT Topic</h2>
+<p>ใช้ Topic เดิมจาก LAB ก่อนหน้า</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Multi-device</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>Payload ปกติ</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<h2 id="19-11-ทดสอบ-valid-data">19.11 ทดสอบ VALID Data</h2>
+<p>เปิด Subscriber</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/data&quot; \
+-v</code></pre>
+<p>ส่งข้อมูล</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ข้อมูลนี้ควรถูกจัดเป็น</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>หากผ่าน Validation Rules ที่กำหนด</p>
+<h2 id="19-12-ทดสอบ-invalid-data">19.12 ทดสอบ INVALID Data</h2>
+<p>ตัวอย่าง Sensor Error Code</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>ส่งค่า null</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:null,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>ส่งข้อมูลไม่มี temp</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<h2 id="19-13-กำหนด-valid-range">19.13 กำหนด Valid Range</h2>
+<p>สำหรับ LAB สามารถกำหนด Engineering Range เพื่อใช้ตรวจสอบข้อมูล ตัวอย่าง</p>
+<pre class="language-text"><code>Temperature
+-20 ถึง 80 °C
+
+Humidity
+0 ถึง 100 %
+
+Light
+0 ถึง 100000 lx</code></pre>
+<p>ค่าที่อยู่นอกช่วงนี้ ให้ถือเป็น</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>หมายเหตุสำคัญ Valid Range ต้องกำหนดตาม</p>
+<ul>
+<li>Sensor</li>
+<li>Physical Process</li>
+<li>Application Requirement</li>
+</ul>
+<p>ไม่ควรใช้ช่วงตัวอย่างนี้กับทุกระบบโดยไม่พิจารณาบริบท</p>
+<h2 id="19-14-validation-rules">19.14 Validation Rules</h2>
+<p>สำหรับ LAB นี้กำหนดว่า Payload ต้องมี</p>
+<pre class="language-text"><code>temp
+humi
+light</code></pre>
+<p>และต้องเป็นตัวเลขที่มีค่าจำกัด พร้อมอยู่ในช่วง</p>
+<pre class="language-text"><code>-20 &lt;= temp &lt;= 80
+
+0 &lt;= humi &lt;= 100
+
+0 &lt;= light &lt;= 100000</code></pre>
+<p>นอกจากนี้กำหนด Error Value</p>
+<pre class="language-text"><code>-99</code></pre>
+<p>เป็น INVALID</p>
+<h2 id="19-15-node-red-flow">19.15 Node-RED Flow</h2>
+<p>สร้าง Flow</p>
+<pre class="language-text"><code>[MQTT In]
+     │
+     ▼
+   [JSON]
+     │
+     ▼
+[Data Validation]
+     │
+     ▼
+   [Debug]</code></pre>
+<p>MQTT Topic</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<h2 id="19-16-function-data-validation">19.16 Function - Data Validation</h2>
+<p>สร้าง Function Node ชื่อ</p>
+<pre class="language-text"><code>Data Validation</code></pre>
+<p>ใช้</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+let temp = Number(msg.payload.temp);
+let humi = Number(msg.payload.humi);
+let light = Number(msg.payload.light);
+
+let valid = true;
+
+if (
+    msg.payload.temp === null ||
+    msg.payload.temp === undefined ||
+    msg.payload.humi === null ||
+    msg.payload.humi === undefined ||
+    msg.payload.light === null ||
+    msg.payload.light === undefined
+) {
+    valid = false;
+}
+
+if (
+    !Number.isFinite(temp) ||
+    !Number.isFinite(humi) ||
+    !Number.isFinite(light)
+) {
+    valid = false;
+}
+
+if (
+    temp === -99 ||
+    humi === -99 ||
+    light === -99
+) {
+    valid = false;
+}
+
+if (
+    temp &lt; -20 || temp &gt; 80 ||
+    humi &lt; 0 || humi &gt; 100 ||
+    light &lt; 0 || light &gt; 100000
+) {
+    valid = false;
+}
+
+msg.device_id = device_id;
+msg.quality = valid ? &quot;VALID&quot; : &quot;INVALID&quot;;
+msg.received_at = Date.now();
+
+return msg;</code></pre>
+<h2 id="19-17-ทำไมต้องใช้-number-isfinite">19.17 ทำไมต้องใช้ Number.isFinite()</h2>
+<p>ไม่ควรตรวจเพียง</p>
+<pre class="language-text"><code>Number(value)</code></pre>
+<p>เพราะข้อมูลบางชนิดอาจถูกแปลงในลักษณะที่ไม่ตรงกับสิ่งที่ต้องการ จึงตรวจเพิ่ม</p>
+<pre class="language-javascript"><code>Number.isFinite(temp)</code></pre>
+<p>เพื่อยืนยันว่าได้ค่าตัวเลขที่มีขอบเขตจำกัดจริง เช่น</p>
+<pre class="language-text"><code>&quot;ERROR&quot;</code></pre>
+<p>เมื่อแปลงเป็น Number จะได้</p>
+<pre class="language-text"><code>NaN</code></pre>
+<p>และ</p>
+<pre class="language-javascript"><code>Number.isFinite(NaN)</code></pre>
+<p>จะเป็น</p>
+<pre class="language-text"><code>false</code></pre>
+<p>จึงสามารถจัดเป็น</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<h2 id="19-18-เก็บ-data-quality-ของแต่ละ-device">19.18 เก็บ Data Quality ของแต่ละ Device</h2>
+<p>เพิ่มการเก็บ State</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+let temp = Number(msg.payload.temp);
+let humi = Number(msg.payload.humi);
+let light = Number(msg.payload.light);
+
+let valid = true;
+
+if (
+    msg.payload.temp === null ||
+    msg.payload.temp === undefined ||
+    msg.payload.humi === null ||
+    msg.payload.humi === undefined ||
+    msg.payload.light === null ||
+    msg.payload.light === undefined
+) {
+    valid = false;
+}
+
+if (
+    !Number.isFinite(temp) ||
+    !Number.isFinite(humi) ||
+    !Number.isFinite(light)
+) {
+    valid = false;
+}
+
+if (
+    temp === -99 ||
+    humi === -99 ||
+    light === -99
+) {
+    valid = false;
+}
+
+if (
+    temp &lt; -20 || temp &gt; 80 ||
+    humi &lt; 0 || humi &gt; 100 ||
+    light &lt; 0 || light &gt; 100000
+) {
+    valid = false;
+}
+
+let quality = flow.get(&quot;data_quality&quot;) || {};
+
+quality[device_id] = {
+    status: valid ? &quot;VALID&quot; : &quot;INVALID&quot;,
+    last_update: Date.now()
+};
+
+flow.set(&quot;data_quality&quot;, quality);
+
+msg.device_id = device_id;
+msg.quality = quality[device_id].status;
+
+return msg;</code></pre>
+<h2 id="19-19-สิ่งที่เก็บใน-gateway">19.19 สิ่งที่เก็บใน Gateway</h2>
+<p>ตัวอย่าง</p>
+<pre class="language-javascript"><code>flow.data_quality</code></pre>
+<p>อาจมี</p>
+<pre class="language-json"><code>{
+  &quot;001&quot;: {
+    &quot;status&quot;: &quot;VALID&quot;,
+    &quot;last_update&quot;: 1780000000000
+  },
+
+  &quot;002&quot;: {
+    &quot;status&quot;: &quot;INVALID&quot;,
+    &quot;last_update&quot;: 1780000005000
+  },
+
+  &quot;003&quot;: {
+    &quot;status&quot;: &quot;VALID&quot;,
+    &quot;last_update&quot;: 1780000010000
+  }
+}</code></pre>
+<p>ค่าของ Timestamp ด้านบนเป็นเพียงตัวอย่าง ค่าจริงมาจาก</p>
+<pre class="language-javascript"><code>Date.now()</code></pre>
+<h2 id="19-20-ตรวจจับ-stale">19.20 ตรวจจับ STALE</h2>
+<p>สมมติ Sensor ส่งข้อมูลทุก</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>กำหนด</p>
+<pre class="language-text"><code>Stale Timeout = 15 seconds</code></pre>
+<p>ถ้า</p>
+<pre class="language-text"><code>Current Time - Last Update &gt; 15 seconds</code></pre>
+<p>ให้เปลี่ยน Quality เป็น</p>
+<pre class="language-text"><code>STALE</code></pre>
+<h2 id="19-21-periodic-stale-check">19.21 Periodic Stale Check</h2>
+<p>สร้าง Inject Node ตั้งให้ทำงานทุก</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>Flow</p>
+<pre class="language-text"><code>[Inject every 5 s]
+         │
+         ▼
+   [Check Stale]
+         │
+         ▼
+       [Debug]</code></pre>
+<h2 id="19-22-function-check-stale">19.22 Function - Check Stale</h2>
+<p>สร้าง Function Node ชื่อ</p>
+<pre class="language-text"><code>Check Stale</code></pre>
+<p>ใช้</p>
+<pre class="language-javascript"><code>let quality = flow.get(&quot;data_quality&quot;) || {};
+
+let now = Date.now();
+let stale_timeout = 15000;
+
+for (let device_id in quality) {
+
+    let elapsed =
+        now - quality[device_id].last_update;
+
+    if (elapsed &gt; stale_timeout) {
+        quality[device_id].status = &quot;STALE&quot;;
+    }
+}
+
+flow.set(&quot;data_quality&quot;, quality);
+
+msg.payload = quality;
+
+return msg;</code></pre>
+<h2 id="19-23-ทดสอบ-stale">19.23 ทดสอบ STALE</h2>
+<p>ส่งข้อมูล</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>เริ่มต้น</p>
+<pre class="language-text"><code>Device 001
+Quality = VALID</code></pre>
+<p>จากนั้นไม่ส่งข้อมูลใหม่ รอเกิน</p>
+<pre class="language-text"><code>15 seconds</code></pre>
+<p>ผล</p>
+<pre class="language-text"><code>Device 001
+Quality = STALE</code></pre>
+<p>แม้ Last Value ยังเป็น</p>
+<pre class="language-text"><code>temp = 32</code></pre>
+<p>ก็ตาม</p>
+<h2 id="19-24-data-quality-architecture">19.24 Data Quality Architecture</h2>
+<pre class="language-text"><code>Sensor Data
+    │
+    ▼
+ Received
+    │
+    ▼
+Validation
+  /      \
+Pass     Fail
+ │         │
+ ▼         ▼</code></pre>
+<p>VALID    INVALID</p>
+<pre class="language-text"><code> │
+ │ No Update
+ │ &gt; Timeout
+ ▼</code></pre>
+<p>STALE</p>
+<h2 id="19-25-invalid-data-ต้อง-update-last-update-หรือไม่">19.25 INVALID Data ต้อง Update Last Update หรือไม่?</h2>
+<p>นี่เป็นจุดสำคัญ สมมติ Device ส่ง</p>
+<pre class="language-text"><code>temp = -99</code></pre>
+<p>ทุก 5 วินาที Device ยังส่งข้อมูลอยู่ ดังนั้น</p>
+<pre class="language-text"><code>Device Communication</code></pre>
+<p>ยังทำงาน แต่</p>
+<pre class="language-text"><code>Sensor Data</code></pre>
+<p>ผิด ใน LAB นี้</p>
+<pre class="language-text"><code>last_update</code></pre>
+<p>หมายถึง</p>
+<pre class="language-text"><code>เวลาที่ได้รับ Sensor Message ล่าสุด</code></pre>
+<p>ดังนั้น INVALID Message จะ Update</p>
+<pre class="language-text"><code>last_update</code></pre>
+<p>ด้วย ผลคือ</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>จะยังคงเป็น INVALID ไม่เปลี่ยนเป็น STALE ตราบใดที่ INVALID Message ยังเข้ามาเรื่อย ๆ นี่ทำให้สามารถแยก</p>
+<pre class="language-text"><code>Sensor ส่งข้อมูลผิด</code></pre>
+<p>ออกจาก</p>
+<pre class="language-text"><code>Sensor หยุดส่งข้อมูล</code></pre>
+<p>ได้</p>
+<h2 id="19-26-last-received-กับ-last-valid">19.26 Last Received กับ Last Valid</h2>
+<p>ระบบจริงควรแยก Timestamp อย่างน้อยสองค่า</p>
+<pre class="language-text"><code>last_received</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>last_valid</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>Device 001
+
+last_received = 10:20:30
+last_valid    = 10:19:50</code></pre>
+<p>หมายความว่า Device ยังส่ง Message อยู่ แต่ไม่มี Valid Data มาประมาณ 40 วินาที นี่ให้ข้อมูลมากกว่า Timestamp เดียว</p>
+<h2 id="19-27-ปรับ-data-quality-registry">19.27 ปรับ Data Quality Registry</h2>
+<p>รูปแบบที่ดีกว่า</p>
+<pre class="language-json"><code>{
+  &quot;001&quot;: {
+    &quot;status&quot;: &quot;VALID&quot;,
+    &quot;last_received&quot;: 1780000000000,
+    &quot;last_valid&quot;: 1780000000000
+  }
+}</code></pre>
+<p>เมื่อได้รับ INVALID Data</p>
+<pre class="language-text"><code>last_received</code></pre>
+<p>ต้อง Update แต่</p>
+<pre class="language-text"><code>last_valid</code></pre>
+<p>ไม่ Update</p>
+<h2 id="19-28-function-ที่แนะนำสำหรับ-lab">19.28 Function ที่แนะนำสำหรับ LAB</h2>
+<p>ใช้ Function นี้เป็นเวอร์ชันหลัก</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+let device_id = parts[2];
+
+let now = Date.now();
+
+let raw_temp = msg.payload.temp;
+let raw_humi = msg.payload.humi;
+let raw_light = msg.payload.light;
+
+let temp = Number(raw_temp);
+let humi = Number(raw_humi);
+let light = Number(raw_light);
+
+let valid = true;
+
+if (
+    raw_temp === null ||
+    raw_temp === undefined ||
+    raw_humi === null ||
+    raw_humi === undefined ||
+    raw_light === null ||
+    raw_light === undefined
+) {
+    valid = false;
+}
+
+if (
+    !Number.isFinite(temp) ||
+    !Number.isFinite(humi) ||
+    !Number.isFinite(light)
+) {
+    valid = false;
+}
+
+if (
+    temp === -99 ||
+    humi === -99 ||
+    light === -99
+) {
+    valid = false;
+}
+
+if (
+    temp &lt; -20 || temp &gt; 80 ||
+    humi &lt; 0 || humi &gt; 100 ||
+    light &lt; 0 || light &gt; 100000
+) {
+    valid = false;
+}
+
+let quality = flow.get(&quot;data_quality&quot;) || {};
+
+let old_data = quality[device_id] || {};
+
+quality[device_id] = {
+    status: valid ? &quot;VALID&quot; : &quot;INVALID&quot;,
+    last_received: now,
+    last_valid: valid
+        ? now
+        : (old_data.last_valid || null)
+};
+
+flow.set(&quot;data_quality&quot;, quality);
+
+msg.device_id = device_id;
+msg.quality = quality[device_id].status;
+
+return msg;</code></pre>
+<h2 id="19-29-ปรับ-stale-detection">19.29 ปรับ Stale Detection</h2>
+<p>เมื่อใช้</p>
+<pre class="language-text"><code>last_received</code></pre>
+<p>การตรวจ STALE ควรใช้</p>
+<pre class="language-text"><code>Current Time - last_received</code></pre>
+<p>Function</p>
+<pre class="language-javascript"><code>let quality = flow.get(&quot;data_quality&quot;) || {};
+
+let now = Date.now();
+let stale_timeout = 15000;
+
+for (let device_id in quality) {
+
+    let elapsed =
+        now - quality[device_id].last_received;
+
+    if (elapsed &gt; stale_timeout) {
+        quality[device_id].status = &quot;STALE&quot;;
+    }
+}
+
+flow.set(&quot;data_quality&quot;, quality);
+
+msg.payload = quality;
+
+return msg;</code></pre>
+<p>ผลคือ</p>
+<h3 id="device-ส่ง-valid-data">Device ส่ง Valid Data</h3>
+<pre class="language-text"><code>VALID</code></pre>
+<h3 id="device-ส่ง-invalid-data-ต่อเนื่อง">Device ส่ง Invalid Data ต่อเนื่อง</h3>
+<pre class="language-text"><code>INVALID</code></pre>
+<h3 id="device-หยุดส่ง-sensor-data">Device หยุดส่ง Sensor Data</h3>
+<pre class="language-text"><code>STALE</code></pre>
+<p>สาม State จึงมีความหมายแยกจากกันชัดเจน</p>
+<h2 id="19-30-state-transition">19.30 State Transition</h2>
+<p>ตัวอย่าง Device 001 เริ่มต้นส่ง</p>
+<pre class="language-text"><code>temp = 30</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>จากนั้นส่ง</p>
+<pre class="language-text"><code>temp = -99</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>จากนั้นกลับมาส่ง</p>
+<pre class="language-text"><code>temp = 31</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>จากนั้นหยุดส่งเกิน 15 วินาที ได้</p>
+<pre class="language-text"><code>STALE</code></pre>
+<p>จากนั้นส่ง</p>
+<pre class="language-text"><code>temp = 32</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>State Sequence</p>
+<pre class="language-text"><code>VALID
+  ↓
+INVALID
+  ↓
+VALID
+  ↓
+STALE
+  ↓
+VALID</code></pre>
+<h2 id="19-31-dashboard">19.31 Dashboard</h2>
+<p>เพิ่ม Data Quality ใน Dashboard ตัวอย่าง</p>
+<pre class="language-text"><code>┌──────────────────────────────┐
+│ DEVICE 001                   │
+│                              │
+│ Device Status : ONLINE       │
+│ Data Quality  : VALID        │
+│                              │
+│ Temp  : 30 °C                │
+│ Humi  : 70 %                 │
+│ Light : 1500 lx              │
+└──────────────────────────────┘</code></pre>
+<p>Device 002</p>
+<pre class="language-text"><code>┌──────────────────────────────┐
+│ DEVICE 002                   │
+│                              │
+│ Device Status : ONLINE       │
+│ Data Quality  : INVALID      │
+│                              │
+│ Temp  : -99                  │
+└──────────────────────────────┘</code></pre>
+<p>Device 003</p>
+<pre class="language-text"><code>┌──────────────────────────────┐
+│ DEVICE 003                   │
+│                              │
+│ Device Status : ONLINE       │
+│ Data Quality  : STALE        │
+│                              │
+│ Temp  : 32 °C                │
+│ Last Data : 35 s ago         │
+└──────────────────────────────┘</code></pre>
+<h2 id="19-32-ไม่ควรใช้-invalid-data-ควบคุม-actuator">19.32 ไม่ควรใช้ INVALID Data ควบคุม Actuator</h2>
+<p>สมมติ LAB 15 มี Rule</p>
+<pre class="language-text"><code>temp &gt; 35
+    → Fan ON</code></pre>
+<p>ถ้า Sensor ส่ง</p>
+<pre class="language-text"><code>temp = -99</code></pre>
+<p>ระบบไม่ควรส่งข้อมูลนี้เข้า Automatic Control โดยตรง Architecture ที่เหมาะสมคือ</p>
+<pre class="language-text"><code>Sensor
+   ↓
+  MQTT
+   ↓
+Validation
+   │
+   ├── VALID ──→ Rule → Control
+   │
+   └── INVALID → Reject / Alert</code></pre>
+<p>เช่นเดียวกับ STALE</p>
+<pre class="language-text"><code>STALE</code></pre>
+<p>ไม่ควรถูกนำไปใช้ตัดสินใจควบคุมโดยไม่มีกลยุทธ์ Failsafe ที่ชัดเจน นี่เป็นเหตุผลสำคัญว่าทำไม</p>
+<pre class="language-text"><code>Data Validation</code></pre>
+<p>ควรอยู่ก่อน</p>
+<pre class="language-text"><code>Decision / Control</code></pre>
+<h2 id="19-33-safe-processing-pipeline">19.33 Safe Processing Pipeline</h2>
+<p>หลัง LAB 19 Architecture ที่ดีขึ้นคือ</p>
+<pre class="language-text"><code>Sensor
+   ↓
+  MQTT
+   ↓
+Data Validation
+   ↓
+Data Quality
+   │
+   ├── VALID
+   │      ↓
+   │     Rule
+   │      ↓
+   │    Control
+   │
+   ├── INVALID
+   │      ↓
+   │    Alert
+   │
+   └── STALE
+          ↓
+        Alert /
+        Failsafe</code></pre>
+<p>ดังนั้น Processing Pipeline เป็น</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Validate
+   ↓
+Process
+   ↓
+Decide
+   ↓
+Control</code></pre>
+<p>ไม่ใช่</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Control</code></pre>
+<p>ทันที</p>
+<h2 id="19-34-device-status-และ-data-quality">19.34 Device Status และ Data Quality</h2>
+<p>ตัวอย่างสถานการณ์</p>
+<h3 id="case-1">Case 1</h3>
+<pre class="language-text"><code>Device Status = ONLINE
+Data Quality  = VALID</code></pre>
+<p>ความหมาย</p>
+<pre class="language-text"><code>Device ทำงาน
+Sensor Data ใช้งานได้</code></pre>
+<h3 id="case-2">Case 2</h3>
+<pre class="language-text"><code>Device Status = ONLINE
+Data Quality  = INVALID</code></pre>
+<p>ความหมาย</p>
+<pre class="language-text"><code>Device ยังเชื่อมต่ออยู่
+แต่ Sensor Data ผิด</code></pre>
+<p>สาเหตุอาจเป็น</p>
+<ul>
+<li>Sensor Error</li>
+<li>Sensor Disconnect</li>
+<li>Invalid Value</li>
+<li>Parsing Error</li>
+</ul>
+<h3 id="case-3">Case 3</h3>
+<pre class="language-text"><code>Device Status = ONLINE
+Data Quality  = STALE</code></pre>
+<p>ความหมาย</p>
+<pre class="language-text"><code>Device Communication อาจยังทำงาน
+แต่ Sensor Data ไม่ Update ตามที่คาดไว้</code></pre>
+<p>ตัวอย่าง ESP32 ยังส่ง Heartbeat</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>แต่ Sensor Task หยุดทำงาน</p>
+<h3 id="case-4">Case 4</h3>
+<pre class="language-text"><code>Device Status = OFFLINE
+Data Quality  = STALE</code></pre>
+<p>ความหมาย</p>
+<pre class="language-text"><code>Device หายจากระบบ
+และ Sensor Data ที่เหลืออยู่เป็นข้อมูลเก่า</code></pre>
+<h2 id="19-35-ทำไม-lab-18-และ-lab-19-ต้องแยกกัน">19.35 ทำไม LAB 18 และ LAB 19 ต้องแยกกัน</h2>
+<p>LAB 18 ตรวจ</p>
+<pre class="language-text"><code>Device Availability</code></pre>
+<p>ถามว่า</p>
+<pre class="language-text"><code>&quot;Device ยังอยู่หรือไม่?&quot;</code></pre>
+<p>LAB 19 ตรวจ</p>
+<pre class="language-text"><code>Data Quality</code></pre>
+<p>ถามว่า</p>
+<pre class="language-text"><code>&quot;ข้อมูลยังใช้ได้หรือไม่?&quot;</code></pre>
+<p>สองคำถามนี้ไม่เหมือนกัน ระบบที่ดีต้องตอบได้ทั้งสองคำถาม</p>
+<h2 id="19-36-multi-device-data-quality">19.36 Multi-device Data Quality</h2>
+<p>ระบบต้องเก็บ Quality แยกตาม Device ตัวอย่าง</p>
+<pre class="language-text"><code>Device 001
+ONLINE
+VALID
+
+Device 002
+ONLINE
+INVALID
+
+Device 003
+ONLINE
+STALE</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>Device 001 ─┐
+Device 002 ─┼──→ MQTT
+Device 003 ─┘
+                 │
+                 ▼
+             Node-RED
+                 │
+                 ▼
+            Validation
+                 │
+                 ▼
+           Quality Registry
+                 │
+      ┌──────────┼──────────┐
+      ▼          ▼          ▼
+     001        002        003
+    VALID     INVALID      STALE</code></pre>
+<h2 id="19-37-sensor-simulator-valid">19.37 Sensor Simulator - VALID</h2>
+<pre class="language-bash"><code>while true
+do
+    temp=$((25 + RANDOM % 11))
+    humi=$((60 + RANDOM % 21))
+    light=$((500 + RANDOM % 1501))
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp,\&quot;humi\&quot;:$humi,\&quot;light\&quot;:$light}&quot;
+
+    sleep 5
+done</code></pre>
+<p>ผล</p>
+<pre class="language-text"><code>VALID</code></pre>
+<h2 id="19-38-sensor-simulator-invalid">19.38 Sensor Simulator - INVALID</h2>
+<p>จำลอง Sensor Error</p>
+<pre class="language-bash"><code>while true
+do
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/002/data&quot; \
+        -m &#x27;{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;
+
+    sleep 5
+done</code></pre>
+<p>ผล</p>
+<pre class="language-text"><code>Device 002
+Data Quality = INVALID</code></pre>
+<p>แต่ถ้า Heartbeat ยังทำงาน</p>
+<pre class="language-text"><code>Device Status = ONLINE</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>ONLINE + INVALID</code></pre>
+<h2 id="19-39-sensor-simulator-stale">19.39 Sensor Simulator - STALE</h2>
+<p>ส่งข้อมูล Device 003 หนึ่งครั้ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/003/data&quot; \
+-m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>เริ่มต้น</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>จากนั้นไม่ส่ง Data อีก หลังเกิน</p>
+<pre class="language-text"><code>15 seconds</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>STALE</code></pre>
+<p>ถ้า Device 003 ยังส่ง Heartbeat</p>
+<pre class="language-text"><code>pkru/iot/003/status ONLINE</code></pre>
+<p>จะได้</p>
+<pre class="language-text"><code>Device Status = ONLINE
+Data Quality  = STALE</code></pre>
+<p>นี่เป็นกรณีสำคัญ เพราะแสดงว่า Device ยังอยู่ แต่ Sensor Data Pipeline มีปัญหา</p>
+<h2 id="19-40-การทดสอบพร้อมกัน-3-device">19.40 การทดสอบพร้อมกัน 3 Device</h2>
+<p>กำหนด</p>
+<pre class="language-text"><code>Device 001 → VALID
+Device 002 → INVALID
+Device 003 → STALE</code></pre>
+<p>ผลที่ต้องได้</p>
+<table>
+<thead><tr>
+<th>Device</th>
+<th>Device Status</th>
+<th>Data Quality</th>
+</tr></thead><tbody>
+<tr>
+<td>001</td>
+<td>ONLINE</td>
+<td>VALID</td>
+</tr>
+<tr>
+<td>002</td>
+<td>ONLINE</td>
+<td>INVALID</td>
+</tr>
+<tr>
+<td>003</td>
+<td>ONLINE</td>
+<td>STALE</td>
+</tr>
+</tbody></table>
+<p>ช่วยให้คุณเห็นความแตกต่างของ Quality State ได้ชัดเจน</p>
+<h2 id="19-41-แบบฝึกหัดที่-1-valid-range">19.41 แบบฝึกหัดที่ 1 - Valid Range</h2>
+<p>กำหนด</p>
+<pre class="language-text"><code>Temperature
+-20 ถึง 80 °C</code></pre>
+<p>ทดสอบ</p>
+<pre class="language-text"><code>25
+80
+81
+-20
+-21
+-99</code></pre>
+<p>ระบุ</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>ผลที่คาดหวัง</p>
+<table>
+<thead><tr>
+<th>temp</th>
+<th>Quality</th>
+</tr></thead><tbody>
+<tr>
+<td>25</td>
+<td>VALID</td>
+</tr>
+<tr>
+<td>80</td>
+<td>VALID</td>
+</tr>
+<tr>
+<td>81</td>
+<td>INVALID</td>
+</tr>
+<tr>
+<td>-20</td>
+<td>VALID</td>
+</tr>
+<tr>
+<td>-21</td>
+<td>INVALID</td>
+</tr>
+<tr>
+<td>-99</td>
+<td>INVALID</td>
+</tr>
+</tbody></table>
+<h2 id="19-42-แบบฝึกหัดที่-2-missing-data">19.42 แบบฝึกหัดที่ 2 - Missing Data</h2>
+<p>ทดสอบ</p>
+<pre class="language-json"><code>{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}
+
+{&quot;temp&quot;:30,&quot;humi&quot;:70}
+
+{&quot;temp&quot;:null,&quot;humi&quot;:70,&quot;light&quot;:1500}
+
+{&quot;temp&quot;:&quot;ERROR&quot;,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>ระบุว่าแต่ละ Payload เป็น</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<h2 id="19-43-แบบฝึกหัดที่-3-stale-detection">19.43 แบบฝึกหัดที่ 3 - Stale Detection</h2>
+<p>กำหนด</p>
+<pre class="language-text"><code>Data Interval = 5 s
+
+Stale Timeout = 15 s</code></pre>
+<p>ส่ง Valid Data ตรวจสอบ</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>จากนั้นหยุดส่ง รอมากกว่า 15 วินาที ตรวจสอบ</p>
+<pre class="language-text"><code>STALE</code></pre>
+<p>จากนั้นส่ง Valid Data ใหม่ ตรวจสอบว่ากลับเป็น</p>
+<pre class="language-text"><code>VALID</code></pre>
+<h2 id="19-44-แบบฝึกหัดที่-4-invalid-recovery">19.44 แบบฝึกหัดที่ 4 - Invalid Recovery</h2>
+<p>ส่ง</p>
+<pre class="language-text"><code>temp = -99</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-text"><code>INVALID</code></pre>
+<p>จากนั้นส่ง</p>
+<pre class="language-text"><code>temp = 32</code></pre>
+<p>ตรวจสอบว่ากลับเป็น</p>
+<pre class="language-text"><code>VALID</code></pre>
+<p>State</p>
+<pre class="language-text"><code>INVALID
+   ↓
+VALID</code></pre>
+<h2 id="19-45-แบบฝึกหัดที่-5-device-status-vs-data-quality">19.45 แบบฝึกหัดที่ 5 - Device Status vs Data Quality</h2>
+<p>สร้างสถานการณ์</p>
+<pre class="language-text"><code>Device 001
+ONLINE + VALID
+
+Device 002
+ONLINE + INVALID
+
+Device 003
+ONLINE + STALE</code></pre>
+<p>อธิบายความหมายของแต่ละกรณี</p>
+<h2 id="19-46-แบบฝึกหัดขั้นสูง-per-sensor-quality">19.46 แบบฝึกหัดขั้นสูง - Per-sensor Quality</h2>
+<p>LAB หลักกำหนด Quality ระดับ Device เช่น</p>
+<pre class="language-text"><code>Device 001
+Quality = INVALID</code></pre>
+<p>แต่ระบบจริงอาจเกิด</p>
+<pre class="language-text"><code>temp  = INVALID
+humi  = VALID
+light = VALID</code></pre>
+<p>จึงสามารถพัฒนาต่อเป็น</p>
+<pre class="language-text"><code>temp_quality
+humi_quality
+light_quality</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: {
+    &quot;value&quot;: -99,
+    &quot;quality&quot;: &quot;INVALID&quot;
+  },
+
+  &quot;humi&quot;: {
+    &quot;value&quot;: 70,
+    &quot;quality&quot;: &quot;VALID&quot;
+  },
+
+  &quot;light&quot;: {
+    &quot;value&quot;: 1500,
+    &quot;quality&quot;: &quot;VALID&quot;
+  }
+}</code></pre>
+<p>แนวคิดนี้เหมาะกับระบบที่ต้องการ Sensor Verification รายตัว แต่ LAB หลักยังใช้ Device-level Quality เพื่อไม่ให้ซับซ้อนเกินไป</p>
+<h2 id="19-47-งานส่ง-lab-19">19.47 งานส่ง LAB 19</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Node-RED Flow</li>
+</ol>
+<pre class="language-text"><code>   MQTT
+     ↓
+   JSON
+     ↓
+   Data Validation
+     ↓
+   Data Quality</code></pre>
+<ol>
+<li>Screenshot Dashboard แสดง</li>
+</ol>
+<pre class="language-text"><code>   Device Status
+   Data Quality
+   Temp
+   Humi
+   Light</code></pre>
+<ol>
+<li>แสดงสถานะ</li>
+</ol>
+<pre class="language-text"><code>   VALID</code></pre>
+<ol>
+<li>แสดงสถานะ</li>
+</ol>
+<pre class="language-text"><code>   INVALID</code></pre>
+<ol>
+<li>แสดงสถานะ</li>
+</ol>
+<pre class="language-text"><code>   STALE</code></pre>
+<ol>
+<li>ทดสอบอย่างน้อย 3 Device</li>
+</ol>
+<pre class="language-text"><code>   001 → VALID
+   002 → INVALID
+   003 → STALE</code></pre>
+<ol>
+<li>แสดง Boundary Test ของ Temperature</li>
+</ol>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   VALID
+   INVALID
+   STALE</code></pre>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   Device Status</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   Data Quality</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด INVALID หรือ STALE Data จึงไม่ควรถูกส่งเข้า Automatic Control โดยตรง</li>
+</ol>
+<h2 id="19-48-สิ่งที่ต้องเข้าใจ">19.48 สิ่งที่ต้องเข้าใจ</h2>
+<p>LAB 18 ถามว่า</p>
+<pre class="language-text"><code>Device ยังทำงานอยู่หรือไม่?</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>ONLINE
+OFFLINE</code></pre>
+<p>LAB 19 ถามว่า</p>
+<pre class="language-text"><code>Sensor Data ยังเชื่อถือได้หรือไม่?</code></pre>
+<p>ได้</p>
+<pre class="language-text"><code>VALID
+INVALID
+STALE</code></pre>
+<p>จึงมีสองมิติ</p>
+<pre class="language-text"><code>Device Availability
+        +
+   Data Quality</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>ONLINE + VALID</code></pre>
+<p>หมายถึง</p>
+<pre class="language-text"><code>Device ทำงาน
+Data ใช้งานได้</code></pre>
+<p>ส่วน</p>
+<pre class="language-text"><code>ONLINE + INVALID</code></pre>
+<p>หมายถึง</p>
+<pre class="language-text"><code>Device ทำงาน
+Data ใช้งานไม่ได้</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>ONLINE + STALE</code></pre>
+<p>หมายถึง</p>
+<pre class="language-text"><code>Device ยังอยู่
+แต่ Sensor Data ไม่ Update</code></pre>
+<h2 id="19-49-architecture-หลัง-lab-19">19.49 Architecture หลัง LAB 19</h2>
+<pre class="language-text"><code>┌───────────────┐
+│ ESP32 / Sensor│
+└───────┬───────┘
+        │
+        ├──────── Data
+        │
+        └──────── Status
+                 │
+                 ▼
+          ┌───────────────┐
+          │ MQTT Broker   │
+          └───────┬───────┘
+                  │
+                  ▼
+          ┌───────────────┐
+          │ Node-RED      │
+          │               │
+          │ Availability  │
+          │ Validation    │
+          │ Freshness     │
+          └───────┬───────┘
+                  │
+         ┌────────┴────────┐
+         │                 │
+         ▼                 ▼
+   Device Status       Data Quality
+         │                 │
+    ONLINE/OFFLINE    VALID
+                      INVALID
+                      STALE
+         │                 │
+         └────────┬────────┘
+                  ▼
+              Dashboard
+                  │
+                  ▼
+            Trusted Data
+                  │
+                  ▼
+           Rule / Control</code></pre>
+<p>Processing Pipeline จึงเป็น</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Communicate
+   ↓
+Verify Device
+   ↓
+Validate Data
+   ↓
+Check Freshness
+   ↓
+Process
+   ↓
+Decide
+   ↓
+Control</code></pre>
+<h2 id="19-50-ความสัมพันธ์ของ-lab-16-19">19.50 ความสัมพันธ์ของ LAB 16–19</h2>
+<p>LAB 16 - MQTT Topic Design</p>
+<pre class="language-text"><code>Multiple Devices
+      ↓
+Structured MQTT</code></pre>
+<p>LAB 17 - Multi-device Dashboard</p>
+<pre class="language-text"><code>Multiple Devices
+      ↓
+Multi-device Monitoring</code></pre>
+<p>LAB 18 - Device Status</p>
+<pre class="language-text"><code>Device
+  ↓
+ONLINE / OFFLINE</code></pre>
+<p>LAB 19 - Data Quality</p>
+<pre class="language-text"><code>Sensor Data
+    ↓
+VALID / INVALID / STALE</code></pre>
+<p>ระบบจึงพัฒนาจาก</p>
+<pre class="language-text"><code>Multi-device Communication
+          ↓
+Multi-device Monitoring
+          ↓
+Device Availability
+          ↓
+   Data Verification</code></pre>
+<h2 id="เชื่อมไป-lab-20-python-mqtt-application">เชื่อมไป LAB 20 - Python MQTT Application</h2>
+<p>จนถึง LAB 19 เราใช้</p>
+<pre class="language-text"><code>Node-RED</code></pre>
+<p>เป็น Processing Layer หลัก Architecture</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Node-RED
+   ↓
+Validation
+   ↓
+  Rule
+   ↓
+Dashboard / Control</code></pre>
+<p>แต่ Raspberry Pi สามารถทำงานเป็น IoT Gateway โดยไม่ต้องพึ่ง Node-RED LAB 20 จะสร้าง MQTT Application ด้วย Python</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Python Application
+   │
+   ├── Subscribe
+   ├── JSON Parsing
+   ├── Validation
+   ├── Rule Processing
+   ├── Publish
+   └── Error Handling</code></pre>
+<p>ช่วยให้คุณเข้าใจว่า</p>
+<pre class="language-text"><code>Node-RED</code></pre>
+<p>เป็นเครื่องมือหนึ่งสำหรับสร้าง IoT Application แต่หลักการจริงคือ</p>
+<pre class="language-text"><code>MQTT
+  +
+Application Logic</code></pre>
+<p>และ Application Logic สามารถพัฒนาด้วยภาษาโปรแกรมได้ LAB 20 จึงเป็นจุดเปลี่ยนจาก</p>
+<pre class="language-text"><code>Visual Programming</code></pre>
+<p>ไปสู่</p>
+<pre class="language-text"><code>Programmatic IoT Gateway Application</code></pre>
+<p>เพื่อเตรียมต่อไปยัง LAB 21</p>
+<pre class="language-text"><code>Python Application
+      ↓
+  systemd Service
+      ↓
+Auto Start / Restart
+      ↓
+Autonomous IoT Gateway</code></pre>
+    </main>
+  </div>
+</body>
+</html>

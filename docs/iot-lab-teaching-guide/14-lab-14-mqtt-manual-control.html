@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 14 - MQTT Manual Control</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="active" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-14-mqtt-manual-control">LAB 14 - MQTT Manual Control</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="13-lab-13-rule-and-alert-processing.html">ก่อนหน้า: LAB 13 - Rule &amp; Alert Processing</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="15-lab-15-automatic-control.html">ถัดไป: LAB 15 - Automatic Control</a></nav>
+<h2 id="14-1-แนวคิดของ-lab">14.1 แนวคิดของ LAB</h2>
+<p>LAB นี้เริ่มสอน <strong>Control Path</strong> ของระบบ IoT หลังจาก LAB ก่อนหน้าเน้น Data Path และ Rule Processing Data Path:</p>
+<pre class="language-text"><code>ESP32 → MQTT → Raspberry Pi → Node-RED → Dashboard</code></pre>
+<p>Control Path:</p>
+<pre class="language-text"><code>Dashboard → Node-RED → MQTT → ESP32 → Actuator</code></pre>
+<p>เป้าหมายคือให้คุณเข้าใจว่า MQTT ไม่ได้ใช้เฉพาะส่งข้อมูล Sensor จาก Device ไปยัง Gateway แต่สามารถใช้ส่งคำสั่งจาก Gateway กลับไปควบคุม Device ได้</p>
+<h2 id="14-2-วัตถุประสงค์">14.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>อธิบายความแตกต่างระหว่าง Data Path และ Control Path</li>
+<li>ออกแบบ MQTT Topic สำหรับ Command</li>
+<li>ใช้ Node-RED Publish MQTT Message</li>
+<li>ให้ ESP32 Subscribe Command Topic</li>
+<li>ควบคุม LED หรือ Actuator จาก Dashboard</li>
+<li>ตรวจสอบคำสั่งด้วย <code>mosquitto_sub</code></li>
+<li>เข้าใจหลักการ Manual Control</li>
+</ul>
+<h2 id="14-3-architecture">14.3 Architecture</h2>
+<pre class="language-text"><code>                ┌───────────────────┐
+                │ Dashboard         │
+                │                   │
+                │   ON      OFF     │
+                └─────────┬─────────┘
+                          │
+                          ▼
+                ┌───────────────────┐
+                │ Node-RED          │
+                └─────────┬─────────┘
+                          │
+                          │ MQTT Publish
+                          ▼
+                ┌───────────────────┐
+                │ Mosquitto Broker  │
+                │ Raspberry Pi      │
+                └─────────┬─────────┘
+                          │
+                          │ MQTT Subscribe
+                          ▼
+                ┌───────────────────┐
+                │ ESP32             │
+                │                   │
+                │ LED / Relay       │
+                └───────────────────┘</code></pre>
+<h2 id="14-4-mqtt-topic">14.4 MQTT Topic</h2>
+<p>ใช้ Command Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>ตัวอย่าง Message:</p>
+<pre class="language-text"><code>ON
+OFF</code></pre>
+<p>ใน LAB นี้ใช้ Payload แบบข้อความธรรมดาก่อน เพื่อให้คุณเห็นกลไก Publish / Subscribe ชัดเจน ก่อนขยายไปสู่ Topic Structure สำหรับระบบหลายอุปกรณ์ใน LAB 16</p>
+<h2 id="14-5-ทดสอบ-command-ด้วย-command-line">14.5 ทดสอบ Command ด้วย Command Line</h2>
+<p>เปิด Terminal แรก:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost -t &quot;pkru/iot/001/cmd&quot; -v</code></pre>
+<p>เปิด Terminal อีกหน้าต่างแล้วส่งคำสั่ง:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost -t &quot;pkru/iot/001/cmd&quot; -m &quot;ON&quot;</code></pre>
+<p>ผลที่ควรได้รับ:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<p>ทดลองส่ง:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost -t &quot;pkru/iot/001/cmd&quot; -m &quot;OFF&quot;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd OFF</code></pre>
+<p>ขั้นตอนนี้ใช้ยืนยันว่า Broker และ Command Topic ทำงานถูกต้องก่อนนำ Node-RED และ ESP32 เข้ามาเกี่ยวข้อง</p>
+<h2 id="14-6-node-red-manual-control">14.6 Node-RED Manual Control</h2>
+<p>สร้าง Flow:</p>
+<pre class="language-text"><code>[ON Button] ──┐
+              ├──→ [MQTT Out]
+[OFF Button] ─┘</code></pre>
+<p>ตั้งค่า MQTT Out:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>รายละเอียด</th>
+</tr></thead><tbody>
+<tr>
+<td>MQTT Broker</td>
+<td><code>localhost:1883</code></td>
+</tr>
+<tr>
+<td>Topic</td>
+<td><code>pkru/iot/001/cmd</code></td>
+</tr>
+</tbody></table>
+<p>ON Button ส่ง:</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>OFF Button ส่ง:</p>
+<pre class="language-text"><code>OFF</code></pre>
+<h2 id="14-7-ตรวจสอบ-node-red">14.7 ตรวจสอบ Node-RED</h2>
+<p>เปิด Terminal:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost -t &quot;pkru/iot/001/cmd&quot; -v</code></pre>
+<p>กดปุ่ม <code>ON</code> บน Dashboard ควรได้:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<p>กด <code>OFF</code> ควรได้:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd OFF</code></pre>
+<p>แสดงว่า Control Path ส่วนแรกทำงานแล้ว:</p>
+<pre class="language-text"><code>Dashboard
+    ↓
+Node-RED
+    ↓
+MQTT Broker</code></pre>
+<h2 id="14-8-esp32-subscribe-command">14.8 ESP32 Subscribe Command</h2>
+<p>ESP32 ทำหน้าที่เป็น IoT Node:</p>
+<pre class="language-text"><code>MQTT Broker
+     │
+     │ Subscribe
+     ▼
+   ESP32
+     │
+     ▼
+ LED / Relay</code></pre>
+<p>ESP32 Subscribe Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>เมื่อได้รับ:</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ให้เปิด LED เมื่อได้รับ:</p>
+<pre class="language-text"><code>OFF</code></pre>
+<p>ให้ปิด LED</p>
+<h2 id="14-9-complete-control-path">14.9 Complete Control Path</h2>
+<p>เมื่อเชื่อมทุกส่วนเข้าด้วยกัน:</p>
+<pre class="language-text"><code>User
+  │
+  ▼
+Dashboard
+  │
+  ▼
+Node-RED
+  │
+  │ MQTT Publish
+  ▼
+Mosquitto
+  │
+  │ MQTT Subscribe
+  ▼
+ESP32
+  │
+  ▼
+Actuator</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>กด ON
+  ↓
+Node-RED
+  ↓
+MQTT: ON
+  ↓
+ESP32
+  ↓
+LED ON</code></pre>
+<h2 id="14-10-manual-control">14.10 Manual Control</h2>
+<p>สิ่งสำคัญของ LAB นี้คือคำว่า <strong>Manual</strong> การตัดสินใจยังมาจากมนุษย์:</p>
+<pre class="language-text"><code>Human
+  ↓
+Decision
+  ↓
+Dashboard
+  ↓
+Command
+  ↓
+ESP32
+  ↓
+Actuator</code></pre>
+<p>ระบบยังไม่ได้ตัดสินใจเปิดหรือปิด Actuator เอง ตัวอย่าง:</p>
+<pre class="language-text"><code>Temperature = 38 °C
+       ↓
+     ALERT</code></pre>
+<p>แม้ระบบจะตรวจพบ <code>ALERT</code> จาก LAB 13 แต่จะยังไม่สั่งเปิดพัดลมเอง ผู้ใช้ต้องเป็นผู้กด:</p>
+<pre class="language-text"><code>Fan ON</code></pre>
+<p>นี่คือความแตกต่างสำคัญระหว่าง Manual Control กับ Automatic Control</p>
+<h2 id="14-11-ความสัมพันธ์กับ-lab-13">14.11 ความสัมพันธ์กับ LAB 13</h2>
+<p>LAB 13:</p>
+<pre class="language-text"><code>Sensor
+  ↓
+MQTT
+  ↓
+Node-RED
+  ↓
+Rule
+  ↓
+NORMAL / WARNING / ALERT</code></pre>
+<p>แนวคิด:</p>
+<pre class="language-text"><code>Data → Decision</code></pre>
+<p>LAB 14:</p>
+<pre class="language-text"><code>Human
+  ↓
+Dashboard
+  ↓
+Node-RED
+  ↓
+MQTT
+  ↓
+ESP32
+  ↓
+Actuator</code></pre>
+<p>แนวคิด:</p>
+<pre class="language-text"><code>Human Decision → Control</code></pre>
+<p>ทั้งสองส่วนยังแยกออกจากกัน</p>
+<h2 id="14-12-data-path-และ-control-path">14.12 Data Path และ Control Path</h2>
+<p>ระบบ IoT มี communication สองทิศทางหลัก</p>
+<h3 id="data-path">Data Path</h3>
+<pre class="language-text"><code>Device → Gateway</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>ESP32
+  ↓
+MQTT
+  ↓
+Raspberry Pi</code></pre>
+<p>ใช้สำหรับ:</p>
+<ul>
+<li>Sensor Data</li>
+<li>Telemetry</li>
+<li>Device Status</li>
+</ul>
+<h3 id="control-path">Control Path</h3>
+<pre class="language-text"><code>Gateway → Device</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>Raspberry Pi
+    ↓
+  MQTT
+    ↓
+  ESP32</code></pre>
+<p>ใช้สำหรับ:</p>
+<ul>
+<li>Command</li>
+<li>Control</li>
+<li>Configuration</li>
+</ul>
+<p>ดังนั้น MQTT เป็น communication backbone ที่รองรับการสื่อสารได้ทั้งสองทิศทาง</p>
+<h2 id="14-13-แบบฝึกหัด">14.13 แบบฝึกหัด</h2>
+<p>สร้าง Dashboard สำหรับควบคุม LED บน ESP32 ต้องสามารถสั่ง:</p>
+<pre class="language-text"><code>ON
+OFF</code></pre>
+<p>ผ่าน MQTT Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>จากนั้นใช้ <code>mosquitto_sub</code> เพื่อตรวจสอบ Command ที่ส่งออกจาก Node-RED ทดสอบตามลำดับ:</p>
+<ol>
+<li>กด ON จาก Dashboard</li>
+<li>ตรวจสอบ MQTT Message</li>
+<li>ตรวจสอบว่า LED บน ESP32 เปิด</li>
+<li>กด OFF จาก Dashboard</li>
+<li>ตรวจสอบ MQTT Message</li>
+<li>ตรวจสอบว่า LED บน ESP32 ปิด</li>
+</ol>
+<h2 id="14-14-งานส่ง">14.14 งานส่ง</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Screenshot Node-RED Flow</li>
+<li>Screenshot Dashboard</li>
+<li>Screenshot <code>mosquitto_sub</code> ขณะได้รับ <code>ON</code></li>
+<li>Screenshot <code>mosquitto_sub</code> ขณะได้รับ <code>OFF</code></li>
+<li>ภาพหรือหลักฐานว่า ESP32 LED เปิดและปิดตามคำสั่ง</li>
+<li>อธิบาย Data Path และ Control Path ของระบบ</li>
+</ol>
+<h2 id="14-15-ผลลัพธ์ของ-lab">14.15 ผลลัพธ์ของ LAB</h2>
+<p>เมื่อจบ LAB 14 ระบบมีทั้ง Data Path และ Control Path</p>
+<pre class="language-text"><code>             DATA PATH
+
+ESP32 ──MQTT──→ Raspberry Pi
+                     │
+                     ▼
+                  Node-RED
+                     │
+                     ▼
+                 Dashboard
+
+
+            CONTROL PATH
+
+Dashboard
+    │
+    ▼
+ Node-RED
+    │
+    ▼
+  MQTT
+    │
+    ▼
+  ESP32
+    │
+    ▼
+ Actuator</code></pre>
+<p>แต่การตัดสินใจควบคุมยังมาจากผู้ใช้:</p>
+<pre class="language-text"><code>Monitor
+   ↓
+Human Decision
+   ↓
+Manual Control</code></pre>
+<h2 id="14-16-เชื่อมไป-lab-15">14.16 เชื่อมไป LAB 15</h2>
+<p>LAB 13 มี:</p>
+<pre class="language-text"><code>Sensor → Rule → Decision</code></pre>
+<p>LAB 14 มี:</p>
+<pre class="language-text"><code>Human → Command → Actuator</code></pre>
+<p>LAB 15 จะนำสองส่วนมารวมกัน:</p>
+<pre class="language-text"><code>Sensor
+  ↓
+MQTT
+  ↓
+Rule
+  ↓
+Decision
+  ↓
+MQTT Command
+  ↓
+ESP32
+  ↓
+Actuator</code></pre>
+<p>เปลี่ยนจาก:</p>
+<pre class="language-text"><code>Manual Control</code></pre>
+<p>เป็น:</p>
+<pre class="language-text"><code>Automatic Control</code></pre>
+<p>และเริ่มเกิดแนวคิด:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Measure
+   ↓
+Decision
+   ↓
+Control
+   ↓
+Physical System</code></pre>
+<p>ซึ่งเป็นพื้นฐานของ Closed-loop IoT Control System</p>
+    </main>
+  </div>
+</body>
+</html>

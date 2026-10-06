@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="active" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">ก่อนหน้า: LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">ถัดไป: LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a></nav>
+<h2 id="3-1-แนวคิดของ-lab">3.1 แนวคิดของ LAB</h2>
+<p>LAB นี้เปลี่ยนจากการทดสอบ MQTT แบบข้อความธรรมดา ไปเป็นการส่งข้อมูล sensor แบบ JSON ผ่าน command line เพื่อจำลองอุปกรณ์จริงก่อนใช้ ESP32 หรือ sensor จริง</p>
+<pre class="language-text"><code>Command Line Simulator
+          |
+          | MQTT JSON
+          v
+Mosquitto Broker
+          |
+          v
+Subscriber / Node-RED ใน lab ถัดไป</code></pre>
+<p>การจำลองด้วย command line ทำให้ตรวจ path ของข้อมูลได้เร็ว และช่วยแยกปัญหาว่าเกิดจาก MQTT, payload หรือ Node-RED</p>
+<h2 id="3-2-วัตถุประสงค์">3.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>ออกแบบ topic สำหรับ sensor หนึ่งตัว</li>
+<li>สร้าง payload JSON ที่มี <code>temp</code>, <code>humi</code>, <code>light</code></li>
+<li>ส่งข้อมูลด้วย <code>mosquitto_pub</code></li>
+<li>รับข้อมูลด้วย <code>mosquitto_sub</code></li>
+<li>จำลอง sensor หลายรอบด้วย shell loop</li>
+<li>ตรวจความถูกต้องของ JSON payload</li>
+<li>เข้าใจความแตกต่างระหว่าง topic และ payload</li>
+</ul>
+<h2 id="3-3-architecture">3.3 Architecture</h2>
+<pre class="language-text"><code>Terminal Simulator
+   |
+   | mosquitto_pub
+   | topic: pkru/iot/001/data
+   v
++------------------------+
+| Mosquitto Broker       |
++-----------+------------+
+            |
+            | mosquitto_sub
+            v
+       Debug Terminal</code></pre>
+<h2 id="3-4-topic-ที่ใช้ใน-lab">3.4 Topic ที่ใช้ใน LAB</h2>
+<p>ใช้ topic เดียวกันตลอดช่วงพื้นฐาน:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>โครงสร้าง topic:</p>
+<table>
+<thead><tr>
+<th>ส่วน</th>
+<th>ความหมาย</th>
+</tr></thead><tbody>
+<tr>
+<td><code>pkru</code></td>
+<td>namespace ของ lab</td>
+</tr>
+<tr>
+<td><code>iot</code></td>
+<td>กลุ่มระบบ</td>
+</tr>
+<tr>
+<td><code>001</code></td>
+<td>device id</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>ประเภท message</td>
+</tr>
+</tbody></table>
+<p>หลักคิด:</p>
+<pre class="language-text"><code>Topic = ช่องทาง
+Payload = ข้อมูล</code></pre>
+<h2 id="3-5-payload-json-มาตรฐาน">3.5 Payload JSON มาตรฐาน</h2>
+<p>payload ที่ใช้:</p>
+<pre class="language-json"><code>{&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:1200}</code></pre>
+<p>ความหมาย:</p>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>ความหมาย</th>
+<th>ตัวอย่างหน่วย</th>
+</tr></thead><tbody>
+<tr>
+<td><code>temp</code></td>
+<td>อุณหภูมิ</td>
+<td>°C</td>
+</tr>
+<tr>
+<td><code>humi</code></td>
+<td>ความชื้น</td>
+<td><code>%RH</code></td>
+</tr>
+<tr>
+<td><code>light</code></td>
+<td>ค่าแสง</td>
+<td>lux หรือค่าจำลอง</td>
+</tr>
+</tbody></table>
+<h2 id="3-6-เปิด-subscriber-เพื่อตรวจข้อมูล">3.6 เปิด Subscriber เพื่อตรวจข้อมูล</h2>
+<p>เปิด terminal แรก:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -v</code></pre>
+<p>ถ้า broker ใช้ authentication:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -u iotuser \
+  -P &#x27;YOUR_PASSWORD&#x27; \
+  -t &quot;pkru/iot/001/data&quot; \
+  -v</code></pre>
+<h2 id="3-7-ส่งข้อมูลหนึ่งครั้ง">3.7 ส่งข้อมูลหนึ่งครั้ง</h2>
+<p>เปิด terminal ที่สอง:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:1200}&#x27;</code></pre>
+<p>ผลที่ terminal subscriber:</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:1200}</code></pre>
+<h2 id="3-8-ส่งข้อมูลหลายค่าเพื่อจำลอง-sensor">3.8 ส่งข้อมูลหลายค่าเพื่อจำลอง Sensor</h2>
+<p>ใช้ loop ส่งข้อมูลทุก 2 วินาที:</p>
+<pre class="language-bash"><code>while true; do
+  TEMP=$((25 + RANDOM % 10))
+  HUMI=$((55 + RANDOM % 25))
+  LIGHT=$((500 + RANDOM % 1500))
+
+  mosquitto_pub -h localhost \
+    -t &quot;pkru/iot/001/data&quot; \
+    -m &quot;{\&quot;temp\&quot;:$TEMP,\&quot;humi\&quot;:$HUMI,\&quot;light\&quot;:$LIGHT}&quot;
+
+  sleep 2
+done</code></pre>
+<p>หยุด loop ด้วย <code>Ctrl+C</code></p>
+<h2 id="3-9-ทดสอบ-payload-ผิดรูปแบบ">3.9 ทดสอบ Payload ผิดรูปแบบ</h2>
+<p>ส่ง JSON ที่ผิดเพื่อดูผลใน lab ถัดไป:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:}&#x27;</code></pre>
+<p>ส่ง payload ที่เป็น text ธรรมดา:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;hello&#x27;</code></pre>
+<p>สิ่งที่ต้องสังเกต:</p>
+<pre class="language-text"><code>MQTT broker ไม่สนใจว่า payload เป็น JSON ถูกหรือผิด
+Node-RED หรือ application layer ต้องเป็นฝ่ายตรวจ</code></pre>
+<h2 id="3-10-ตรวจ-json-ด้วย-jq-ถ้ามีเครื่องมือ">3.10 ตรวจ JSON ด้วย jq ถ้ามีเครื่องมือ</h2>
+<p>ทดสอบ JSON string:</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:1200}&#x27; | jq</code></pre>
+<p>ถ้า JSON ถูกต้อง จะถูกจัดรูปแบบใหม่ ถ้าผิดจะขึ้น error</p>
+<h2 id="3-11-รูปแบบข้อมูลที่ควรยึดให้คงที่">3.11 รูปแบบข้อมูลที่ควรยึดให้คงที่</h2>
+<p>กำหนดให้ทุก message มี field เดิม:</p>
+<pre class="language-json"><code>{
+  &quot;device_id&quot;: &quot;001&quot;,
+  &quot;temp&quot;: 28.5,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1200
+}</code></pre>
+<p>ถ้ายังไม่ใช้ <code>device_id</code> ใน flow ตอนต้นก็ยังควรเข้าใจว่าข้อมูลนี้จะสำคัญเมื่อเข้าสู่ multi-device lab</p>
+<h2 id="3-12-checklist-ก่อนจบ-lab">3.12 Checklist ก่อนจบ LAB</h2>
+<ul>
+<li>เปิด subscriber และเห็น topic/payload ได้</li>
+<li>publish JSON ได้อย่างน้อย 3 ค่า</li>
+<li>เข้าใจว่า broker ไม่ validate JSON</li>
+<li>จำลองข้อมูลต่อเนื่องด้วย loop ได้</li>
+<li>รู้ว่า payload ผิดรูปแบบจะกระทบ Node-RED ใน lab ถัดไป</li>
+</ul>
+<h2 id="3-13-งานส่ง-lab">3.13 งานส่ง LAB</h2>
+<p>ให้บันทึก:</p>
+<pre class="language-text"><code>Topic ที่ใช้:
+ตัวอย่าง payload ที่ถูกต้อง:
+ตัวอย่าง payload ที่ผิด:
+ผลที่ mosquitto_sub เห็น:
+ข้อสรุปเรื่อง topic และ payload:</code></pre>
+<h2 id="3-14-เชื่อมไป-lab-ถัดไป">3.14 เชื่อมไป LAB ถัดไป</h2>
+<p>LAB 04 จะนำ topic และ JSON payload จาก LAB นี้ไปรับด้วย Node-RED ผ่าน MQTT In node แล้วแสดงผลใน debug sidebar</p>
+    </main>
+  </div>
+</body>
+</html>

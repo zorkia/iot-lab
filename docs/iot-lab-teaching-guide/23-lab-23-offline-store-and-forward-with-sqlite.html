@@ -1,0 +1,2515 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 23 - Offline / Store-and-Forward with SQLite</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="active" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-23-offline-store-and-forward-with-sqlite">LAB 23 - Offline / Store-and-Forward with SQLite</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">ก่อนหน้า: LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="24-lab-24-mqtt-security-authentication-and-acl.html">ถัดไป: LAB 24 - MQTT Security: Authentication + ACL</a></nav>
+<h2 id="23-1-แนวคิดของ-lab">23.1 แนวคิดของ LAB</h2>
+<p>จนถึง LAB 22 Raspberry Pi สามารถทำหน้าที่เป็น IoT Gateway รับข้อมูลจากหลาย Protocol</p>
+<pre class="language-text"><code>BLE ──┐
+      │
+UDP ──┼──→ Raspberry Pi Gateway
+      │
+MQTT ─┘
+                │
+                ▼
+             MQTT
+                │
+      ┌─────────┼─────────┐
+      ▼         ▼         ▼
+   Node-RED   SQLite   Dashboard</code></pre>
+<p>ระบบสามารถทำงานภายใน LAN ได้แม้ไม่มี Internet แต่ถ้าระบบต้องส่งข้อมูลต่อไปยัง</p>
+<pre class="language-text"><code>Remote MQTT Broker
+Cloud Server
+Cloud Database</code></pre>
+<p>จะเกิดปัญหาเมื่อ Internet ขาด Architecture แบบตรง</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Gateway
+   ↓
+Internet
+   X
+   ↓
+ Cloud</code></pre>
+<p>ถ้า Gateway พยายามส่งข้อมูลเพียงครั้งเดียวแล้วทิ้ง ข้อมูลช่วงที่ Internet ขาดอาจสูญหาย LAB 23 จะแก้ปัญหานี้ด้วยแนวคิด</p>
+<pre class="language-text"><code>Store-and-Forward</code></pre>
+<p>หลักการคือ</p>
+<pre class="language-text"><code>Receive Data
+     ↓
+Store Locally
+     ↓
+Try Forward
+     │
+     ├── Success → Mark Sent
+     │
+     └── Failure → Keep Pending
+                          ↓
+                    Retry Later</code></pre>
+<p>SQLite จะทำหน้าที่เป็น</p>
+<pre class="language-text"><code>Persistent Local Buffer</code></pre>
+<p>ข้อมูลจึงยังอยู่แม้</p>
+<pre class="language-text"><code>Internet ขาด
+Python Restart
+Raspberry Pi Reboot</code></pre>
+<h2 id="23-2-วัตถุประสงค์">23.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>อธิบายแนวคิด Store-and-Forward</li>
+<li>อธิบายความแตกต่างระหว่าง Memory Buffer และ Persistent Buffer</li>
+<li>ใช้ SQLite เป็น Local Buffer</li>
+<li>เก็บ Sensor Data ก่อน Forward</li>
+<li>กำหนดสถานะ PENDING / SENT</li>
+<li>ตรวจสอบข้อมูลที่ยังไม่ได้ส่ง</li>
+<li>Retry ข้อมูลหลัง Network กลับมา</li>
+<li>ป้องกันข้อมูลสูญหายจาก Internet Failure</li>
+<li>ทดสอบ Offline Operation</li>
+<li>ทดสอบ Recovery หลัง Network กลับมา</li>
+<li>ทดสอบ Recovery หลัง Process Restart</li>
+<li>เข้าใจข้อจำกัดของ Store-and-Forward</li>
+<li>เข้าใจแนวคิด Duplicate Delivery และ Message Identity</li>
+</ul>
+<h2 id="23-3-architecture">23.3 Architecture</h2>
+<pre class="language-text"><code>IoT Nodes
+    │
+    │ BLE / UDP / MQTT
+    ▼
+Raspberry Pi Gateway
+    │
+    ▼
+Data Validation
+    │
+    ▼
+  SQLite
+Local Buffer
+    │
+    ▼
+  PENDING
+    │
+    ▼
+Forward Worker
+    │
+    ├── Success ──→ SENT
+    │
+    └── Failure ──→ PENDING
+                       │
+                       ▼
+                  Retry Later</code></pre>
+<p>เมื่อ Internet กลับมา</p>
+<pre class="language-text"><code>PENDING
+   ↓
+Retry
+   ↓
+Remote Server
+   ↓
+Success
+   ↓
+ SENT</code></pre>
+<h2 id="23-4-ทำไมต้อง-store-ก่อน-forward">23.4 ทำไมต้อง Store ก่อน Forward</h2>
+<p>แนวทางที่เสี่ยงคือ</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Publish Cloud
+   │
+   ├── Success → OK
+   │
+   └── Failure → Lost</code></pre>
+<p>แนวทาง Store-and-Forward</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Store SQLite
+   ↓
+PENDING
+   ↓
+Forward
+   │
+   ├── Success → SENT
+   │
+   └── Failure → Keep PENDING</code></pre>
+<p>หลักสำคัญคือ</p>
+<pre class="language-text"><code>Store First
+   ↓
+Forward Later</code></pre>
+<p>ไม่ใช่</p>
+<pre class="language-text"><code>Forward First
+   ↓
+Store only if failed</code></pre>
+<p>เพราะ Store First ทำให้มี Local Record ก่อนพยายามส่งออก</p>
+<h2 id="23-5-persistent-buffer">23.5 Persistent Buffer</h2>
+<p>ถ้าใช้ Python List</p>
+<pre class="language-text"><code>pending_data = []</code></pre>
+<p>ข้อมูลอยู่ใน RAM ถ้า</p>
+<pre class="language-text"><code>Python Crash
+Raspberry Pi Reboot
+Power Loss</code></pre>
+<p>ข้อมูลใน RAM จะหาย แต่ SQLite เก็บลง Storage</p>
+<pre class="language-text"><code>RAM
+ X
+ │
+ ▼
+Reboot
+ │
+ ▼
+Data Lost</code></pre>
+<p>เทียบกับ</p>
+<pre class="language-text"><code>SQLite
+  │
+  ▼
+Storage
+  │
+  ▼
+Reboot
+  │
+  ▼
+Data Still Exists</code></pre>
+<p>ดังนั้น SQLite เหมาะสำหรับ</p>
+<pre class="language-text"><code>Persistent Local Buffer</code></pre>
+<h2 id="23-6-ตรวจสอบ-sqlite">23.6 ตรวจสอบ SQLite</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sqlite3 --version</code></pre>
+<p>ถ้ายังไม่มี</p>
+<pre class="language-bash"><code>sudo apt update
+
+sudo apt install sqlite3 -y</code></pre>
+<h2 id="23-7-สร้าง-project-database">23.7 สร้าง Project Database</h2>
+<p>ใช้ Project เดิม</p>
+<pre class="language-bash"><code>cd ~/iot-gateway</code></pre>
+<p>สร้าง Database</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db</code></pre>
+<p>จะเข้าสู่</p>
+<pre class="language-text"><code>sqlite&gt;</code></pre>
+<h2 id="23-8-สร้าง-table">23.8 สร้าง Table</h2>
+<p>สร้าง</p>
+<pre class="language-sql"><code>CREATE TABLE queue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    device_id TEXT NOT NULL,
+    timestamp INTEGER NOT NULL,
+    temp REAL,
+    humi REAL,
+    light REAL,
+    status TEXT NOT NULL DEFAULT &#x27;PENDING&#x27;,
+    retry_count INTEGER NOT NULL DEFAULT 0,
+    sent_at INTEGER
+);</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-text"><code>.schema queue</code></pre>
+<p>ออก</p>
+<pre class="language-text"><code>.quit</code></pre>
+<h2 id="23-9-โครงสร้าง-table">23.9 โครงสร้าง Table</h2>
+<p>Field</p>
+<pre class="language-text"><code>id</code></pre>
+<p>คือ Local Message ID</p>
+<pre class="language-text"><code>device_id</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<pre class="language-text"><code>timestamp</code></pre>
+<p>เวลาที่ Gateway รับข้อมูล ใช้ Unix Time</p>
+<pre class="language-text"><code>temp
+humi
+light</code></pre>
+<p>Sensor Data</p>
+<pre class="language-text"><code>status</code></pre>
+<p>สถานะ</p>
+<pre class="language-text"><code>PENDING
+SENT</code></pre>
+<pre class="language-text"><code>retry_count</code></pre>
+<p>จำนวนครั้งที่พยายาม Forward แล้วไม่สำเร็จ</p>
+<pre class="language-text"><code>sent_at</code></pre>
+<p>เวลาที่ Gateway ยืนยันว่า Forward สำเร็จ</p>
+<h2 id="23-10-queue-state">23.10 Queue State</h2>
+<p>เมื่อรับข้อมูล</p>
+<pre class="language-text"><code>INSERT
+  ↓
+PENDING</code></pre>
+<p>เมื่อส่งสำเร็จ</p>
+<pre class="language-text"><code>PENDING
+  ↓
+ SENT</code></pre>
+<p>เมื่อส่งไม่สำเร็จ</p>
+<pre class="language-text"><code>PENDING
+  ↓
+retry_count + 1
+  ↓
+PENDING</code></pre>
+<p>ดังนั้น State หลักคือ</p>
+<pre class="language-text"><code>PENDING
+SENT</code></pre>
+<h2 id="23-11-ทดสอบ-insert">23.11 ทดสอบ INSERT</h2>
+<p>เปิด</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db</code></pre>
+<p>เพิ่มข้อมูล</p>
+<pre class="language-sql"><code>INSERT INTO queue (
+    device_id,
+    timestamp,
+    temp,
+    humi,
+    light
+)
+VALUES (
+    &#x27;001&#x27;,
+    strftime(&#x27;%s&#x27;,&#x27;now&#x27;),
+    30,
+    70,
+    1500
+);</code></pre>
+<p>ดูข้อมูล</p>
+<pre class="language-sql"><code>SELECT * FROM queue;</code></pre>
+<p>ควรได้ประมาณ</p>
+<pre class="language-text"><code>1|001|...|30.0|70.0|1500.0|PENDING|0|</code></pre>
+<h2 id="23-12-ดูเฉพาะ-pending">23.12 ดูเฉพาะ PENDING</h2>
+<p>ใช้</p>
+<pre class="language-text"><code>SELECT
+    id,
+    device_id,
+    timestamp,
+    temp,
+    humi,
+    light,
+    retry_count
+FROM queue
+WHERE status = &#x27;PENDING&#x27;
+ORDER BY id;</code></pre>
+<p>นี่คือข้อมูลที่ยังรอ Forward</p>
+<h2 id="23-13-mark-sent">23.13 Mark SENT</h2>
+<p>สมมติ Record ID 1 ส่งสำเร็จ ใช้</p>
+<pre class="language-sql"><code>UPDATE queue
+SET
+    status = &#x27;SENT&#x27;,
+    sent_at = strftime(&#x27;%s&#x27;,&#x27;now&#x27;)
+WHERE id = 1;</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-sql"><code>SELECT id, device_id, status, sent_at
+FROM queue;</code></pre>
+<h2 id="23-14-architecture-ของ-queue">23.14 Architecture ของ Queue</h2>
+<pre class="language-text"><code>MQTT Message
+     ↓
+Python Gateway
+     ↓
+SQLite INSERT
+     ↓
+  PENDING
+     ↓
+Forward Worker
+     │
+     ├── ACK/Success
+     │       ↓
+     │      SENT
+     │
+     └── Failure
+             ↓
+         PENDING</code></pre>
+<h2 id="23-15-python-sqlite">23.15 Python SQLite</h2>
+<p>Python มี Module</p>
+<pre class="language-text"><code>sqlite3</code></pre>
+<p>อยู่ใน Standard Library จึงไม่ต้อง</p>
+<pre class="language-text"><code>pip install sqlite3</code></pre>
+<p>ทดสอบ</p>
+<pre class="language-bash"><code>python -c &quot;import sqlite3; print(&#x27;SQLite OK&#x27;)&quot;</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>SQLite OK</code></pre>
+<h2 id="23-16-สร้าง-store-and-forward-application">23.16 สร้าง Store-and-Forward Application</h2>
+<p>สร้าง</p>
+<pre class="language-bash"><code>nano store_forward.py</code></pre>
+<p>โครงสร้าง Application</p>
+<pre class="language-text"><code>MQTT Input
+    │
+    ▼
+on_message()
+    │
+    ▼
+Validate
+    │
+    ▼
+SQLite INSERT
+    │
+    ▼
+PENDING
+    │
+    ▼
+Forward Worker</code></pre>
+<h2 id="23-17-database-initialization">23.17 Database Initialization</h2>
+<p>ใช้</p>
+<pre class="language-python"><code>import sqlite3
+
+
+database_path = &quot;store_forward.db&quot;
+
+
+def init_database():
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.execute(
+            &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS queue (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                device_id TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                temp REAL,
+                humi REAL,
+                light REAL,
+                status TEXT NOT NULL DEFAULT &#x27;PENDING&#x27;,
+                retry_count INTEGER NOT NULL DEFAULT 0,
+                sent_at INTEGER
+            )
+            &quot;&quot;&quot;
+        )
+
+        conn.commit()</code></pre>
+<h2 id="23-18-store-sensor-data">23.18 Store Sensor Data</h2>
+<p>สร้าง Function</p>
+<pre class="language-python"><code>import time
+
+
+def store_data(
+    device_id,
+    temp,
+    humi,
+    light
+):
+    timestamp = int(
+        time.time()
+    )
+
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        cursor = conn.execute(
+            &quot;&quot;&quot;
+            INSERT INTO queue (
+                device_id,
+                timestamp,
+                temp,
+                humi,
+                light,
+                status
+            )
+            VALUES (?, ?, ?, ?, ?, &#x27;PENDING&#x27;)
+            &quot;&quot;&quot;,
+            (
+                device_id,
+                timestamp,
+                temp,
+                humi,
+                light
+            )
+        )
+
+        conn.commit()
+
+        return cursor.lastrowid</code></pre>
+<h2 id="23-19-ทำไมใช้">23.19 ทำไมใช้ <code>?</code></h2>
+<p>ไม่ควรสร้าง SQL แบบ</p>
+<pre class="language-text"><code>&quot;INSERT ... &quot; + value</code></pre>
+<p>แต่ใช้</p>
+<pre class="language-text"><code>?</code></pre>
+<p>และส่ง Parameters แยก ข้อดี</p>
+<ul>
+<li>ลดปัญหา SQL Injection</li>
+<li>ลดปัญหา Quote</li>
+<li>Code อ่านง่าย</li>
+<li>SQLite จัดการ Data Type ให้เหมาะสม</li>
+</ul>
+<p>เรียกว่า</p>
+<pre class="language-text"><code>Parameterized Query</code></pre>
+<h2 id="23-20-mqtt-input">23.20 MQTT Input</h2>
+<p>ใช้ Topic เดิม</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>Flow</p>
+<pre class="language-text"><code>IoT Device
+    ↓
+  MQTT
+    ↓
+Python
+    ↓
+SQLite</code></pre>
+<h2 id="23-21-mqtt-callback">23.21 MQTT Callback</h2>
+<p>ตัวอย่าง</p>
+<pre class="language-python"><code>import json
+
+import paho.mqtt.client as mqtt
+
+
+local_broker = &quot;localhost&quot;
+local_port = 1883
+
+input_topic = &quot;pkru/iot/+/data&quot;
+
+
+def on_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    print(
+        f&quot;Local MQTT connected: &quot;
+        f&quot;{reason_code}&quot;
+    )
+
+    client.subscribe(
+        input_topic
+    )
+
+
+def on_message(
+    client,
+    userdata,
+    msg
+):
+    try:
+        parts = msg.topic.split(&quot;/&quot;)
+
+        if (
+            len(parts) != 4 or
+            parts[0] != &quot;pkru&quot; or
+            parts[1] != &quot;iot&quot; or
+            parts[3] != &quot;data&quot;
+        ):
+            return
+
+        device_id = parts[2]
+
+        payload = msg.payload.decode(
+            &quot;utf-8&quot;
+        )
+
+        data = json.loads(
+            payload
+        )
+
+        temp = float(
+            data[&quot;temp&quot;]
+        )
+
+        humi = float(
+            data[&quot;humi&quot;]
+        )
+
+        light = float(
+            data[&quot;light&quot;]
+        )
+
+        record_id = store_data(
+            device_id,
+            temp,
+            humi,
+            light
+        )
+
+        print(
+            f&quot;STORED &quot;
+            f&quot;id={record_id} &quot;
+            f&quot;device={device_id}&quot;
+        )
+
+    except (
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+        ValueError,
+        UnicodeDecodeError
+    ) as error:
+
+        print(
+            f&quot;INVALID DATA: &quot;
+            f&quot;{error}&quot;
+        )</code></pre>
+<h2 id="23-22-ทดสอบ-store-ก่อนทำ-forward">23.22 ทดสอบ Store ก่อนทำ Forward</h2>
+<p>Run</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+
+source venv/bin/activate
+
+python store_forward.py</code></pre>
+<p>ถ้า Program ยังไม่สมบูรณ์ ให้ทดสอบ Function ส่วนรับข้อมูลก่อน ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ตรวจสอบ Database</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;SELECT id,device_id,temp,humi,light,status FROM queue;&quot;</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>1|001|30.0|70.0|1500.0|PENDING</code></pre>
+<p>จุดสำคัญคือ</p>
+<pre class="language-text"><code>Data ต้องเข้า SQLite ก่อน</code></pre>
+<h2 id="23-23-remote-destination">23.23 Remote Destination</h2>
+<p>เพื่อเรียน Store-and-Forward ต้องมี</p>
+<pre class="language-text"><code>Local Side</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Remote Side</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>Local MQTT
+    ↓
+Gateway
+    ↓
+SQLite
+    ↓
+Remote MQTT</code></pre>
+<p>ในระบบจริง Remote MQTT อาจอยู่</p>
+<pre class="language-text"><code>Cloud
+Data Center
+Another Raspberry Pi
+Remote Server</code></pre>
+<p>แต่ LAB ไม่จำเป็นต้องพึ่ง Internet จริง สามารถจำลอง Remote Broker ใน LAN ได้</p>
+<h2 id="23-24-topic-สำหรับ-forward">23.24 Topic สำหรับ Forward</h2>
+<p>ไม่ควร Publish กลับเข้า Topic Input เดิมบน Broker เดียวกัน เช่น</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>เพราะ Application ที่ Subscribe</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>อาจรับ Message ของตัวเองกลับมาแล้ว Store ซ้ำ เกิด</p>
+<pre class="language-text"><code>Publish
+  ↓
+Subscribe
+  ↓
+Store
+  ↓
+Publish
+  ↓
+Subscribe
+  ↓
+  ...</code></pre>
+<p>ดังนั้นต้องแยก</p>
+<pre class="language-text"><code>Local Input</code></pre>
+<p>กับ</p>
+<pre class="language-text"><code>Forward Destination</code></pre>
+<p>อย่างชัดเจน</p>
+<h2 id="23-25-remote-topic">23.25 Remote Topic</h2>
+<p>ตัวอย่างกำหนด</p>
+<pre class="language-text"><code>pkru/cloud/{device_id}/data</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>pkru/cloud/001/data</code></pre>
+<p>Payload</p>
+<pre class="language-json"><code>{
+  &quot;message_id&quot;: 1,
+  &quot;device_id&quot;: &quot;001&quot;,
+  &quot;timestamp&quot;: 1780000000,
+  &quot;temp&quot;: 30.0,
+  &quot;humi&quot;: 70.0,
+  &quot;light&quot;: 1500.0
+}</code></pre>
+<p><code>message_id</code> ใช้ช่วยระบุ Record ที่ถูก Forward</p>
+<h2 id="23-26-delivery-success-ต้องนิยามให้ชัด">23.26 Delivery Success ต้องนิยามให้ชัด</h2>
+<p>จุดสำคัญมาก คำว่า</p>
+<pre class="language-text"><code>publish()</code></pre>
+<p>สำเร็จ ไม่ได้แปลเสมอไปว่า</p>
+<pre class="language-text"><code>Cloud Application บันทึกข้อมูลสำเร็จแล้ว</code></pre>
+<p>ต้องกำหนดว่า</p>
+<pre class="language-text"><code>Success</code></pre>
+<p>หมายถึงอะไร ระดับง่ายใน LAB นี้กำหนดว่า</p>
+<pre class="language-text"><code>MQTT Publish ได้รับการยืนยันในระดับ MQTT Client/Broker ตาม QoS ที่ใช้</code></pre>
+<p>แล้วจึง Mark</p>
+<pre class="language-text"><code>SENT</code></pre>
+<p>แต่ในระบบที่ต้องการความน่าเชื่อถือสูงกว่า อาจต้องใช้</p>
+<pre class="language-text"><code>Application ACK</code></pre>
+<p>จาก Remote Application เช่น</p>
+<pre class="language-text"><code>pkru/cloud/ack/{message_id}</code></pre>
+<p>จึงค่อย Mark SENT</p>
+<h2 id="23-27-qos-สำหรับ-forward">23.27 QoS สำหรับ Forward</h2>
+<p>สำหรับ Store-and-Forward ไม่ควรใช้</p>
+<pre class="language-text"><code>QoS 0</code></pre>
+<p>ถ้าต้องการทราบว่า Broker รับ Publish หรือไม่ LAB นี้ใช้</p>
+<pre class="language-text"><code>QoS 1</code></pre>
+<p>แนวคิด</p>
+<pre class="language-text"><code>Publisher
+    │
+    │ PUBLISH
+    ▼
+  Broker
+    │
+    │ PUBACK
+    ▼
+ Publisher</code></pre>
+<p>QoS 1 ให้</p>
+<pre class="language-text"><code>At Least Once Delivery</code></pre>
+<p>ดังนั้น Message อาจถูกส่งซ้ำได้ ระบบปลายทางจึงควรสามารถตรวจ Duplicate ได้</p>
+<h2 id="23-28-duplicate-delivery">23.28 Duplicate Delivery</h2>
+<p>สมมติ</p>
+<ol>
+<li>Gateway ส่ง Record 100</li>
+<li>Remote Broker รับแล้ว</li>
+<li>Connection ขาดก่อน Gateway บันทึก SENT</li>
+<li>Gateway Restart</li>
+<li>Record 100 ยังเป็น PENDING</li>
+<li>Gateway ส่ง Record 100 อีกครั้ง</li>
+</ol>
+<p>Remote อาจได้รับ</p>
+<pre class="language-text"><code>Record 100</code></pre>
+<p>สองครั้ง ดังนั้น Store-and-Forward ต้องเข้าใจว่า</p>
+<pre class="language-text"><code>No Data Loss</code></pre>
+<p>อาจแลกกับ</p>
+<pre class="language-text"><code>Possible Duplicate</code></pre>
+<p>โดยเฉพาะเมื่อใช้แนวคิด</p>
+<pre class="language-text"><code>At Least Once</code></pre>
+<h2 id="23-29-message-id">23.29 Message ID</h2>
+<p>เพื่อช่วยตรวจ Duplicate ทุก Record มี</p>
+<pre class="language-text"><code>id</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>100</code></pre>
+<p>Forward Payload</p>
+<pre class="language-json"><code>{
+  &quot;message_id&quot;: 100,
+  &quot;device_id&quot;: &quot;001&quot;,
+  &quot;timestamp&quot;: 1780000000,
+  &quot;temp&quot;: 30.0,
+  &quot;humi&quot;: 70.0,
+  &quot;light&quot;: 1500.0
+}</code></pre>
+<p>Remote Application สามารถตรวจ</p>
+<pre class="language-text"><code>message_id</code></pre>
+<p>ก่อน INSERT แต่ถ้ามีหลาย Gateway <code>id = 100</code> อาจเกิดในหลายเครื่อง ระบบจริงควรใช้ Identity เช่น</p>
+<pre class="language-text"><code>gateway_id + message_id</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>pi01-100</code></pre>
+<p>หรือ UUID สำหรับ LAB นี้ใช้</p>
+<pre class="language-text"><code>local id</code></pre>
+<p>เพื่ออธิบายแนวคิดก่อน</p>
+<h2 id="23-30-อ่าน-pending-records">23.30 อ่าน Pending Records</h2>
+<p>Function</p>
+<pre class="language-python"><code>def get_pending_records(
+    limit=10
+):
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.row_factory = (
+            sqlite3.Row
+        )
+
+        rows = conn.execute(
+            &quot;&quot;&quot;
+            SELECT
+                id,
+                device_id,
+                timestamp,
+                temp,
+                humi,
+                light,
+                retry_count
+            FROM queue
+            WHERE status = &#x27;PENDING&#x27;
+            ORDER BY id
+            LIMIT ?
+            &quot;&quot;&quot;,
+            (limit,)
+        ).fetchall()
+
+        return rows</code></pre>
+<h2 id="23-31-mark-record-as-sent">23.31 Mark Record as SENT</h2>
+<p>Function</p>
+<pre class="language-python"><code>def mark_sent(
+    record_id
+):
+    sent_at = int(
+        time.time()
+    )
+
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.execute(
+            &quot;&quot;&quot;
+            UPDATE queue
+            SET
+                status = &#x27;SENT&#x27;,
+                sent_at = ?
+            WHERE id = ?
+            &quot;&quot;&quot;,
+            (
+                sent_at,
+                record_id
+            )
+        )
+
+        conn.commit()</code></pre>
+<h2 id="23-32-เพิ่ม-retry-count">23.32 เพิ่ม Retry Count</h2>
+<p>เมื่อ Forward ไม่สำเร็จ ใช้</p>
+<pre class="language-python"><code>def mark_retry(
+    record_id
+):
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.execute(
+            &quot;&quot;&quot;
+            UPDATE queue
+            SET
+                retry_count =
+                retry_count + 1
+            WHERE id = ?
+            &quot;&quot;&quot;,
+            (
+                record_id,
+            )
+        )
+
+        conn.commit()</code></pre>
+<h2 id="23-33-forward-payload">23.33 Forward Payload</h2>
+<p>สร้าง</p>
+<pre class="language-python"><code>def build_forward_payload(
+    row
+):
+    return {
+        &quot;message_id&quot;: row[&quot;id&quot;],
+        &quot;device_id&quot;: row[&quot;device_id&quot;],
+        &quot;timestamp&quot;: row[&quot;timestamp&quot;],
+        &quot;temp&quot;: row[&quot;temp&quot;],
+        &quot;humi&quot;: row[&quot;humi&quot;],
+        &quot;light&quot;: row[&quot;light&quot;]
+    }</code></pre>
+<h2 id="23-34-forward-worker-concept">23.34 Forward Worker Concept</h2>
+<p>Worker ทำงานเป็นรอบ เช่นทุก</p>
+<pre class="language-text"><code>5 seconds</code></pre>
+<p>ขั้นตอน</p>
+<pre class="language-text"><code>Read PENDING
+     ↓
+Publish Record 1
+     │
+     ├── Success → SENT
+     └── Failure → retry_count + 1
+     ↓
+Publish Record 2
+     ↓
+    ...</code></pre>
+<h2 id="23-35-อย่าใช้-internet-ping-เป็นตัวตัดสินเพียงอย่างเดียว">23.35 อย่าใช้ Internet Ping เป็นตัวตัดสินเพียงอย่างเดียว</h2>
+<p>ไม่ควรออกแบบว่า</p>
+<pre class="language-text"><code>ping 8.8.8.8
+    ↓
+Success
+    ↓
+Cloud Available</code></pre>
+<p>เพราะ</p>
+<pre class="language-text"><code>Internet อาจใช้ได้
+แต่ Remote Broker ใช้ไม่ได้</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>ICMP อาจถูก Block
+แต่ MQTT ใช้ได้</code></pre>
+<p>ดังนั้น Availability ที่สำคัญคือ</p>
+<pre class="language-text"><code>Destination Service Availability</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>Remote MQTT Connection</code></pre>
+<p>ไม่ใช่เพียง</p>
+<pre class="language-text"><code>Internet = YES/NO</code></pre>
+<h2 id="23-36-จำลอง-remote-broker-สำหรับ-lab">23.36 จำลอง Remote Broker สำหรับ LAB</h2>
+<p>เพื่อให้ LAB ทำได้โดยไม่ต้องพึ่ง Cloud จริง สามารถใช้ Mosquitto อีกเครื่องใน LAN ตัวอย่าง</p>
+<pre class="language-text"><code>Raspberry Pi Gateway
+192.168.1.50
+
+Remote Broker
+BROKER_IP</code></pre>
+<p>Gateway รับ Local MQTT จาก</p>
+<pre class="language-text"><code>localhost:1883</code></pre>
+<p>แล้ว Forward ไป</p>
+<pre class="language-text"><code>BROKER_IP:1883</code></pre>
+<p>ถ้ามี Raspberry Pi หลายเครื่องในห้อง LAB วิธีนี้เหมาะมาก</p>
+<h2 id="23-37-ถ้ามี-raspberry-pi-เครื่องเดียว">23.37 ถ้ามี Raspberry Pi เครื่องเดียว</h2>
+<p>สามารถจำลอง Remote Destination ด้วย Mosquitto Listener อีก Port ได้ เช่น</p>
+<pre class="language-text"><code>Local Broker
+localhost:1883</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Test Remote Broker
+localhost:1884</code></pre>
+<p>แต่ต้องตั้ง Mosquitto Listener แยกอย่างถูกต้อง อีกทางที่ง่ายกว่าสำหรับการเรียนรู้คือใช้ Raspberry Pi สองเครื่อง</p>
+<pre class="language-text"><code>Pi A = Gateway
+Pi B = Remote Broker</code></pre>
+<p>เพื่อให้สามารถจำลอง Network Failure ได้ชัดเจน</p>
+<h2 id="23-38-remote-mqtt-client">23.38 Remote MQTT Client</h2>
+<p>ตัวอย่าง Configuration</p>
+<pre class="language-python"><code>remote_broker = &quot;BROKER_IP&quot;
+remote_port = 1883</code></pre>
+<p>สร้าง Client แยกจาก Local Client</p>
+<pre class="language-python"><code>remote_client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;store-forward-remote&quot;
+)</code></pre>
+<p>ดังนั้น Application มี</p>
+<pre class="language-text"><code>local_client</code></pre>
+<p>สำหรับ Subscribe Sensor Data และ</p>
+<pre class="language-text"><code>remote_client</code></pre>
+<p>สำหรับ Forward Data</p>
+<h2 id="23-39-ทำไมต้องแยก-mqtt-client">23.39 ทำไมต้องแยก MQTT Client</h2>
+<p>Architecture</p>
+<pre class="language-text"><code>Local MQTT Client
+    │
+    └── Subscribe
+        pkru/iot/+/data
+
+Remote MQTT Client
+    │
+    └── Publish
+        pkru/cloud/{device_id}/data</code></pre>
+<p>ทำให้</p>
+<pre class="language-text"><code>Local Data Collection</code></pre>
+<p>แยกจาก</p>
+<pre class="language-text"><code>Remote Forwarding</code></pre>
+<p>ชัดเจน เมื่อ Remote Broker หาย Local MQTT ยังสามารถทำงาน และ Gateway ยังสามารถ</p>
+<pre class="language-text"><code>Store Data</code></pre>
+<p>ลง SQLite ต่อไป นี่คือหัวใจของ Offline Operation</p>
+<h2 id="23-40-remote-connection-state">23.40 Remote Connection State</h2>
+<p>สร้างตัวแปร</p>
+<pre class="language-python"><code>remote_connected = False</code></pre>
+<p>Callback</p>
+<pre class="language-python"><code>def on_remote_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    global remote_connected
+
+    if reason_code == 0:
+        remote_connected = True
+        print(
+            &quot;REMOTE CONNECTED&quot;
+        )
+    else:
+        remote_connected = False
+
+
+def on_remote_disconnect(
+    client,
+    userdata,
+    disconnect_flags,
+    reason_code,
+    properties
+):
+    global remote_connected
+
+    remote_connected = False
+
+    print(
+        &quot;REMOTE DISCONNECTED&quot;
+    )</code></pre>
+<p>หมายเหตุ: Application ไม่ควรถือว่า Boolean นี้เป็นหลักฐานการส่งข้อมูลสำเร็จของแต่ละ Record มันเป็นเพียง Connection State การ Mark SENT ยังควรอิง Publish Confirmation ที่เหมาะสม</p>
+<h2 id="23-41-mqtt-publish-confirmation">23.41 MQTT Publish Confirmation</h2>
+<p>Paho MQTT สามารถคืน</p>
+<pre class="language-text"><code>MQTTMessageInfo</code></pre>
+<p>จาก</p>
+<pre class="language-text"><code>publish()</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-python"><code>info = remote_client.publish(
+    topic,
+    payload,
+    qos=1
+)</code></pre>
+<p>จากนั้นรอ Publish Completion</p>
+<pre class="language-python"><code>info.wait_for_publish(
+    timeout=5
+)</code></pre>
+<p>และตรวจ</p>
+<pre class="language-python"><code>info.is_published()</code></pre>
+<p>สำหรับ LAB ใช้แนวทางนี้เพื่อสาธิต</p>
+<pre class="language-text"><code>Publish Confirmation</code></pre>
+<p>ก่อน Mark SENT</p>
+<h2 id="23-42-forward-record">23.42 Forward Record</h2>
+<p>ตัวอย่าง Function</p>
+<pre class="language-python"><code>def forward_record(
+    row
+):
+    if not remote_connected:
+        return False
+
+    topic = (
+        f&quot;pkru/cloud/&quot;
+        f&quot;{row[&#x27;device_id&#x27;]}/data&quot;
+    )
+
+    payload = json.dumps(
+        build_forward_payload(row)
+    )
+
+    try:
+        info = remote_client.publish(
+            topic,
+            payload,
+            qos=1
+        )
+
+        info.wait_for_publish(
+            timeout=5
+        )
+
+        return info.is_published()
+
+    except Exception as error:
+        print(
+            f&quot;FORWARD ERROR: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return False</code></pre>
+<h2 id="23-43-forward-pending-records">23.43 Forward Pending Records</h2>
+<pre class="language-python"><code>def forward_pending():
+    rows = get_pending_records(
+        limit=10
+    )
+
+    for row in rows:
+
+        if not remote_connected:
+            break
+
+        success = forward_record(
+            row
+        )
+
+        if success:
+            mark_sent(
+                row[&quot;id&quot;]
+            )
+
+            print(
+                f&quot;SENT &quot;
+                f&quot;id={row[&#x27;id&#x27;]}&quot;
+            )
+
+        else:
+            mark_retry(
+                row[&quot;id&quot;]
+            )
+
+            print(
+                f&quot;RETRY &quot;
+                f&quot;id={row[&#x27;id&#x27;]}&quot;
+            )
+
+            break</code></pre>
+<p>สังเกตว่าเมื่อ Remote Failure ให้หยุด Loop รอบนั้น ไม่ควรยิง Record ที่เหลือซ้ำอย่างรวดเร็วโดยไม่จำเป็น</p>
+<h2 id="23-44-worker-thread">23.44 Worker Thread</h2>
+<p>สามารถสร้าง Thread สำหรับ Forward</p>
+<pre class="language-python"><code>import threading
+
+
+def forward_worker():
+    while True:
+        try:
+            forward_pending()
+
+        except Exception as error:
+            print(
+                f&quot;WORKER ERROR: &quot;
+                f&quot;{error}&quot;
+            )
+
+        time.sleep(5)</code></pre>
+<p>เริ่ม</p>
+<pre class="language-python"><code>worker = threading.Thread(
+    target=forward_worker,
+    daemon=True
+)
+
+worker.start()</code></pre>
+<p>ดังนั้น Application มีสองงาน</p>
+<pre class="language-text"><code>MQTT Receive
+     +
+Forward Worker</code></pre>
+<p>ทำงานพร้อมกัน</p>
+<h2 id="23-45-processing-architecture">23.45 Processing Architecture</h2>
+<pre class="language-text"><code>Thread / Flow 1
+
+Local MQTT
+    ↓
+on_message()
+    ↓
+Validate
+    ↓
+SQLite INSERT
+
+
+Thread / Flow 2
+
+SQLite PENDING
+    ↓
+Forward Worker
+    ↓
+Remote MQTT
+    ↓
+SENT / RETRY</code></pre>
+<p>นี่คือการแยก</p>
+<pre class="language-text"><code>Data Ingestion</code></pre>
+<p>ออกจาก</p>
+<pre class="language-text"><code>Data Forwarding</code></pre>
+<h2 id="23-46-ทำไมการแยก-ingestion-กับ-forwarding-สำคัญ">23.46 ทำไมการแยก Ingestion กับ Forwarding สำคัญ</h2>
+<p>ถ้าเขียน</p>
+<pre class="language-text"><code>Receive
+   ↓
+Wait for Remote
+   ↓
+Forward
+   ↓
+Receive Next</code></pre>
+<p>เมื่อ Remote ช้า Data Ingestion อาจถูก Block แต่ Store-and-Forward ที่ดีควรเป็น</p>
+<pre class="language-text"><code>Receive
+   ↓
+Store
+   ↓
+Return Quickly</code></pre>
+<p>ส่วน Forward ทำแยก</p>
+<pre class="language-text"><code>Database
+   ↓
+Worker
+   ↓
+Remote</code></pre>
+<p>ดังนั้น Remote Failure ไม่ควรหยุด Local Data Collection</p>
+<h2 id="23-47-full-application-architecture">23.47 Full Application Architecture</h2>
+<pre class="language-text"><code>Local MQTT Broker
+       │
+       ▼
+MQTT Callback
+       │
+       ▼
+   Validation
+       │
+       ▼
+  SQLite INSERT
+       │
+       ▼
+    PENDING
+       │
+       │
+       └──────────────┐
+                      │
+                      ▼
+               Forward Worker
+                      │
+                      ▼
+                Remote MQTT
+                      │
+            ┌─────────┴─────────┐
+            │                   │
+         Success             Failure
+            │                   │
+            ▼                   ▼
+          SENT              PENDING
+                                │
+                                ▼
+                            Retry Later</code></pre>
+<h2 id="23-48-full-python-example">23.48 Full Python Example</h2>
+<p>สร้าง</p>
+<pre class="language-bash"><code>nano store_forward.py</code></pre>
+<p>ใช้</p>
+<pre class="language-python"><code>import json
+import sqlite3
+import threading
+import time
+
+import paho.mqtt.client as mqtt
+
+
+database_path = (
+    &quot;/home/piuser/iot-gateway/&quot;
+    &quot;store_forward.db&quot;
+)
+
+local_broker = &quot;localhost&quot;
+local_port = 1883
+
+remote_broker = &quot;BROKER_IP&quot;
+remote_port = 1883
+
+input_topic = &quot;pkru/iot/+/data&quot;
+
+remote_connected = False
+
+
+def init_database():
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.execute(
+            &quot;&quot;&quot;
+            CREATE TABLE IF NOT EXISTS queue (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                device_id TEXT NOT NULL,
+                timestamp INTEGER NOT NULL,
+                temp REAL,
+                humi REAL,
+                light REAL,
+                status TEXT NOT NULL DEFAULT &#x27;PENDING&#x27;,
+                retry_count INTEGER NOT NULL DEFAULT 0,
+                sent_at INTEGER
+            )
+            &quot;&quot;&quot;
+        )
+
+        conn.commit()
+
+
+def validate_data(data):
+    required_fields = [
+        &quot;temp&quot;,
+        &quot;humi&quot;,
+        &quot;light&quot;
+    ]
+
+    for field in required_fields:
+        if field not in data:
+            return False
+
+        if data[field] is None:
+            return False
+
+    try:
+        temp = float(data[&quot;temp&quot;])
+        humi = float(data[&quot;humi&quot;])
+        light = float(data[&quot;light&quot;])
+
+    except (TypeError, ValueError):
+        return False
+
+    if (
+        temp == -99 or
+        humi == -99 or
+        light == -99
+    ):
+        return False
+
+    if temp &lt; -20 or temp &gt; 80:
+        return False
+
+    if humi &lt; 0 or humi &gt; 100:
+        return False
+
+    if light &lt; 0 or light &gt; 100000:
+        return False
+
+    return True
+
+
+def store_data(
+    device_id,
+    temp,
+    humi,
+    light
+):
+    timestamp = int(
+        time.time()
+    )
+
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        cursor = conn.execute(
+            &quot;&quot;&quot;
+            INSERT INTO queue (
+                device_id,
+                timestamp,
+                temp,
+                humi,
+                light,
+                status
+            )
+            VALUES (?, ?, ?, ?, ?, &#x27;PENDING&#x27;)
+            &quot;&quot;&quot;,
+            (
+                device_id,
+                timestamp,
+                temp,
+                humi,
+                light
+            )
+        )
+
+        conn.commit()
+
+        return cursor.lastrowid
+
+
+def get_pending_records(
+    limit=10
+):
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.row_factory = (
+            sqlite3.Row
+        )
+
+        rows = conn.execute(
+            &quot;&quot;&quot;
+            SELECT
+                id,
+                device_id,
+                timestamp,
+                temp,
+                humi,
+                light,
+                retry_count
+            FROM queue
+            WHERE status = &#x27;PENDING&#x27;
+            ORDER BY id
+            LIMIT ?
+            &quot;&quot;&quot;,
+            (limit,)
+        ).fetchall()
+
+        return rows
+
+
+def mark_sent(
+    record_id
+):
+    sent_at = int(
+        time.time()
+    )
+
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.execute(
+            &quot;&quot;&quot;
+            UPDATE queue
+            SET
+                status = &#x27;SENT&#x27;,
+                sent_at = ?
+            WHERE id = ?
+            &quot;&quot;&quot;,
+            (
+                sent_at,
+                record_id
+            )
+        )
+
+        conn.commit()
+
+
+def mark_retry(
+    record_id
+):
+    with sqlite3.connect(
+        database_path
+    ) as conn:
+
+        conn.execute(
+            &quot;&quot;&quot;
+            UPDATE queue
+            SET
+                retry_count =
+                retry_count + 1
+            WHERE id = ?
+            &quot;&quot;&quot;,
+            (
+                record_id,
+            )
+        )
+
+        conn.commit()
+
+
+def build_forward_payload(
+    row
+):
+    return {
+        &quot;message_id&quot;: row[&quot;id&quot;],
+        &quot;device_id&quot;: row[&quot;device_id&quot;],
+        &quot;timestamp&quot;: row[&quot;timestamp&quot;],
+        &quot;temp&quot;: row[&quot;temp&quot;],
+        &quot;humi&quot;: row[&quot;humi&quot;],
+        &quot;light&quot;: row[&quot;light&quot;]
+    }
+
+
+def on_local_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    print(
+        f&quot;LOCAL MQTT: &quot;
+        f&quot;{reason_code}&quot;
+    )
+
+    client.subscribe(
+        input_topic
+    )
+
+
+def on_local_message(
+    client,
+    userdata,
+    msg
+):
+    try:
+        parts = msg.topic.split(&quot;/&quot;)
+
+        if (
+            len(parts) != 4 or
+            parts[0] != &quot;pkru&quot; or
+            parts[1] != &quot;iot&quot; or
+            parts[3] != &quot;data&quot;
+        ):
+            return
+
+        device_id = parts[2]
+
+        payload = msg.payload.decode(
+            &quot;utf-8&quot;
+        )
+
+        data = json.loads(
+            payload
+        )
+
+        if not isinstance(
+            data,
+            dict
+        ):
+            return
+
+        if not validate_data(
+            data
+        ):
+            print(
+                f&quot;INVALID DATA &quot;
+                f&quot;device={device_id}&quot;
+            )
+            return
+
+        temp = float(
+            data[&quot;temp&quot;]
+        )
+
+        humi = float(
+            data[&quot;humi&quot;]
+        )
+
+        light = float(
+            data[&quot;light&quot;]
+        )
+
+        record_id = store_data(
+            device_id,
+            temp,
+            humi,
+            light
+        )
+
+        print(
+            f&quot;STORED &quot;
+            f&quot;id={record_id} &quot;
+            f&quot;device={device_id}&quot;
+        )
+
+    except (
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+        ValueError,
+        UnicodeDecodeError
+    ) as error:
+
+        print(
+            f&quot;INPUT ERROR: &quot;
+            f&quot;{error}&quot;
+        )
+
+
+def on_remote_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    global remote_connected
+
+    if reason_code == 0:
+        remote_connected = True
+
+        print(
+            &quot;REMOTE CONNECTED&quot;
+        )
+
+    else:
+        remote_connected = False
+
+
+def on_remote_disconnect(
+    client,
+    userdata,
+    disconnect_flags,
+    reason_code,
+    properties
+):
+    global remote_connected
+
+    remote_connected = False
+
+    print(
+        &quot;REMOTE DISCONNECTED&quot;
+    )
+
+
+def forward_record(
+    row
+):
+    if not remote_connected:
+        return False
+
+    topic = (
+        f&quot;pkru/cloud/&quot;
+        f&quot;{row[&#x27;device_id&#x27;]}/data&quot;
+    )
+
+    payload = json.dumps(
+        build_forward_payload(
+            row
+        )
+    )
+
+    try:
+        info = remote_client.publish(
+            topic,
+            payload,
+            qos=1
+        )
+
+        info.wait_for_publish(
+            timeout=5
+        )
+
+        return info.is_published()
+
+    except Exception as error:
+        print(
+            f&quot;FORWARD ERROR: &quot;
+            f&quot;{error}&quot;
+        )
+
+        return False
+
+
+def forward_pending():
+    rows = get_pending_records(
+        limit=10
+    )
+
+    for row in rows:
+
+        if not remote_connected:
+            break
+
+        success = forward_record(
+            row
+        )
+
+        if success:
+            mark_sent(
+                row[&quot;id&quot;]
+            )
+
+            print(
+                f&quot;SENT &quot;
+                f&quot;id={row[&#x27;id&#x27;]}&quot;
+            )
+
+        else:
+            mark_retry(
+                row[&quot;id&quot;]
+            )
+
+            print(
+                f&quot;RETRY &quot;
+                f&quot;id={row[&#x27;id&#x27;]}&quot;
+            )
+
+            break
+
+
+def forward_worker():
+    while True:
+
+        try:
+            forward_pending()
+
+        except Exception as error:
+            print(
+                f&quot;WORKER ERROR: &quot;
+                f&quot;{error}&quot;
+            )
+
+        time.sleep(5)
+
+
+init_database()
+
+
+local_client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;store-forward-local&quot;
+)
+
+local_client.on_connect = (
+    on_local_connect
+)
+
+local_client.on_message = (
+    on_local_message
+)
+
+local_client.connect(
+    local_broker,
+    local_port,
+    60
+)
+
+local_client.loop_start()
+
+
+remote_client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;store-forward-remote&quot;
+)
+
+remote_client.on_connect = (
+    on_remote_connect
+)
+
+remote_client.on_disconnect = (
+    on_remote_disconnect
+)
+
+remote_client.reconnect_delay_set(
+    min_delay=1,
+    max_delay=30
+)
+
+try:
+    remote_client.connect_async(
+        remote_broker,
+        remote_port,
+        60
+    )
+
+    remote_client.loop_start()
+
+except Exception as error:
+    print(
+        f&quot;REMOTE START ERROR: &quot;
+        f&quot;{error}&quot;
+    )
+
+
+worker = threading.Thread(
+    target=forward_worker,
+    daemon=True
+)
+
+worker.start()
+
+
+print(
+    &quot;Store-and-Forward &quot;
+    &quot;Gateway started&quot;
+)
+
+
+try:
+    while True:
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    print(
+        &quot;Stopping Gateway&quot;
+    )
+
+    local_client.loop_stop()
+    remote_client.loop_stop()
+
+    local_client.disconnect()
+    remote_client.disconnect()</code></pre>
+<p>หมายเหตุ: ต้องเปลี่ยน</p>
+<pre class="language-text"><code>/home/piuser/...</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>BROKER_IP</code></pre>
+<p>ให้ตรงกับระบบที่ใช้จริง</p>
+<h2 id="23-49-ขั้นตอนทดสอบปกติ">23.49 ขั้นตอนทดสอบปกติ</h2>
+<p>บน Remote Broker เปิด</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/cloud/+/data&quot; \
+-v</code></pre>
+<p>บน Gateway Run</p>
+<pre class="language-bash"><code>python store_forward.py</code></pre>
+<p>ส่ง Sensor Data เข้า Local Broker</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Gateway ควรแสดง</p>
+<pre class="language-text"><code>STORED id=...
+SENT id=...</code></pre>
+<p>Remote Broker ควรได้รับ</p>
+<pre class="language-text"><code>pkru/cloud/001/data ...</code></pre>
+<h2 id="23-50-ตรวจสอบ-database-หลังส่งสำเร็จ">23.50 ตรวจสอบ Database หลังส่งสำเร็จ</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;SELECT id,device_id,status,retry_count,sent_at FROM queue;&quot;</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>SENT</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>1|001|SENT|0|...</code></pre>
+<h2 id="23-51-จำลอง-remote-failure">23.51 จำลอง Remote Failure</h2>
+<p>วิธีที่ชัดที่สุดคือหยุด Remote Broker บน Remote Pi</p>
+<pre class="language-bash"><code>sudo systemctl stop mosquitto</code></pre>
+<p>หรือทำให้ Gateway ติดต่อ Remote Broker ไม่ได้ จากนั้นส่งข้อมูลเข้า Local Broker</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:31,&quot;humi&quot;:71,&quot;light&quot;:1600}&#x27;</code></pre>
+<p>Gateway ต้องยัง</p>
+<pre class="language-text"><code>STORED</code></pre>
+<p>ข้อมูลได้</p>
+<h2 id="23-52-ตรวจสอบ-pending-ขณะ-offline">23.52 ตรวจสอบ PENDING ขณะ Offline</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;SELECT id,device_id,temp,status,retry_count FROM queue WHERE status=&#x27;PENDING&#x27;;&quot;</code></pre>
+<p>ต้องเห็น Record ใหม่เป็น</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>นี่คือหัวใจของ LAB</p>
+<pre class="language-text"><code>Remote Down</code></pre>
+<p>แต่</p>
+<pre class="language-text"><code>Local Data Collection</code></pre>
+<p>ยังทำงาน</p>
+<h2 id="23-53-ส่งข้อมูลหลาย-record-ขณะ-offline">23.53 ส่งข้อมูลหลาย Record ขณะ Offline</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>for temp in 30 31 32 33 34
+do
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp,\&quot;humi\&quot;:70,\&quot;light\&quot;:1500}&quot;
+
+    sleep 1
+done</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;SELECT id,device_id,temp,status FROM queue WHERE status=&#x27;PENDING&#x27;;&quot;</code></pre>
+<p>ควรมีหลาย Record</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<h2 id="23-54-remote-recovery">23.54 Remote Recovery</h2>
+<p>เปิด Remote Broker กลับ</p>
+<pre class="language-bash"><code>sudo systemctl start mosquitto</code></pre>
+<p>Gateway MQTT Client จะพยายาม Reconnect เมื่อเชื่อมต่อได้</p>
+<pre class="language-text"><code>REMOTE CONNECTED</code></pre>
+<p>Forward Worker จะเริ่มอ่าน</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>และส่งย้อนหลัง ผล</p>
+<pre class="language-text"><code>SENT id=...
+SENT id=...
+SENT id=...</code></pre>
+<h2 id="23-55-ตรวจสอบหลัง-recovery">23.55 ตรวจสอบหลัง Recovery</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sqlite3 store_forward.db \
+&quot;SELECT id,device_id,temp,status,retry_count FROM queue ORDER BY id;&quot;</code></pre>
+<p>Record ที่เคย</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>ควรกลายเป็น</p>
+<pre class="language-text"><code>SENT</code></pre>
+<p>หลัง Forward สำเร็จ</p>
+<h2 id="23-56-ตรวจสอบ-remote-data">23.56 ตรวจสอบ Remote Data</h2>
+<p>Remote Subscriber ควรได้รับข้อมูลย้อนหลัง เช่น</p>
+<pre class="language-text"><code>temp=30
+temp=31
+temp=32
+temp=33
+temp=34</code></pre>
+<p>ตามลำดับ Record เพราะ Query ใช้</p>
+<pre class="language-sql"><code>ORDER BY id</code></pre>
+<h2 id="23-57-store-and-forward-timeline">23.57 Store-and-Forward Timeline</h2>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>10:00 Internet OK
+   Data A → SENT
+
+10:01 Internet DOWN
+   Data B → PENDING
+
+10:02
+   Data C → PENDING
+
+10:03
+   Data D → PENDING
+
+10:04 Internet RECOVERED
+
+   Data B → SENT
+   Data C → SENT
+   Data D → SENT</code></pre>
+<p>ดังนั้นข้อมูลช่วง Network Failure ไม่สูญหาย</p>
+<h2 id="23-58-ทดสอบ-process-restart">23.58 ทดสอบ Process Restart</h2>
+<p>ขณะ Remote Broker Down ส่งข้อมูลหลาย Record ตรวจสอบ</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>จากนั้นหยุด Python</p>
+<pre class="language-bash"><code>Ctrl+C</code></pre>
+<p>แล้ว Run ใหม่</p>
+<pre class="language-bash"><code>python store_forward.py</code></pre>
+<p>ข้อมูลเดิมต้องยังอยู่</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>เพราะเก็บใน SQLite เมื่อ Remote Broker กลับมา ข้อมูลเหล่านั้นต้องถูก Forward ต่อ นี่คือข้อแตกต่างระหว่าง</p>
+<pre class="language-text"><code>Persistent Queue</code></pre>
+<p>กับ</p>
+<pre class="language-text"><code>Memory Queue</code></pre>
+<h2 id="23-59-ทดสอบ-raspberry-pi-reboot">23.59 ทดสอบ Raspberry Pi Reboot</h2>
+<p>ขณะมี</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>อยู่ใน Database Reboot</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot ถ้า Application ถูกจัดการด้วย systemd Service ต้อง Start ใหม่ จากนั้นเมื่อ Remote Broker Available Gateway ต้อง Forward Record ที่ค้างอยู่ นี่คือ</p>
+<pre class="language-text"><code>Reboot Recovery</code></pre>
+<h2 id="23-60-systemd-service">23.60 systemd Service</h2>
+<p>สร้าง</p>
+<pre class="language-bash"><code>sudo nano \
+/etc/systemd/system/store-forward.service</code></pre>
+<p>ใช้</p>
+<pre class="language-ini"><code>[Unit]
+Description=IoT Store and Forward Gateway
+After=network-online.target mosquitto.service
+Wants=network-online.target
+Requires=mosquitto.service
+
+[Service]
+Type=simple
+User=piuser
+WorkingDirectory=/home/piuser/iot-gateway
+ExecStart=/home/piuser/iot-gateway/venv/bin/python -u /home/piuser/iot-gateway/store_forward.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<p>เปลี่ยน</p>
+<pre class="language-text"><code>piuser</code></pre>
+<p>ให้ตรงกับ User จริง</p>
+<h2 id="23-61-enable-service">23.61 Enable Service</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sudo systemctl daemon-reload
+
+sudo systemctl enable --now \
+store-forward</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status \
+store-forward</code></pre>
+<p>ดู Log</p>
+<pre class="language-bash"><code>journalctl \
+-u store-forward \
+-f</code></pre>
+<h2 id="23-62-ตรวจสอบ-queue-statistics">23.62 ตรวจสอบ Queue Statistics</h2>
+<p>จำนวน Record ทั้งหมด</p>
+<pre class="language-sql"><code>SELECT COUNT(*)
+FROM queue;</code></pre>
+<p>จำนวน PENDING</p>
+<pre class="language-sql"><code>SELECT COUNT(*)
+FROM queue
+WHERE status = &#x27;PENDING&#x27;;</code></pre>
+<p>จำนวน SENT</p>
+<pre class="language-sql"><code>SELECT COUNT(*)
+FROM queue
+WHERE status = &#x27;SENT&#x27;;</code></pre>
+<p>จำนวน Retry</p>
+<pre class="language-sql"><code>SELECT SUM(retry_count)
+FROM queue;</code></pre>
+<h2 id="23-63-query-แบบสรุป">23.63 Query แบบสรุป</h2>
+<p>ใช้</p>
+<pre class="language-text"><code>SELECT
+    status,
+    COUNT(*) AS total
+FROM queue
+GROUP BY status;</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>PENDING|15
+SENT|1200</code></pre>
+<p>ช่วยให้ Gateway Monitor ได้ว่า</p>
+<pre class="language-text"><code>Backlog</code></pre>
+<p>กำลังเพิ่มขึ้นหรือไม่</p>
+<h2 id="23-64-queue-backlog">23.64 Queue Backlog</h2>
+<p>ถ้า Remote Down นาน</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<p>จะเพิ่มขึ้นเรื่อย ๆ ตัวอย่าง</p>
+<pre class="language-text"><code>10:00 → 10 PENDING
+11:00 → 500 PENDING
+12:00 → 1000 PENDING</code></pre>
+<p>เรียกว่า</p>
+<pre class="language-text"><code>Queue Backlog</code></pre>
+<p>Gateway ควร Monitor</p>
+<pre class="language-text"><code>Queue Length</code></pre>
+<p>เพราะ Storage มีขนาดจำกัด</p>
+<h2 id="23-65-disk-capacity">23.65 Disk Capacity</h2>
+<p>Store-and-Forward ไม่ได้หมายความว่าเก็บข้อมูลได้ไม่จำกัด ต้องพิจารณา</p>
+<pre class="language-text"><code>Sampling Rate
+Number of Devices
+Record Size
+Offline Duration
+Disk Capacity</code></pre>
+<p>ตัวอย่างแนวคิด</p>
+<pre class="language-text"><code>100 Devices
+   ×
+1 Message / 5 s
+   ×
+24 hours</code></pre>
+<p>จะมี Record จำนวนมาก ดังนั้นระบบจริงต้องมี</p>
+<pre class="language-text"><code>Retention Policy</code></pre>
+<h2 id="23-66-retention-policy">23.66 Retention Policy</h2>
+<p>หลังข้อมูลเป็น</p>
+<pre class="language-text"><code>SENT</code></pre>
+<p>นานพอ สามารถลบข้อมูลเก่า ตัวอย่าง</p>
+<pre class="language-sql"><code>DELETE FROM queue
+WHERE
+    status = &#x27;SENT&#x27;
+    AND sent_at &lt;
+        strftime(&#x27;%s&#x27;,&#x27;now&#x27;)
+        - 604800;</code></pre>
+<p>604800 วินาที คือประมาณ</p>
+<pre class="language-text"><code>7 days</code></pre>
+<p>หมายเหตุ ควรกำหนด Retention ตาม Requirement จริง ไม่ควรลบข้อมูลโดยไม่มี Policy</p>
+<h2 id="23-67-vacuum">23.67 VACUUM</h2>
+<p>SQLite Database อาจไม่คืน Disk Space ให้ File ทันทีหลัง DELETE สามารถใช้</p>
+<pre class="language-sql"><code>VACUUM;</code></pre>
+<p>เพื่อ Rebuild Database และลด File Size ในบางกรณี แต่</p>
+<pre class="language-sql"><code>VACUUM</code></pre>
+<p>ไม่ควรถูกเรียกบ่อยโดยไม่จำเป็น เพราะใช้ I/O และเวลา</p>
+<h2 id="23-68-index">23.68 Index</h2>
+<p>เมื่อ Queue ใหญ่ขึ้น Query</p>
+<pre class="language-sql"><code>WHERE status=&#x27;PENDING&#x27;
+ORDER BY id</code></pre>
+<p>จะถูกใช้บ่อย สามารถเพิ่ม Index</p>
+<pre class="language-sql"><code>CREATE INDEX IF NOT EXISTS
+idx_queue_status_id
+ON queue(status, id);</code></pre>
+<p>ช่วยให้ Query Pending Records มีประสิทธิภาพขึ้นเมื่อข้อมูลจำนวนมาก</p>
+<h2 id="23-69-retry-storm">23.69 Retry Storm</h2>
+<p>ถ้า Remote Down ไม่ควร Retry</p>
+<pre class="language-text"><code>หลายร้อยครั้งต่อวินาที</code></pre>
+<p>เพราะทำให้</p>
+<pre class="language-text"><code>CPU
+Network
+Log
+Remote Service</code></pre>
+<p>รับภาระโดยไม่จำเป็น LAB นี้ใช้</p>
+<pre class="language-text"><code>Worker Interval = 5 seconds</code></pre>
+<p>และ MQTT Reconnect Delay</p>
+<pre class="language-text"><code>1 → ... → 30 seconds</code></pre>
+<p>ระบบจริงอาจใช้</p>
+<pre class="language-text"><code>Exponential Backoff</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>1 s
+2 s
+4 s
+8 s
+16 s
+30 s</code></pre>
+<p>เพื่อลด Retry Storm</p>
+<h2 id="23-70-store-and-forward-ไม่เท่ากับ-backup">23.70 Store-and-Forward ไม่เท่ากับ Backup</h2>
+<p>SQLite Queue มีหน้าที่หลัก</p>
+<pre class="language-text"><code>Buffer Data During Failure</code></pre>
+<p>ไม่ใช่ Backup ทั้งระบบ ยังต้อง Backup</p>
+<pre class="language-text"><code>Database
+Configuration
+Python Application
+Node-RED Flow
+Mosquitto Configuration</code></pre>
+<p>แยกต่างหาก เรื่องนี้จะอยู่ใน</p>
+<pre class="language-text"><code>LAB 26 - Backup &amp; Recovery</code></pre>
+<h2 id="23-71-store-and-forward-ไม่ได้แก้ทุก-failure">23.71 Store-and-Forward ไม่ได้แก้ทุก Failure</h2>
+<p>ระบบนี้ช่วยกรณี</p>
+<pre class="language-text"><code>Remote Network Failure
+Internet Failure
+Remote Broker Failure
+Temporary Service Failure</code></pre>
+<p>แต่ถ้า</p>
+<pre class="language-text"><code>SD Card เสีย</code></pre>
+<p>SQLite ก็อาจหาย ถ้า</p>
+<pre class="language-text"><code>Raspberry Pi ถูกทำลาย</code></pre>
+<p>Local Buffer ก็อาจหาย ดังนั้น Reliability มีหลาย Layer</p>
+<pre class="language-text"><code>Memory
+  ↓
+Local Persistent Storage
+  ↓
+Remote Storage
+  ↓
+Backup</code></pre>
+<h2 id="23-72-qos-1-ไม่ได้หมายถึง-exactly-once">23.72 QoS 1 ไม่ได้หมายถึง Exactly Once</h2>
+<p>LAB ใช้</p>
+<pre class="language-text"><code>QoS 1</code></pre>
+<p>ซึ่งหมายถึง</p>
+<pre class="language-text"><code>At Least Once</code></pre>
+<p>ไม่ใช่</p>
+<pre class="language-text"><code>Exactly Once</code></pre>
+<p>ดังนั้นปลายทางควรเตรียมรับ</p>
+<pre class="language-text"><code>Duplicate</code></pre>
+<p>โดยใช้</p>
+<pre class="language-text"><code>message_id</code></pre>
+<p>หรือ Unique Identifier และออกแบบ Database ให้รองรับ</p>
+<pre class="language-text"><code>Idempotent Processing</code></pre>
+<h2 id="23-73-idempotency">23.73 Idempotency</h2>
+<p>Idempotent หมายถึง ถ้า Message เดียวกันถูกประมวลผลซ้ำ ผลสุดท้ายไม่ควรเสียหายหรือเกิด Record ซ้ำโดยไม่ตั้งใจ ตัวอย่าง Remote Database อาจใช้</p>
+<pre class="language-text"><code>gateway_id
+message_id</code></pre>
+<p>เป็น Unique Key ถ้า Message เดิมเข้าซ้ำ Database ไม่ INSERT ซ้ำ แนวคิดนี้สำคัญมากสำหรับระบบ Store-and-Forward</p>
+<h2 id="23-74-data-ordering">23.74 Data Ordering</h2>
+<p>LAB นี้ Forward ด้วย</p>
+<pre class="language-sql"><code>ORDER BY id</code></pre>
+<p>จึงพยายามส่งข้อมูลตามลำดับที่ Gateway Store แต่ใน Distributed System ไม่ควรสมมติว่าทุกกรณีจะรักษาลำดับได้สมบูรณ์ ดังนั้นแต่ละ Record ควรมี</p>
+<pre class="language-text"><code>timestamp</code></pre>
+<p>ของตัวเอง Application ปลายทางควรใช้ Timestamp ในการจัด Time-series Data</p>
+<h2 id="23-75-local-timestamp">23.75 Local Timestamp</h2>
+<p>ใน LAB นี้ใช้</p>
+<pre class="language-text"><code>Gateway Receive Time</code></pre>
+<p>จาก</p>
+<pre class="language-text"><code>time.time()</code></pre>
+<p>ข้อดี</p>
+<ul>
+<li>Gateway ควบคุมเวลาเดียว</li>
+<li>ไม่ต้องเชื่อเวลา ESP32 ทุกตัว</li>
+</ul>
+<p>แต่ระบบจริงอาจต้องแยก</p>
+<pre class="language-text"><code>sensor_timestamp</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>gateway_received_at</code></pre>
+<p>เพื่อทราบทั้ง</p>
+<pre class="language-text"><code>เวลาที่ Sensor วัด</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>เวลาที่ Gateway รับ</code></pre>
+<h2 id="23-76-monitoring-store-and-forward">23.76 Monitoring Store-and-Forward</h2>
+<p>Gateway ควรสามารถรายงานอย่างน้อย</p>
+<pre class="language-text"><code>Remote Status
+Pending Count
+Sent Count
+Retry Count</code></pre>
+<p>ตัวอย่าง Dashboard</p>
+<pre class="language-text"><code>Remote Broker
+OFFLINE
+
+Pending
+152
+
+Sent
+4,321
+
+Retries
+18</code></pre>
+<p>เมื่อ Network กลับมา</p>
+<pre class="language-text"><code>Remote Broker
+ONLINE
+
+Pending
+0
+
+Sent
+4,473</code></pre>
+<h2 id="23-77-architecture-ที่ดีขึ้น">23.77 Architecture ที่ดีขึ้น</h2>
+<pre class="language-text"><code>Sensors
+   │
+   ▼
+Gateway
+   │
+   ▼
+Validation
+   │
+   ▼
+Persistent Queue
+   │
+   ├───────────────┐
+   │               │
+   ▼               ▼
+Local Use      Remote Forward
+   │               │
+   ▼               ▼
+Dashboard        Cloud
+Control          Server
+SQLite</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>Remote Failure</code></pre>
+<p>ไม่ควรหยุด</p>
+<pre class="language-text"><code>Local Dashboard
+Local Control
+Local Data Collection</code></pre>
+<p>นี่คือหลักสำคัญของ</p>
+<pre class="language-text"><code>Offline-capable IoT</code></pre>
+<h2 id="23-78-offline-first-principle">23.78 Offline-first Principle</h2>
+<p>ระบบ IoT สำหรับงานจริงควรคิดว่า</p>
+<pre class="language-text"><code>Internet</code></pre>
+<p>เป็น Resource ที่อาจหายได้ ไม่ควรออกแบบว่า</p>
+<pre class="language-text"><code>Internet Down
+     =
+Entire System Down</code></pre>
+<p>Architecture ที่เหมาะสมกว่า</p>
+<pre class="language-text"><code>Local Operation
+      +
+Remote Synchronization</code></pre>
+<p>เมื่อ Internet หาย</p>
+<pre class="language-text"><code>Local Operation
+    → Continue</code></pre>
+<p>เมื่อ Internet กลับ</p>
+<pre class="language-text"><code>Remote Synchronization
+    → Resume</code></pre>
+<h2 id="23-79-แบบฝึกหัดที่-1-sqlite-queue">23.79 แบบฝึกหัดที่ 1 - SQLite Queue</h2>
+<p>สร้าง Table</p>
+<pre class="language-text"><code>queue</code></pre>
+<p>เพิ่ม Sensor Data 3 Record ตรวจสอบว่าเริ่มต้นเป็น</p>
+<pre class="language-text"><code>PENDING</code></pre>
+<h2 id="23-80-แบบฝึกหัดที่-2-mqtt-sqlite">23.80 แบบฝึกหัดที่ 2 - MQTT → SQLite</h2>
+<p>Subscribe</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>เมื่อได้รับข้อมูล ต้อง Store ลง SQLite ก่อน ตรวจสอบด้วย</p>
+<pre class="language-text"><code>SELECT</code></pre>
+<h2 id="23-81-แบบฝึกหัดที่-3-normal-forward">23.81 แบบฝึกหัดที่ 3 - Normal Forward</h2>
+<p>เปิด Remote Broker ส่ง Sensor Data ผลต้องเป็น</p>
+<pre class="language-text"><code>Store
+  ↓
+PENDING
+  ↓
+Forward
+  ↓
+SENT</code></pre>
+<h2 id="23-82-แบบฝึกหัดที่-4-remote-failure">23.82 แบบฝึกหัดที่ 4 - Remote Failure</h2>
+<p>หยุด Remote Broker ส่ง Sensor Data อย่างน้อย</p>
+<pre class="language-text"><code>10 Records</code></pre>
+<p>Local Gateway ต้องยังรับข้อมูลได้ Database ต้องมี</p>
+<pre class="language-text"><code>10 PENDING</code></pre>
+<p>โดยประมาณตามจำนวนข้อมูลที่ส่งในการทดสอบ</p>
+<h2 id="23-83-แบบฝึกหัดที่-5-recovery">23.83 แบบฝึกหัดที่ 5 - Recovery</h2>
+<p>เปิด Remote Broker กลับ Gateway ต้อง</p>
+<pre class="language-text"><code>Reconnect
+   ↓
+Read PENDING
+   ↓
+Forward
+   ↓
+Mark SENT</code></pre>
+<p>จน</p>
+<pre class="language-text"><code>Pending Count = 0</code></pre>
+<h2 id="23-84-แบบฝึกหัดที่-6-process-restart">23.84 แบบฝึกหัดที่ 6 - Process Restart</h2>
+<p>ขณะมี PENDING หยุด</p>
+<pre class="language-text"><code>store_forward.py</code></pre>
+<p>แล้วเปิดใหม่ PENDING Record ต้องยังอยู่ และสามารถ Forward ต่อได้</p>
+<h2 id="23-85-แบบฝึกหัดที่-7-reboot-recovery">23.85 แบบฝึกหัดที่ 7 - Reboot Recovery</h2>
+<p>ขณะมี PENDING Reboot Raspberry Pi</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot</p>
+<pre class="language-text"><code>store-forward.service</code></pre>
+<p>ต้อง Start เอง เมื่อ Remote กลับมา PENDING ต้องถูก Forward ต่อ</p>
+<h2 id="23-86-แบบฝึกหัดที่-8-duplicate-analysis">23.86 แบบฝึกหัดที่ 8 - Duplicate Analysis</h2>
+<p>อธิบายสถานการณ์</p>
+<pre class="language-text"><code>Remote receives message
+       ↓
+Gateway fails before mark SENT
+       ↓
+Gateway restarts
+       ↓
+Sends message again</code></pre>
+<p>ตอบว่า</p>
+<pre class="language-text"><code>ทำไม Duplicate จึงเกิดได้?</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>message_id</code></pre>
+<p>ช่วยอย่างไร?</p>
+<h2 id="23-87-งานส่ง-lab-23">23.87 งานส่ง LAB 23</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Architecture Diagram</li>
+</ol>
+<pre class="language-text"><code>   Sensor
+     ↓
+   Gateway
+     ↓
+   SQLite
+     ↓
+   Remote MQTT</code></pre>
+<ol>
+<li>Source Code</li>
+</ol>
+<pre class="language-text"><code>   store_forward.py</code></pre>
+<ol>
+<li>Database Schema</li>
+</ol>
+<pre class="language-text"><code>   .schema queue</code></pre>
+<ol>
+<li>Screenshot Normal Operation</li>
+</ol>
+<pre class="language-text"><code>   STORED
+   SENT</code></pre>
+<ol>
+<li>Screenshot Remote Failure</li>
+</ol>
+<pre class="language-text"><code>   Remote OFFLINE</code></pre>
+<ol>
+<li>Screenshot Database ขณะ Offline</li>
+</ol>
+<pre class="language-text"><code>   PENDING</code></pre>
+<ol>
+<li>มี Pending Data อย่างน้อยหลาย Record</li>
+</ol>
+<ol>
+<li>Screenshot หลัง Remote Recovery</li>
+</ol>
+<pre class="language-text"><code>   PENDING → SENT</code></pre>
+<ol>
+<li>Screenshot Remote Subscriber ได้รับข้อมูลย้อนหลัง</li>
+</ol>
+<ol>
+<li>Screenshot Process Restart แล้ว PENDING ยังอยู่</li>
+</ol>
+<ol>
+<li>Screenshot Reboot Recovery</li>
+</ol>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   systemctl status store-forward</code></pre>
+<ol>
+<li>Query แสดง</li>
+</ol>
+<pre class="language-text"><code>   PENDING Count
+   SENT Count
+   Retry Count</code></pre>
+<ol>
+<li>อธิบายความหมายของ</li>
+</ol>
+<pre class="language-text"><code>   Store-and-Forward
+   Persistent Buffer
+   PENDING
+   SENT
+   Retry
+   Backlog</code></pre>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   Memory Buffer</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   SQLite Persistent Buffer</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด</li>
+</ol>
+<pre class="language-text"><code>   QoS 1</code></pre>
+<p>อาจทำให้เกิด Duplicate</p>
+<ol>
+<li>อธิบายประโยชน์ของ</li>
+</ol>
+<pre class="language-text"><code>   message_id</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด</li>
+</ol>
+<pre class="language-text"><code>   Internet Down</code></pre>
+<p>ไม่ควรทำให้ Local IoT System หยุดทำงาน</p>
+<h2 id="23-88-checklist-ก่อนถือว่าผ่าน-lab">23.88 Checklist ก่อนถือว่าผ่าน LAB</h2>
+<pre class="language-text"><code>[ ] MQTT Data เข้า Gateway ได้
+
+[ ] Data ถูก Store ลง SQLite ก่อน Forward
+
+[ ] Record ใหม่เป็น PENDING
+
+[ ] Remote Online แล้ว Forward ได้
+
+[ ] Forward สำเร็จแล้วเป็น SENT
+
+[ ] Remote Down แล้วยัง Store Data ได้
+
+[ ] มีหลาย PENDING Record ระหว่าง Offline
+
+[ ] Remote กลับมาแล้วส่งย้อนหลังได้
+
+[ ] Process Restart แล้ว Queue ไม่หาย
+
+[ ] Raspberry Pi Reboot แล้ว Queue ไม่หาย
+
+[ ] systemd Start Application กลับมาได้
+
+[ ] Invalid Data ไม่ทำให้ Application Crash
+
+[ ] สามารถตรวจ Pending Count ได้</code></pre>
+<p>ถ้าผ่านทั้งหมด Gateway มีความสามารถ</p>
+<pre class="language-text"><code>Offline Store-and-Forward</code></pre>
+<p>ในระดับพื้นฐานแล้ว</p>
+<h2 id="23-89-สิ่งที่ต้องเข้าใจ">23.89 สิ่งที่ต้องเข้าใจ</h2>
+<p>ก่อน LAB 23</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Gateway
+   ↓
+Remote
+   X</code></pre>
+<p>อาจเกิด</p>
+<pre class="language-text"><code>Data Loss</code></pre>
+<p>หลัง LAB 23</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Gateway
+   ↓
+SQLite
+   ↓
+PENDING
+   │
+   ├── Remote Online
+   │       ↓
+   │      SENT
+   │
+   └── Remote Offline
+           ↓
+       Keep Data
+           ↓
+         Retry
+           ↓
+       Send Later</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>Network Failure</code></pre>
+<p>ไม่เท่ากับ</p>
+<pre class="language-text"><code>Data Loss</code></pre>
+<p>โดยอัตโนมัติอีกต่อไป</p>
+<h2 id="23-90-ความสัมพันธ์ของ-lab-20-23">23.90 ความสัมพันธ์ของ LAB 20–23</h2>
+<p>LAB 20</p>
+<pre class="language-text"><code>Python MQTT Application
+
+      ↓</code></pre>
+<p>LAB 21</p>
+<pre class="language-text"><code>systemd
+Auto Start / Restart
+
+      ↓</code></pre>
+<p>LAB 22</p>
+<pre class="language-text"><code>BLE / UDP / MQTT
+Protocol Gateway
+
+      ↓</code></pre>
+<p>LAB 23</p>
+<pre class="language-text"><code>Persistent Queue
+Store-and-Forward</code></pre>
+<p>เส้นทางคือ</p>
+<pre class="language-text"><code>Program Gateway
+      ↓
+Run Autonomously
+      ↓
+Connect Multiple Protocols
+      ↓
+Survive Network Failure</code></pre>
+<h2 id="23-91-architecture-หลัง-lab-23">23.91 Architecture หลัง LAB 23</h2>
+<pre class="language-text"><code>                  IoT NODES
+
+      BLE ────────┐
+                  │
+      UDP ────────┼────────────┐
+                  │            │
+      MQTT ───────┘            │
+                               ▼
+                     ┌─────────────────┐
+                     │ Raspberry Pi    │
+                     │ Edge Gateway    │
+                     │                 │
+                     │ Decode          │
+                     │ Validate        │
+                     │ Normalize       │
+                     │ Local Process   │
+                     └────────┬────────┘
+                              │
+                ┌─────────────┴─────────────┐
+                │                           │
+                ▼                           ▼
+         Local Services              SQLite Queue
+                │                           │
+       ┌────────┼────────┐                  │
+       ▼        ▼        ▼                  │
+    Node-RED  Control  Dashboard          PENDING
+                                            │
+                                            ▼
+                                     Forward Worker
+                                            │
+                                            ▼
+                                        Internet
+                                            │
+                                  ┌─────────┴─────────┐
+                                  │                   │
+                                 OK                 DOWN
+                                  │                   │
+                                  ▼                   ▼
+                               Remote             Keep Local
+                                  │                   │
+                                  ▼                   │
+                                SENT                  │
+                                                      │
+                                          Network Recovery
+                                                      │
+                                                      ▼
+                                                    Retry
+                                                      │
+                                                      ▼
+                                                    SENT</code></pre>
+<h2 id="23-92-จุดสำคัญที่สุดของ-lab">23.92 จุดสำคัญที่สุดของ LAB</h2>
+<p>Store-and-Forward ไม่ใช่เพียง</p>
+<pre class="language-text"><code>&quot;Internet ขาดแล้วเก็บข้อมูลไว้&quot;</code></pre>
+<p>แต่เป็นการออกแบบ Data Pipeline ให้มีสถานะชัดเจน</p>
+<pre class="language-text"><code>Receive
+   ↓
+Validate
+   ↓
+Persist
+   ↓
+PENDING
+   ↓
+Forward
+   ↓
+Confirm
+   ↓
+SENT</code></pre>
+<p>พร้อมรองรับ</p>
+<pre class="language-text"><code>Failure
+Retry
+Restart
+Reboot
+Backlog
+Duplicate</code></pre>
+<p>หลักการสำคัญคือ</p>
+<pre class="language-text"><code>Persist Before Forward</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Local Operation Must Continue</code></pre>
+<p>แม้ Remote Service ใช้งานไม่ได้ นี่ทำให้ Raspberry Pi Gateway เริ่มมีคุณสมบัติ</p>
+<pre class="language-text"><code>Autonomous
+Offline-capable
+Persistent
+Recoverable</code></pre>
+<p>มากขึ้นอย่างชัดเจน</p>
+<h2 id="เชื่อมไป-lab-24-mqtt-security">เชื่อมไป LAB 24 - MQTT Security</h2>
+<p>หลัง LAB 23 ระบบมีความสามารถมากขึ้น</p>
+<pre class="language-text"><code>Multi-device
+Automatic Control
+Device Monitoring
+Data Quality
+Python Gateway
+systemd
+Protocol Translation
+Store-and-Forward</code></pre>
+<p>แต่ MQTT Broker ยังต้องตอบคำถามสำคัญว่า</p>
+<pre class="language-text"><code>&quot;ใครสามารถเชื่อมต่อ Broker ได้?&quot;</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>&quot;แต่ละ Client สามารถอ่านหรือเขียน Topic ใดได้บ้าง?&quot;</code></pre>
+<p>ถ้า Broker เปิดกว้าง Client ที่เข้าถึง Network อาจ</p>
+<pre class="language-text"><code>Subscribe Sensor Data</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>Publish Command</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
+<p>โดยไม่ได้รับอนุญาต LAB 24 จะเพิ่ม</p>
+<pre class="language-text"><code>MQTT Authentication
+       +
+MQTT Authorization</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>MQTT Client
+     │
+     │ Username / Password
+     ▼
+  Mosquitto
+     │
+     ├── Authentication
+     │      Who are you?
+     │
+     └── ACL Authorization
+            What can you access?
+                │
+                ▼
+            MQTT Topics</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>sensor001</code></pre>
+<p>สามารถ</p>
+<pre class="language-text"><code>WRITE
+pkru/iot/001/data</code></pre>
+<p>แต่ไม่ควร</p>
+<pre class="language-text"><code>WRITE
+pkru/iot/002/data</code></pre>
+<p>และ Control Application อาจ</p>
+<pre class="language-text"><code>WRITE
+pkru/iot/+/cmd</code></pre>
+<p>ตาม Permission ที่กำหนด LAB 24 จึงจะเปลี่ยนระบบจาก</p>
+<pre class="language-text"><code>Functional MQTT System</code></pre>
+<p>ไปสู่</p>
+<pre class="language-text"><code>Authenticated and Access-controlled MQTT System</code></pre>
+    </main>
+  </div>
+</body>
+</html>

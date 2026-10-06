@@ -1,0 +1,2256 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 27 - Fault-Tolerant IoT Gateway</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="active" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-27-fault-tolerant-iot-gateway">LAB 27 - Fault-Tolerant IoT Gateway</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">ก่อนหน้า: LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="28-lab-28-integrated-iot-mini-project.html">ถัดไป: LAB 28 - Integrated IoT Mini Project</a></nav>
+<p>การออกแบบระบบ IoT ให้ตรวจพบความผิดปกติ ฟื้นตัว และทำงานต่อได้</p>
+<h2 id="27-1-แนวคิดของ-lab">27.1 แนวคิดของ LAB</h2>
+<p>LAB ก่อนหน้าได้สร้างความสามารถหลายส่วนแล้ว</p>
+<pre class="language-text"><code>LAB 18
+Device Status
+ONLINE / OFFLINE</code></pre>
+<pre class="language-text"><code>LAB 19
+Data Quality
+VALID / INVALID / STALE</code></pre>
+<pre class="language-text"><code>LAB 20
+Python MQTT Application</code></pre>
+<pre class="language-text"><code>LAB 21
+systemd Service
+Auto Start / Restart</code></pre>
+<pre class="language-text"><code>LAB 22
+IoT Gateway
+BLE / UDP / MQTT</code></pre>
+<pre class="language-text"><code>LAB 23
+Store-and-Forward
+Offline Buffer</code></pre>
+<pre class="language-text"><code>LAB 24
+MQTT Security
+Authentication / ACL</code></pre>
+<pre class="language-text"><code>LAB 25
+Remote Access
+Cloudflare Tunnel</code></pre>
+<pre class="language-text"><code>LAB 26
+Backup &amp; Recovery</code></pre>
+<p>LAB 27 จะนำแนวคิดเหล่านี้มารวมกันเพื่อสร้าง Fault-Tolerant IoT Gateway เป้าหมายไม่ใช่ทำให้ระบบ &quot;ไม่มีวันเสีย&quot; แต่ทำให้ระบบสามารถ</p>
+<pre class="language-text"><code>Detect
+   ↓
+Isolate
+   ↓
+Recover
+   ↓
+Continue Operation</code></pre>
+<p>เมื่อบาง Component เกิด Failure</p>
+<h2 id="27-2-fault-tolerance-คืออะไร">27.2 Fault Tolerance คืออะไร</h2>
+<p>ระบบทั่วไป:</p>
+<pre class="language-text"><code>Failure
+   ↓
+System Stops
+   ↓
+Administrator
+   ↓
+Manual Repair</code></pre>
+<p>ระบบ Fault-Tolerant:</p>
+<pre class="language-text"><code>Failure
+   ↓
+Detect
+   ↓
+Recover / Degrade Gracefully
+   ↓
+Continue Essential Operation</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>Wi-Fi หลุด
+    → reconnect</code></pre>
+<pre class="language-text"><code>MQTT Broker หาย
+    → reconnect / retry</code></pre>
+<pre class="language-text"><code>Internet หาย
+    → store locally</code></pre>
+<pre class="language-text"><code>Remote Server หาย
+    → queue data</code></pre>
+<pre class="language-text"><code>Python Process Crash
+    → systemd restart</code></pre>
+<pre class="language-text"><code>Sensor ไม่ส่งข้อมูล
+    → STALE</code></pre>
+<pre class="language-text"><code>Sensor ส่งข้อมูลผิด
+    → INVALID</code></pre>
+<pre class="language-text"><code>Device หาย
+    → OFFLINE</code></pre>
+<pre class="language-text"><code>ระบบ Reboot
+    → services auto-start</code></pre>
+<h2 id="27-3-วัตถุประสงค์">27.3 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>อธิบาย Fault, Error และ Failure เบื้องต้น</li>
+<li>ระบุ Failure Point ในระบบ IoT</li>
+<li>ตรวจจับ MQTT Disconnect</li>
+<li>ทำ MQTT Reconnect</li>
+<li>ใช้ Retry และ Backoff</li>
+<li>ตรวจ Device ONLINE/OFFLINE</li>
+<li>ตรวจ VALID/INVALID/STALE</li>
+<li>ป้องกัน Invalid Data จากการเข้าสู่ Control Logic</li>
+<li>ใช้ Store-and-Forward เมื่อปลายทางใช้งานไม่ได้</li>
+<li>ใช้ systemd Restart Policy</li>
+<li>ใช้ Watchdog/Health Check เบื้องต้น</li>
+<li>ออกแบบ Failsafe State</li>
+<li>ทดสอบ Failure Scenario</li>
+<li>ตรวจสอบ Recovery</li>
+<li>แยก Local Operation ออกจาก Internet Dependency</li>
+<li>เข้าใจ Single Point of Failure</li>
+<li>ประเมิน Recovery Time</li>
+<li>สร้าง Fault-Tolerance Test Matrix</li>
+</ul>
+<h2 id="27-4-fault-error-และ-failure">27.4 Fault, Error และ Failure</h2>
+<p>Fault คือสาเหตุของปัญหา ตัวอย่าง: สาย Sensor หลุด Error คือ State ภายในระบบที่ผิด ตัวอย่าง: temp = -99 Failure คือระบบไม่สามารถให้ Service ตามที่ต้องการ ตัวอย่าง: ระบบใช้ temp = -99 ไปสั่ง Actuator ผิด ตัวอย่าง:</p>
+<pre class="language-text"><code>Sensor disconnected
+       ↓
+     Fault
+       ↓
+temp = -99
+       ↓
+     Error
+       ↓
+Fan incorrectly controlled
+       ↓
+    Failure</code></pre>
+<p>ดังนั้น Data Validation จาก LAB 19 ช่วยหยุด Error ก่อนพัฒนาไปเป็น Failure</p>
+<h2 id="27-5-failure-model-ของระบบ">27.5 Failure Model ของระบบ</h2>
+<p>ระบบ IoT สามารถ Failure ได้หลาย Layer</p>
+<pre class="language-text"><code>Sensor Layer
+    ├── Sensor disconnected
+    ├── Invalid value
+    └── No update</code></pre>
+<pre class="language-text"><code>Device Layer
+    ├── ESP32 crash
+    ├── Power loss
+    └── Wi-Fi disconnect</code></pre>
+<pre class="language-text"><code>Network Layer
+    ├── AP failure
+    ├── Packet loss
+    ├── Wi-Fi failure
+    └── Internet failure</code></pre>
+<pre class="language-text"><code>Messaging Layer
+    ├── MQTT broker unavailable
+    ├── Authentication failure
+    └── Connection loss</code></pre>
+<pre class="language-text"><code>Gateway Layer
+    ├── Python crash
+    ├── Process hang
+    ├── Node-RED failure
+    └── Storage full</code></pre>
+<pre class="language-text"><code>Remote Layer
+    ├── Internet unavailable
+    ├── Cloud service unavailable
+    └── Cloudflare Tunnel unavailable</code></pre>
+<pre class="language-text"><code>Storage Layer
+    ├── SQLite failure
+    ├── Disk full
+    └── SD Card failure</code></pre>
+<h2 id="27-6-fault-tolerant-architecture">27.6 Fault-Tolerant Architecture</h2>
+<pre class="language-text"><code>                     INTERNET
+                        │
+                        ▼
+                 Remote Services
+                        ▲
+                        │
+                 Store-and-Forward
+                        │
+┌─────────────────────────────────────────────┐
+│          RASPBERRY PI IoT GATEWAY           │
+│                                             │
+│  Mosquitto                                  │
+│      │                                      │
+│      ▼                                      │
+│  Python Gateway                             │
+│      │                                      │
+│      ├── Validation                         │
+│      ├── Device Status                      │
+│      ├── Retry                              │
+│      ├── Reconnect                          │
+│      ├── Rule Processing                    │
+│      ├── Failsafe                           │
+│      └── Health Monitoring                  │
+│                                             │
+│  SQLite                                     │
+│      └── Offline Queue                      │
+│                                             │
+│  systemd                                    │
+│      ├── Auto Start                         │
+│      └── Auto Restart                       │
+│                                             │
+└───────────────────┬─────────────────────────┘
+                    │
+                  MQTT
+                    │
+          ┌─────────┼─────────┐
+          ▼         ▼         ▼
+       ESP32-001 ESP32-002 ESP32-003
+          │         │         │
+        Sensor    Sensor    Sensor</code></pre>
+<h2 id="27-7-หลักสำคัญของ-lab-27">27.7 หลักสำคัญของ LAB 27</h2>
+<p>Fault Tolerance ไม่ใช่ Feature ตัวเดียว แต่เกิดจากหลาย Mechanism ทำงานร่วมกัน</p>
+<pre class="language-text"><code>Detection
+    +
+Validation
+    +
+Timeout
+    +
+Retry
+    +
+Reconnect
+    +
+Local Buffer
+    +
+Failsafe
+    +
+Process Restart
+    +
+Recovery Verification</code></pre>
+<h2 id="27-8-failure-scenario-1-invalid-sensor-data">27.8 Failure Scenario 1 - Invalid Sensor Data</h2>
+<p>ส่งข้อมูลปกติ:</p>
+<pre class="language-bash"><code>mosquitto_pub \
+-h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผล: VALID ส่งข้อมูลผิด:</p>
+<pre class="language-bash"><code>mosquitto_pub \
+-h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผล: INVALID สิ่งสำคัญ:</p>
+<pre class="language-text"><code>INVALID
+   ↓
+Reject
+   ↓
+DO NOT CONTROL ACTUATOR</code></pre>
+<p>ไม่ควรเป็น</p>
+<pre class="language-text"><code>INVALID
+   ↓
+Rule
+   ↓
+Actuator</code></pre>
+<h2 id="27-9-safe-processing-pipeline">27.9 Safe Processing Pipeline</h2>
+<pre class="language-text"><code>Sensor
+   ↓
+MQTT
+   ↓
+JSON Parsing
+   ↓
+Validation
+   ↓
+Data Quality
+   │
+   ├── VALID
+   │      ↓
+   │     Rule
+   │      ↓
+   │    Control
+   │
+   ├── INVALID
+   │      ↓
+   │    Reject
+   │      ↓
+   │    Alert
+   │
+   └── STALE
+          ↓
+       Failsafe</code></pre>
+<p>หลักการ:</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Validate
+   ↓
+Process
+   ↓
+Decide
+   ↓
+Control</code></pre>
+<p>ไม่ใช่</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Control</code></pre>
+<h2 id="27-10-failure-scenario-2-stale-data">27.10 Failure Scenario 2 - Stale Data</h2>
+<p>สมมติ Sensor ส่งทุก 5 seconds กำหนด stale_timeout = 15 seconds ถ้าไม่มีข้อมูลใหม่เกิน 15 seconds เปลี่ยนสถานะ</p>
+<pre class="language-text"><code>VALID
+   ↓
+STALE</code></pre>
+<p>ตัวอย่าง: 08:00:00 data received 08:00:05 data received 08:00:10 data received หลังจากนั้น Sensor หยุด</p>
+<pre class="language-text"><code>08:00:25+</code></pre>
+<p>Data Quality: STALE ค่าล่าสุดอาจยังเป็น temp = 32 แต่ไม่ควรถือว่าเป็น Current Trusted Value</p>
+<h2 id="27-11-last-value-current-value">27.11 Last Value ≠ Current Value</h2>
+<p>Dashboard อาจยังแสดง 32 °C แต่ Sensor ไม่ส่งข้อมูลมา 5 นาทีแล้ว ดังนั้น</p>
+<pre class="language-text"><code>Value Exists
+    ≠
+Data Is Current</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Last Value
+    ≠
+Trusted Current Value</code></pre>
+<p>ระบบต้องเก็บ</p>
+<pre class="language-text"><code>value
+timestamp
+quality</code></pre>
+<p>ร่วมกัน</p>
+<h2 id="27-12-failure-scenario-3-device-offline">27.12 Failure Scenario 3 - Device Offline</h2>
+<p>จาก LAB 18 ใช้</p>
+<pre class="language-text"><code>Heartbeat
++
+LWT
++
+Timeout</code></pre>
+<p>ตัวอย่าง Device ส่ง pkru/iot/001/status payload: ONLINE ทุก 5 วินาที ถ้าไม่มี Heartbeat เกิน 15 วินาที ระบบกำหนด OFFLINE</p>
+<h2 id="27-13-availability-กับ-data-quality-ต้องแยกกัน">27.13 Availability กับ Data Quality ต้องแยกกัน</h2>
+<p>Device Status:</p>
+<pre class="language-text"><code>ONLINE
+OFFLINE</code></pre>
+<p>Data Quality:</p>
+<pre class="language-text"><code>VALID
+INVALID
+STALE</code></pre>
+<p>ตัวอย่างสถานะที่เป็นไปได้: Device 001</p>
+<pre class="language-text"><code>ONLINE
+VALID</code></pre>
+<p>Device 002</p>
+<pre class="language-text"><code>ONLINE
+INVALID</code></pre>
+<p>Device 003</p>
+<pre class="language-text"><code>ONLINE
+STALE</code></pre>
+<p>Device 004</p>
+<pre class="language-text"><code>OFFLINE
+STALE</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>ONLINE
+   ≠
+VALID</code></pre>
+<h2 id="27-14-failure-scenario-4-python-process-crash">27.14 Failure Scenario 4 - Python Process Crash</h2>
+<p>ตรวจ Service:</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>หา PID:</p>
+<pre class="language-bash"><code>systemctl show \
+-p MainPID \
+--value \
+iot-gateway</code></pre>
+<p>สมมติได้: 1234 จำลอง Crash:</p>
+<pre class="language-bash"><code>sudo kill -9 1234</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ถ้า LAB 21 ตั้ง</p>
+<pre class="language-ini"><code>Restart=on-failure</code></pre>
+<p>systemd ควร Start Process ใหม่</p>
+<h2 id="27-15-ตรวจ-log-หลัง-process-crash">27.15 ตรวจ Log หลัง Process Crash</h2>
+<p>ใช้:</p>
+<pre class="language-bash"><code>journalctl \
+-u iot-gateway \
+-n 50 \
+--no-pager</code></pre>
+<p>หรือดูแบบ Real-time:</p>
+<pre class="language-bash"><code>journalctl \
+-u iot-gateway \
+-f</code></pre>
+<p>ควรเห็นลักษณะ:</p>
+<pre class="language-text"><code>Process terminated
+    ↓
+Restart scheduled
+    ↓
+Service started</code></pre>
+<h2 id="27-16-systemd-restart-policy">27.16 systemd Restart Policy</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-ini"><code>[Service]
+Type=simple
+ExecStart=/home/piuser/iot-gateway/venv/bin/python \
+-u \
+/home/piuser/iot-gateway/gateway.py
+Restart=on-failure
+RestartSec=5</code></pre>
+<p>ความหมาย:</p>
+<pre class="language-text"><code>Process Crash
+    ↓
+Wait 5 seconds
+    ↓
+Restart</code></pre>
+<h2 id="27-17-on-failure-vs-always">27.17 on-failure vs always</h2>
+<pre class="language-ini"><code>Restart=on-failure</code></pre>
+<p>เหมาะกับกรณี Process</p>
+<pre class="language-text"><code>Crash
+Non-zero exit
+Signal termination</code></pre>
+<pre class="language-ini"><code>Restart=always</code></pre>
+<p>จะพยายาม Restart หลัง Process Exit โดยทั่วไปด้วย สำหรับ LAB นี้ใช้</p>
+<pre class="language-ini"><code>Restart=on-failure</code></pre>
+<p>เป็น Baseline</p>
+<h2 id="27-18-manual-stop-ไม่ใช่-failure">27.18 Manual Stop ไม่ใช่ Failure</h2>
+<p>ถ้าใช้:</p>
+<pre class="language-bash"><code>sudo systemctl stop iot-gateway</code></pre>
+<p>systemd จะถือว่า Administrator ตั้งใจ Stop จึงไม่ควรใช้</p>
+<pre class="language-bash"><code>systemctl stop</code></pre>
+<p>เพื่อจำลอง Process Crash ให้ใช้:</p>
+<pre class="language-bash"><code>sudo kill -9 PID</code></pre>
+<p>สำหรับ Failure Test</p>
+<h2 id="27-19-failure-scenario-5-mqtt-broker-down">27.19 Failure Scenario 5 - MQTT Broker Down</h2>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<p>หยุด Broker:</p>
+<pre class="language-bash"><code>sudo systemctl stop mosquitto</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>Python Gateway
+       ↓
+MQTT Connection Lost</code></pre>
+<p>Application ต้องไม่ Crash อย่างควบคุมไม่ได้ ควร</p>
+<pre class="language-text"><code>Detect Disconnect
+      ↓
+Wait
+      ↓
+Reconnect</code></pre>
+<h2 id="27-20-mqtt-disconnect-callback">27.20 MQTT Disconnect Callback</h2>
+<p>แนวคิด Python:</p>
+<pre class="language-python"><code>def on_disconnect(
+    client,
+    userdata,
+    disconnect_flags,
+    reason_code,
+    properties
+):
+    print(
+        f&quot;MQTT disconnected: {reason_code}&quot;
+    )</code></pre>
+<p>กำหนด:</p>
+<pre class="language-python"><code>client.on_disconnect = on_disconnect</code></pre>
+<p>ใช้เพื่อ Detect ว่า MQTT Connection หาย</p>
+<h2 id="27-21-mqtt-reconnect-delay">27.21 MQTT Reconnect Delay</h2>
+<p>Paho MQTT สามารถกำหนด Reconnect Delay ได้ ตัวอย่าง:</p>
+<pre class="language-python"><code>client.reconnect_delay_set(
+    min_delay=1,
+    max_delay=30
+)</code></pre>
+<p>แนวคิด:</p>
+<pre class="language-text"><code>Failure #1
+    ↓
+wait 1 sec</code></pre>
+<pre class="language-text"><code>Failure #2
+    ↓
+wait longer</code></pre>
+<p>... สูงสุดประมาณ 30 sec ช่วยลดการ Reconnect ถี่เกินไป</p>
+<h2 id="27-22-ทำไมไม่-retry-ทุก-0-1-วินาที">27.22 ทำไมไม่ Retry ทุก 0.1 วินาที</h2>
+<p>ถ้ามี Device 1,000 ตัว และ Broker หาย ทุก Device Retry อย่างรวดเร็ว จะเกิด Retry Storm ดังนั้นควรใช้ Backoff เช่น</p>
+<pre class="language-text"><code>1 sec
+2 sec
+4 sec
+8 sec
+16 sec
+30 sec</code></pre>
+<p>แทน</p>
+<pre class="language-text"><code>0.1
+0.1
+0.1
+0.1
+...</code></pre>
+<h2 id="27-23-exponential-backoff">27.23 Exponential Backoff</h2>
+<p>แนวคิด:</p>
+<pre class="language-python"><code>delay = min(
+    base_delay * 2^attempt,
+    max_delay
+)</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>Attempt 0 → 1 sec</code></pre>
+<pre class="language-text"><code>Attempt 1 → 2 sec</code></pre>
+<pre class="language-text"><code>Attempt 2 → 4 sec</code></pre>
+<pre class="language-text"><code>Attempt 3 → 8 sec</code></pre>
+<pre class="language-text"><code>Attempt 4 → 16 sec</code></pre>
+<pre class="language-text"><code>Attempt 5 → 30 sec</code></pre>
+<pre class="language-text"><code>Attempt 6 → 30 sec</code></pre>
+<p>ระบบจริงอาจเพิ่ม Random Jitter เพื่อลดการ Retry พร้อมกันจำนวนมาก</p>
+<h2 id="27-24-failure-scenario-6-broker-recovery">27.24 Failure Scenario 6 - Broker Recovery</h2>
+<p>หลังหยุด Mosquitto:</p>
+<pre class="language-bash"><code>sudo systemctl stop mosquitto</code></pre>
+<p>รอประมาณ 10 วินาที เปิดกลับ:</p>
+<pre class="language-bash"><code>sudo systemctl start mosquitto</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>journalctl \
+-u iot-gateway \
+-f</code></pre>
+<p>Gateway ควร</p>
+<pre class="language-text"><code>Detect
+   ↓
+Reconnect
+   ↓
+Subscribe Again
+   ↓
+Continue Processing</code></pre>
+<h2 id="27-25-subscribe-หลัง-reconnect">27.25 Subscribe หลัง Reconnect</h2>
+<p>ควร Subscribe ใน on_connect() ตัวอย่าง:</p>
+<pre class="language-python"><code>def on_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    print(
+        f&quot;MQTT connected: {reason_code}&quot;
+    )</code></pre>
+<pre class="language-python"><code>    client.subscribe(
+        &quot;pkru/iot/+/data&quot;
+    )</code></pre>
+<pre class="language-python"><code>    client.subscribe(
+        &quot;pkru/iot/+/status&quot;
+    )</code></pre>
+<p>ข้อดีคือทุกครั้งที่ Reconnect Subscription จะถูกสร้างใหม่</p>
+<h2 id="27-26-failure-scenario-7-internet-down">27.26 Failure Scenario 7 - Internet Down</h2>
+<p>Architecture:</p>
+<pre class="language-text"><code>ESP32
+   ↓
+Local MQTT
+   ↓
+Raspberry Pi
+   ↓
+Internet
+   X
+Remote Service</code></pre>
+<p>Internet หาย ไม่ควรทำให้</p>
+<pre class="language-text"><code>Local MQTT
+Local Control
+Local SQLite</code></pre>
+<p>หยุด</p>
+<h2 id="27-27-local-first-architecture">27.27 Local-First Architecture</h2>
+<p>Internet DOWN</p>
+<p>X</p>
+<pre class="language-text"><code>┌────────────────────────────┐
+│        LOCAL SYSTEM        │
+│                            │
+│ ESP32                      │
+│   ↓                        │
+│ MQTT                       │
+│   ↓                        │
+│ Gateway                    │
+│   ├── Validation           │
+│   ├── Rule                 │
+│   ├── Control              │
+│   └── SQLite               │
+│                            │
+└────────────────────────────┘</code></pre>
+<p>ระบบยังทำงาน หลักสำคัญ:</p>
+<pre class="language-text"><code>Internet Dependency
+       ≠
+Local Operation Dependency</code></pre>
+<h2 id="27-28-store-and-forward">27.28 Store-and-Forward</h2>
+<p>จาก LAB 23 ถ้า Remote Destination ใช้งานไม่ได้:</p>
+<pre class="language-text"><code>Data
+   ↓
+SQLite Queue
+   ↓
+PENDING</code></pre>
+<p>เมื่อ Remote Destination กลับมา:</p>
+<pre class="language-text"><code>PENDING
+   ↓
+Retry
+   ↓
+SENT</code></pre>
+<p>ดังนั้น Internet Failure ไม่ทำให้ข้อมูลสูญหายทันที</p>
+<h2 id="27-29-failure-scenario-8-remote-service-down">27.29 Failure Scenario 8 - Remote Service Down</h2>
+<p>สมมติ Internet ยังทำงาน แต่ Remote Server ไม่ทำงาน ไม่ควร Drop Data ควร:</p>
+<pre class="language-text"><code>Send
+   ↓
+Failed
+   ↓
+Store Locally
+   ↓
+PENDING
+   ↓
+Retry Later</code></pre>
+<h2 id="27-30-retry-ต้องมีขีดจำกัด">27.30 Retry ต้องมีขีดจำกัด</h2>
+<p>การ Retry ตลอดไปแบบถี่ ๆ อาจทำให้</p>
+<pre class="language-text"><code>CPU Load
+Network Load
+Log Growth</code></pre>
+<p>เพิ่มขึ้น จึงควรมี</p>
+<pre class="language-text"><code>Retry Interval
+Backoff
+Maximum Delay
+Logging</code></pre>
+<p>และในบาง Application อาจต้องมี Maximum Retry Count ขึ้นอยู่กับ Requirement</p>
+<h2 id="27-31-failure-scenario-9-raspberry-pi-reboot">27.31 Failure Scenario 9 - Raspberry Pi Reboot</h2>
+<p>ใช้:</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<pre class="language-bash"><code>systemctl status nodered</code></pre>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<pre class="language-bash"><code>systemctl status cloudflared</code></pre>
+<p>ทุก Service ที่จำเป็นควรกลับมาทำงานโดยไม่ต้อง Run ด้วยมือ</p>
+<h2 id="27-32-boot-recovery">27.32 Boot Recovery</h2>
+<p>Architecture:</p>
+<pre class="language-text"><code>Power ON
+   ↓
+Linux Boot
+   ↓
+systemd
+   ↓
+Mosquitto
+   ↓
+Python Gateway
+   ↓
+Node-RED
+   ↓
+cloudflared
+   ↓
+System Operational</code></pre>
+<p>นี่คือ Automatic Recovery after Reboot</p>
+<h2 id="27-33-recovery-dependency">27.33 Recovery Dependency</h2>
+<p>Service บางตัวขึ้นกับ Service อื่น เช่น:</p>
+<pre class="language-text"><code>Python Gateway
+      ↓
+Mosquitto</code></pre>
+<p>แต่ After=mosquitto.service หมายถึง Startup Ordering ไม่ได้หมายความว่า MQTT Broker จะพร้อมรับ Connection ทุกสถานการณ์ ดังนั้น Application ยังต้องมี Reconnect Logic</p>
+<h2 id="27-34-systemd-ไม่แทน-application-recovery">27.34 systemd ไม่แทน Application Recovery</h2>
+<p>systemd ช่วย:</p>
+<pre class="language-text"><code>Process Crash
+    ↓
+Restart Process</code></pre>
+<p>แต่ถ้า Process ยัง Running แต่ MQTT Connection หาย systemd อาจไม่เห็นว่าเป็น Failure ดังนั้นต้องมีทั้ง</p>
+<pre class="language-text"><code>systemd Recovery
+       +
+Application Recovery</code></pre>
+<h2 id="27-35-process-alive-service-healthy">27.35 Process Alive ≠ Service Healthy</h2>
+<p>ตัวอย่าง: Python Process Running แต่ MQTT disconnected ดังนั้น:</p>
+<pre class="language-text"><code>Process Alive
+    ≠
+Application Healthy</code></pre>
+<p>นี่นำไปสู่แนวคิด Health Check</p>
+<h2 id="27-36-health-state">27.36 Health State</h2>
+<p>สามารถกำหนด Health ของ Gateway จากหลาย Component ตัวอย่าง:</p>
+<pre class="language-text"><code>MQTT_CONNECTED
+DATABASE_OK
+LAST_SENSOR_DATA
+REMOTE_AVAILABLE</code></pre>
+<p>แล้วสร้างสถานะ:</p>
+<pre class="language-text"><code>HEALTHY
+DEGRADED
+FAILED</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>MQTT = OK
+SQLite = OK
+Internet = DOWN</code></pre>
+<p>ผล: DEGRADED เพราะ Local Operation ยังทำงาน</p>
+<h2 id="27-37-healthy-degraded-failed">27.37 HEALTHY / DEGRADED / FAILED</h2>
+<p>HEALTHY ทุก Critical Component ทำงาน DEGRADED บาง Component มีปัญหา แต่ Essential Service ยังทำงาน FAILED Essential Service ไม่สามารถทำงานได้ ตัวอย่าง:</p>
+<pre class="language-text"><code>Internet Down
+Local MQTT OK
+Local Control OK</code></pre>
+<pre class="language-text"><code>→ DEGRADED</code></pre>
+<pre class="language-text"><code>Mosquitto Down
+Control requires MQTT</code></pre>
+<pre class="language-text"><code>→ FAILED หรือ DEGRADED</code></pre>
+<p>ขึ้นกับ Requirement ของระบบ</p>
+<h2 id="27-38-failsafe">27.38 Failsafe</h2>
+<p>เมื่อข้อมูลที่ใช้ Control ไม่เชื่อถือได้ ระบบต้องตัดสินใจว่า Actuator ควรทำอะไร ตัวอย่าง: Temperature Sensor STALE ทางเลือก:</p>
+<ol>
+<li>Keep Last State</li>
+</ol>
+<ol>
+<li>Turn OFF</li>
+</ol>
+<ol>
+<li>Turn ON</li>
+</ol>
+<ol>
+<li>Switch to Safe Mode</li>
+</ol>
+<p>ไม่มีคำตอบเดียวสำหรับทุกระบบ Failsafe ต้องกำหนดจาก</p>
+<pre class="language-text"><code>Physical System
+Risk
+Application Requirement</code></pre>
+<h2 id="27-39-ตัวอย่าง-failsafe-fan">27.39 ตัวอย่าง Failsafe Fan</h2>
+<p>สมมติ Fan ใช้ระบายความร้อนอุปกรณ์ ถ้า Temperature Sensor หาย การ Turn Fan OFF อาจไม่ปลอดภัย อาจเลือก</p>
+<pre class="language-text"><code>Sensor STALE
+      ↓
+Fan ON</code></pre>
+<p>แต่ถ้า Actuator เป็น Water Pump การเปิด Pump ต่อเนื่องอาจสร้างความเสียหาย ดังนั้น:</p>
+<pre class="language-text"><code>Failsafe State
+      ≠
+Always OFF</code></pre>
+<p>ต้องออกแบบตาม Physical Process</p>
+<h2 id="27-40-commanded-state-actual-state">27.40 Commanded State ≠ Actual State</h2>
+<p>Python ส่ง: ON ไม่ได้พิสูจน์ว่า Fan เปิดจริง ดังนั้น:</p>
+<pre class="language-text"><code>Command
+   ↓
+Actuator
+   ↓
+Feedback
+   ↓
+Verify</code></pre>
+<p>ระบบที่แข็งแรงกว่าควรมี</p>
+<pre class="language-text"><code>Commanded State
+      +
+Actual State</code></pre>
+<p>ตัวอย่าง: pkru/iot/001/cmd ON และ Device Report: pkru/iot/001/state ON</p>
+<h2 id="27-41-command-verification">27.41 Command Verification</h2>
+<p>Architecture:</p>
+<pre class="language-text"><code>Gateway
+   │
+   │ ON
+   ▼
+ESP32
+   │
+   │ actual state
+   ▼
+Gateway</code></pre>
+<p>ถ้า: Commanded = ON Actual = OFF ระบบสามารถ Detect Control Failure ได้</p>
+<h2 id="27-42-watchdog-concept">27.42 Watchdog Concept</h2>
+<p>Watchdog ใช้ตรวจว่า Software ยังทำงานตามที่คาดหรือไม่ แนวคิด:</p>
+<pre class="language-text"><code>Application
+    ↓
+Heartbeat
+    ↓
+Watchdog</code></pre>
+<p>ถ้าไม่มี Heartbeat ภายใน Timeout: Recovery Action เช่น: Restart Process</p>
+<h2 id="27-43-systemd-watchdog">27.43 systemd Watchdog</h2>
+<p>systemd รองรับ Watchdog สำหรับ Service ที่ Application รองรับ notification protocol ของ systemd Concept:</p>
+<pre class="language-text"><code>Python Application
+      ↓
+Watchdog Notification
+      ↓
+systemd</code></pre>
+<p>ถ้า Notification หาย:</p>
+<pre class="language-text"><code>systemd
+   ↓
+ถือว่า Service มีปัญหา
+   ↓
+Restart</code></pre>
+<p>แต่ต้องเขียน Application ให้รองรับอย่างถูกต้อง สำหรับ LAB 27 Core ใช้</p>
+<pre class="language-ini"><code>Health Monitoring
++
+Restart=on-failure</code></pre>
+<p>ก่อน systemd Watchdog จริงให้เป็น Advanced Exercise</p>
+<h2 id="27-44-application-heartbeat">27.44 Application Heartbeat</h2>
+<p>วิธีง่ายสำหรับ LAB: Python Gateway Publish pkru/gateway/status เช่นทุก 10 วินาที:</p>
+<pre class="language-json"><code>{
+  &quot;status&quot;:&quot;ONLINE&quot;
+}</code></pre>
+<p>หรือเพิ่ม:</p>
+<pre class="language-json"><code>{
+  &quot;status&quot;:&quot;ONLINE&quot;,
+  &quot;mqtt&quot;:true,
+  &quot;database&quot;:true
+}</code></pre>
+<p>ทำให้ Node-RED ตรวจ Gateway Health ได้</p>
+<h2 id="27-45-gateway-status-topic">27.45 Gateway Status Topic</h2>
+<p>แนะนำ: pkru/gateway/status ไม่ใช้ pkru/iot/001/status เพราะ 001 หมายถึง IoT Device Gateway เป็น Component คนละประเภท</p>
+<h2 id="27-46-health-payload">27.46 Health Payload</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-json"><code>{
+  &quot;status&quot;:&quot;HEALTHY&quot;,
+  &quot;mqtt&quot;:true,
+  &quot;database&quot;:true,
+  &quot;internet&quot;:true
+}</code></pre>
+<p>Internet Down:</p>
+<pre class="language-json"><code>{
+  &quot;status&quot;:&quot;DEGRADED&quot;,
+  &quot;mqtt&quot;:true,
+  &quot;database&quot;:true,
+  &quot;internet&quot;:false
+}</code></pre>
+<h2 id="27-47-อย่าใช้-internet-เป็น-health-หลักของ-local-gateway">27.47 อย่าใช้ Internet เป็น Health หลักของ Local Gateway</h2>
+<p>ถ้า Internet หาย แต่</p>
+<pre class="language-text"><code>MQTT Local
+SQLite
+Automatic Control</code></pre>
+<p>ยังทำงาน Gateway ไม่ควรถูกตีความว่า FAILED อาจเป็น DEGRADED นี่คือแนวคิด Graceful Degradation</p>
+<h2 id="27-48-graceful-degradation">27.48 Graceful Degradation</h2>
+<p>ระบบไม่จำเป็นต้องมี Function ครบ 100% ตลอดเวลา แต่ควรรักษา Essential Functions ตัวอย่าง: Internet Failure Unavailable:</p>
+<pre class="language-text"><code>Remote Dashboard
+Cloud Upload
+Cloudflare SSH</code></pre>
+<p>Still Available:</p>
+<pre class="language-text"><code>Local MQTT
+Local Dashboard
+Local Database
+Automatic Control</code></pre>
+<p>ผล: DEGRADED แต่ยัง Operational</p>
+<h2 id="27-49-single-point-of-failure">27.49 Single Point of Failure</h2>
+<p>Single Point of Failure หรือ SPOF คือ Component ตัวเดียวที่เสียแล้วทำให้ระบบส่วนสำคัญหยุด ตัวอย่าง Architecture:</p>
+<pre class="language-text"><code>ESP32
+  ↓
+AP
+  ↓
+Raspberry Pi</code></pre>
+<p>ถ้า AP ตัวเดียวเสีย Communication ทั้งระบบอาจหยุด ดังนั้น AP เป็น Potential SPOF</p>
+<h2 id="27-50-raspberry-pi-เป็น-spof-หรือไม่">27.50 Raspberry Pi เป็น SPOF หรือไม่</h2>
+<p>ถ้า Architecture เป็น</p>
+<pre class="language-text"><code>ทุก Device
+    ↓
+Raspberry Pi
+    ↓
+Processing
+    ↓
+Control</code></pre>
+<p>และมี Raspberry Pi ตัวเดียว Pi อาจเป็น Single Point of Failure LAB 26 ช่วยเรื่อง Recovery แต่ไม่ได้ทำให้ Pi มี High Availability ต้องแยกคำว่า Fault Recovery กับ Redundancy</p>
+<h2 id="27-51-fault-tolerance-vs-redundancy">27.51 Fault Tolerance vs Redundancy</h2>
+<p>Fault Tolerance Mechanisms:</p>
+<pre class="language-text"><code>Retry
+Reconnect
+Restart
+Store-and-Forward
+Failsafe</code></pre>
+<p>Redundancy:</p>
+<pre class="language-text"><code>Multiple AP
+Backup Gateway
+Multiple Broker
+Dual Network
+Power Backup</code></pre>
+<p>LAB 27 เน้น</p>
+<pre class="language-text"><code>Fault Detection
++
+Automatic Recovery</code></pre>
+<p>ไม่จำเป็นต้องสร้าง Full High Availability Cluster</p>
+<h2 id="27-52-failure-scenario-10-disk-full">27.52 Failure Scenario 10 - Disk Full</h2>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>df -h</code></pre>
+<p>ถ้า Disk เต็ม อาจกระทบ</p>
+<pre class="language-text"><code>SQLite
+Node-RED
+Logs
+Store-and-Forward
+Backup</code></pre>
+<p>ดังนั้น Storage เป็นส่วนหนึ่งของ Health Monitoring</p>
+<h2 id="27-53-ตรวจ-disk-usage">27.53 ตรวจ Disk Usage</h2>
+<p>ใช้:</p>
+<pre class="language-bash"><code>df -P /</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>Filesystem
+/dev/mmcblk0p2</code></pre>
+<pre class="language-text"><code>Use%
+72%</code></pre>
+<p>สามารถตั้ง Threshold เช่น</p>
+<pre class="language-text"><code>&lt; 80%
+    NORMAL</code></pre>
+<pre class="language-text"><code>80–90%
+    WARNING</code></pre>
+<pre class="language-text"><code>&gt; 90%
+    ALERT</code></pre>
+<p>ค่า Threshold เป็นตัวอย่างสำหรับ LAB ระบบจริงต้องกำหนดตาม Requirement</p>
+<h2 id="27-54-log-growth">27.54 Log Growth</h2>
+<p>Fault-Tolerant System ต้องระวังว่า Retry Error อาจสร้าง Log จำนวนมาก ตัวอย่าง:</p>
+<pre class="language-text"><code>MQTT Failed
+Retry
+Log</code></pre>
+<p>ทุก 0.1 วินาที อาจทำให้ Disk เต็ม ดังนั้น Backoff ช่วยทั้ง</p>
+<pre class="language-text"><code>Network
+CPU
+Logs</code></pre>
+<h2 id="27-55-failure-scenario-11-corrupt-json">27.55 Failure Scenario 11 - Corrupt JSON</h2>
+<p>ทดสอบ:</p>
+<pre class="language-bash"><code>mosquitto_pub \
+-h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;HELLO&#x27;</code></pre>
+<p>Python ต้อง</p>
+<pre class="language-text"><code>Catch JSON Error
+      ↓
+Log
+      ↓
+Continue Running</code></pre>
+<p>ไม่ควร:</p>
+<pre class="language-text"><code>Malformed Message
+       ↓
+Unhandled Exception
+       ↓
+Gateway Crash</code></pre>
+<h2 id="27-56-exception-isolation">27.56 Exception Isolation</h2>
+<p>Message หนึ่งผิด ไม่ควรทำให้ Application ทั้งระบบหยุด แนวคิด:</p>
+<pre class="language-text"><code>Message
+   ↓
+try
+   ↓
+Process</code></pre>
+<pre class="language-text"><code>Error
+   ↓
+except
+   ↓
+Log
+   ↓
+Continue</code></pre>
+<p>นี่คือ Fault Isolation ในระดับ Application</p>
+<h2 id="27-57-failure-scenario-12-wrong-topic">27.57 Failure Scenario 12 - Wrong Topic</h2>
+<p>ทดสอบ:</p>
+<pre class="language-bash"><code>mosquitto_pub \
+-h localhost \
+-t &quot;pkru/wrong/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>Gateway ต้อง Ignore / Reject ไม่ควรตีความ Device ID ผิด ดังนั้น Topic Validation สำคัญ</p>
+<h2 id="27-58-topic-validation">27.58 Topic Validation</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-python"><code>parts = msg.topic.split(&quot;/&quot;)</code></pre>
+<p>ต้องตรวจ:</p>
+<pre class="language-python"><code>len(parts) == 4</code></pre>
+<p>parts[0] == &quot;pkru&quot; parts[1] == &quot;iot&quot; parts[3] == &quot;data&quot; ก่อนใช้:</p>
+<pre class="language-python"><code>device_id = parts[2]</code></pre>
+<h2 id="27-59-failure-scenario-13-authentication-failure">27.59 Failure Scenario 13 - Authentication Failure</h2>
+<p>หลัง LAB 24 ถ้า MQTT Username/Password ผิด Gateway จะ Connect ไม่สำเร็จ ต้องแยกจาก: Network Failure ตัวอย่าง:</p>
+<pre class="language-text"><code>Network reachable
+Broker reachable
+Credentials invalid</code></pre>
+<p>การ Retry อย่างเดียว ไม่สามารถแก้ Wrong Password ดังนั้น Log ต้องบอกสาเหตุให้ชัด</p>
+<h2 id="27-60-recoverable-vs-non-recoverable-failure">27.60 Recoverable vs Non-Recoverable Failure</h2>
+<p>Recoverable Automatically:</p>
+<pre class="language-text"><code>Wi-Fi temporary loss
+MQTT temporary loss
+Internet temporary loss
+Remote service temporary loss
+Process crash</code></pre>
+<p>ต้องการ Human Intervention:</p>
+<pre class="language-text"><code>Wrong password
+Expired/revoked credential
+Corrupt configuration
+Disk hardware failure
+Broken sensor
+Damaged power supply</code></pre>
+<p>Fault-Tolerant System ต้องรู้ว่า อะไรควร Retry และ อะไรควร Alert</p>
+<h2 id="27-61-อย่า-retry-ทุก-error">27.61 อย่า Retry ทุก Error</h2>
+<p>ตัวอย่าง: Wrong Password Retry ทุกวินาทีตลอดไป ไม่ได้แก้ปัญหา ควร:</p>
+<pre class="language-text"><code>Detect
+   ↓
+Log
+   ↓
+Alert
+   ↓
+Slow Retry / Stop ตาม Policy</code></pre>
+<p>ดังนั้น:</p>
+<pre class="language-text"><code>Retry
+   ≠
+Universal Recovery</code></pre>
+<h2 id="27-62-state-machine">27.62 State Machine</h2>
+<p>สามารถมอง Gateway เป็น State Machine</p>
+<pre class="language-text"><code>STARTING
+   ↓
+CONNECTING
+   ↓
+ONLINE
+   │
+   ├── Internet Failure
+   │       ↓
+   │    DEGRADED
+   │
+   ├── MQTT Failure
+   │       ↓
+   │    RECONNECTING
+   │
+   └── Critical Failure
+           ↓
+         FAILED</code></pre>
+<p>เมื่อ Recovery:</p>
+<pre class="language-text"><code>DEGRADED
+   ↓
+ONLINE</code></pre>
+<pre class="language-text"><code>RECONNECTING
+   ↓
+ONLINE</code></pre>
+<h2 id="27-63-full-gateway-state">27.63 Full Gateway State</h2>
+<p>ตัวอย่าง State: STARTING HEALTHY DEGRADED RECONNECTING FAILED STOPPING ช่วยให้ Dashboard แสดงสถานะระบบได้ชัดกว่าการแสดงเพียง ONLINE/OFFLINE</p>
+<h2 id="27-64-fault-tolerant-python-gateway-structure">27.64 Fault-Tolerant Python Gateway Structure</h2>
+<p>แนวคิด Program:</p>
+<pre class="language-text"><code>Startup
+   ↓
+Initialize Database
+   ↓
+Connect MQTT
+   ↓
+Subscribe
+   ↓
+Main Operation
+   │
+   ├── Receive Data
+   │
+   ├── Validate
+   │
+   ├── Update Last Seen
+   │
+   ├── Rule
+   │
+   ├── Control
+   │
+   ├── Store
+   │
+   └── Health Update
+   │
+   ├── MQTT Disconnect
+   │      ↓
+   │   Reconnect
+   │
+   ├── Remote Failure
+   │      ↓
+   │   Store Locally
+   │
+   └── Invalid Data
+          ↓
+        Reject</code></pre>
+<h2 id="27-65-ตัวอย่าง-fault-tolerant-gateway-py">27.65 ตัวอย่าง Fault-Tolerant gateway.py</h2>
+<p>ตัวอย่างนี้เน้นแนวคิด LAB 27</p>
+<pre class="language-python"><code>import json
+import math
+import signal
+import time
+import paho.mqtt.client as mqtt
+
+broker = &quot;localhost&quot;
+port = 1883
+
+data_topic = &quot;pkru/iot/+/data&quot;
+status_topic = &quot;pkru/iot/+/status&quot;
+gateway_status_topic = &quot;pkru/gateway/status&quot;
+
+running = True
+mqtt_connected = False
+
+last_seen = {}
+data_quality = {}
+fan_states = {}
+
+stale_timeout = 15
+offline_timeout = 15
+
+
+def is_number(value):
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+    )
+
+
+def validate_data(data):
+    required_fields = [
+        &quot;temp&quot;,
+        &quot;humi&quot;,
+        &quot;light&quot;
+    ]
+
+    for field in required_fields:
+        if field not in data:
+            return False
+
+        if not is_number(data[field]):
+            return False
+
+    temp = data[&quot;temp&quot;]
+    humi = data[&quot;humi&quot;]
+    light = data[&quot;light&quot;]
+
+    if (
+        temp == -99
+        or humi == -99
+        or light == -99
+    ):
+        return False
+
+    if temp &lt; -20 or temp &gt; 80:
+        return False
+
+    if humi &lt; 0 or humi &gt; 100:
+        return False
+
+    if light &lt; 0 or light &gt; 100000:
+        return False
+
+    return True
+
+
+def automatic_control(
+    client,
+    device_id,
+    temp
+):
+    old_state = fan_states.get(
+        device_id,
+        &quot;OFF&quot;
+    )
+
+    new_state = old_state
+
+    if temp &gt; 35:
+        new_state = &quot;ON&quot;
+
+    elif temp &lt; 30:
+        new_state = &quot;OFF&quot;
+
+    if new_state == old_state:
+        return
+
+    fan_states[device_id] = new_state
+
+    topic = (
+        f&quot;pkru/iot/&quot;
+        f&quot;{device_id}/cmd&quot;
+    )
+
+    client.publish(
+        topic,
+        new_state
+    )
+
+    print(
+        f&quot;COMMAND &quot;
+        f&quot;device={device_id} &quot;
+        f&quot;fan={new_state}&quot;
+    )
+
+
+def on_connect(
+    client,
+    userdata,
+    flags,
+    reason_code,
+    properties
+):
+    global mqtt_connected
+
+    print(
+        f&quot;MQTT connected: &quot;
+        f&quot;{reason_code}&quot;
+    )
+
+    if reason_code == 0:
+        mqtt_connected = True
+
+        client.subscribe(
+            data_topic
+        )
+
+        client.subscribe(
+            status_topic
+        )
+
+
+def on_disconnect(
+    client,
+    userdata,
+    disconnect_flags,
+    reason_code,
+    properties
+):
+    global mqtt_connected
+
+    mqtt_connected = False
+
+    print(
+        f&quot;MQTT disconnected: &quot;
+        f&quot;{reason_code}&quot;
+    )
+
+
+def on_message(
+    client,
+    userdata,
+    msg
+):
+    try:
+        parts = msg.topic.split(&quot;/&quot;)
+
+        if len(parts) != 4:
+            print(
+                f&quot;INVALID TOPIC &quot;
+                f&quot;{msg.topic}&quot;
+            )
+            return
+
+        if (
+            parts[0] != &quot;pkru&quot;
+            or parts[1] != &quot;iot&quot;
+        ):
+            return
+
+        device_id = parts[2]
+        channel = parts[3]
+
+        now = time.time()
+
+        if channel == &quot;status&quot;:
+            payload = (
+                msg.payload
+                .decode(&quot;utf-8&quot;)
+                .strip()
+            )
+
+            if payload == &quot;ONLINE&quot;:
+                last_seen[device_id] = now
+
+            print(
+                f&quot;STATUS &quot;
+                f&quot;device={device_id} &quot;
+                f&quot;value={payload}&quot;
+            )
+
+            return
+
+        if channel != &quot;data&quot;:
+            return
+
+        last_seen[device_id] = now
+
+        payload = msg.payload.decode(
+            &quot;utf-8&quot;
+        )
+
+        try:
+            data = json.loads(payload)
+
+        except json.JSONDecodeError:
+            data_quality[device_id] = {
+                &quot;status&quot;: &quot;INVALID&quot;,
+                &quot;last_received&quot;: now
+            }
+
+            print(
+                f&quot;INVALID JSON &quot;
+                f&quot;device={device_id}&quot;
+            )
+
+            return
+
+        if not isinstance(data, dict):
+            data_quality[device_id] = {
+                &quot;status&quot;: &quot;INVALID&quot;,
+                &quot;last_received&quot;: now
+            }
+
+            print(
+                f&quot;INVALID PAYLOAD &quot;
+                f&quot;device={device_id}&quot;
+            )
+
+            return
+
+        if not validate_data(data):
+            data_quality[device_id] = {
+                &quot;status&quot;: &quot;INVALID&quot;,
+                &quot;last_received&quot;: now
+            }
+
+            print(
+                f&quot;INVALID DATA &quot;
+                f&quot;device={device_id} &quot;
+                f&quot;payload={data}&quot;
+            )
+
+            return
+
+        data_quality[device_id] = {
+            &quot;status&quot;: &quot;VALID&quot;,
+            &quot;last_received&quot;: now
+        }
+
+        temp = data[&quot;temp&quot;]
+        humi = data[&quot;humi&quot;]
+        light = data[&quot;light&quot;]
+
+        print(
+            f&quot;VALID &quot;
+            f&quot;device={device_id} &quot;
+            f&quot;temp={temp} &quot;
+            f&quot;humi={humi} &quot;
+            f&quot;light={light}&quot;
+        )
+
+        automatic_control(
+            client,
+            device_id,
+            temp
+        )
+
+    except Exception as error:
+        print(
+            f&quot;MESSAGE ERROR: &quot;
+            f&quot;{error}&quot;
+        )
+
+
+def update_health(client):
+    now = time.time()
+
+    devices = {}
+
+    all_device_ids = set(
+        last_seen.keys()
+    ) | set(
+        data_quality.keys()
+    )
+
+    for device_id in all_device_ids:
+        seen = last_seen.get(
+            device_id
+        )
+
+        if seen is None:
+            availability = &quot;UNKNOWN&quot;
+
+        elif (
+            now - seen
+            &gt; offline_timeout
+        ):
+            availability = &quot;OFFLINE&quot;
+
+        else:
+            availability = &quot;ONLINE&quot;
+
+        quality_info = (
+            data_quality.get(device_id)
+        )
+
+        if quality_info is None:
+            quality = &quot;UNKNOWN&quot;
+
+        else:
+            elapsed = (
+                now
+                - quality_info[
+                    &quot;last_received&quot;
+                ]
+            )
+
+            if elapsed &gt; stale_timeout:
+                quality = &quot;STALE&quot;
+
+            else:
+                quality = (
+                    quality_info[&quot;status&quot;]
+                )
+
+        devices[device_id] = {
+            &quot;availability&quot;:
+                availability,
+            &quot;quality&quot;:
+                quality
+        }
+
+    gateway_state = (
+        &quot;HEALTHY&quot;
+        if mqtt_connected
+        else &quot;DEGRADED&quot;
+    )
+
+    health = {
+        &quot;status&quot;: gateway_state,
+        &quot;mqtt&quot;: mqtt_connected,
+        &quot;devices&quot;: devices
+    }
+
+    if mqtt_connected:
+        client.publish(
+            gateway_status_topic,
+            json.dumps(health),
+            retain=True
+        )
+
+    print(
+        &quot;HEALTH &quot;
+        + json.dumps(health)
+    )
+
+
+def handle_signal(
+    signum,
+    frame
+):
+    global running
+
+    print(
+        &quot;Shutdown requested&quot;
+    )
+
+    running = False
+
+
+signal.signal(
+    signal.SIGTERM,
+    handle_signal
+)
+
+signal.signal(
+    signal.SIGINT,
+    handle_signal
+)
+
+
+client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;python-gateway&quot;
+)
+
+client.on_connect = on_connect
+client.on_disconnect = on_disconnect
+client.on_message = on_message
+
+client.reconnect_delay_set(
+    min_delay=1,
+    max_delay=30
+)
+
+
+while running:
+
+    try:
+        print(
+            &quot;Connecting MQTT...&quot;
+        )
+
+        client.connect(
+            broker,
+            port,
+            60
+        )
+
+        client.loop_start()
+
+        while running:
+
+            update_health(client)
+
+            time.sleep(5)
+
+        break
+
+    except Exception as error:
+
+        mqtt_connected = False
+
+        print(
+            f&quot;MQTT ERROR: {error}&quot;
+        )
+
+        try:
+            client.loop_stop()
+
+        except Exception:
+            pass
+
+        if running:
+            print(
+                &quot;Retry in 5 seconds&quot;
+            )
+
+            time.sleep(5)
+
+
+try:
+    client.loop_stop()
+except Exception:
+    pass
+
+try:
+    client.disconnect()
+except Exception:
+    pass
+
+print(
+    &quot;Python IoT Gateway stopped&quot;
+)</code></pre>
+<h2 id="27-66-หมายเหตุเกี่ยวกับตัวอย่าง-gateway-py">27.66 หมายเหตุเกี่ยวกับตัวอย่าง gateway.py</h2>
+<p>Code นี้ใช้เพื่อสอนแนวคิด</p>
+<pre class="language-text"><code>Fault Detection
+Validation
+Reconnect
+Health Monitoring
+Graceful Shutdown</code></pre>
+<p>ไม่ใช่ Production HA Framework สำหรับระบบจริงยังต้องพิจารณา</p>
+<pre class="language-text"><code>Thread Safety
+Persistent State
+Database Error Handling
+Publish Confirmation
+QoS
+Actual Actuator Feedback
+Credential Management
+Logging
+Metrics
+Watchdog
+Network Failure Modes</code></pre>
+<h2 id="27-67-ปัญหา-state-หลัง-restart">27.67 ปัญหา State หลัง Restart</h2>
+<p>ตัวอย่าง:</p>
+<pre class="language-python"><code>fan_states = {}</code></pre>
+<p>อยู่ใน RAM เมื่อ Python Restart State จะหาย ดังนั้น Gateway อาจคิดว่า Fan = OFF ทั้งที่ Fan จริงยัง ON นี่เป็นเหตุผลที่ระบบจริงควรใช้ Actual State Feedback หรือ Persistent State</p>
+<h2 id="27-68-state-recovery">27.68 State Recovery</h2>
+<p>แนวทาง:</p>
+<pre class="language-text"><code>Gateway Restart
+      ↓
+Do not assume actuator state
+      ↓
+Request / Wait for device state
+      ↓
+Synchronize
+      ↓
+Resume Control</code></pre>
+<p>ดีกว่า:</p>
+<pre class="language-text"><code>Gateway Restart
+      ↓
+Assume everything OFF</code></pre>
+<h2 id="27-69-mqtt-retained-state">27.69 MQTT Retained State</h2>
+<p>สามารถใช้ Retained Message สำหรับ Reported State เช่น: pkru/iot/001/state ESP32 Publish: ON retain = true Gateway Reconnect Subscribe แล้วได้รับ Last Reported State แต่ต้องจำว่า</p>
+<pre class="language-text"><code>Retained State
+    ≠
+Proof Device Is Currently Online</code></pre>
+<p>จึงยังต้องใช้ Heartbeat / LWT / Timeout</p>
+<h2 id="27-70-failsafe-decision-table">27.70 Failsafe Decision Table</h2>
+<p>ตัวอย่าง: Condition             Action</p>
+<pre class="language-text"><code>VALID + ONLINE
+    → Normal Control</code></pre>
+<pre class="language-text"><code>INVALID + ONLINE
+    → Reject Data
+    → Alert
+    → Failsafe Policy</code></pre>
+<pre class="language-text"><code>STALE + ONLINE
+    → Do not trust old value
+    → Failsafe Policy</code></pre>
+<pre class="language-text"><code>OFFLINE
+    → Stop normal control
+    → Failsafe / Alert</code></pre>
+<pre class="language-text"><code>MQTT Down
+    → Local device fallback if available</code></pre>
+<pre class="language-text"><code>Internet Down
+    → Local operation
+    → Store-and-Forward</code></pre>
+<h2 id="27-71-fault-isolation">27.71 Fault Isolation</h2>
+<p>Failure ของ Device หนึ่ง ไม่ควรทำให้ Device อื่นหยุด ตัวอย่าง:</p>
+<pre class="language-text"><code>ESP32-002
+    ↓
+INVALID</code></pre>
+<p>ระบบควรเป็น:</p>
+<pre class="language-text"><code>001 → VALID → Process</code></pre>
+<pre class="language-text"><code>002 → INVALID → Reject</code></pre>
+<pre class="language-text"><code>003 → VALID → Process</code></pre>
+<p>ไม่ใช่:</p>
+<pre class="language-text"><code>002 Invalid
+    ↓
+Gateway Crash
+    ↓
+001/002/003 Stop</code></pre>
+<h2 id="27-72-multi-device-isolation">27.72 Multi-device Isolation</h2>
+<p>แต่ละ Device ควรมี State แยกกัน เช่น:</p>
+<pre class="language-python"><code>last_seen[&quot;001&quot;]</code></pre>
+<pre class="language-python"><code>last_seen[&quot;002&quot;]</code></pre>
+<pre class="language-python"><code>last_seen[&quot;003&quot;]</code></pre>
+<pre class="language-python"><code>data_quality[&quot;001&quot;]</code></pre>
+<pre class="language-python"><code>data_quality[&quot;002&quot;]</code></pre>
+<pre class="language-python"><code>data_quality[&quot;003&quot;]</code></pre>
+<pre class="language-python"><code>fan_states[&quot;001&quot;]</code></pre>
+<pre class="language-python"><code>fan_states[&quot;002&quot;]</code></pre>
+<pre class="language-python"><code>fan_states[&quot;003&quot;]</code></pre>
+<p>ทำให้ Failure ของ Device หนึ่งไม่ปนกับอีก Device</p>
+<h2 id="27-73-failure-scenario-14-one-device-offline">27.73 Failure Scenario 14 - One Device Offline</h2>
+<pre class="language-text"><code>Simulator 001
+    → running</code></pre>
+<pre class="language-text"><code>Simulator 002
+    → stop</code></pre>
+<pre class="language-text"><code>Simulator 003
+    → running</code></pre>
+<p>หลัง Timeout:</p>
+<pre class="language-text"><code>001
+ONLINE</code></pre>
+<pre class="language-text"><code>002
+OFFLINE</code></pre>
+<pre class="language-text"><code>003
+ONLINE</code></pre>
+<p>Gateway ต้องยัง Process</p>
+<pre class="language-text"><code>001
+003</code></pre>
+<p>ต่อไป</p>
+<h2 id="27-74-failure-scenario-15-one-device-invalid">27.74 Failure Scenario 15 - One Device Invalid</h2>
+<p>001:</p>
+<pre class="language-json"><code>{&quot;temp&quot;:31,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>002:</p>
+<pre class="language-json"><code>{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>003:</p>
+<pre class="language-json"><code>{&quot;temp&quot;:34,&quot;humi&quot;:72,&quot;light&quot;:1400}</code></pre>
+<p>ผล: 001 VALID 002 INVALID 003 VALID 001 และ 003 ต้องยังทำงานตามปกติ</p>
+<h2 id="27-75-failure-scenario-16-gateway-process-failure">27.75 Failure Scenario 16 - Gateway Process Failure</h2>
+<p>Kill Python</p>
+<pre class="language-text"><code>    ↓</code></pre>
+<p>systemd detects process failure</p>
+<pre class="language-text"><code>    ↓</code></pre>
+<p>Restart</p>
+<pre class="language-text"><code>    ↓</code></pre>
+<p>MQTT reconnect</p>
+<pre class="language-text"><code>    ↓</code></pre>
+<p>Subscribe</p>
+<pre class="language-text"><code>    ↓</code></pre>
+<p>Resume ทดสอบด้วย:</p>
+<pre class="language-bash"><code>pid=$(systemctl show \
+-p MainPID \
+--value \
+iot-gateway)</code></pre>
+<pre class="language-bash"><code>echo &quot;$pid&quot;</code></pre>
+<pre class="language-bash"><code>sudo kill -9 &quot;$pid&quot;</code></pre>
+<p>ตรวจ:</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<h2 id="27-76-failure-scenario-17-complete-reboot">27.76 Failure Scenario 17 - Complete Reboot</h2>
+<p>ใช้:</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot:</p>
+<pre class="language-text"><code>Mosquitto
+    ↓
+Gateway
+    ↓
+Node-RED
+    ↓
+Cloudflare</code></pre>
+<p>ควรกลับมา ทดสอบ:</p>
+<pre class="language-bash"><code>systemctl is-active mosquitto</code></pre>
+<pre class="language-bash"><code>systemctl is-active iot-gateway</code></pre>
+<pre class="language-bash"><code>systemctl is-active nodered</code></pre>
+<pre class="language-bash"><code>systemctl is-active cloudflared</code></pre>
+<h2 id="27-77-fault-injection">27.77 Fault Injection</h2>
+<p>การจงใจสร้าง Failure เพื่อทดสอบเรียกว่า Fault Injection ตัวอย่างใน LAB: Kill Process Stop Broker Disconnect Internet Stop Device Simulator Send Invalid Data Send Malformed JSON Send Wrong Topic เป้าหมายไม่ใช่ทำลายระบบ แต่พิสูจน์ว่า Recovery Mechanism ทำงาน</p>
+<h2 id="27-78-fault-injection-test-matrix">27.78 Fault Injection Test Matrix</h2>
+<pre class="language-text"><code>Fault:
+Invalid sensor</code></pre>
+<pre class="language-text"><code>Detection:
+Validation</code></pre>
+<pre class="language-text"><code>Recovery:
+Reject data</code></pre>
+<pre class="language-text"><code>Expected:
+Gateway continues</code></pre>
+<pre class="language-text"><code>Fault:
+No sensor update</code></pre>
+<pre class="language-text"><code>Detection:
+Timeout</code></pre>
+<pre class="language-text"><code>Recovery:
+STALE + failsafe</code></pre>
+<pre class="language-text"><code>Expected:
+Other devices continue</code></pre>
+<pre class="language-text"><code>Fault:
+Device offline</code></pre>
+<pre class="language-text"><code>Detection:
+Heartbeat/LWT/timeout</code></pre>
+<pre class="language-text"><code>Recovery:
+OFFLINE + alert</code></pre>
+<pre class="language-text"><code>Expected:
+Other devices continue</code></pre>
+<pre class="language-text"><code>Fault:
+Python crash</code></pre>
+<pre class="language-text"><code>Detection:
+systemd</code></pre>
+<pre class="language-text"><code>Recovery:
+Restart</code></pre>
+<pre class="language-text"><code>Expected:
+Gateway resumes</code></pre>
+<pre class="language-text"><code>Fault:
+MQTT down</code></pre>
+<pre class="language-text"><code>Detection:
+Disconnect</code></pre>
+<pre class="language-text"><code>Recovery:
+Reconnect/backoff</code></pre>
+<pre class="language-text"><code>Expected:
+Resume when broker returns</code></pre>
+<pre class="language-text"><code>Fault:
+Internet down</code></pre>
+<pre class="language-text"><code>Detection:
+Remote failure</code></pre>
+<pre class="language-text"><code>Recovery:
+Store locally</code></pre>
+<pre class="language-text"><code>Expected:
+Local operation continues</code></pre>
+<pre class="language-text"><code>Fault:
+Remote service down</code></pre>
+<pre class="language-text"><code>Detection:
+Send failure</code></pre>
+<pre class="language-text"><code>Recovery:
+Queue/retry</code></pre>
+<pre class="language-text"><code>Expected:
+Data sent later</code></pre>
+<pre class="language-text"><code>Fault:
+Pi reboot</code></pre>
+<pre class="language-text"><code>Detection:
+systemd boot</code></pre>
+<pre class="language-text"><code>Recovery:
+Auto-start</code></pre>
+<pre class="language-text"><code>Expected:
+Services return</code></pre>
+<h2 id="27-79-recovery-time">27.79 Recovery Time</h2>
+<p>แต่ละ Failure ควรวัด Detection Time และ Recovery Time ตัวอย่าง: MQTT Broker stopped</p>
+<pre class="language-text"><code>Detection:
+2 seconds</code></pre>
+<p>Broker restored</p>
+<pre class="language-text"><code>Reconnect:
+5 seconds</code></pre>
+<p>หรือ Python crash</p>
+<pre class="language-text"><code>systemd RestartSec:
+5 seconds</code></pre>
+<p>Recovery: ประมาณ 5–10 seconds ค่าจริงต้องวัดจากระบบ</p>
+<h2 id="27-80-detection-time-recovery-time">27.80 Detection Time + Recovery Time</h2>
+<pre class="language-text"><code>Failure
+   ↓
+Detection
+   ↓
+Recovery
+   ↓
+Operational</code></pre>
+<p>ดังนั้น Downtime โดยประมาณ:</p>
+<pre class="language-text"><code>Detection Time
+      +
+Recovery Time</code></pre>
+<p>ถ้า Detection = 15 sec Recovery = 5 sec ระบบอาจใช้ประมาณ 20 sec ก่อนกลับสู่สถานะที่ต้องการ</p>
+<h2 id="27-81-timeout-trade-off">27.81 Timeout Trade-off</h2>
+<p>Timeout สั้นเกินไป:</p>
+<pre class="language-text"><code>Network Delay
+    ↓
+False Offline</code></pre>
+<p>Timeout ยาวเกินไป:</p>
+<pre class="language-text"><code>Real Failure
+    ↓
+Slow Detection</code></pre>
+<p>ดังนั้น Timeout ต้องสัมพันธ์กับ Expected Update Interval ตัวอย่าง: Heartbeat every 5 sec Timeout = 15 sec หมายถึงยอมพลาดประมาณ 3 รอบก่อนตัดสิน OFFLINE</p>
+<h2 id="27-82-retry-trade-off">27.82 Retry Trade-off</h2>
+<p>Retry เร็วเกิน:</p>
+<pre class="language-text"><code>Network Load
+CPU Load
+Log Load</code></pre>
+<p>Retry ช้าเกิน: Recovery Slow จึงใช้ Backoff เพื่อสร้างสมดุล</p>
+<h2 id="27-83-observability">27.83 Observability</h2>
+<p>Fault-Tolerant System ต้องสามารถบอกได้ว่าเกิดอะไรขึ้น อย่างน้อยควรมี</p>
+<pre class="language-text"><code>Logs
+Status
+Timestamp
+Error Reason
+Recovery Event</code></pre>
+<p>ตัวอย่าง: MQTT disconnected Retry in 5 seconds MQTT connected Device 002 OFFLINE Device 002 ONLINE Remote service unavailable Stored locally Forward completed</p>
+<h2 id="27-84-logging-ที่ดี">27.84 Logging ที่ดี</h2>
+<p>Log ควรตอบได้ว่า WHEN WHAT WHERE RESULT ตัวอย่าง:</p>
+<pre class="language-text"><code>2026-10-02 10:15:01
+device=002
+event=OFFLINE</code></pre>
+<p>ดีกว่า: ERROR!</p>
+<h2 id="27-85-recovery-verification">27.85 Recovery Verification</h2>
+<p>หลัง Recovery ต้อง Verify ตัวอย่าง MQTT Recovery:</p>
+<pre class="language-text"><code>Reconnect
+   ↓
+Subscribe
+   ↓
+Receive Data
+   ↓
+Validate
+   ↓
+Control</code></pre>
+<p>ไม่ควรถือว่า Recovery สำเร็จเพียงเพราะ Connection Established</p>
+<h2 id="27-86-end-to-end-recovery">27.86 End-to-End Recovery</h2>
+<p>Recovery Test:</p>
+<pre class="language-text"><code>Sensor
+   ↓
+MQTT
+   ↓
+Gateway
+   ↓
+Validation
+   ↓
+Rule
+   ↓
+Command
+   ↓
+ESP32
+   ↓
+State Feedback</code></pre>
+<p>ถ้าทั้ง Path ทำงาน จึงถือว่า Control Path Recovered</p>
+<h2 id="27-87-dashboard-สำหรับ-fault-tolerance">27.87 Dashboard สำหรับ Fault Tolerance</h2>
+<p>Dashboard ควรแสดงอย่างน้อย: Gateway Status MQTT Status Internet Status Device Status Data Quality Last Seen Pending Queue Disk Usage ตัวอย่าง:</p>
+<pre class="language-text"><code>Gateway
+HEALTHY</code></pre>
+<pre class="language-text"><code>MQTT
+CONNECTED</code></pre>
+<pre class="language-text"><code>Internet
+ONLINE</code></pre>
+<pre class="language-text"><code>Device 001
+ONLINE / VALID</code></pre>
+<pre class="language-text"><code>Device 002
+OFFLINE / STALE</code></pre>
+<pre class="language-text"><code>Pending Queue
+0</code></pre>
+<pre class="language-text"><code>Disk
+42%</code></pre>
+<h2 id="27-88-alert-ที่ควรมี">27.88 Alert ที่ควรมี</h2>
+<p>ตัวอย่าง: Device OFFLINE Data INVALID Data STALE MQTT disconnected Database error Disk &gt; 90% Store-and-Forward queue growing Backup too old แต่ไม่ควร Alert ทุก Event แบบไม่มี Priority</p>
+<h2 id="27-89-warning-vs-alert">27.89 Warning vs Alert</h2>
+<p>WARNING</p>
+<pre class="language-text"><code>ระบบยังทำงานได้
+แต่ต้องติดตาม</code></pre>
+<p>ALERT มี Failure ที่ต้องดำเนินการ ตัวอย่าง:</p>
+<pre class="language-text"><code>Internet Down
+Local Control OK</code></pre>
+<pre class="language-text"><code>→ WARNING / DEGRADED</code></pre>
+<p>SQLite Write Failure</p>
+<pre class="language-text"><code>→ ALERT</code></pre>
+<p>ระดับจริงต้องกำหนดตาม Requirement</p>
+<h2 id="27-90-cascading-failure">27.90 Cascading Failure</h2>
+<p>Failure หนึ่งอาจทำให้เกิด Failure ต่อเนื่อง ตัวอย่าง:</p>
+<pre class="language-text"><code>Internet Down
+    ↓
+Queue grows
+    ↓
+Disk fills
+    ↓
+SQLite cannot write
+    ↓
+Local storage fails</code></pre>
+<p>ดังนั้น Store-and-Forward เองต้องมี</p>
+<pre class="language-text"><code>Queue Monitoring
+Disk Monitoring
+Retention Policy</code></pre>
+<h2 id="27-91-fault-tolerance-ไม่ใช่แค่-retry">27.91 Fault Tolerance ไม่ใช่แค่ Retry</h2>
+<p>ระบบ Fault-Tolerant ที่ดีต้องประกอบด้วย:</p>
+<pre class="language-text"><code>Detect
+Isolate
+Validate
+Retry
+Reconnect
+Store
+Fallback
+Failsafe
+Restart
+Verify
+Alert</code></pre>
+<p>ไม่ใช่เพียง:</p>
+<pre class="language-text"><code>while true:
+    retry()</code></pre>
+<h2 id="27-92-fault-tolerance-กับ-backup">27.92 Fault Tolerance กับ Backup</h2>
+<p>LAB 27: Automatic / Short-term Recovery LAB 26: Disaster / Major Failure Recovery ตัวอย่าง:</p>
+<pre class="language-text"><code>Python Crash
+    → LAB 27
+    → systemd restart</code></pre>
+<pre class="language-text"><code>SD Card Dead
+    → LAB 26
+    → Restore Backup</code></pre>
+<p>ทั้งสองอย่างต้องมีร่วมกัน</p>
+<h2 id="27-93-fault-tolerance-กับ-security">27.93 Fault Tolerance กับ Security</h2>
+<p>Security Failure บางอย่างไม่ควร Auto-Recover ด้วยการลด Security ตัวอย่าง: MQTT Authentication Failed ห้ามแก้โดย: allow_anonymous true เพื่อให้ระบบกลับมาทำงาน ควร:</p>
+<pre class="language-text"><code>Detect
+   ↓
+Alert
+   ↓
+Fix Credential</code></pre>
+<p>Fault Tolerance ต้องไม่ทำลาย Security Policy</p>
+<h2 id="27-94-fault-tolerance-กับ-local-first">27.94 Fault Tolerance กับ Local-First</h2>
+<p>หลักสำคัญของ Architecture นี้: Cloud เป็น Optional Dependency สำหรับ Local Operation ดังนั้น:</p>
+<pre class="language-text"><code>Internet
+   X</code></pre>
+<pre class="language-text"><code>Local Sensor
+   ↓
+MQTT
+   ↓
+Gateway
+   ↓
+Rule
+   ↓
+Actuator</code></pre>
+<p>ยังทำงาน นี่เป็นคุณสมบัติสำคัญของ Edge IoT</p>
+<h2 id="27-95-checklist-การทดสอบ-lab-27">27.95 Checklist การทดสอบ LAB 27</h2>
+<p>[ ] VALID data ทำงาน [ ] INVALID data ถูก Reject [ ] STALE data ถูกตรวจพบ [ ] Device OFFLINE ถูกตรวจพบ [ ] Device อื่นยังทำงานเมื่อหนึ่ง Device เสีย [ ] Malformed JSON ไม่ทำให้ Gateway Crash [ ] Wrong Topic ไม่ทำให้ Gateway Crash</p>
+<pre class="language-text"><code>[ ] Python Crash → systemd Restart</code></pre>
+<pre class="language-text"><code>[ ] MQTT Down → Detect Disconnect</code></pre>
+<pre class="language-text"><code>[ ] MQTT Up → Reconnect</code></pre>
+<pre class="language-text"><code>[ ] Reconnect → Subscribe Again</code></pre>
+<pre class="language-text"><code>[ ] Internet Down → Local Operation Continues</code></pre>
+<pre class="language-text"><code>[ ] Remote Failure → Store Locally</code></pre>
+<pre class="language-text"><code>[ ] Remote Recovery → Forward Pending Data</code></pre>
+<pre class="language-text"><code>[ ] Pi Reboot → Services Auto-start</code></pre>
+<p>[ ] Gateway Health ถูกแสดง [ ] Disk Usage ถูกตรวจสอบ [ ] Failsafe Policy ถูกกำหนด [ ] Recovery ถูก Verify End-to-End</p>
+<h2 id="27-96-งานส่ง-lab-27">27.96 งานส่ง LAB 27</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Fault-Tolerant Architecture Diagram</li>
+</ol>
+<ol>
+<li>Failure Model ของระบบ</li>
+</ol>
+<ol>
+<li>รายการ Fault อย่างน้อย 8 กรณี</li>
+</ol>
+<ol>
+<li>Safe Processing Pipeline</li>
+</ol>
+<ol>
+<li>Python Gateway Code</li>
+</ol>
+<ol>
+<li>หลักฐาน VALID</li>
+</ol>
+<ol>
+<li>หลักฐาน INVALID</li>
+</ol>
+<ol>
+<li>หลักฐาน STALE</li>
+</ol>
+<ol>
+<li>หลักฐาน Device OFFLINE</li>
+</ol>
+<ol>
+<li>หลักฐานว่า Device อื่นยังทำงาน</li>
+</ol>
+<ol>
+<li>Malformed JSON Test</li>
+</ol>
+<ol>
+<li>Python Crash Test</li>
+</ol>
+<ol>
+<li>systemd Automatic Restart</li>
+</ol>
+<ol>
+<li>MQTT Broker Failure Test</li>
+</ol>
+<ol>
+<li>MQTT Reconnect Test</li>
+</ol>
+<ol>
+<li>Internet Failure Test</li>
+</ol>
+<ol>
+<li>Local Operation During Internet Failure</li>
+</ol>
+<ol>
+<li>Store-and-Forward Test</li>
+</ol>
+<ol>
+<li>Remote Recovery Test</li>
+</ol>
+<ol>
+<li>Reboot Recovery Test</li>
+</ol>
+<ol>
+<li>Gateway Health Status</li>
+</ol>
+<ol>
+<li>Failsafe Policy</li>
+</ol>
+<ol>
+<li>Fault Injection Test Matrix</li>
+</ol>
+<ol>
+<li>Detection Time อย่างน้อย 3 Failure</li>
+</ol>
+<ol>
+<li>Recovery Time อย่างน้อย 3 Failure</li>
+</ol>
+<ol>
+<li>อธิบายความแตกต่าง:</li>
+</ol>
+<pre class="language-text"><code>Fault
+Error
+Failure</code></pre>
+<ol>
+<li>อธิบายความแตกต่าง:</li>
+</ol>
+<pre class="language-text"><code>ONLINE
+VALID</code></pre>
+<ol>
+<li>อธิบายความแตกต่าง:</li>
+</ol>
+<pre class="language-text"><code>Process Alive
+Service Healthy</code></pre>
+<ol>
+<li>อธิบายความแตกต่าง:</li>
+</ol>
+<pre class="language-text"><code>Fault Tolerance
+Backup &amp; Recovery</code></pre>
+<ol>
+<li>ระบุ Single Point of Failure ในระบบของตน</li>
+</ol>
+<h2 id="27-97-เกณฑ์ผ่าน-lab">27.97 เกณฑ์ผ่าน LAB</h2>
+<p>คุณต้องพิสูจน์ได้ว่า Failure หนึ่ง Component ไม่ทำให้ระบบทั้งหมดล้มโดยไม่จำเป็น อย่างน้อยต้องแสดง:</p>
+<pre class="language-text"><code>Sensor Failure
+    ↓
+Detected</code></pre>
+<pre class="language-text"><code>Invalid Data
+    ↓
+Rejected</code></pre>
+<pre class="language-text"><code>Device Failure
+    ↓
+Detected</code></pre>
+<pre class="language-text"><code>Process Failure
+    ↓
+Restarted</code></pre>
+<pre class="language-text"><code>MQTT Failure
+    ↓
+Reconnected</code></pre>
+<pre class="language-text"><code>Internet Failure
+    ↓
+Local Operation Continued</code></pre>
+<pre class="language-text"><code>Remote Failure
+    ↓
+Data Stored</code></pre>
+<pre class="language-text"><code>Remote Recovery
+    ↓
+Pending Data Forwarded</code></pre>
+<pre class="language-text"><code>Reboot
+    ↓
+Services Restored</code></pre>
+<h2 id="27-98-architecture-หลัง-lab-27">27.98 Architecture หลัง LAB 27</h2>
+<pre class="language-text"><code>                         INTERNET
+                            │
+                            ▼
+                    Remote Services
+                            ▲
+                            │
+                    Store-and-Forward
+                            │
+                            ▼
+┌──────────────────────────────────────────────────┐
+│             RASPBERRY PI IoT GATEWAY             │
+│                                                  │
+│  Mosquitto                                       │
+│      ├── Authentication                          │
+│      └── ACL                                     │
+│                                                  │
+│  Python Gateway                                  │
+│      ├── MQTT Reconnect                          │
+│      ├── Validation                              │
+│      ├── ONLINE/OFFLINE                          │
+│      ├── VALID/INVALID/STALE                     │
+│      ├── Rule Processing                         │
+│      ├── Automatic Control                       │
+│      ├── Failsafe                                │
+│      └── Health Monitoring                       │
+│                                                  │
+│  SQLite                                          │
+│      ├── Sensor Data                             │
+│      └── Offline Queue                           │
+│                                                  │
+│  systemd                                         │
+│      ├── Auto Start                              │
+│      └── Auto Restart                            │
+│                                                  │
+│  Node-RED                                        │
+│      ├── Dashboard                               │
+│      └── Alert                                   │
+│                                                  │
+│  cloudflared                                     │
+│      └── Remote Access                           │
+│                                                  │
+│  Backup                                          │
+│      └── Recovery                                │
+│                                                  │
+└─────────────────────┬────────────────────────────┘
+                      │
+                     MQTT
+                      │
+           ┌──────────┼──────────┐
+           ▼          ▼          ▼
+       ESP32-001  ESP32-002  ESP32-003
+           │          │          │
+        Sensor      Sensor      Sensor
+           │
+           └── Local Control / Feedback</code></pre>
+<h2 id="27-99-ความสัมพันธ์-lab-18-27">27.99 ความสัมพันธ์ LAB 18–27</h2>
+<pre class="language-text"><code>LAB 18
+Device Availability
+ONLINE / OFFLINE</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 19
+Data Quality
+VALID / INVALID / STALE</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 20
+Python Application</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 21
+systemd
+Auto Start / Restart</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 22
+IoT Gateway
+BLE / UDP / MQTT</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 23
+Offline Operation
+Store-and-Forward</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 24
+MQTT Security
+Authentication / ACL</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 25
+Remote Access
+Cloudflare Tunnel</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 26
+Backup &amp; Recovery</code></pre>
+<pre class="language-text"><code>        ↓</code></pre>
+<pre class="language-text"><code>LAB 27
+Fault-Tolerant IoT
+Detect / Recover / Continue</code></pre>
+<h2 id="27-100-สิ่งสำคัญที่สุดของ-lab-27">27.100 สิ่งสำคัญที่สุดของ LAB 27</h2>
+<p>Fault-Tolerant IoT ไม่ได้หมายถึง &quot;ระบบไม่มีวันเสีย&quot; แต่หมายถึง &quot;ระบบถูกออกแบบโดยยอมรับว่า Failure จะเกิดขึ้น&quot; ดังนั้นต้องสามารถ:</p>
+<pre class="language-text"><code>Detect Failure
+      ↓
+Understand Failure
+      ↓
+Isolate Failure
+      ↓
+Recover Automatically
+      ↓
+Verify Recovery
+      ↓
+Continue Essential Operation</code></pre>
+<p>หลักการสำคัญ:</p>
+<pre class="language-text"><code>Value Exists
+    ≠
+Current Value</code></pre>
+<pre class="language-text"><code>ONLINE
+    ≠
+VALID</code></pre>
+<pre class="language-text"><code>Process Running
+    ≠
+Service Healthy</code></pre>
+<pre class="language-text"><code>MQTT Connected
+    ≠
+Sensor Healthy</code></pre>
+<pre class="language-text"><code>Internet Down
+    ≠
+Local System Must Stop</code></pre>
+<pre class="language-text"><code>Command Sent
+    ≠
+Actuator Actually Changed</code></pre>
+<pre class="language-text"><code>Backup Exists
+    ≠
+System Can Be Recovered</code></pre>
+<p>ระบบหลัง LAB 27 จึงเปลี่ยนจาก</p>
+<pre class="language-text"><code>Monitor
+   ↓
+Store
+   ↓
+Control</code></pre>
+<p>เป็น</p>
+<pre class="language-text"><code>Monitor
+   ↓
+Validate
+   ↓
+Decide
+   ↓
+Control
+   ↓
+Verify
+   ↓
+Detect Failure
+   ↓
+Recover
+   ↓
+Continue Operation</code></pre>
+<h2 id="27-101-ขั้นต่อไป-lab-28">27.101 ขั้นต่อไป - LAB 28</h2>
+<p>LAB 28 เป็น LAB สุดท้ายของชุดนี้: LAB 28 - Integrated IoT Mini Project คุณจะนำองค์ความรู้ทั้งหมดมารวมเป็นระบบเดียว</p>
+<pre class="language-text"><code>IoT Nodes
+    ↓
+MQTT / BLE / UDP
+    ↓
+Raspberry Pi Gateway
+    ↓
+Processing
+    ↓
+Data Quality
+    ↓
+Database
+    ↓
+Dashboard
+    ↓
+Rule / Alert
+    ↓
+Manual / Automatic Control
+    ↓
+Device Status
+    ↓
+Store-and-Forward
+    ↓
+Security
+    ↓
+Remote Access
+    ↓
+Backup
+    ↓
+Fault Recovery</code></pre>
+<p>เป้าหมาย LAB 28 ไม่ใช่เพิ่ม Technology ใหม่จำนวนมาก แต่เป็นการพิสูจน์ว่าองค์ประกอบจาก LAB ก่อนหน้าสามารถทำงานร่วมกันเป็น End-to-End IoT System ที่มีคุณสมบัติ</p>
+<pre class="language-text"><code>Observable
+Controllable
+Multi-device
+Sensor-verified
+Offline-capable
+Access-controlled
+Remotely manageable
+Recoverable
+Fault-tolerant</code></pre>
+    </main>
+  </div>
+</body>
+</html>

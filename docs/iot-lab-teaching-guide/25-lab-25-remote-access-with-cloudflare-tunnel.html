@@ -1,0 +1,1801 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 25 - Remote Access with Cloudflare Tunnel</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="active" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-25-remote-access-with-cloudflare-tunnel">LAB 25 - Remote Access with Cloudflare Tunnel</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="24-lab-24-mqtt-security-authentication-and-acl.html">ก่อนหน้า: LAB 24 - MQTT Security: Authentication + ACL</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">ถัดไป: LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a></nav>
+<h2 id="25-1-แนวคิดของ-lab">25.1 แนวคิดของ LAB</h2>
+<p>จนถึง LAB 24 ระบบ IoT ของเรามีองค์ประกอบหลักแล้ว</p>
+<pre class="language-text"><code>ESP32 / Sensors
+      ↓
+     MQTT
+      ↓
+  Mosquitto
+      ↓
+Raspberry Pi Gateway
+      │
+      ├── Node-RED
+      ├── Dashboard
+      ├── Python Service
+      ├── SQLite
+      ├── Store-and-Forward
+      └── MQTT Authentication + ACL</code></pre>
+<p>ระบบเหล่านี้สามารถทำงานภายใน LAN ได้ดี แต่ถ้าผู้ดูแลระบบอยู่นอก Network เช่น</p>
+<pre class="language-text"><code>บ้าน
+เครือข่ายมือถือ
+อาคารอื่น
+จังหวัดอื่น</code></pre>
+<p>และต้องการเข้าถึง</p>
+<pre class="language-text"><code>Node-RED
+Dashboard
+SSH</code></pre>
+<p>จะเกิดปัญหาเพราะ Raspberry Pi มักอยู่หลัง</p>
+<pre class="language-text"><code>NAT
+CGNAT
+University Firewall</code></pre>
+<p>วิธีดั้งเดิมคือ</p>
+<pre class="language-text"><code>Public IPv4
+     +
+Port Forwarding</code></pre>
+<p>แต่ LAB นี้จะไม่ใช้วิธีดังกล่าว เราจะใช้</p>
+<pre class="language-text"><code>Cloudflare Tunnel</code></pre>
+<p>ให้ Raspberry Pi เป็นฝ่ายสร้าง Connection ออกไปยัง Cloudflare</p>
+<pre class="language-text"><code>Raspberry Pi
+     │
+     │ Outbound Connection
+     ▼
+  Cloudflare
+     ▲
+     │
+  Internet
+     ▲
+     │
+  Remote User</code></pre>
+<p>จึงไม่จำเป็นต้องเปิด Incoming Port จาก Internet มายัง Raspberry Pi โดยตรง</p>
+<hr>
+<h2 id="25-2-วัตถุประสงค์">25.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>อธิบายปัญหา NAT และ CGNAT</li>
+<li>อธิบายหลักการของ Reverse/Outbound Tunnel</li>
+<li>ติดตั้ง <code>cloudflared</code></li>
+<li>สร้าง Named Tunnel</li>
+<li>เชื่อม Domain/Subdomain เข้ากับ Tunnel</li>
+<li>สร้าง Ingress Rules</li>
+<li>เปิด Node-RED ผ่าน HTTPS</li>
+<li>เปิด Web Service ผ่าน HTTPS</li>
+<li>ใช้งาน SSH ผ่าน Cloudflare Tunnel</li>
+<li>ติดตั้ง Tunnel เป็น systemd Service</li>
+<li>ตรวจสอบ Tunnel Status และ Log</li>
+<li>อธิบายความแตกต่างระหว่าง Tunnel กับ Port Forwarding</li>
+<li>อธิบายความแตกต่างระหว่าง Remote Access กับ MQTT Security</li>
+<li>ทดสอบ Service จาก Network ภายนอก</li>
+<li>เข้าใจว่า Tunnel ไม่ได้แทน Authentication ของ Application</li>
+</ul>
+<hr>
+<h2 id="25-3-architecture-ก่อน-lab-25">25.3 Architecture ก่อน LAB 25</h2>
+<p>ภายใน LAN</p>
+<pre class="language-text"><code>ESP32
+   │
+   ▼
+Mosquitto
+   │
+   ▼
+Raspberry Pi
+   │
+   ├── Node-RED :1880
+   ├── nginx    :80
+   ├── SSH      :22
+   ├── SQLite
+   └── Python</code></pre>
+<p>ผู้ใช้ใน LAN เข้าได้ผ่าน</p>
+<pre class="language-text"><code>http://192.168.1.50:1880</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>ssh piuser@192.168.1.50</code></pre>
+<p>แต่จาก Internet</p>
+<pre class="language-text"><code>Remote User
+    │
+    ▼
+ Internet
+    │
+    ▼
+   NAT
+    │
+    X
+    │
+Raspberry Pi</code></pre>
+<p>ไม่สามารถเข้าถึงได้โดยตรงในหลายกรณี</p>
+<hr>
+<h2 id="25-4-architecture-หลัง-lab-25">25.4 Architecture หลัง LAB 25</h2>
+<pre class="language-text"><code>Remote User
+     │
+     │ HTTPS / SSH
+     ▼
+Cloudflare Edge
+     │
+     │ Cloudflare Tunnel
+     ▼
+  cloudflared
+Raspberry Pi
+     │
+     ├── localhost:80
+     │      └── nginx
+     │
+     ├── localhost:1880
+     │      └── Node-RED
+     │
+     └── localhost:22
+            └── SSH</code></pre>
+<p>จุดสำคัญคือ</p>
+<pre class="language-text"><code>Raspberry Pi → Cloudflare</code></pre>
+<p>เป็น Connection ขาออก ไม่ใช่</p>
+<pre class="language-text"><code>Internet → Router → Raspberry Pi</code></pre>
+<p>โดยตรง</p>
+<hr>
+<h2 id="25-5-port-forwarding-แบบเดิม">25.5 Port Forwarding แบบเดิม</h2>
+<p>Architecture</p>
+<pre class="language-text"><code>Internet
+   │
+   ▼
+Public IP
+   │
+   ▼
+ Router
+   │
+   │ Port Forward
+   ▼
+Raspberry Pi</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>Public_IP:1880
+      ↓
+RaspberryPi:1880</code></pre>
+<p>ปัญหาที่อาจพบ</p>
+<pre class="language-text"><code>ไม่มี Public IPv4
+อยู่หลัง CGNAT
+Router ตั้งค่าไม่ได้
+University Firewall
+เปิด Service ตรงสู่ Internet</code></pre>
+<hr>
+<h2 id="25-6-cloudflare-tunnel">25.6 Cloudflare Tunnel</h2>
+<p>Architecture</p>
+<pre class="language-text"><code>Raspberry Pi
+     │
+     │ outbound encrypted tunnel
+     ▼
+  Cloudflare
+     ▲
+     │
+  Internet
+     ▲
+     │
+  Remote User</code></pre>
+<p>ข้อดีเชิงสถาปัตยกรรม</p>
+<ul>
+<li>ไม่ต้องใช้ Public IPv4 ที่ Raspberry Pi</li>
+<li>ไม่ต้องทำ Port Forwarding</li>
+<li>ทำงานได้ในหลาย Network ที่อยู่หลัง NAT/CGNAT</li>
+<li>Web Service สามารถเข้าผ่าน HTTPS</li>
+<li>ใช้ Subdomain แยกแต่ละ Service ได้</li>
+<li>Tunnel สามารถ Run เป็น Service</li>
+<li>ลดการเปิด Inbound Port ที่ Router</li>
+</ul>
+<hr>
+<h2 id="25-7-สิ่งที่ต้องมี">25.7 สิ่งที่ต้องมี</h2>
+<p>สำหรับ LAB นี้ต้องมี</p>
+<pre class="language-text"><code>Raspberry Pi
+Internet Connection
+Cloudflare Account
+Domain ที่จัดการ DNS ผ่าน Cloudflare
+cloudflared</code></pre>
+<p>ตัวอย่าง Domain ใน LAB</p>
+<pre class="language-text"><code>vodun.cc</code></pre>
+<p>ตัวอย่าง Raspberry Pi</p>
+<pre class="language-text"><code>kathu</code></pre>
+<p>ดังนั้นจะใช้</p>
+<pre class="language-text"><code>pi.vodun.cc</code></pre>
+<p>สำหรับ Web และ</p>
+<pre class="language-text"><code>node-red.vodun.cc</code></pre>
+<p>สำหรับ Node-RED และ</p>
+<pre class="language-text"><code>ssh.vodun.cc</code></pre>
+<p>สำหรับ SSH ชื่อจริงสามารถเปลี่ยนตามระบบของแต่ละกลุ่มได้</p>
+<hr>
+<h2 id="25-8-ตรวจสอบ-internet">25.8 ตรวจสอบ Internet</h2>
+<p>บน Raspberry Pi</p>
+<pre class="language-bash"><code>ping -c 4 1.1.1.1</code></pre>
+<p>ตรวจ DNS</p>
+<pre class="language-bash"><code>ping -c 4 cloudflare.com</code></pre>
+<p>ถ้าทำงาน แสดงว่า Pi สามารถออก Internet ได้</p>
+<hr>
+<h2 id="25-9-ตรวจสอบ-architecture-ภายในก่อน">25.9 ตรวจสอบ Architecture ภายในก่อน</h2>
+<p>ก่อนทำ Tunnel ต้องให้ Service ภายในทำงานก่อน ตรวจ nginx</p>
+<pre class="language-bash"><code>systemctl status nginx</code></pre>
+<p>ตรวจ Node-RED</p>
+<pre class="language-bash"><code>systemctl status nodered</code></pre>
+<p>ตรวจ SSH</p>
+<pre class="language-bash"><code>systemctl status ssh</code></pre>
+<p>ตรวจ Port</p>
+<pre class="language-bash"><code>sudo ss -lntp</code></pre>
+<p>ควรเห็น Service เช่น</p>
+<pre class="language-text"><code>:22
+:80
+:1880</code></pre>
+<hr>
+<h2 id="25-10-ทดสอบ-local-service">25.10 ทดสอบ Local Service</h2>
+<p>จาก Raspberry Pi</p>
+<pre class="language-bash"><code>curl http://localhost</code></pre>
+<p>ทดสอบ Node-RED</p>
+<pre class="language-bash"><code>curl -I http://localhost:1880</code></pre>
+<p>หรือจากเครื่องใน LAN เปิด</p>
+<pre class="language-text"><code>http://192.168.1.50</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>http://192.168.1.50:1880</code></pre>
+<p>หลักสำคัญคือ</p>
+<pre class="language-text"><code>Local Service ต้องทำงานก่อนสร้าง Tunnel</code></pre>
+<p>ถ้า</p>
+<pre class="language-text"><code>localhost:1880</code></pre>
+<p>ยังเข้าไม่ได้ Cloudflare Tunnel ก็ไม่สามารถแก้ปัญหาของ Node-RED Service เองได้</p>
+<hr>
+<h2 id="25-11-ตรวจ-architecture-ก่อนทำ-tunnel">25.11 ตรวจ Architecture ก่อนทำ Tunnel</h2>
+<p>ต้องแยกปัญหาเป็น Layer</p>
+<pre class="language-text"><code>Application
+    ↓
+Local Network
+    ↓
+Tunnel
+    ↓
+DNS
+    ↓
+Internet Client</code></pre>
+<p>ควรทดสอบจากด้านในออกด้านนอก</p>
+<pre class="language-text"><code>Step 1
+localhost
+
+Step 2
+LAN IP
+
+Step 3
+Tunnel
+
+Step 4
+Domain
+
+Step 5
+External Network</code></pre>
+<p>วิธีนี้ช่วย Debug ได้ง่ายกว่า</p>
+<hr>
+<h2 id="25-12-ติดตั้ง-cloudflared">25.12 ติดตั้ง cloudflared</h2>
+<p>วิธีติดตั้งอาจเปลี่ยนตาม Debian/Cloudflare เวอร์ชัน</p>
+<p>หลังติดตั้งแล้ว สิ่งที่ LAB ต้องได้คือคำสั่ง</p>
+<pre class="language-text"><code>cloudflared</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>cloudflared --version</code></pre>
+<p>ควรแสดง Version ของ cloudflared</p>
+<hr>
+<h2 id="25-13-ตรวจ-architecture-ของ-raspberry-pi">25.13 ตรวจ Architecture ของ Raspberry Pi</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>uname -m</code></pre>
+<p>ตัวอย่าง Raspberry Pi OS 64-bit</p>
+<pre class="language-text"><code>aarch64</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>arm64</code></pre>
+<p>ต้องเลือก Package ให้ตรง Architecture ไม่ควรนำ Package</p>
+<pre class="language-text"><code>amd64</code></pre>
+<p>ของ PC x86-64 มาใช้กับ Raspberry Pi ARM</p>
+<hr>
+<h2 id="25-14-login-cloudflare">25.14 Login Cloudflare</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel login</code></pre>
+<p>Command จะให้ URL สำหรับ Authentication เปิด URL นั้นใน Browser Login Cloudflare เลือก Domain ที่ต้องการอนุญาตให้ Tunnel ใช้งาน เมื่อสำเร็จ cloudflared จะได้รับ Credential ที่จำเป็นสำหรับจัดการ Tunnel</p>
+<hr>
+<h2 id="25-15-ตรวจสอบ-directory">25.15 ตรวจสอบ Directory</h2>
+<p>หลัง Login ใช้</p>
+<pre class="language-bash"><code>ls -la ~/.cloudflared</code></pre>
+<p>อาจพบ File ที่เกี่ยวข้องกับ Authentication/Credentials ห้ามนำ Credential File ไปเผยแพร่ เช่น</p>
+<pre class="language-text"><code>GitHub
+Public Repository
+Screenshot
+Shared Folder</code></pre>
+<p>เพราะ Credential ถือเป็น Secret</p>
+<hr>
+<h2 id="25-16-สร้าง-named-tunnel">25.16 สร้าง Named Tunnel</h2>
+<p>สร้าง Tunnel ชื่อ</p>
+<pre class="language-text"><code>kathu</code></pre>
+<p>ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel create kathu</code></pre>
+<p>ผลจะได้</p>
+<pre class="language-text"><code>Tunnel ID</code></pre>
+<p>รูปแบบ UUID เช่น</p>
+<pre class="language-text"><code>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</code></pre>
+<p>และ Credentials File เช่น</p>
+<pre class="language-text"><code>~/.cloudflared/TUNNEL_ID.json</code></pre>
+<hr>
+<h2 id="25-17-ตรวจสอบ-tunnel">25.17 ตรวจสอบ Tunnel</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>NAME
+kathu</code></pre>
+<p>พร้อม Tunnel ID เก็บ Tunnel ID ไว้ใช้ใน Configuration</p>
+<hr>
+<h2 id="25-18-named-tunnel-vs-quick-tunnel">25.18 Named Tunnel vs Quick Tunnel</h2>
+<p>Quick Tunnel เหมาะกับ</p>
+<pre class="language-text"><code>Testing
+Temporary Demo</code></pre>
+<p>URL อาจเป็น Temporary URL แต่ LAB นี้ใช้</p>
+<pre class="language-text"><code>Named Tunnel</code></pre>
+<p>เพราะต้องการ</p>
+<pre class="language-text"><code>Stable Configuration
+Custom Domain
+Multiple Services
+systemd
+Reboot Recovery</code></pre>
+<hr>
+<h2 id="25-19-สร้าง-configuration-file">25.19 สร้าง Configuration File</h2>
+<p>สร้าง</p>
+<pre class="language-bash"><code>nano ~/.cloudflared/config.yml</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-yaml"><code>tunnel: TUNNEL_ID
+credentials-file: /home/piuser/.cloudflared/TUNNEL_ID.json
+
+ingress:
+  - hostname: pi.vodun.cc
+    service: http://localhost:80
+
+  - hostname: node-red.vodun.cc
+    service: http://localhost:1880
+
+  - hostname: ssh.vodun.cc
+    service: ssh://localhost:22
+
+  - service: http_status:404</code></pre>
+<p>เปลี่ยน</p>
+<pre class="language-text"><code>TUNNEL_ID</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>piuser</code></pre>
+<p>ให้ตรงกับเครื่องจริง</p>
+<hr>
+<h2 id="25-20-ingress-rule">25.20 Ingress Rule</h2>
+<p>ส่วน</p>
+<pre class="language-yaml"><code>ingress:</code></pre>
+<p>คือ Mapping ระหว่าง</p>
+<pre class="language-text"><code>Public Hostname</code></pre>
+<p>กับ</p>
+<pre class="language-text"><code>Local Service</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>pi.vodun.cc
+      ↓
+localhost:80
+
+node-red.vodun.cc
+      ↓
+localhost:1880
+
+ssh.vodun.cc
+      ↓
+localhost:22</code></pre>
+<p>ดังนั้นไม่ต้องเปิด Port</p>
+<pre class="language-text"><code>80
+1880
+22</code></pre>
+<p>จาก Router สู่ Internet โดยตรง</p>
+<hr>
+<h2 id="25-21-catch-all-rule">25.21 Catch-all Rule</h2>
+<p>บรรทัดสุดท้าย</p>
+<pre class="language-yaml"><code>- service: http_status:404</code></pre>
+<p>มีความสำคัญ ใช้รองรับ Request ที่ไม่ตรงกับ Ingress Rule ใด ผลคือ</p>
+<pre class="language-text"><code>HTTP 404</code></pre>
+<p>แทนการ Forward ไปยัง Service ที่ไม่ต้องการ</p>
+<hr>
+<h2 id="25-22-ตรวจสอบ-configuration">25.22 ตรวจสอบ Configuration</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel ingress validate</code></pre>
+<p>ถ้า Configuration ถูกต้องควรผ่าน Validation ถ้ามี YAML Error ให้แก้ก่อน Run Tunnel</p>
+<hr>
+<h2 id="25-23-ตรวจสอบ-ingress-mapping">25.23 ตรวจสอบ Ingress Mapping</h2>
+<p>สามารถตรวจสอบ Rule ที่จะ Match กับ URL เช่น</p>
+<pre class="language-bash"><code>cloudflared tunnel ingress rule \
+https://pi.vodun.cc</code></pre>
+<p>ควร Match ไปยัง</p>
+<pre class="language-text"><code>http://localhost:80</code></pre>
+<p>และ</p>
+<pre class="language-bash"><code>cloudflared tunnel ingress rule \
+https://node-red.vodun.cc</code></pre>
+<p>ควร Match</p>
+<pre class="language-text"><code>http://localhost:1880</code></pre>
+<hr>
+<h2 id="25-24-สร้าง-dns-route">25.24 สร้าง DNS Route</h2>
+<p>สำหรับ Web</p>
+<pre class="language-bash"><code>cloudflared tunnel route dns \
+kathu \
+pi.vodun.cc</code></pre>
+<p>สำหรับ Node-RED</p>
+<pre class="language-bash"><code>cloudflared tunnel route dns \
+kathu \
+node-red.vodun.cc</code></pre>
+<p>สำหรับ SSH</p>
+<pre class="language-bash"><code>cloudflared tunnel route dns \
+kathu \
+ssh.vodun.cc</code></pre>
+<p>Cloudflare จะสร้าง DNS Mapping ที่ชี้ Hostname ไปยัง Tunnel</p>
+<hr>
+<h2 id="25-25-dns-architecture">25.25 DNS Architecture</h2>
+<p>แนวคิดคือ</p>
+<pre class="language-text"><code>pi.vodun.cc
+      │
+      ▼
+Cloudflare DNS
+      │
+      ▼
+Cloudflare Tunnel
+      │
+      ▼
+Raspberry Pi
+      │
+      ▼
+localhost:80</code></pre>
+<p>ไม่ใช่</p>
+<pre class="language-text"><code>DNS
+  ↓
+Public IP ของ Raspberry Pi</code></pre>
+<p>โดยตรง</p>
+<hr>
+<h2 id="25-26-run-tunnel-แบบ-manual-ก่อน">25.26 Run Tunnel แบบ Manual ก่อน</h2>
+<p>ก่อนติดตั้งเป็น Service ควร Run แบบ Manual ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel run kathu</code></pre>
+<p>ควรเห็น Log แสดงว่า Tunnel พยายามเชื่อมต่อ Cloudflare เปิด Terminal นี้ไว้ แล้วทดสอบจาก Client ภายนอก</p>
+<hr>
+<h2 id="25-27-ทดสอบ-web">25.27 ทดสอบ Web</h2>
+<p>เปิด Browser</p>
+<pre class="language-text"><code>https://pi.vodun.cc</code></pre>
+<p>ควรเห็น Web Page จาก</p>
+<pre class="language-text"><code>nginx</code></pre>
+<p>บน Raspberry Pi Flow คือ</p>
+<pre class="language-text"><code>Browser
+   ↓
+HTTPS
+   ↓
+Cloudflare
+   ↓
+Tunnel
+   ↓
+cloudflared
+   ↓
+localhost:80
+   ↓
+nginx</code></pre>
+<hr>
+<h2 id="25-28-ทดสอบ-node-red">25.28 ทดสอบ Node-RED</h2>
+<p>เปิด</p>
+<pre class="language-text"><code>https://node-red.vodun.cc</code></pre>
+<p>ควรเข้าถึง Node-RED Flow</p>
+<pre class="language-text"><code>Browser
+   ↓
+HTTPS
+   ↓
+Cloudflare
+   ↓
+Tunnel
+   ↓
+localhost:1880
+   ↓
+Node-RED</code></pre>
+<hr>
+<h2 id="25-29-สำคัญ-tunnel-ไม่ใช่-node-red-authentication">25.29 สำคัญ - Tunnel ไม่ใช่ Node-RED Authentication</h2>
+<p>Cloudflare Tunnel ทำให้ Service</p>
+<pre class="language-text"><code>Reachable</code></pre>
+<p>จากภายนอก แต่ไม่ได้หมายความว่า Node-RED Application มี Authentication ที่เหมาะสมโดยอัตโนมัติ ดังนั้น Node-RED ควรมี</p>
+<pre class="language-text"><code>Authentication</code></pre>
+<p>ของตัวเอง หรือเพิ่ม Access Policy ที่เหมาะสม หลักสำคัญ</p>
+<pre class="language-text"><code>Tunnel
+   ≠
+Application Login</code></pre>
+<hr>
+<h2 id="25-30-อย่าเปิด-node-red-editor-แบบไม่มีการป้องกัน">25.30 อย่าเปิด Node-RED Editor แบบไม่มีการป้องกัน</h2>
+<p>Node-RED Editor สามารถ</p>
+<pre class="language-text"><code>แก้ Flow
+Deploy Flow
+Publish MQTT
+Run Logic
+เข้าถึง Credential ที่ Flow ใช้ในบางรูปแบบ</code></pre>
+<p>ดังนั้นการเปิด</p>
+<pre class="language-text"><code>Node-RED Editor</code></pre>
+<p>สู่ Internet โดยไม่มี Authentication เป็นความเสี่ยงสูง อย่างน้อยควรมี</p>
+<pre class="language-text"><code>Node-RED Admin Authentication</code></pre>
+<p>ก่อนใช้ Remote Access</p>
+<hr>
+<h2 id="25-31-dashboard-กับ-editor-ควรคิดแยกกัน">25.31 Dashboard กับ Editor ควรคิดแยกกัน</h2>
+<p>ผู้ใช้ Dashboard อาจต้องการเพียง</p>
+<pre class="language-text"><code>View Data
+Control Device</code></pre>
+<p>แต่ Administrator ต้องการ</p>
+<pre class="language-text"><code>Edit Flow
+Deploy
+Configure System</code></pre>
+<p>จึงไม่ควรถือว่า</p>
+<pre class="language-text"><code>Dashboard User
+    =
+Node-RED Administrator</code></pre>
+<p>ระบบจริงควรแยก Permission ตามหน้าที่</p>
+<hr>
+<h2 id="25-32-ssh-ผ่าน-cloudflare-tunnel">25.32 SSH ผ่าน Cloudflare Tunnel</h2>
+<p>Ingress</p>
+<pre class="language-yaml"><code>- hostname: ssh.vodun.cc
+  service: ssh://localhost:22</code></pre>
+<p>ไม่ได้หมายความว่า Client จะใช้</p>
+<pre class="language-bash"><code>ssh piuser@ssh.vodun.cc</code></pre>
+<p>แบบ TCP ปกติได้เสมอโดยตรง Client ต้องใช้ cloudflared เป็น Proxy สำหรับ Tunnel รูปแบบนี้</p>
+<hr>
+<h2 id="25-33-ติดตั้ง-cloudflared-บน-client">25.33 ติดตั้ง cloudflared บน Client</h2>
+<p>เครื่องที่ใช้ Remote SSH เช่น</p>
+<pre class="language-text"><code>Windows
+macOS
+Linux</code></pre>
+<p>ต้องมี</p>
+<pre class="language-text"><code>cloudflared</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>cloudflared --version</code></pre>
+<hr>
+<h2 id="25-34-ทดสอบ-ssh-proxy">25.34 ทดสอบ SSH Proxy</h2>
+<p>รูปแบบ</p>
+<pre class="language-bash"><code>cloudflared access ssh \
+--hostname ssh.vodun.cc</code></pre>
+<p>สำหรับการใช้งานร่วมกับ OpenSSH สามารถใช้เป็น</p>
+<pre class="language-text"><code>ProxyCommand</code></pre>
+<hr>
+<h2 id="25-35-ssh-จาก-macos-linux">25.35 SSH จาก macOS/Linux</h2>
+<p>แก้</p>
+<pre class="language-text"><code>~/.ssh/config</code></pre>
+<p>เพิ่ม</p>
+<pre class="language-sshconfig"><code>Host kathu
+    HostName ssh.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h</code></pre>
+<p>จากนั้นใช้</p>
+<pre class="language-bash"><code>ssh kathu</code></pre>
+<p>แทน Command ยาว</p>
+<hr>
+<h2 id="25-36-ssh-แบบ-command-เดียว">25.36 SSH แบบ Command เดียว</h2>
+<p>สามารถใช้</p>
+<pre class="language-bash"><code>ssh \
+-o ProxyCommand=&quot;cloudflared access ssh --hostname %h&quot; \
+piuser@ssh.vodun.cc</code></pre>
+<p>ถ้า Configuration ถูกต้องจะเชื่อมไปยัง</p>
+<pre class="language-text"><code>Raspberry Pi SSH :22</code></pre>
+<p>ผ่าน Cloudflare</p>
+<hr>
+<h2 id="25-37-ssh-จาก-windows">25.37 SSH จาก Windows</h2>
+<p>ถ้ามี</p>
+<pre class="language-text"><code>OpenSSH Client
+cloudflared</code></pre>
+<p>สามารถสร้าง File</p>
+<pre class="language-text"><code>C:\Users\USERNAME\.ssh\config</code></pre>
+<p>เช่น</p>
+<pre class="language-sshconfig"><code>Host kathu
+    HostName ssh.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h</code></pre>
+<p>จากนั้นใช้</p>
+<pre class="language-bash"><code>ssh kathu</code></pre>
+<hr>
+<h2 id="25-38-ssh-authentication-ยังจำเป็น">25.38 SSH Authentication ยังจำเป็น</h2>
+<p>Tunnel มีหน้าที่</p>
+<pre class="language-text"><code>Transport / Reachability</code></pre>
+<p>แต่ SSH ยังต้องตรวจสอบ</p>
+<pre class="language-text"><code>SSH Authentication</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>Password
+SSH Key</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>Cloudflare Tunnel
+      ↓
+SSH Server
+      ↓
+SSH Authentication</code></pre>
+<p>ยังเป็นคนละ Layer</p>
+<hr>
+<h2 id="25-39-แนะนำ-ssh-key">25.39 แนะนำ SSH Key</h2>
+<p>บน Client</p>
+<pre class="language-bash"><code>ssh-keygen -t ed25519</code></pre>
+<p>จากนั้นนำ Public Key ไปติดตั้งที่ Raspberry Pi เช่น</p>
+<pre class="language-text"><code>~/.ssh/authorized_keys</code></pre>
+<p>หลังทดสอบ Key Login สำเร็จแล้ว สามารถพิจารณาปิด Password Login ตาม Requirement ของระบบ ข้อสำคัญ</p>
+<pre class="language-text"><code>อย่าปิด Password Login
+ก่อนทดสอบ SSH Key สำเร็จ</code></pre>
+<p>ไม่เช่นนั้นอาจ Lock ตัวเองออกจากเครื่อง</p>
+<hr>
+<h2 id="25-40-remote-access-security-layers">25.40 Remote Access Security Layers</h2>
+<p>สำหรับ SSH</p>
+<pre class="language-text"><code>Cloudflare Tunnel
+       ↓
+Cloudflare Access
+       ↓
+SSH Authentication
+       ↓
+Linux User Permission</code></pre>
+<p>สำหรับ Node-RED</p>
+<pre class="language-text"><code>Cloudflare Tunnel
+       ↓
+Cloudflare Access
+       ↓
+Node-RED Authentication
+       ↓
+Application Permission</code></pre>
+<p>แต่ละ Layer มีหน้าที่ต่างกัน</p>
+<hr>
+<h2 id="25-41-cloudflare-access">25.41 Cloudflare Access</h2>
+<p>Tunnel ทำให้ Service สามารถเข้าถึงผ่าน Cloudflare แต่ถ้าต้องการจำกัดว่า</p>
+<pre class="language-text"><code>ใคร</code></pre>
+<p>สามารถเข้า Web Application ได้ สามารถเพิ่ม</p>
+<pre class="language-text"><code>Cloudflare Access</code></pre>
+<p>หน้า Service Flow</p>
+<pre class="language-text"><code>Remote User
+     ↓
+Cloudflare Access
+     ↓
+Identity / Policy
+     ↓
+Tunnel
+     ↓
+Application</code></pre>
+<p>จึงเป็น Security Layer เพิ่มเติม</p>
+<hr>
+<h2 id="25-42-tunnel-access-policy">25.42 Tunnel ≠ Access Policy</h2>
+<p>ต้องแยกคำว่า</p>
+<pre class="language-text"><code>Tunnel</code></pre>
+<p>กับ</p>
+<pre class="language-text"><code>Access</code></pre>
+<p>Tunnel</p>
+<pre class="language-text"><code>เชื่อม Cloudflare
+กับ Local Service</code></pre>
+<p>Access</p>
+<pre class="language-text"><code>กำหนดว่า User ใด
+ได้รับอนุญาตให้ผ่าน</code></pre>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>Tunnel Active</code></pre>
+<p>ไม่ได้หมายความว่า</p>
+<pre class="language-text"><code>Access Control Complete</code></pre>
+<hr>
+<h2 id="25-43-multiple-services-one-tunnel">25.43 Multiple Services One Tunnel</h2>
+<p>Tunnel เดียวสามารถ Route หลาย Hostname เช่น</p>
+<pre class="language-text"><code>pi.vodun.cc
+    → nginx:80
+
+node-red.vodun.cc
+    → Node-RED:1880
+
+ssh.vodun.cc
+    → SSH:22</code></pre>
+<p>ข้อดีคือ</p>
+<pre class="language-text"><code>Tunnel เดียว
+หลาย Service</code></pre>
+<p>ไม่จำเป็นต้องสร้าง Tunnel ใหม่ทุก Port</p>
+<hr>
+<h2 id="25-44-multiple-raspberry-pi">25.44 Multiple Raspberry Pi</h2>
+<p>ถ้ามี Raspberry Pi</p>
+<pre class="language-text"><code>kata
+karon
+kathu
+kathu</code></pre>
+<p>แนวทางที่เข้าใจง่ายสำหรับ LAB คือให้แต่ละ Pi มี Tunnel ของตัวเอง ตัวอย่าง</p>
+<pre class="language-text"><code>kata.vodun.cc
+karon.vodun.cc
+kathu.vodun.cc
+pi.vodun.cc</code></pre>
+<p>Node-RED</p>
+<pre class="language-text"><code>nodered-kata.vodun.cc
+nodered-karon.vodun.cc
+nodered-kathu.vodun.cc
+node-red.vodun.cc</code></pre>
+<p>SSH</p>
+<pre class="language-text"><code>ssh-kata.vodun.cc
+ssh-karon.vodun.cc
+ssh-kathu.vodun.cc
+ssh.vodun.cc</code></pre>
+<p>ทำให้ Mapping</p>
+<pre class="language-text"><code>Hostname
+   ↔
+Raspberry Pi</code></pre>
+<p>ชัดเจน</p>
+<hr>
+<h2 id="25-45-naming-convention">25.45 Naming Convention</h2>
+<p>ควรกำหนด Naming Convention ตั้งแต่ต้น ตัวอย่าง</p>
+<pre class="language-text"><code>{service}-{device}.{domain}</code></pre>
+<p>เช่น</p>
+<pre class="language-text"><code>node-red.vodun.cc
+ssh.vodun.cc</code></pre>
+<p>หรือสำหรับ Web หลัก</p>
+<pre class="language-text"><code>pi.vodun.cc</code></pre>
+<p>เมื่อมี Device จำนวนมากจะช่วยลดความสับสน</p>
+<hr>
+<h2 id="25-46-ติดตั้ง-tunnel-เป็น-systemd-service">25.46 ติดตั้ง Tunnel เป็น systemd Service</h2>
+<p>หลังทดสอบ</p>
+<pre class="language-bash"><code>cloudflared tunnel run kathu</code></pre>
+<p>สำเร็จแล้ว จึงติดตั้งเป็น Service แนวทางทั่วไปคือใช้</p>
+<pre class="language-bash"><code>cloudflared service install</code></pre>
+<p>แต่ต้องระวังว่าเมื่อใช้ <code>sudo</code> Home Directory/ตำแหน่ง Configuration ที่ cloudflared มองหาอาจต่างจาก User ปกติ วิธีที่ชัดเจนสำหรับ LAB คือกำหนด Configuration Path ให้แน่นอนก่อนติดตั้ง Service</p>
+<hr>
+<h2 id="25-47-เก็บ-configuration-ใน-etc-cloudflared">25.47 เก็บ Configuration ใน /etc/cloudflared</h2>
+<p>สร้าง Directory</p>
+<pre class="language-bash"><code>sudo mkdir -p /etc/cloudflared</code></pre>
+<p>Copy Configuration</p>
+<pre class="language-bash"><code>sudo cp \
+~/.cloudflared/config.yml \
+/etc/cloudflared/config.yml</code></pre>
+<p>Copy Credentials</p>
+<pre class="language-bash"><code>sudo cp \
+~/.cloudflared/TUNNEL_ID.json \
+/etc/cloudflared/TUNNEL_ID.json</code></pre>
+<p>จากนั้นแก้</p>
+<pre class="language-bash"><code>sudo nano \
+/etc/cloudflared/config.yml</code></pre>
+<p>ให้</p>
+<pre class="language-yaml"><code>credentials-file:</code></pre>
+<p>ชี้ไปยัง</p>
+<pre class="language-text"><code>/etc/cloudflared/TUNNEL_ID.json</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-yaml"><code>tunnel: TUNNEL_ID
+
+credentials-file: /etc/cloudflared/TUNNEL_ID.json
+
+ingress:
+  - hostname: pi.vodun.cc
+    service: http://localhost:80
+
+  - hostname: node-red.vodun.cc
+    service: http://localhost:1880
+
+  - hostname: ssh.vodun.cc
+    service: ssh://localhost:22
+
+  - service: http_status:404</code></pre>
+<hr>
+<h2 id="25-48-ป้องกัน-credentials">25.48 ป้องกัน Credentials</h2>
+<p>กำหนด Permission</p>
+<pre class="language-bash"><code>sudo chown -R root:root \
+/etc/cloudflared</code></pre>
+<p>จากนั้นจำกัด Permission ของ Credential</p>
+<pre class="language-bash"><code>sudo chmod 600 \
+/etc/cloudflared/TUNNEL_ID.json</code></pre>
+<p>และ Configuration</p>
+<pre class="language-bash"><code>sudo chmod 600 \
+/etc/cloudflared/config.yml</code></pre>
+<p>อย่าเก็บ Credentials ใน</p>
+<pre class="language-text"><code>GitHub
+Shared Drive
+Public Repository
+Student Submission</code></pre>
+<hr>
+<h2 id="25-49-validate-configuration-ใหม่">25.49 Validate Configuration ใหม่</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel \
+--config /etc/cloudflared/config.yml \
+ingress validate</code></pre>
+<p>ต้องผ่านก่อนสร้าง Service</p>
+<hr>
+<h2 id="25-50-ทดสอบ-configuration-จาก-etc">25.50 ทดสอบ Configuration จาก /etc</h2>
+<p>Run</p>
+<pre class="language-bash"><code>sudo cloudflared tunnel \
+--config /etc/cloudflared/config.yml \
+run</code></pre>
+<p>ถ้าทำงาน แสดงว่า Service สามารถใช้ Configuration ชุดนี้ได้ กด</p>
+<pre class="language-text"><code>Ctrl+C</code></pre>
+<p>หลังทดสอบ</p>
+<hr>
+<h2 id="25-51-ติดตั้ง-service">25.51 ติดตั้ง Service</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sudo cloudflared \
+--config /etc/cloudflared/config.yml \
+service install</code></pre>
+<p>จากนั้น</p>
+<pre class="language-bash"><code>sudo systemctl enable cloudflared
+
+sudo systemctl start cloudflared</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>sudo systemctl enable --now cloudflared</code></pre>
+<hr>
+<h2 id="25-52-ตรวจสอบ-service">25.52 ตรวจสอบ Service</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>systemctl status cloudflared</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<p>ตรวจสอบว่า Enable แล้ว</p>
+<pre class="language-bash"><code>systemctl is-enabled cloudflared</code></pre>
+<p>ควรได้</p>
+<pre class="language-text"><code>enabled</code></pre>
+<hr>
+<h2 id="25-53-ดู-log">25.53 ดู Log</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>journalctl \
+-u cloudflared \
+-f</code></pre>
+<p>หรือดูย้อนหลัง</p>
+<pre class="language-bash"><code>journalctl \
+-u cloudflared \
+-n 100 \
+--no-pager</code></pre>
+<p>Log มีประโยชน์มากสำหรับ Debug</p>
+<pre class="language-text"><code>DNS
+Tunnel Connection
+Ingress
+Origin Service
+Authentication</code></pre>
+<hr>
+<h2 id="25-54-reboot-test">25.54 Reboot Test</h2>
+<p>Reboot Raspberry Pi</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลังเครื่องกลับมา ตรวจ</p>
+<pre class="language-bash"><code>systemctl status cloudflared</code></pre>
+<p>ต้องเป็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<p>ทดสอบ</p>
+<pre class="language-text"><code>https://pi.vodun.cc</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>https://node-red.vodun.cc</code></pre>
+<p>อีกครั้ง นี่คือ</p>
+<pre class="language-text"><code>Remote Access Recovery after Reboot</code></pre>
+<hr>
+<h2 id="25-55-ทดสอบจาก-network-ภายนอกจริง">25.55 ทดสอบจาก Network ภายนอกจริง</h2>
+<p>อย่าทดสอบเฉพาะจาก LAN เดียวกัน ใช้</p>
+<pre class="language-text"><code>Smartphone 4G/5G</code></pre>
+<p>หรือ Network อื่น แล้วเปิด</p>
+<pre class="language-text"><code>https://pi.vodun.cc</code></pre>
+<p>ถ้าเข้าได้ แสดงว่า Remote Access ใช้งานจากภายนอกได้จริง</p>
+<hr>
+<h2 id="25-56-test-matrix">25.56 Test Matrix</h2>
+<table>
+<thead><tr>
+<th>Test</th>
+<th>Expected</th>
+</tr></thead><tbody>
+<tr>
+<td>localhost:80</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>localhost:1880</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Tunnel manual run</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Public web hostname</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Public Node-RED hostname</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>SSH through cloudflared</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>cloudflared service</td>
+<td>active</td>
+</tr>
+<tr>
+<td>Reboot Pi</td>
+<td>Tunnel recovers</td>
+</tr>
+<tr>
+<td>Stop nginx</td>
+<td>Web hostname fails</td>
+</tr>
+<tr>
+<td>Start nginx</td>
+<td>Web hostname recovers</td>
+</tr>
+<tr>
+<td>Stop Node-RED</td>
+<td>Node-RED hostname fails</td>
+</tr>
+<tr>
+<td>Start Node-RED</td>
+<td>Node-RED hostname recovers</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="25-57-ทดสอบ-origin-failure">25.57 ทดสอบ Origin Failure</h2>
+<p>หยุด nginx</p>
+<pre class="language-bash"><code>sudo systemctl stop nginx</code></pre>
+<p>จากนั้นเปิด</p>
+<pre class="language-text"><code>https://pi.vodun.cc</code></pre>
+<p>Tunnel อาจยัง</p>
+<pre class="language-text"><code>ONLINE</code></pre>
+<p>แต่ Origin Service</p>
+<pre class="language-text"><code>nginx</code></pre>
+<p>ไม่ทำงาน นี่แสดงว่า</p>
+<pre class="language-text"><code>Tunnel Online
+    ≠
+Application Online</code></pre>
+<hr>
+<h2 id="25-58-เปิด-nginx-กลับ">25.58 เปิด nginx กลับ</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sudo systemctl start nginx</code></pre>
+<p>ตรวจ</p>
+<pre class="language-bash"><code>systemctl status nginx</code></pre>
+<p>จากนั้น Refresh</p>
+<pre class="language-text"><code>https://pi.vodun.cc</code></pre>
+<p>Service ควรกลับมา</p>
+<hr>
+<h2 id="25-59-ทดสอบ-node-red-failure">25.59 ทดสอบ Node-RED Failure</h2>
+<p>หยุด</p>
+<pre class="language-bash"><code>sudo systemctl stop nodered</code></pre>
+<p>Tunnel ยังทำงาน แต่</p>
+<pre class="language-text"><code>node-red.vodun.cc</code></pre>
+<p>จะใช้งานไม่ได้ เปิดกลับ</p>
+<pre class="language-bash"><code>sudo systemctl start nodered</code></pre>
+<p>นี่ช่วยให้คุณเข้าใจ Layer</p>
+<pre class="language-text"><code>Cloudflare
+    ↓
+Tunnel
+    ↓
+Origin Service</code></pre>
+<p>แต่ละ Layer สามารถ Failure แยกกันได้</p>
+<hr>
+<h2 id="25-60-troubleshooting-model">25.60 Troubleshooting Model</h2>
+<p>ถ้า</p>
+<pre class="language-text"><code>https://node-red.vodun.cc</code></pre>
+<p>เข้าไม่ได้ ตรวจตามลำดับ</p>
+<pre class="language-text"><code>1. Node-RED ทำงานหรือไม่
+
+2. localhost:1880 ใช้งานได้หรือไม่
+
+3. cloudflared ทำงานหรือไม่
+
+4. Ingress ถูกหรือไม่
+
+5. DNS Route ถูกหรือไม่
+
+6. Cloudflare Access Policy ถูกหรือไม่
+
+7. Client Network ใช้งานได้หรือไม่</code></pre>
+<p>ไม่ควรเริ่มจากการแก้ DNS แบบสุ่ม</p>
+<hr>
+<h2 id="25-61-คำสั่งตรวจ-node-red">25.61 คำสั่งตรวจ Node-RED</h2>
+<pre class="language-bash"><code>systemctl status nodered
+
+curl -I http://localhost:1880
+
+sudo ss -lntp | grep 1880</code></pre>
+<hr>
+<h2 id="25-62-คำสั่งตรวจ-cloudflared">25.62 คำสั่งตรวจ cloudflared</h2>
+<pre class="language-bash"><code>systemctl status cloudflared
+
+journalctl \
+-u cloudflared \
+-n 50 \
+--no-pager</code></pre>
+<hr>
+<h2 id="25-63-คำสั่งตรวจ-dns">25.63 คำสั่งตรวจ DNS</h2>
+<p>จาก Client</p>
+<pre class="language-bash"><code>nslookup pi.vodun.cc</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>dig pi.vodun.cc</code></pre>
+<p>ใช้เพื่อตรวจว่า Hostname Resolve ได้ แต่ต้องเข้าใจว่า Tunnel DNS Record ไม่ได้จำเป็นต้องเปิดเผย IP ของ Raspberry Pi</p>
+<hr>
+<h2 id="25-64-tunnel-status">25.64 Tunnel Status</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>cloudflared tunnel info kathu</code></pre>
+<p>เพื่อตรวจสอบ Tunnel ข้อมูลที่แสดงขึ้นกับ Version ของ cloudflared และสถานะ Connection</p>
+<hr>
+<h2 id="25-65-service-dependency">25.65 Service Dependency</h2>
+<p>หลัง Boot</p>
+<pre class="language-text"><code>nginx
+Node-RED
+SSH
+cloudflared</code></pre>
+<p>ต้องกลับมาทำงาน ตรวจ</p>
+<pre class="language-bash"><code>systemctl is-enabled nginx
+
+systemctl is-enabled nodered
+
+systemctl is-enabled ssh
+
+systemctl is-enabled cloudflared</code></pre>
+<p>เพราะ Tunnel กลับมาอย่างเดียวไม่เพียงพอ Origin Service ก็ต้องกลับมาด้วย</p>
+<hr>
+<h2 id="25-66-remote-access-remote-mqtt">25.66 Remote Access ≠ Remote MQTT</h2>
+<p>LAB 25 เน้น</p>
+<pre class="language-text"><code>Node-RED
+Dashboard
+SSH
+Web Service</code></pre>
+<p>ไม่จำเป็นต้องเปิด MQTT Broker</p>
+<pre class="language-text"><code>:1883</code></pre>
+<p>ออก Internet โดยตรง MQTT Architecture จาก LAB 24 ยังคง</p>
+<pre class="language-text"><code>IoT Devices
+     ↓
+Local MQTT Broker
+     ↓
+Authentication + ACL</code></pre>
+<p>ถ้าต้องการ Remote MQTT จริง ควรออกแบบ Security เพิ่มเติม เช่น</p>
+<pre class="language-text"><code>TLS
+Certificate
+ACL
+VPN/Tunnel Architecture</code></pre>
+<p>ไม่ควรเปิด Port 1883 สู่ Internet เพียงเพราะทำได้</p>
+<hr>
+<h2 id="25-67-lab-24-กับ-lab-25-ทำหน้าที่ต่างกัน">25.67 LAB 24 กับ LAB 25 ทำหน้าที่ต่างกัน</h2>
+<p>LAB 24</p>
+<pre class="language-text"><code>MQTT Security</code></pre>
+<p>ตอบคำถาม</p>
+<pre class="language-text"><code>&quot;MQTT Client ใด
+อ่าน/เขียน Topic ใดได้?&quot;</code></pre>
+<p>LAB 25</p>
+<pre class="language-text"><code>Remote Access</code></pre>
+<p>ตอบคำถาม</p>
+<pre class="language-text"><code>&quot;Administrator/User
+จะเข้าถึง Service จากภายนอกได้อย่างไร?&quot;</code></pre>
+<p>จึงเป็นคนละ Layer</p>
+<hr>
+<h2 id="25-68-security-layers-หลัง-lab-25">25.68 Security Layers หลัง LAB 25</h2>
+<pre class="language-text"><code>Internet User
+     │
+     ▼
+Cloudflare
+     │
+     ├── HTTPS
+     ├── Tunnel
+     └── Access Policy
+     │
+     ▼
+Raspberry Pi
+     │
+     ├── Node-RED Authentication
+     ├── SSH Authentication
+     └── Linux Permission
+     │
+     ▼
+  Mosquitto
+     │
+     ├── Authentication
+     └── ACL</code></pre>
+<p>นี่คือ</p>
+<pre class="language-text"><code>Defense in Depth</code></pre>
+<p>คือไม่พึ่ง Security Mechanism เพียงตัวเดียว</p>
+<hr>
+<h2 id="25-69-อย่าเปิดทุก-service-โดยไม่จำเป็น">25.69 อย่าเปิดทุก Service โดยไม่จำเป็น</h2>
+<p>ถ้า Remote User ต้องใช้เพียง</p>
+<pre class="language-text"><code>Dashboard</code></pre>
+<p>ไม่จำเป็นต้องเปิด</p>
+<pre class="language-text"><code>Node-RED Editor
+SSH
+MQTT</code></pre>
+<p>ทั้งหมด หลักการคือ</p>
+<pre class="language-text"><code>Expose Only What Is Required</code></pre>
+<p>สอดคล้องกับ</p>
+<pre class="language-text"><code>Least Privilege</code></pre>
+<p>จาก LAB 24</p>
+<hr>
+<h2 id="25-70-cloudflare-tunnel-กับ-cgnat">25.70 Cloudflare Tunnel กับ CGNAT</h2>
+<p>CGNAT ทำให้ Router ของเราอาจไม่ได้รับ Public IPv4 โดยตรง ดังนั้น</p>
+<pre class="language-text"><code>Port Forwarding</code></pre>
+<p>จาก Internet เข้ามาอาจทำไม่ได้ แต่ Cloudflare Tunnel ใช้</p>
+<pre class="language-text"><code>Outbound Connection</code></pre>
+<p>จาก Raspberry Pi จึงสามารถทำงานใน Network หลัง NAT/CGNAT ได้ในหลายกรณี ตราบใดที่ Network อนุญาต Outbound Traffic ที่ cloudflared ต้องใช้</p>
+<hr>
+<h2 id="25-71-university-network">25.71 University Network</h2>
+<p>ใน University Network ผู้ใช้อาจ</p>
+<pre class="language-text"><code>ไม่มีสิทธิ์ Router
+ไม่มี Public IPv4
+ไม่มี Port Forwarding
+อยู่หลัง Firewall</code></pre>
+<p>Cloudflare Tunnel จึงเหมาะกับ LAB เพราะ</p>
+<pre class="language-text"><code>Raspberry Pi</code></pre>
+<p>เป็นฝ่ายสร้าง Connection ออก แต่ต้องเป็นไปตาม</p>
+<pre class="language-text"><code>University Network Policy</code></pre>
+<p>และ Security Policy ขององค์กรด้วย</p>
+<hr>
+<h2 id="25-72-internet-failure">25.72 Internet Failure</h2>
+<p>ถ้า Internet ขาด</p>
+<pre class="language-text"><code>Cloudflare Tunnel
+     ↓
+   OFFLINE</code></pre>
+<p>Remote Access จะหยุด แต่ Local IoT System ควรยังทำงาน</p>
+<pre class="language-text"><code>ESP32
+   ↓
+Local MQTT
+   ↓
+Gateway
+   ↓
+SQLite
+   ↓
+Local Control</code></pre>
+<p>และ LAB 23 ช่วยให้ Remote Data สามารถ</p>
+<pre class="language-text"><code>Store
+  ↓
+Retry Later</code></pre>
+<p>ได้ นี่คือเหตุผลที่ Architecture ไม่ควรพึ่ง Cloud Service สำหรับ Local Operation ทั้งหมด</p>
+<hr>
+<h2 id="25-73-architecture-ระหว่าง-internet-failure">25.73 Architecture ระหว่าง Internet Failure</h2>
+<pre class="language-text"><code>               INTERNET
+                  X
+                  │
+           Cloudflare
+                  X
+
+┌────────────────────────────────┐
+│           LOCAL LAN            │
+│                                │
+│ ESP32                          │
+│   ↓                            │
+│ MQTT                           │
+│   ↓                            │
+│ Raspberry Pi                   │
+│   ├── Node-RED                 │
+│   ├── Local Dashboard          │
+│   ├── SQLite                   │
+│   ├── Automatic Control        │
+│   └── Store-and-Forward        │
+│                                │
+└────────────────────────────────┘</code></pre>
+<p>Local System</p>
+<pre class="language-text"><code>CONTINUES</code></pre>
+<p>Remote Access</p>
+<pre class="language-text"><code>TEMPORARILY UNAVAILABLE</code></pre>
+<hr>
+<h2 id="25-74-internet-recovery">25.74 Internet Recovery</h2>
+<p>เมื่อ Internet กลับมา</p>
+<pre class="language-text"><code>cloudflared
+    ↓
+Reconnect
+    ↓
+Remote Access Restored</code></pre>
+<p>พร้อมกับ LAB 23</p>
+<pre class="language-text"><code>PENDING Data
+    ↓
+Forward
+    ↓
+Remote Service</code></pre>
+<p>ดังนั้นระบบมีความสามารถ</p>
+<pre class="language-text"><code>Local Continuity
+      +
+Remote Recovery</code></pre>
+<hr>
+<h2 id="25-75-hostname-design-สำหรับห้อง-lab">25.75 Hostname Design สำหรับห้อง LAB</h2>
+<p>ตัวอย่างแต่ละ Raspberry Pi</p>
+<pre class="language-text"><code>kata.vodun.cc
+karon.vodun.cc
+kathu.vodun.cc
+pi.vodun.cc</code></pre>
+<p>Node-RED</p>
+<pre class="language-text"><code>nodered-kata.vodun.cc
+nodered-karon.vodun.cc
+nodered-kathu.vodun.cc
+node-red.vodun.cc</code></pre>
+<p>SSH</p>
+<pre class="language-text"><code>ssh-kata.vodun.cc
+ssh-karon.vodun.cc
+ssh-kathu.vodun.cc
+ssh.vodun.cc</code></pre>
+<p>รูปแบบนี้ทำให้ทราบได้ทันทีว่า</p>
+<pre class="language-text"><code>Service ไหน
+อยู่บน Pi ตัวไหน</code></pre>
+<hr>
+<h2 id="25-76-ไม่ควรแชร์-tunnel-credential-กับผู้อื่นโดยไม่จำเป็น">25.76 ไม่ควรแชร์ Tunnel Credential กับผู้อื่นโดยไม่จำเป็น</h2>
+<p>ถ้าแต่ละกลุ่มมี Raspberry Pi ของตัวเอง ควรแยก</p>
+<pre class="language-text"><code>Tunnel
+Credentials
+Hostname</code></pre>
+<p>เพื่อลดผลกระทบเมื่อ Credential ของกลุ่มหนึ่งมีปัญหา แนวคิด</p>
+<pre class="language-text"><code>One Gateway
+   ↓
+One Identity
+   ↓
+One Tunnel Credential</code></pre>
+<p>เหมือนกับแนวคิด</p>
+<pre class="language-text"><code>Per-device MQTT Identity</code></pre>
+<p>ใน LAB 24</p>
+<hr>
+<h2 id="25-77-credential-management">25.77 Credential Management</h2>
+<p>ข้อมูลที่ไม่ควรใส่ใน Public Repository</p>
+<pre class="language-text"><code>Tunnel Credentials
+API Tokens
+MQTT Passwords
+SSH Private Keys</code></pre>
+<p>สามารถเก็บ</p>
+<pre class="language-text"><code>Configuration Template</code></pre>
+<p>ได้ เช่น</p>
+<pre class="language-yaml"><code>tunnel: YOUR_TUNNEL_ID
+
+credentials-file:
+  /etc/cloudflared/YOUR_TUNNEL_ID.json</code></pre>
+<p>แต่ไม่ควร Commit Credential จริง</p>
+<hr>
+<h2 id="25-78-backup-อะไรบ้าง">25.78 Backup อะไรบ้าง</h2>
+<p>สำหรับ Cloudflare Tunnel ควรรู้ว่า Configuration ใดต้อง Backup เช่น</p>
+<pre class="language-text"><code>/etc/cloudflared/config.yml</code></pre>
+<p>และควรมี Record ของ</p>
+<pre class="language-text"><code>Tunnel Name
+Hostnames
+Ingress Mapping</code></pre>
+<p>แต่ Credential Backup ต้องจัดการอย่างปลอดภัย เรื่อง Backup และ Restore จะต่อใน</p>
+<pre class="language-text"><code>LAB 26</code></pre>
+<hr>
+<h2 id="25-79-แบบฝึกหัดที่-1-local-service-verification">25.79 แบบฝึกหัดที่ 1 - Local Service Verification</h2>
+<p>ตรวจ</p>
+<pre class="language-text"><code>nginx
+Node-RED
+SSH</code></pre>
+<p>ใช้</p>
+<pre class="language-bash"><code>systemctl status</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>curl</code></pre>
+<p>บันทึกผลว่าแต่ละ Service ใช้ Port ใด</p>
+<hr>
+<h2 id="25-80-แบบฝึกหัดที่-2-create-tunnel">25.80 แบบฝึกหัดที่ 2 - Create Tunnel</h2>
+<p>สร้าง Named Tunnel</p>
+<pre class="language-bash"><code>cloudflared tunnel create ...</code></pre>
+<p>บันทึก</p>
+<pre class="language-text"><code>Tunnel Name
+Tunnel ID</code></pre>
+<p>ห้ามส่ง Credential File ในรายงาน</p>
+<hr>
+<h2 id="25-81-แบบฝึกหัดที่-3-web-tunnel">25.81 แบบฝึกหัดที่ 3 - Web Tunnel</h2>
+<p>สร้าง</p>
+<pre class="language-text"><code>HOSTNAME
+    ↓
+localhost:80</code></pre>
+<p>ทดสอบจาก Browser ภายนอก ต้องเห็น nginx</p>
+<hr>
+<h2 id="25-82-แบบฝึกหัดที่-4-node-red-tunnel">25.82 แบบฝึกหัดที่ 4 - Node-RED Tunnel</h2>
+<p>สร้าง</p>
+<pre class="language-text"><code>HOSTNAME
+    ↓
+localhost:1880</code></pre>
+<p>ทดสอบ Node-RED ผ่าน HTTPS ต้องมี Authentication ที่เหมาะสมก่อนเปิดใช้งานจาก Internet</p>
+<hr>
+<h2 id="25-83-แบบฝึกหัดที่-5-ssh-tunnel">25.83 แบบฝึกหัดที่ 5 - SSH Tunnel</h2>
+<p>สร้าง</p>
+<pre class="language-text"><code>ssh-HOSTNAME
+    ↓
+localhost:22</code></pre>
+<p>ตั้งค่า</p>
+<pre class="language-text"><code>ProxyCommand</code></pre>
+<p>บน Client แล้วใช้</p>
+<pre class="language-bash"><code>ssh HOST_ALIAS</code></pre>
+<p>เพื่อเข้า Raspberry Pi</p>
+<hr>
+<h2 id="25-84-แบบฝึกหัดที่-6-systemd">25.84 แบบฝึกหัดที่ 6 - systemd</h2>
+<p>ติดตั้ง</p>
+<pre class="language-text"><code>cloudflared</code></pre>
+<p>เป็น Service ตรวจ</p>
+<pre class="language-bash"><code>systemctl status cloudflared</code></pre>
+<p>ต้องเป็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<hr>
+<h2 id="25-85-แบบฝึกหัดที่-7-reboot-recovery">25.85 แบบฝึกหัดที่ 7 - Reboot Recovery</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot ตรวจ</p>
+<pre class="language-text"><code>nginx
+Node-RED
+SSH
+cloudflared</code></pre>
+<p>จากนั้นทดสอบ Public Hostname อีกครั้ง โดยไม่ Run cloudflared ด้วยมือ</p>
+<hr>
+<h2 id="25-86-แบบฝึกหัดที่-8-origin-failure">25.86 แบบฝึกหัดที่ 8 - Origin Failure</h2>
+<p>หยุด Node-RED</p>
+<pre class="language-bash"><code>sudo systemctl stop nodered</code></pre>
+<p>ตรวจว่า</p>
+<pre class="language-text"><code>Tunnel</code></pre>
+<p>ยังทำงาน แต่</p>
+<pre class="language-text"><code>Node-RED Service</code></pre>
+<p>เข้าไม่ได้ จากนั้น</p>
+<pre class="language-bash"><code>sudo systemctl start nodered</code></pre>
+<p>และตรวจ Recovery</p>
+<hr>
+<h2 id="25-87-แบบฝึกหัดที่-9-internet-failure">25.87 แบบฝึกหัดที่ 9 - Internet Failure</h2>
+<p>ตัด Internet ของ Raspberry Pi ชั่วคราวโดยไม่ทำลาย Local LAN ที่ใช้กับ IoT Nodes หากสภาพแวดล้อม LAB รองรับ ตรวจว่า</p>
+<pre class="language-text"><code>Remote Access
+    → unavailable</code></pre>
+<p>แต่</p>
+<pre class="language-text"><code>Local MQTT
+Local Node-RED
+Local SQLite
+Local Control</code></pre>
+<p>ยังทำงาน เมื่อ Internet กลับมา ตรวจว่า</p>
+<pre class="language-text"><code>Tunnel reconnects</code></pre>
+<hr>
+<h2 id="25-88-แบบฝึกหัดที่-10-compare-architectures">25.88 แบบฝึกหัดที่ 10 - Compare Architectures</h2>
+<p>ให้อธิบายความแตกต่าง</p>
+<h3 id="port-forwarding">Port Forwarding</h3>
+<pre class="language-text"><code>Internet
+   ↓
+Router
+   ↓
+Forward Port
+   ↓
+Raspberry Pi</code></pre>
+<h3 id="cloudflare-tunnel">Cloudflare Tunnel</h3>
+<pre class="language-text"><code>Raspberry Pi
+   ↓
+Outbound Tunnel
+   ↓
+Cloudflare
+   ↑
+Remote User</code></pre>
+<p>อธิบายว่าทำไม Cloudflare Tunnel จึงเหมาะกับ Network ที่อยู่หลัง CGNAT หรือ Network ที่ผู้ใช้ไม่สามารถตั้ง Port Forwarding ได้</p>
+<hr>
+<h2 id="25-89-งานส่ง-lab-25">25.89 งานส่ง LAB 25</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Architecture Diagram</li>
+</ol>
+<pre class="language-text"><code>   Remote User
+        ↓
+   Cloudflare
+        ↓
+   Tunnel
+        ↓
+   Raspberry Pi</code></pre>
+<ol>
+<li>Tunnel Name</li>
+</ol>
+<ol>
+<li>Tunnel ID</li>
+</ol>
+<p>สามารถแสดง ID ได้ แต่ห้ามส่ง Credential Secret</p>
+<ol>
+<li><code>config.yml</code></li>
+</ol>
+<p>โดยลบข้อมูล Secret หากมี</p>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   cloudflared tunnel list</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   cloudflared tunnel ingress validate</code></pre>
+<ol>
+<li>Screenshot Web Service ผ่าน HTTPS</li>
+</ol>
+<ol>
+<li>Screenshot Node-RED ผ่าน HTTPS</li>
+</ol>
+<ol>
+<li>Screenshot SSH ผ่าน Tunnel</li>
+</ol>
+<ol>
+<li>SSH Client Configuration</li>
+</ol>
+<pre class="language-text"><code>   Host
+   HostName
+   User
+   ProxyCommand</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   systemctl status cloudflared</code></pre>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   systemctl is-enabled cloudflared</code></pre>
+<ol>
+<li>Screenshotหลัง Reboot ว่า Tunnel กลับมาทำงาน</li>
+</ol>
+<ol>
+<li>Screenshot Node-RED Origin Failure Test</li>
+</ol>
+<ol>
+<li>Screenshot Node-RED Recovery</li>
+</ol>
+<ol>
+<li>อธิบาย</li>
+</ol>
+<pre class="language-text"><code>   NAT</code></pre>
+<ol>
+<li>อธิบาย</li>
+</ol>
+<pre class="language-text"><code>   CGNAT</code></pre>
+<ol>
+<li>อธิบาย</li>
+</ol>
+<pre class="language-text"><code>   Outbound Tunnel</code></pre>
+<ol>
+<li>อธิบายความแตกต่าง</li>
+</ol>
+<pre class="language-text"><code>   Port Forwarding
+         vs
+   Cloudflare Tunnel</code></pre>
+<ol>
+<li>อธิบายความแตกต่าง</li>
+</ol>
+<pre class="language-text"><code>   Tunnel
+         vs
+   Application Authentication</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด</li>
+</ol>
+<pre class="language-text"><code>   Internet Down</code></pre>
+<p>ไม่ควรทำให้ Local IoT System หยุดทำงาน</p>
+<ol>
+<li>ห้ามส่ง</li>
+</ol>
+<pre class="language-text"><code>   Tunnel Credentials
+   MQTT Password
+   SSH Private Key</code></pre>
+<hr>
+<h2 id="25-90-checklist-ก่อนถือว่าผ่าน-lab">25.90 Checklist ก่อนถือว่าผ่าน LAB</h2>
+<pre class="language-text"><code>[ ] Local nginx ทำงาน
+
+[ ] Local Node-RED ทำงาน
+
+[ ] Local SSH ทำงาน
+
+[ ] cloudflared ติดตั้งแล้ว
+
+[ ] Login Cloudflare สำเร็จ
+
+[ ] Named Tunnel ถูกสร้าง
+
+[ ] config.yml ถูกต้อง
+
+[ ] Ingress Validation ผ่าน
+
+[ ] DNS Route ถูกสร้าง
+
+[ ] Web ผ่าน HTTPS ได้
+
+[ ] Node-RED ผ่าน HTTPS ได้
+
+[ ] Node-RED มี Authentication
+
+[ ] SSH ผ่าน cloudflared ได้
+
+[ ] cloudflared ทำงานเป็น systemd Service
+
+[ ] cloudflared Enable ตอน Boot
+
+[ ] Reboot แล้ว Tunnel กลับมา
+
+[ ] Origin Failure ถูกตรวจพบ
+
+[ ] Origin Recovery ทำงาน
+
+[ ] Internet Failure ไม่หยุด Local IoT
+
+[ ] Credential ไม่ถูกเผยแพร่</code></pre>
+<p>ถ้าผ่านทั้งหมด Raspberry Pi Gateway มีความสามารถ</p>
+<pre class="language-text"><code>Remote Monitoring
+       +
+Remote Administration</code></pre>
+<p>โดยไม่ต้องเปิด Inbound Port จาก Router โดยตรง</p>
+<hr>
+<h2 id="25-91-สิ่งที่ต้องเข้าใจ">25.91 สิ่งที่ต้องเข้าใจ</h2>
+<p>Cloudflare Tunnel ไม่ใช่เพียงวิธี</p>
+<pre class="language-text"><code>&quot;เปิดเว็บ Raspberry Pi จากข้างนอก&quot;</code></pre>
+<p>แต่เป็นส่วนหนึ่งของ Architecture ก่อน LAB 25</p>
+<pre class="language-text"><code>IoT System
+    │
+    ▼
+  Local LAN</code></pre>
+<p>หลัง LAB 25</p>
+<pre class="language-text"><code>Local IoT System
+    │
+    ├── Local Operation
+    │
+    └── Controlled Remote Access
+             │
+             ▼
+         Cloudflare
+             │
+             ▼
+         Remote User</code></pre>
+<p>โดยยังรักษาหลักว่า</p>
+<pre class="language-text"><code>Local Operation</code></pre>
+<p>ไม่ควรขึ้นอยู่กับ</p>
+<pre class="language-text"><code>Remote Access</code></pre>
+<hr>
+<h2 id="25-92-ความสัมพันธ์-lab-23-25">25.92 ความสัมพันธ์ LAB 23–25</h2>
+<p>LAB 23</p>
+<pre class="language-text"><code>Internet Failure
+      ↓
+Store Locally
+      ↓
+Forward Later</code></pre>
+<p>LAB 24</p>
+<pre class="language-text"><code>MQTT Client
+      ↓
+Authentication
+      ↓
+ACL</code></pre>
+<p>LAB 25</p>
+<pre class="language-text"><code>Remote User
+      ↓
+Cloudflare
+      ↓
+Raspberry Pi Service</code></pre>
+<p>จึงครอบคลุมคนละปัญหา</p>
+<pre class="language-text"><code>LAB 23 = Data Continuity
+
+LAB 24 = MQTT Access Control
+
+LAB 25 = Remote Connectivity</code></pre>
+<hr>
+<h2 id="25-93-ความสัมพันธ์ของ-lab-20-25">25.93 ความสัมพันธ์ของ LAB 20–25</h2>
+<pre class="language-text"><code>LAB 20
+Python MQTT Application
+      ↓
+Programmable Gateway
+
+      ↓
+
+LAB 21
+systemd
+      ↓
+Autonomous Service
+
+      ↓
+
+LAB 22
+BLE / UDP / MQTT
+      ↓
+Multi-protocol Gateway
+
+      ↓
+
+LAB 23
+SQLite Queue
+      ↓
+Offline Store-and-Forward
+
+      ↓
+
+LAB 24
+MQTT Authentication + ACL
+      ↓
+Controlled MQTT Access
+
+      ↓
+
+LAB 25
+Cloudflare Tunnel
+      ↓
+Remote Access</code></pre>
+<p>ผลคือ Raspberry Pi เริ่มทำหน้าที่เป็น</p>
+<pre class="language-text"><code>Autonomous
+Multi-protocol
+Offline-capable
+Access-controlled
+Remotely manageable</code></pre>
+<p>IoT Gateway</p>
+<hr>
+<h2 id="25-94-architecture-หลัง-lab-25">25.94 Architecture หลัง LAB 25</h2>
+<pre class="language-text"><code>                     REMOTE USER
+                          │
+                          │ HTTPS / SSH
+                          ▼
+                   ┌──────────────┐
+                   │ Cloudflare   │
+                   │ Access/Tunnel│
+                   └──────┬───────┘
+                          │
+                          │ Outbound Tunnel
+                          ▼
+┌──────────────────────────────────────────────┐
+│             RASPBERRY PI GATEWAY             │
+│                                              │
+│  cloudflared                                 │
+│      │                                       │
+│      ├── nginx :80                           │
+│      ├── Node-RED :1880                      │
+│      └── SSH :22                             │
+│                                              │
+│  Mosquitto                                   │
+│      ├── Authentication                      │
+│      └── ACL                                 │
+│                                              │
+│  Python Gateway                              │
+│      ├── MQTT                                │
+│      ├── BLE                                 │
+│      └── UDP                                 │
+│                                              │
+│  SQLite                                      │
+│      └── Store-and-Forward                   │
+│                                              │
+└───────────────────┬──────────────────────────┘
+                    │
+                    │ LAN
+                    ▼
+           ┌──────────────────┐
+           │    IoT Nodes     │
+           │                  │
+           │ ESP32-001        │
+           │ ESP32-002        │
+           │ ESP32-003        │
+           │ BLE Sensors      │
+           └──────────────────┘</code></pre>
+<p>เมื่อ Internet ใช้งานได้</p>
+<pre class="language-text"><code>Local Operation
+      +
+Remote Access
+      +
+Remote Forwarding</code></pre>
+<p>เมื่อ Internet ขาด</p>
+<pre class="language-text"><code>Local Operation
+      +
+SQLite Buffer</code></pre>
+<p>ยังทำงาน เมื่อ Internet กลับ</p>
+<pre class="language-text"><code>Tunnel Reconnect
+      +
+Store-and-Forward Recovery</code></pre>
+<p>ทำงานต่อ</p>
+<hr>
+<h2 id="25-95-จุดสำคัญที่สุดของ-lab">25.95 จุดสำคัญที่สุดของ LAB</h2>
+<p>Cloudflare Tunnel ช่วยแก้ปัญหา</p>
+<pre class="language-text"><code>Remote Reachability</code></pre>
+<p>ไม่ใช่แก้ทุกปัญหาด้าน Security จึงต้องแยก Layer ให้ชัดเจน</p>
+<pre class="language-text"><code>Cloudflare Tunnel
+    → Connectivity
+
+Cloudflare Access
+    → User Access Policy
+
+Node-RED Authentication
+    → Application Access
+
+SSH Key
+    → SSH Authentication
+
+MQTT Username/Password
+    → MQTT Authentication
+
+MQTT ACL
+    → MQTT Authorization</code></pre>
+<p>การมี Tunnel ไม่ได้หมายความว่า</p>
+<pre class="language-text"><code>ทุก Service ควรถูกเปิดออก Internet</code></pre>
+<p>หลักที่ควรใช้คือ</p>
+<pre class="language-text"><code>Expose Only What Is Required
+         +
+   Least Privilege
+         +
+   Defense in Depth</code></pre>
+<hr>
+<h2 id="25-96-แนวคิดระบบหลัง-lab-25">25.96 แนวคิดระบบหลัง LAB 25</h2>
+<p>ตอนนี้ IoT Gateway สามารถ</p>
+<pre class="language-text"><code>Acquire
+   ↓
+Communicate
+   ↓
+Process
+   ↓
+Store
+   ↓
+Analyze
+   ↓
+Decide
+   ↓
+Control
+   ↓
+Detect Device Failure
+   ↓
+Validate Data
+   ↓
+Translate Protocols
+   ↓
+Operate Offline
+   ↓
+Authenticate Clients
+   ↓
+Authorize Topics
+   ↓
+Provide Remote Access</code></pre>
+<p>แต่ยังมีคำถามสำคัญอีกข้อ</p>
+<pre class="language-text"><code>&quot;ถ้า Raspberry Pi หรือ SD Card มีปัญหา
+เราจะสร้างระบบกลับมาได้อย่างไร?&quot;</code></pre>
+<p>นี่คือหัวข้อถัดไป</p>
+<h2 id="lab-26-backup-and-recovery">LAB 26 - Backup &amp; Recovery</h2>
+<p>LAB 26 จะ Backup สิ่งสำคัญ เช่น</p>
+<pre class="language-bash"><code>Node-RED Flows
+Mosquitto Configuration
+MQTT Password File
+MQTT ACL
+SQLite Database
+Python Gateway
+systemd Services
+cloudflared Configuration</code></pre>
+<p>จากนั้นจะไม่จบเพียง</p>
+<pre class="language-text"><code>Backup สำเร็จ</code></pre>
+<p>แต่ต้องทดสอบ</p>
+<pre class="language-text"><code>Restore</code></pre>
+<p>เพื่อพิสูจน์ว่า Backup ใช้งานได้จริง แนวคิดสำคัญของ LAB 26 คือ</p>
+<pre class="language-text"><code>Backup
+   ≠
+Recovery</code></pre>
+<p>จนกว่าจะสามารถ</p>
+<pre class="language-text"><code>Restore
+   ↓
+Start Services
+   ↓
+Verify System</code></pre>
+<p>ได้สำเร็จ</p>
+    </main>
+  </div>
+</body>
+</html>

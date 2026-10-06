@@ -1,0 +1,1747 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="active" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-22-iot-gateway-ble-udp-mqtt-protocol-translation">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">ก่อนหน้า: LAB 21 - systemd Service: Autonomous Python IoT Gateway</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="23-lab-23-offline-store-and-forward-with-sqlite.html">ถัดไป: LAB 23 - Offline / Store-and-Forward with SQLite</a></nav>
+<h2 id="22-1-แนวคิดของ-lab">22.1 แนวคิดของ LAB</h2>
+<p>จนถึง LAB 21 ระบบของเรามี Architecture หลัก</p>
+<pre class="language-text"><code>ESP32
+   │
+   │ MQTT
+   ▼
+Mosquitto
+   │
+   ├──→ Python Gateway
+   └──→ Node-RED / Dashboard</code></pre>
+<p>แต่ในระบบ IoT จริง Sensor หรือ IoT Node ไม่ได้ใช้ MQTT ทุกตัว ตัวอย่าง</p>
+<pre class="language-text"><code>Mijia LYWSD03MMC
+    ↓
+BLE / BTHome</code></pre>
+<p>หรือ ESP32 บางระบบอาจใช้</p>
+<pre class="language-text"><code>UDP</code></pre>
+<p>แทน MQTT ดังนั้น Raspberry Pi สามารถทำหน้าที่เป็น</p>
+<pre class="language-text"><code>IoT Gateway</code></pre>
+<p>เพื่อรับข้อมูลจาก Protocol ต่าง ๆ แล้วแปลงให้อยู่ในรูปแบบกลาง ใน LAB นี้กำหนดให้</p>
+<pre class="language-text"><code>MQTT</code></pre>
+<p>เป็น Protocol กลางภายในระบบ Architecture</p>
+<pre class="language-text"><code>BLE / BTHome ──┐
+               │
+UDP ───────────┼──→ Raspberry Pi Gateway ──→ MQTT
+               │
+MQTT ──────────┘</code></pre>
+<p>จากนั้นระบบเดิมสามารถนำข้อมูลไปใช้ต่อได้</p>
+<pre class="language-text"><code>MQTT
+  │
+  ├──→ Node-RED
+  ├──→ SQLite
+  ├──→ Dashboard
+  └──→ Control Logic</code></pre>
+<p>แนวคิดสำคัญคือ</p>
+<pre class="language-text"><code>Protocol Translation</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>Protocol Bridging</code></pre>
+<h2 id="22-2-วัตถุประสงค์">22.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>อธิบายบทบาทของ IoT Gateway</li>
+<li>อธิบายความแตกต่างระหว่าง IoT Node และ IoT Gateway</li>
+<li>รับข้อมูล UDP บน Raspberry Pi</li>
+<li>Parse UDP Payload</li>
+<li>แปลง UDP → MQTT</li>
+<li>Scan BLE Device</li>
+<li>ตรวจสอบ BLE Advertisement</li>
+<li>เข้าใจ BTHome Advertisement</li>
+<li>รับข้อมูล Sensor จาก BLE/BTHome</li>
+<li>แปลง BLE/BTHome → MQTT</li>
+<li>Normalize ข้อมูลจาก Protocol ต่างกัน</li>
+<li>ใช้ MQTT เป็น Common Messaging Layer</li>
+<li>เชื่อมข้อมูลเข้าสู่ Node-RED / Dashboard</li>
+<li>เข้าใจแนวคิด Multi-protocol IoT Gateway</li>
+</ul>
+<h2 id="22-3-architecture-ของ-lab">22.3 Architecture ของ LAB</h2>
+<pre class="language-text"><code>                     IoT DEVICES
+
+         ┌─────────────────────────┐
+         │ Mijia LYWSD03MMC        │
+         │ BLE / BTHome            │
+         └────────────┬────────────┘
+                      │
+                      │ BLE Advertisement
+                      ▼
+             ┌──────────────────┐
+             │                  │
+             │  Raspberry Pi    │
+             │                  │
+             │  IoT Gateway     │
+             │                  │
+             │ BLE Receiver     │
+             │ UDP Receiver     │
+             │ Data Parser      │
+             │ Data Normalizer  │
+             │ MQTT Publisher   │
+             │                  │
+             └────────┬─────────┘
+                      │
+                      │ MQTT
+                      ▼
+                ┌───────────┐
+                │ Mosquitto │
+                └─────┬─────┘
+                      │
+          ┌───────────┼───────────┐
+          ▼           ▼           ▼
+       Node-RED     SQLite     Dashboard</code></pre>
+<p>อีกเส้นทาง</p>
+<pre class="language-text"><code>ESP32
+  │
+  │ UDP
+  ▼
+Raspberry Pi
+  │
+  │ UDP → JSON → MQTT
+  ▼
+Mosquitto</code></pre>
+<h2 id="22-4-ทำไมต้องมี-gateway">22.4 ทำไมต้องมี Gateway</h2>
+<p>สมมติระบบมี</p>
+<pre class="language-text"><code>Sensor A → MQTT
+Sensor B → BLE
+Sensor C → UDP</code></pre>
+<p>ถ้า Application ต้องรองรับทุก Protocol โดยตรง</p>
+<pre class="language-text"><code>Dashboard
+   ├── MQTT
+   ├── BLE
+   └── UDP</code></pre>
+<p>ระบบจะซับซ้อนขึ้น แนวทางที่ดีกว่าคือ</p>
+<pre class="language-text"><code>BLE ──┐
+      │
+UDP ──┼──→ Gateway ──→ MQTT
+      │
+MQTT ─┘</code></pre>
+<p>จากนั้น Application Layer ใช้เพียง</p>
+<pre class="language-text"><code>MQTT</code></pre>
+<p>Architecture จึงเป็น</p>
+<pre class="language-text"><code>Heterogeneous Devices
+        ↓
+     Gateway
+        ↓
+Common Data Interface
+        ↓
+   Applications</code></pre>
+<h2 id="22-5-iot-node-กับ-iot-gateway">22.5 IoT Node กับ IoT Gateway</h2>
+<h3 id="iot-node">IoT Node</h3>
+<p>เช่น</p>
+<pre class="language-text"><code>ESP32
+Sensor Node
+Mijia Sensor</code></pre>
+<p>หน้าที่หลัก</p>
+<pre class="language-text"><code>Sense
+Measure
+Actuate
+Communicate</code></pre>
+<h3 id="iot-gateway">IoT Gateway</h3>
+<p>เช่น</p>
+<pre class="language-text"><code>Raspberry Pi</code></pre>
+<p>หน้าที่อาจประกอบด้วย</p>
+<pre class="language-text"><code>Receive
+Decode
+Validate
+Normalize
+Translate Protocol
+Filter
+Aggregate
+Store
+Forward</code></pre>
+<p>ใน LAB นี้เน้น</p>
+<pre class="language-text"><code>Receive
+  ↓
+Decode
+  ↓
+Normalize
+  ↓
+MQTT Publish</code></pre>
+<h2 id="22-6-ส่วนที่-1-udp-mqtt-gateway">22.6 ส่วนที่ 1 - UDP → MQTT Gateway</h2>
+<p>เริ่มจาก UDP เพราะเข้าใจ Protocol Translation ได้ง่าย Architecture</p>
+<pre class="language-text"><code>ESP32 / Simulator
+       │
+       │ UDP
+       ▼
+Raspberry Pi
+       │
+       │ Python UDP Receiver
+       ▼
+    Parse JSON
+       │
+       ▼
+    Validate
+       │
+       ▼
+     MQTT
+       │
+       ▼
+   Mosquitto</code></pre>
+<h2 id="22-7-กำหนด-udp-payload">22.7 กำหนด UDP Payload</h2>
+<p>ให้ ESP32 ส่ง JSON ตัวอย่าง</p>
+<pre class="language-json"><code>{
+  &quot;device_id&quot;: &quot;001&quot;,
+  &quot;temp&quot;: 30,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>UDP Port</p>
+<pre class="language-text"><code>5005</code></pre>
+<p>Raspberry Pi จะ Listen</p>
+<pre class="language-text"><code>0.0.0.0:5005</code></pre>
+<h2 id="22-8-ตรวจสอบ-ip-raspberry-pi">22.8 ตรวจสอบ IP Raspberry Pi</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>hostname -I</code></pre>
+<p>หรือ</p>
+<pre class="language-bash"><code>ip addr</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>192.168.1.50</code></pre>
+<p>สมมติ</p>
+<pre class="language-text"><code>Raspberry Pi IP = 192.168.1.50</code></pre>
+<p>ESP32 ต้องส่ง UDP ไปยัง</p>
+<pre class="language-text"><code>192.168.1.50:5005</code></pre>
+<p>ในระบบจริงให้ใช้ IP ของ Raspberry Pi เครื่องนั้น</p>
+<h2 id="22-9-ทดสอบ-udp-receiver-ด้วย-netcat">22.9 ทดสอบ UDP Receiver ด้วย netcat</h2>
+<p>บน Raspberry Pi</p>
+<pre class="language-bash"><code>nc -u -l 5005</code></pre>
+<p>ถ้า <code>nc</code> ยังไม่มี</p>
+<pre class="language-bash"><code>sudo apt update
+
+sudo apt install netcat-openbsd -y</code></pre>
+<h2 id="22-10-ส่ง-udp-จากเครื่องเดียวกัน">22.10 ส่ง UDP จากเครื่องเดียวกัน</h2>
+<p>เปิดอีก Terminal</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>ฝั่ง Receiver ควรเห็น</p>
+<pre class="language-json"><code>{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>นี่เป็นการพิสูจน์ว่า</p>
+<pre class="language-text"><code>UDP Receiver</code></pre>
+<p>ทำงานก่อนเริ่มเขียน Python</p>
+<h2 id="22-11-udp-ไม่มี-broker">22.11 UDP ไม่มี Broker</h2>
+<p>MQTT Architecture</p>
+<pre class="language-text"><code>Publisher
+    ↓
+  Broker
+    ↓
+Subscriber</code></pre>
+<p>แต่ UDP</p>
+<pre class="language-text"><code>Sender
+   ↓
+Receiver</code></pre>
+<p>โดยตรง ดังนั้น UDP ไม่มี MQTT Broker มาช่วย</p>
+<ul>
+<li>Queue</li>
+<li>Topic Routing</li>
+<li>Subscription</li>
+<li>Retained Message</li>
+<li>LWT</li>
+</ul>
+<p>Gateway จึงต้อง Listen UDP Port เอง</p>
+<h2 id="22-12-python-udp-receiver">22.12 Python UDP Receiver</h2>
+<p>ใช้ Project จาก LAB 20–21</p>
+<pre class="language-text"><code>~/iot-gateway</code></pre>
+<p>Activate venv สำหรับการพัฒนา</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+
+source venv/bin/activate</code></pre>
+<p>สร้างไฟล์</p>
+<pre class="language-bash"><code>nano udp_gateway.py</code></pre>
+<h2 id="22-13-udp-receiver-code">22.13 UDP Receiver Code</h2>
+<p>ใช้</p>
+<pre class="language-python"><code>import socket
+
+
+udp_ip = &quot;0.0.0.0&quot;
+udp_port = 5005
+
+sock = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_DGRAM
+)
+
+sock.bind(
+    (udp_ip, udp_port)
+)
+
+print(
+    f&quot;UDP listening on &quot;
+    f&quot;{udp_ip}:{udp_port}&quot;
+)
+
+while True:
+    data, address = sock.recvfrom(2048)
+
+    payload = data.decode(
+        &quot;utf-8&quot;
+    )
+
+    print(
+        f&quot;From {address}: &quot;
+        f&quot;{payload}&quot;
+    )</code></pre>
+<p>Run</p>
+<pre class="language-bash"><code>python udp_gateway.py</code></pre>
+<h2 id="22-14-ทดสอบ-python-udp-receiver">22.14 ทดสอบ Python UDP Receiver</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>Python ควรแสดงประมาณ</p>
+<pre class="language-text"><code>UDP listening on 0.0.0.0:5005
+
+From (&#x27;127.0.0.1&#x27;, ...):
+{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<h2 id="22-15-parse-udp-json">22.15 Parse UDP JSON</h2>
+<p>เพิ่ม</p>
+<pre class="language-python"><code>import json</code></pre>
+<p>แล้วใช้</p>
+<pre class="language-python"><code>try:
+    sensor_data = json.loads(
+        payload
+    )
+
+except json.JSONDecodeError:
+    print(
+        &quot;Invalid UDP JSON&quot;
+    )
+    continue</code></pre>
+<p>จากนั้นสามารถอ่าน</p>
+<pre class="language-text"><code>sensor_data[&quot;device_id&quot;]
+sensor_data[&quot;temp&quot;]
+sensor_data[&quot;humi&quot;]
+sensor_data[&quot;light&quot;]</code></pre>
+<h2 id="22-16-udp-mqtt">22.16 UDP → MQTT</h2>
+<p>เพิ่ม Paho MQTT</p>
+<pre class="language-python"><code>import paho.mqtt.client as mqtt</code></pre>
+<p>สร้าง MQTT Client</p>
+<pre class="language-python"><code>mqtt_client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;udp-gateway&quot;
+)</code></pre>
+<p>เชื่อมต่อ</p>
+<pre class="language-python"><code>mqtt_client.connect(
+    &quot;localhost&quot;,
+    1883,
+    60
+)</code></pre>
+<p>เริ่ม Network Loop</p>
+<pre class="language-python"><code>mqtt_client.loop_start()</code></pre>
+<p>จากนั้นเมื่อได้รับ UDP สร้าง Topic</p>
+<pre class="language-text"><code>device_id = sensor_data[&quot;device_id&quot;]
+
+mqtt_topic = (
+    f&quot;pkru/iot/{device_id}/data&quot;
+)</code></pre>
+<p>Publish</p>
+<pre class="language-python"><code>mqtt_client.publish(
+    mqtt_topic,
+    json.dumps(sensor_data)
+)</code></pre>
+<h2 id="22-17-full-udp-mqtt-gateway">22.17 Full UDP → MQTT Gateway</h2>
+<p>ไฟล์</p>
+<pre class="language-text"><code>udp_gateway.py</code></pre>
+<p>ใช้</p>
+<pre class="language-python"><code>import json
+import socket
+
+import paho.mqtt.client as mqtt
+
+
+udp_ip = &quot;0.0.0.0&quot;
+udp_port = 5005
+
+mqtt_broker = &quot;localhost&quot;
+mqtt_port = 1883
+
+
+mqtt_client = mqtt.Client(
+    mqtt.CallbackAPIVersion.VERSION2,
+    client_id=&quot;udp-gateway&quot;
+)
+
+mqtt_client.connect(
+    mqtt_broker,
+    mqtt_port,
+    60
+)
+
+mqtt_client.loop_start()
+
+
+sock = socket.socket(
+    socket.AF_INET,
+    socket.SOCK_DGRAM
+)
+
+sock.bind(
+    (udp_ip, udp_port)
+)
+
+
+print(
+    f&quot;UDP Gateway listening &quot;
+    f&quot;on {udp_ip}:{udp_port}&quot;
+)
+
+
+while True:
+
+    data, address = sock.recvfrom(
+        2048
+    )
+
+    try:
+        payload = data.decode(
+            &quot;utf-8&quot;
+        )
+
+        sensor_data = json.loads(
+            payload
+        )
+
+        if not isinstance(
+            sensor_data,
+            dict
+        ):
+            print(
+                &quot;Invalid payload&quot;
+            )
+            continue
+
+        device_id = str(
+            sensor_data[&quot;device_id&quot;]
+        )
+
+        temp = float(
+            sensor_data[&quot;temp&quot;]
+        )
+
+        humi = float(
+            sensor_data[&quot;humi&quot;]
+        )
+
+        light = float(
+            sensor_data[&quot;light&quot;]
+        )
+
+        mqtt_data = {
+            &quot;temp&quot;: temp,
+            &quot;humi&quot;: humi,
+            &quot;light&quot;: light
+        }
+
+        mqtt_topic = (
+            f&quot;pkru/iot/&quot;
+            f&quot;{device_id}/data&quot;
+        )
+
+        mqtt_client.publish(
+            mqtt_topic,
+            json.dumps(mqtt_data)
+        )
+
+        print(
+            f&quot;UDP {address} &quot;
+            f&quot;→ MQTT {mqtt_topic} &quot;
+            f&quot;{mqtt_data}&quot;
+        )
+
+    except (
+        json.JSONDecodeError,
+        KeyError,
+        TypeError,
+        ValueError,
+        UnicodeDecodeError
+    ) as error:
+
+        print(
+            f&quot;Invalid UDP data: &quot;
+            f&quot;{error}&quot;
+        )</code></pre>
+<h2 id="22-18-สังเกต-data-normalization">22.18 สังเกต Data Normalization</h2>
+<p>UDP Payload</p>
+<pre class="language-json"><code>{
+  &quot;device_id&quot;: &quot;001&quot;,
+  &quot;temp&quot;: 30,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>Gateway Publish MQTT Topic</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Payload</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 30.0,
+  &quot;humi&quot;: 70.0,
+  &quot;light&quot;: 1500.0
+}</code></pre>
+<p>สังเกตว่า</p>
+<pre class="language-text"><code>device_id</code></pre>
+<p>ถูกย้ายจาก Payload ไปเป็นส่วนหนึ่งของ</p>
+<pre class="language-text"><code>MQTT Topic</code></pre>
+<p>เพื่อให้ตรงกับ Topic Design จาก LAB 16 นี่คือ</p>
+<pre class="language-text"><code>Data Normalization</code></pre>
+<h2 id="22-19-ทดสอบ-udp-mqtt">22.19 ทดสอบ UDP → MQTT</h2>
+<p>Terminal 1 Subscribe MQTT</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/data&quot; \
+-v</code></pre>
+<p>Terminal 2 Run Gateway</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+
+source venv/bin/activate
+
+python udp_gateway.py</code></pre>
+<p>Terminal 3 ส่ง UDP</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>ผลที่ MQTT Subscriber</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;: 30.0, &quot;humi&quot;: 70.0, &quot;light&quot;: 1500.0}</code></pre>
+<p>แสดงว่า</p>
+<pre class="language-text"><code>UDP
+  ↓
+Python Gateway
+  ↓
+ MQTT</code></pre>
+<p>ทำงานสำเร็จ</p>
+<h2 id="22-20-udp-multi-device-simulator">22.20 UDP Multi-device Simulator</h2>
+<p>ใช้ Bash จำลอง 3 Device</p>
+<pre class="language-bash"><code>while true
+do
+    temp1=$((25 + RANDOM % 11))
+    temp2=$((25 + RANDOM % 11))
+    temp3=$((25 + RANDOM % 11))
+
+    echo &quot;{\&quot;device_id\&quot;:\&quot;001\&quot;,\&quot;temp\&quot;:$temp1,\&quot;humi\&quot;:70,\&quot;light\&quot;:1000}&quot; \
+    | nc -u -w1 127.0.0.1 5005
+
+    echo &quot;{\&quot;device_id\&quot;:\&quot;002\&quot;,\&quot;temp\&quot;:$temp2,\&quot;humi\&quot;:75,\&quot;light\&quot;:1500}&quot; \
+    | nc -u -w1 127.0.0.1 5005
+
+    echo &quot;{\&quot;device_id\&quot;:\&quot;003\&quot;,\&quot;temp\&quot;:$temp3,\&quot;humi\&quot;:80,\&quot;light\&quot;:2000}&quot; \
+    | nc -u -w1 127.0.0.1 5005
+
+    sleep 5
+done</code></pre>
+<p>MQTT Subscriber จะเห็น</p>
+<pre class="language-text"><code>pkru/iot/001/data ...
+pkru/iot/002/data ...
+pkru/iot/003/data ...</code></pre>
+<h2 id="22-21-esp32-udp-raspberry-pi">22.21 ESP32 → UDP → Raspberry Pi</h2>
+<p>เมื่อเปลี่ยนจาก Simulator เป็น ESP32 Architecture</p>
+<pre class="language-text"><code>ESP32
+   │
+   │ Wi-Fi
+   │ UDP
+   ▼
+   AP
+   │
+   ▼
+Raspberry Pi
+   │
+   │ UDP :5005
+   ▼
+Python Gateway
+   │
+   ▼
+  MQTT</code></pre>
+<p>ESP32 ไม่จำเป็นต้อง Run MQTT Client เพียงส่ง UDP Datagram ไปยัง IP ของ Raspberry Pi</p>
+<h2 id="22-22-ข้อกำหนด-network-สำหรับ-udp">22.22 ข้อกำหนด Network สำหรับ UDP</h2>
+<p>ESP32 และ Raspberry Pi ต้องสามารถสื่อสารกันผ่าน IP ได้ เช่น</p>
+<pre class="language-text"><code>ESP32
+LAN_IP
+
+Raspberry Pi
+192.168.1.50</code></pre>
+<p>ผ่าน AP เดียวกัน AP ต้องไม่เปิด</p>
+<pre class="language-text"><code>AP Isolation
+Client Isolation</code></pre>
+<p>ที่ห้าม Client ติดต่อกัน สำหรับระบบ LAB ควรใช้</p>
+<pre class="language-text"><code>Static IP</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>DHCP Reservation</code></pre>
+<p>สำหรับ Raspberry Pi เพื่อให้ ESP32 รู้ Gateway IP แน่นอน</p>
+<h2 id="22-23-udp-เป็น-connectionless-protocol">22.23 UDP เป็น Connectionless Protocol</h2>
+<p>UDP ไม่มี Connection Session แบบ TCP ข้อดี</p>
+<ul>
+<li>Simple</li>
+<li>Low Overhead</li>
+<li>Latency ต่ำ</li>
+<li>เหมาะกับ Sensor Datagram บางประเภท</li>
+</ul>
+<p>ข้อจำกัด</p>
+<ul>
+<li>ไม่รับประกัน Delivery</li>
+<li>ไม่มี ACK ในตัว</li>
+<li>Packet อาจหาย</li>
+<li>Packet อาจซ้ำ</li>
+<li>Packet อาจมาผิดลำดับ</li>
+</ul>
+<p>ดังนั้น</p>
+<pre class="language-text"><code>UDP Receive Success</code></pre>
+<p>ไม่ได้หมายความว่า</p>
+<pre class="language-text"><code>ทุก Packet ถูกส่งถึงแน่นอน</code></pre>
+<p>ถ้าระบบต้องการ Reliability สูง ต้องเพิ่ม Application-level Mechanism เช่น</p>
+<pre class="language-text"><code>sequence number
+acknowledgment
+retry
+timestamp</code></pre>
+<p>หรือเลือก Protocol ที่เหมาะสมกว่า</p>
+<h2 id="22-24-ส่วนที่-2-ble-bthome-mqtt">22.24 ส่วนที่ 2 - BLE / BTHome → MQTT</h2>
+<p>อุปกรณ์ตัวอย่าง</p>
+<pre class="language-text"><code>Xiaomi / Mijia LYWSD03MMC</code></pre>
+<p>ที่ใช้ Firmware ซึ่ง Broadcast</p>
+<pre class="language-text"><code>BTHome</code></pre>
+<p>ผ่าน BLE Advertisement Architecture</p>
+<pre class="language-text"><code>Mijia
+  │
+  │ BLE Advertisement
+  ▼
+Raspberry Pi
+  │
+  │ Bluetooth
+  ▼
+BLE Scanner
+  │
+  ▼
+BTHome Decode
+  │
+  ▼
+ MQTT
+  │
+  ▼
+Node-RED</code></pre>
+<h2 id="22-25-ble-advertisement-ต่างจาก-mqtt">22.25 BLE Advertisement ต่างจาก MQTT</h2>
+<p>MQTT</p>
+<pre class="language-text"><code>Device
+  │
+  ▼
+Broker
+  │
+  ▼
+Subscriber</code></pre>
+<p>BLE Advertisement</p>
+<pre class="language-text"><code>BLE Device
+    │
+    │ Broadcast
+    ▼
+  Radio
+    │
+    ├──→ Receiver A
+    ├──→ Receiver B
+    └──→ Receiver C</code></pre>
+<p>Sensor สามารถ Broadcast ข้อมูลโดยไม่ต้องสร้าง Connection กับ Raspberry Pi ในทุกครั้ง เหมาะกับ</p>
+<pre class="language-text"><code>Temperature Sensor
+Humidity Sensor
+Battery Sensor
+Beacon</code></pre>
+<h2 id="22-26-ตรวจสอบ-bluetooth-บน-raspberry-pi">22.26 ตรวจสอบ Bluetooth บน Raspberry Pi</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>bluetoothctl show</code></pre>
+<p>ควรเห็น Bluetooth Controller ตรวจสอบ Interface</p>
+<pre class="language-bash"><code>hciconfig</code></pre>
+<p>ถ้าคำสั่งนี้ไม่มี ไม่เป็นปัญหา เพราะระบบ Linux รุ่นใหม่ใช้ <code>bluetoothctl</code> เป็นหลัก ตรวจสอบ rfkill</p>
+<pre class="language-bash"><code>rfkill list</code></pre>
+<p>ถ้า Bluetooth ถูก Block เช่น</p>
+<pre class="language-text"><code>Soft blocked: yes</code></pre>
+<p>แก้ด้วย</p>
+<pre class="language-bash"><code>sudo rfkill unblock bluetooth</code></pre>
+<h2 id="22-27-ตรวจสอบ-bluetooth-service">22.27 ตรวจสอบ Bluetooth Service</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>systemctl status bluetooth</code></pre>
+<p>ควรเห็น</p>
+<pre class="language-text"><code>active (running)</code></pre>
+<p>ถ้ายังไม่ทำงาน</p>
+<pre class="language-bash"><code>sudo systemctl enable --now bluetooth</code></pre>
+<h2 id="22-28-scan-ble-device">22.28 Scan BLE Device</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>bluetoothctl</code></pre>
+<p>จาก Prompt</p>
+<pre class="language-bash"><code>scan on</code></pre>
+<p>จะเห็น BLE Device รอบ ๆ ตัวอย่าง Mijia</p>
+<pre class="language-text"><code>AA:BB:CC:xx:xx:xx</code></pre>
+<p>อาจพบหลายตัว บันทึก MAC Address ของ Sensor ที่ต้องการใช้ หยุด Scan</p>
+<pre class="language-bash"><code>scan off</code></pre>
+<p>ออก</p>
+<pre class="language-bash"><code>quit</code></pre>
+<h2 id="22-29-bthome">22.29 BTHome</h2>
+<p>BTHome เป็นรูปแบบสำหรับส่ง Sensor Measurement ผ่าน</p>
+<pre class="language-text"><code>Bluetooth Low Energy Advertisement</code></pre>
+<p>ข้อมูลอาจประกอบด้วย</p>
+<pre class="language-text"><code>Temperature
+Humidity
+Battery
+Voltage
+Packet ID
+Sensor Measurements อื่น ๆ</code></pre>
+<p>BTHome Service UUID ที่พบได้คือ</p>
+<pre class="language-text"><code>0xFCD2</code></pre>
+<p>หรือในรูปแบบเต็ม</p>
+<pre class="language-text"><code>0000fcd2-0000-1000-8000-00805f9b34fb</code></pre>
+<p>Gateway ต้อง</p>
+<pre class="language-text"><code>Scan Advertisement
+      ↓
+Identify BTHome
+      ↓
+Decode Measurements
+      ↓
+Normalize
+      ↓
+MQTT Publish</code></pre>
+<h2 id="22-30-หมายเหตุสำคัญเกี่ยวกับ-mijia">22.30 หมายเหตุสำคัญเกี่ยวกับ Mijia</h2>
+<p>Mijia LYWSD03MMC จากโรงงานอาจไม่ได้ Broadcast BTHome ในรูปแบบที่ใช้ใน LAB นี้</p>
+<p>LAB นี้สมมติว่า Sensor ถูกตั้งค่า Firmware/Advertising Format ให้ส่ง</p>
+<pre class="language-text"><code>BTHome</code></pre>
+<p>แล้ว ก่อนทำ LAB ต้องยืนยันด้วยการ Scan ว่า Device ส่ง Advertisement ที่ Gateway สามารถอ่านได้ ไม่ควรสมมติว่า Mijia ทุกตัวจะส่ง BTHome โดยอัตโนมัติ</p>
+<h2 id="22-31-ตรวจสอบ-ble-advertisement">22.31 ตรวจสอบ BLE Advertisement</h2>
+<p>ขั้นแรกไม่ต้องรีบ Decode เป้าหมายคือพิสูจน์ว่า Raspberry Pi</p>
+<pre class="language-text"><code>เห็น Device</code></pre>
+<p>ก่อน ใช้</p>
+<pre class="language-bash"><code>bluetoothctl</code></pre>
+<p>แล้ว</p>
+<pre class="language-bash"><code>scan on</code></pre>
+<p>ถ้าเห็น MAC Address ของ Mijia แสดงว่า</p>
+<pre class="language-text"><code>BLE Radio
+    ↓
+Raspberry Pi</code></pre>
+<p>ทำงาน</p>
+<h2 id="22-32-python-ble-library">22.32 Python BLE Library</h2>
+<p>สำหรับ Python สามารถใช้</p>
+<pre class="language-text"><code>bleak</code></pre>
+<p>ติดตั้งใน venv</p>
+<pre class="language-bash"><code>cd ~/iot-gateway
+
+source venv/bin/activate
+
+pip install bleak</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>pip show bleak</code></pre>
+<h2 id="22-33-ble-scanner-ด้วย-python">22.33 BLE Scanner ด้วย Python</h2>
+<p>สร้าง</p>
+<pre class="language-bash"><code>nano ble_scan.py</code></pre>
+<p>ใช้</p>
+<pre class="language-python"><code>import asyncio
+
+from bleak import BleakScanner
+
+
+async def main():
+
+    devices = await BleakScanner.discover(
+        timeout=10.0
+    )
+
+    for device in devices:
+        print(
+            device.address,
+            device.name,
+            device.rssi
+        )
+
+
+asyncio.run(
+    main()
+)</code></pre>
+<p>หมายเหตุ: Bleak บางเวอร์ชันอาจจัดรายละเอียด Advertisement ผ่าน Callback/API ที่ต่างจากการ Scan แบบพื้นฐานนี้ เป้าหมายของขั้นตอนนี้คือ</p>
+<pre class="language-text"><code>Device Discovery</code></pre>
+<p>ก่อนเข้าสู่ BTHome Decoding</p>
+<h2 id="22-34-run-ble-scanner">22.34 Run BLE Scanner</h2>
+<pre class="language-bash"><code>python ble_scan.py</code></pre>
+<p>ควรเห็น BLE Device รอบ ๆ ค้นหา MAC ของ Mijia เช่น</p>
+<pre class="language-text"><code>AA:BB:CC:xx:xx:xx</code></pre>
+<p>ถ้าไม่พบ ตรวจสอบ</p>
+<pre class="language-text"><code>Bluetooth
+rfkill
+Sensor Battery
+Distance
+Advertisement Mode</code></pre>
+<h2 id="22-35-bthome-decoder">22.35 BTHome Decoder</h2>
+<p>BTHome ไม่ใช่เพียงการอ่านชื่อ BLE Device Gateway ต้อง Decode</p>
+<pre class="language-text"><code>Service Data</code></pre>
+<p>ที่อยู่ใน Advertisement Pipeline</p>
+<pre class="language-text"><code>BLE Advertisement
+      ↓
+  Service UUID
+      ↓
+   BTHome Data
+      ↓
+  Object Decode
+      ↓
+temp / humi / battery</code></pre>
+<p>สำหรับการเรียนรู้ แนะนำแยกเป็นสองระดับ</p>
+<pre class="language-text"><code>Level 1
+BLE Discovery
+
+Level 2
+BTHome Decode</code></pre>
+<p>เพื่อให้คุณเห็นว่า</p>
+<pre class="language-text"><code>BLE</code></pre>
+<p>คือ Transport/Radio Technology ส่วน</p>
+<pre class="language-text"><code>BTHome</code></pre>
+<p>คือ Data Format/Application Protocol ที่อยู่บน BLE Advertisement</p>
+<h2 id="22-36-ใช้-bthome-decoder-library">22.36 ใช้ BTHome Decoder Library</h2>
+<p>เนื่องจากรายละเอียด BTHome Advertisement มี Object ID, Encoding และอาจมี Encryption จึงไม่ควรเริ่มจากการ Decode Byte ทั้งหมดด้วยมือ แนวทาง LAB คือใช้ Python Library ที่รองรับ BTHome แล้วเน้น</p>
+<pre class="language-text"><code>Receive
+Decode
+Normalize
+Publish</code></pre>
+<p>ก่อน แนวคิด</p>
+<pre class="language-text"><code>Advertisement
+     ↓
+BTHome Decoder
+     ↓
+{
+  temperature,
+  humidity,
+  battery
+}</code></pre>
+<p>จากนั้น Gateway ทำงานต่อได้เหมือนข้อมูลจาก UDP</p>
+<h2 id="22-37-normalized-mqtt-data">22.37 Normalized MQTT Data</h2>
+<p>สมมติ BTHome Decoder ได้</p>
+<pre class="language-text"><code>temperature = 29.6
+humidity = 72.5
+battery = 87</code></pre>
+<p>Gateway สามารถ Publish Topic</p>
+<pre class="language-text"><code>pkru/iot/mijia01/data</code></pre>
+<p>Payload</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 29.6,
+  &quot;humi&quot;: 72.5,
+  &quot;battery&quot;: 87
+}</code></pre>
+<p>สังเกตว่า Mijia ไม่มี</p>
+<pre class="language-text"><code>light</code></pre>
+<p>ดังนั้นไม่ควรสร้างค่า Light ปลอม เช่น</p>
+<pre class="language-text"><code>light = 0</code></pre>
+<p>เพียงเพื่อให้ Payload เหมือน ESP32 Data Normalization ไม่ได้หมายถึงการสร้างข้อมูลที่ Sensor ไม่มี</p>
+<h2 id="22-38-schema-ของ-sensor-ต่างชนิด">22.38 Schema ของ Sensor ต่างชนิด</h2>
+<p>ESP32</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 30,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>Mijia</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 29.6,
+  &quot;humi&quot;: 72.5,
+  &quot;battery&quot;: 87
+}</code></pre>
+<p>ทั้งสองสามารถใช้ Topic Structure เดียวกัน</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/data</code></pre>
+<p>แต่ Payload สามารถมี Field แตกต่างกันตาม Device Capability ระบบ Validation จึงควรทราบ</p>
+<pre class="language-text"><code>Device Type</code></pre>
+<p>หรือ</p>
+<pre class="language-text"><code>Sensor Capability</code></pre>
+<p>ในระบบที่ซับซ้อนขึ้น</p>
+<h2 id="22-39-device-naming">22.39 Device Naming</h2>
+<p>สำหรับ LAB สามารถใช้</p>
+<pre class="language-text"><code>mijia01
+mijia02
+mijia03</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>pkru/iot/mijia01/data
+
+pkru/iot/mijia02/data
+
+pkru/iot/mijia03/data</code></pre>
+<p>ทำให้อ่านง่ายกว่าใช้ MAC Address เป็น Topic โดยตรง Gateway สามารถมี Mapping</p>
+<pre class="language-text"><code>AA:BB:CC:xx:xx:01
+    ↓
+mijia01
+
+AA:BB:CC:xx:xx:02
+    ↓
+mijia02</code></pre>
+<h2 id="22-40-device-mapping">22.40 Device Mapping</h2>
+<p>ตัวอย่าง Python Dictionary</p>
+<pre class="language-python"><code>device_map = {
+    &quot;AA:BB:CC:AA:BB:01&quot;: &quot;mijia01&quot;,
+    &quot;AA:BB:CC:AA:BB:02&quot;: &quot;mijia02&quot;,
+    &quot;AA:BB:CC:AA:BB:03&quot;: &quot;mijia03&quot;
+}</code></pre>
+<p>เมื่อ BLE Scanner พบ</p>
+<pre class="language-text"><code>MAC Address</code></pre>
+<p>Gateway แปลงเป็น</p>
+<pre class="language-text"><code>Logical Device ID</code></pre>
+<p>ก่อน Publish MQTT นี่ช่วยแยก</p>
+<pre class="language-text"><code>Physical Identifier</code></pre>
+<p>ออกจาก</p>
+<pre class="language-text"><code>Application Identifier</code></pre>
+<h2 id="22-41-ble-mqtt-logic">22.41 BLE → MQTT Logic</h2>
+<p>Pseudo Flow</p>
+<pre class="language-text"><code>BLE Advertisement
+      ↓
+Get MAC Address
+      ↓
+Check device_map
+      ↓
+Decode BTHome
+      ↓
+Get Measurements
+      ↓
+Build JSON
+      ↓
+Build MQTT Topic
+      ↓
+Publish</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-text"><code>MAC
+AA:BB:CC:AA:BB:01
+
+      ↓
+
+device_id
+mijia01
+
+      ↓
+
+BTHome
+
+temp = 29.6
+humi = 72.5
+battery = 87
+
+      ↓
+
+MQTT
+
+pkru/iot/mijia01/data
+
+      ↓
+
+{
+  &quot;temp&quot;:29.6,
+  &quot;humi&quot;:72.5,
+  &quot;battery&quot;:87
+}</code></pre>
+<h2 id="22-42-mqtt-subscriber-สำหรับ-ble-gateway">22.42 MQTT Subscriber สำหรับ BLE Gateway</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/data&quot; \
+-v</code></pre>
+<p>เมื่อ Gateway Decode BTHome สำเร็จ ควรเห็น</p>
+<pre class="language-text"><code>pkru/iot/mijia01/data {&quot;temp&quot;:29.6,&quot;humi&quot;:72.5,&quot;battery&quot;:87}</code></pre>
+<p>จากจุดนี้ Node-RED ไม่จำเป็นต้องรู้ว่า</p>
+<pre class="language-text"><code>Data เดิมมาจาก BLE</code></pre>
+<p>เพราะรับข้อมูลผ่าน MQTT แล้ว นี่คือประโยชน์สำคัญของ Gateway</p>
+<h2 id="22-43-protocol-translation">22.43 Protocol Translation</h2>
+<p>ก่อน Gateway</p>
+<pre class="language-text"><code>Node-RED
+   ├── MQTT Input
+   ├── UDP Input
+   └── BLE Input</code></pre>
+<p>หลัง Gateway</p>
+<pre class="language-text"><code>BLE ──┐
+      │
+UDP ──┼──→ Gateway ──→ MQTT ──→ Node-RED
+      │
+MQTT ─┘</code></pre>
+<p>Application Layer จึงง่ายขึ้น</p>
+<h2 id="22-44-gateway-ไม่ได้แค่-forward-data">22.44 Gateway ไม่ได้แค่ Forward Data</h2>
+<p>Gateway ที่ดีไม่ควรทำเพียง</p>
+<pre class="language-text"><code>Input
+  ↓
+Output</code></pre>
+<p>แต่สามารถทำ</p>
+<pre class="language-text"><code>Receive
+  ↓
+Decode
+  ↓
+Validate
+  ↓
+Normalize
+  ↓
+Add Metadata
+  ↓
+Publish</code></pre>
+<p>ตัวอย่าง UDP Input</p>
+<pre class="language-json"><code>{
+  &quot;device_id&quot;:&quot;001&quot;,
+  &quot;temp&quot;:&quot;30&quot;,
+  &quot;humi&quot;:&quot;70&quot;,
+  &quot;light&quot;:&quot;1500&quot;
+}</code></pre>
+<p>Gateway</p>
+<pre class="language-text"><code>Parse
+  ↓
+Convert Type
+  ↓
+Validate</code></pre>
+<p>Output</p>
+<pre class="language-text"><code>pkru/iot/001/data
+
+{
+  &quot;temp&quot;:30.0,
+  &quot;humi&quot;:70.0,
+  &quot;light&quot;:1500.0
+}</code></pre>
+<h2 id="22-45-เพิ่ม-gateway-metadata">22.45 เพิ่ม Gateway Metadata</h2>
+<p>ระบบจริงอาจเพิ่ม</p>
+<pre class="language-text"><code>gateway_id
+protocol
+received_at</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:30.0,
+  &quot;humi&quot;:70.0,
+  &quot;light&quot;:1500.0,
+  &quot;gateway_id&quot;:&quot;pi01&quot;,
+  &quot;protocol&quot;:&quot;udp&quot;
+}</code></pre>
+<p>หรือ BLE</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:29.6,
+  &quot;humi&quot;:72.5,
+  &quot;battery&quot;:87,
+  &quot;gateway_id&quot;:&quot;pi01&quot;,
+  &quot;protocol&quot;:&quot;bthome&quot;
+}</code></pre>
+<p>ช่วยให้ระบบรู้ว่า</p>
+<pre class="language-text"><code>Data มาจาก Gateway ไหน</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>Data เดิมมาจาก Protocol อะไร</code></pre>
+<p>สำหรับ LAB หลัก Metadata นี้เป็นส่วนเสริม ไม่จำเป็นต้องเพิ่มทุก Message</p>
+<h2 id="22-46-gateway-กับ-data-quality">22.46 Gateway กับ Data Quality</h2>
+<p>LAB 19 มี</p>
+<pre class="language-text"><code>VALID
+INVALID
+STALE</code></pre>
+<p>Gateway สามารถ Validation ก่อน Publish MQTT เช่น UDP</p>
+<pre class="language-text"><code>Receive
+  ↓
+Parse
+  ↓
+Validate
+  │
+  ├── VALID → MQTT
+  │
+  └── INVALID → Reject / Log</code></pre>
+<p>หรือสามารถ Publish Quality Metadata เพื่อให้ Processing Layer ตัดสินใจต่อ แนวทางใดเหมาะสมขึ้นกับ Architecture</p>
+<h2 id="22-47-ble-และ-wi-fi-บน-raspberry-pi">22.47 BLE และ Wi-Fi บน Raspberry Pi</h2>
+<p>Raspberry Pi 3B+/4B มีทั้ง</p>
+<pre class="language-text"><code>Wi-Fi
+Bluetooth</code></pre>
+<p>จึงสามารถทำงาน</p>
+<pre class="language-text"><code>BLE Receive
+   +
+Wi-Fi/Ethernet MQTT</code></pre>
+<p>พร้อมกันได้ Architecture</p>
+<pre class="language-text"><code>Mijia
+  │
+  │ BLE
+  ▼
+Raspberry Pi
+  │
+  │ Wi-Fi / Ethernet
+  ▼
+MQTT / Network</code></pre>
+<p>ในระบบที่ Raspberry Pi อยู่ในตู้โลหะ อาจพิจารณา USB Bluetooth Adapter หรือ USB Wi-Fi Adapter พร้อมสายอากาศภายนอกตามข้อจำกัดทางกายภาพของระบบ</p>
+<h2 id="22-48-multi-protocol-gateway-architecture">22.48 Multi-protocol Gateway Architecture</h2>
+<p>หลังรวม UDP และ BLE</p>
+<pre class="language-text"><code>┌──────────────┐
+│ Mijia #1     │
+│ BLE/BTHome   │
+└──────┬───────┘
+       │
+┌──────────────┐
+│ Mijia #2     │
+│ BLE/BTHome   │
+└──────┬───────┘
+       │
+       ├─────────────────────┐
+                             │
+┌──────────────┐             │
+│ ESP32 #1     │             │
+│ UDP          │             │
+└──────┬───────┘             │
+       │                     │
+┌──────────────┐             │
+│ ESP32 #2     │             │
+│ UDP          │             │
+└──────┬───────┘             │
+       │                     │
+       └─────────────┐       │
+                     ▼       ▼
+                ┌─────────────────┐
+                │ Raspberry Pi    │
+                │ IoT Gateway     │
+                │                 │
+                │ BLE Receiver    │
+                │ UDP Receiver    │
+                │ Decoder         │
+                │ Normalizer      │
+                │ MQTT Publisher  │
+                └────────┬────────┘
+                         │
+                         ▼
+                    Mosquitto
+                         │
+              ┌──────────┼──────────┐
+              ▼          ▼          ▼
+           Node-RED    SQLite   Dashboard</code></pre>
+<h2 id="22-49-mqtt-device-สามารถเข้าตรงได้">22.49 MQTT Device สามารถเข้าตรงได้</h2>
+<p>ถ้า ESP32 รองรับ MQTT อยู่แล้ว ไม่จำเป็นต้องผ่าน Protocol Translation Architecture</p>
+<pre class="language-text"><code>MQTT Device ──────────────────┐
+                              │
+UDP Device ─→ Gateway ────────┼──→ Mosquitto
+                              │
+BLE Device ─→ Gateway ────────┘</code></pre>
+<p>ดังนั้น Gateway ไม่จำเป็นต้องแปลง Protocol ทุก Device ใช้เฉพาะเมื่อจำเป็น</p>
+<h2 id="22-50-edge-gateway">22.50 Edge Gateway</h2>
+<p>เมื่อ Raspberry Pi ทำ</p>
+<pre class="language-text"><code>Protocol Translation
+Validation
+Filtering
+Local Processing
+Local Storage
+Rule Processing</code></pre>
+<p>Raspberry Pi เริ่มมีบทบาทเป็น</p>
+<pre class="language-text"><code>Edge Gateway</code></pre>
+<p>เพราะ Processing เกิดใกล้ Device ไม่จำเป็นต้องส่ง Raw Data ทุกอย่างไป Cloud ก่อน</p>
+<h2 id="22-51-internet-ไม่จำเป็นสำหรับ-local-gateway">22.51 Internet ไม่จำเป็นสำหรับ Local Gateway</h2>
+<p>Architecture</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Raspberry Pi
+   ↓
+Mosquitto
+   ↓
+Node-RED
+   ↓
+Dashboard</code></pre>
+<p>ทั้งหมดสามารถทำงานภายใน LAN แม้</p>
+<pre class="language-text"><code>Internet = DOWN</code></pre>
+<p>ตราบใดที่</p>
+<pre class="language-text"><code>Local Network</code></pre>
+<p>ยังทำงาน นี่เป็นพื้นฐานสำคัญสำหรับ LAB 23</p>
+<pre class="language-text"><code>Offline / Store-and-Forward</code></pre>
+<h2 id="22-52-ทดสอบ-udp-invalid-json">22.52 ทดสอบ UDP Invalid JSON</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>echo &#x27;HELLO&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>Gateway ควรแสดง</p>
+<pre class="language-text"><code>Invalid UDP data</code></pre>
+<p>แต่ Process ต้องไม่ Crash จากนั้นส่ง Valid JSON</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>Gateway ต้องกลับมาประมวลผลได้ตามปกติ</p>
+<h2 id="22-53-ทดสอบ-missing-field">22.53 ทดสอบ Missing Field</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30}&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>Gateway ควร Reject เพราะไม่มี</p>
+<pre class="language-text"><code>humi
+light</code></pre>
+<p>จากนั้น Process ต้องยังทำงานต่อ</p>
+<h2 id="22-54-ทดสอบ-multi-device-udp">22.54 ทดสอบ Multi-device UDP</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>echo &#x27;{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}&#x27; \
+| nc -u -w1 127.0.0.1 5005
+
+echo &#x27;{&quot;device_id&quot;:&quot;002&quot;,&quot;temp&quot;:31,&quot;humi&quot;:72,&quot;light&quot;:1200}&#x27; \
+| nc -u -w1 127.0.0.1 5005
+
+echo &#x27;{&quot;device_id&quot;:&quot;003&quot;,&quot;temp&quot;:32,&quot;humi&quot;:74,&quot;light&quot;:1400}&#x27; \
+| nc -u -w1 127.0.0.1 5005</code></pre>
+<p>MQTT ต้องได้</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/002/data
+pkru/iot/003/data</code></pre>
+<h2 id="22-55-ตรวจสอบ-node-red">22.55 ตรวจสอบ Node-RED</h2>
+<p>Node-RED จาก LAB 17 สามารถ Subscribe</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>ดังนั้นข้อมูลจาก</p>
+<pre class="language-text"><code>MQTT Device
+UDP Gateway
+BLE Gateway</code></pre>
+<p>สามารถเข้าสู่ Flow เดียวกันได้ ถ้าใช้ Topic Schema เดียวกัน นี่คือประโยชน์ของ</p>
+<pre class="language-text"><code>Common MQTT Data Model</code></pre>
+<h2 id="22-56-protocol-origin">22.56 Protocol Origin</h2>
+<p>สมมติ Node-RED ได้</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>อาจไม่รู้ว่าเดิมมาจาก</p>
+<pre class="language-text"><code>MQTT
+UDP
+BLE</code></pre>
+<p>ถ้าจำเป็นต้องรู้ สามารถเพิ่ม</p>
+<pre class="language-text"><code>protocol</code></pre>
+<p>ใน Payload เช่น</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:30,
+  &quot;humi&quot;:70,
+  &quot;light&quot;:1500,
+  &quot;protocol&quot;:&quot;udp&quot;
+}</code></pre>
+<p>แต่ถ้า Application ไม่จำเป็นต้องรู้ ไม่จำเป็นต้องเพิ่มข้อมูลนี้ หลักการคือ</p>
+<pre class="language-text"><code>Add Metadata only when useful</code></pre>
+<h2 id="22-57-systemd-สำหรับ-udp-gateway">22.57 systemd สำหรับ UDP Gateway</h2>
+<p>จาก LAB 21 สามารถทำให้</p>
+<pre class="language-text"><code>udp_gateway.py</code></pre>
+<p>เป็น Service เช่น</p>
+<pre class="language-text"><code>udp-gateway.service</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-ini"><code>[Unit]
+Description=UDP to MQTT IoT Gateway
+After=network-online.target mosquitto.service
+Wants=network-online.target
+Requires=mosquitto.service
+
+[Service]
+Type=simple
+User=piuser
+WorkingDirectory=/home/piuser/iot-gateway
+ExecStart=/home/piuser/iot-gateway/venv/bin/python -u /home/piuser/iot-gateway/udp_gateway.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<p>เปลี่ยน</p>
+<pre class="language-text"><code>piuser</code></pre>
+<p>ให้ตรงกับ User จริง</p>
+<h2 id="22-58-enable-udp-gateway">22.58 Enable UDP Gateway</h2>
+<p>หลังสร้าง Service</p>
+<pre class="language-bash"><code>sudo systemctl daemon-reload
+
+sudo systemctl enable --now udp-gateway</code></pre>
+<p>ตรวจสอบ</p>
+<pre class="language-bash"><code>systemctl status udp-gateway</code></pre>
+<p>ดู Log</p>
+<pre class="language-bash"><code>journalctl -u udp-gateway -f</code></pre>
+<p>จากนั้น UDP Gateway จะทำงานอัตโนมัติหลัง Boot</p>
+<h2 id="22-59-service-architecture">22.59 Service Architecture</h2>
+<p>Raspberry Pi สามารถมี</p>
+<pre class="language-text"><code>mosquitto.service
+
+iot-gateway.service
+
+udp-gateway.service</code></pre>
+<p>และในอนาคต</p>
+<pre class="language-text"><code>ble-gateway.service</code></pre>
+<p>ทั้งหมดถูกดูแลโดย</p>
+<pre class="language-text"><code>systemd</code></pre>
+<p>Architecture</p>
+<pre class="language-text"><code>            systemd
+               │
+      ┌────────┼────────┐
+      ▼        ▼        ▼
+  Mosquitto   UDP      BLE
+              Gateway  Gateway
+                 │       │
+                 └───┬───┘
+                     ▼
+                   MQTT</code></pre>
+<h2 id="22-60-แยก-gateway-service-หรือรวม-program-เดียว">22.60 แยก Gateway Service หรือรวม Program เดียว</h2>
+<p>มีสองแนวทาง</p>
+<h3 id="แบบที่-1-แยก-service">แบบที่ 1 - แยก Service</h3>
+<pre class="language-text"><code>udp-gateway.service
+ble-gateway.service</code></pre>
+<p>ข้อดี</p>
+<ul>
+<li>Debug ง่าย</li>
+<li>Restart แยกกันได้</li>
+<li>BLE พังไม่กระทบ UDP</li>
+<li>เหมาะกับการเรียน</li>
+</ul>
+<p>LAB นี้แนะนำแนวทางนี้</p>
+<h3 id="แบบที่-2-program-เดียว">แบบที่ 2 - Program เดียว</h3>
+<pre class="language-text"><code>iot-gateway.service</code></pre>
+<p>ภายในมี</p>
+<pre class="language-text"><code>BLE Receiver
+UDP Receiver
+MQTT</code></pre>
+<p>ข้อดี</p>
+<ul>
+<li>Centralized Application</li>
+</ul>
+<p>ข้อเสีย</p>
+<ul>
+<li>Code ซับซ้อนขึ้น</li>
+<li>Failure อาจกระทบหลาย Protocol</li>
+<li>ต้องจัดการ Concurrency / Async มากขึ้น</li>
+</ul>
+<p>สำหรับการเรียนรู้เริ่มจาก</p>
+<pre class="language-text"><code>Separate Services</code></pre>
+<p>ก่อน</p>
+<h2 id="22-61-fault-isolation">22.61 Fault Isolation</h2>
+<p>การแยก</p>
+<pre class="language-text"><code>BLE Gateway</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>UDP Gateway</code></pre>
+<p>เป็นคนละ Process ทำให้เกิด</p>
+<pre class="language-text"><code>Fault Isolation</code></pre>
+<p>ถ้า</p>
+<pre class="language-text"><code>BLE Gateway Crash</code></pre>
+<p>UDP Gateway ยังทำงาน ถ้า</p>
+<pre class="language-text"><code>UDP Gateway Crash</code></pre>
+<p>BLE Gateway ยังทำงาน systemd สามารถ Restart เฉพาะ Service ที่มีปัญหา แนวคิดนี้จะสำคัญมากใน</p>
+<pre class="language-text"><code>LAB 27 - Fault-Tolerant IoT</code></pre>
+<h2 id="22-62-แบบฝึกหัดที่-1-udp-receiver">22.62 แบบฝึกหัดที่ 1 - UDP Receiver</h2>
+<p>สร้าง Python UDP Receiver Listen</p>
+<pre class="language-text"><code>UDP 5005</code></pre>
+<p>ส่ง</p>
+<pre class="language-json"><code>{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}</code></pre>
+<p>ให้ Python แสดงข้อมูลที่รับได้</p>
+<h2 id="22-63-แบบฝึกหัดที่-2-udp-mqtt">22.63 แบบฝึกหัดที่ 2 - UDP → MQTT</h2>
+<p>ให้ Gateway แปลง</p>
+<pre class="language-text"><code>UDP</code></pre>
+<p>เป็น</p>
+<pre class="language-text"><code>MQTT</code></pre>
+<p>Input</p>
+<pre class="language-json"><code>{
+  &quot;device_id&quot;:&quot;001&quot;,
+  &quot;temp&quot;:30,
+  &quot;humi&quot;:70,
+  &quot;light&quot;:1500
+}</code></pre>
+<p>Output Topic</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Payload</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:30.0,
+  &quot;humi&quot;:70.0,
+  &quot;light&quot;:1500.0
+}</code></pre>
+<p>ตรวจสอบด้วย</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+-t &quot;pkru/iot/+/data&quot; \
+-v</code></pre>
+<h2 id="22-64-แบบฝึกหัดที่-3-multi-device-udp">22.64 แบบฝึกหัดที่ 3 - Multi-device UDP</h2>
+<p>จำลอง</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>ส่ง UDP เข้า Gateway MQTT ต้องแยก Topic</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/002/data
+pkru/iot/003/data</code></pre>
+<h2 id="22-65-แบบฝึกหัดที่-4-invalid-udp">22.65 แบบฝึกหัดที่ 4 - Invalid UDP</h2>
+<p>ทดสอบ</p>
+<pre class="language-text"><code>HELLO</code></pre>
+<p>และ</p>
+<pre class="language-json"><code>{&quot;device_id&quot;:&quot;001&quot;,&quot;temp&quot;:30}</code></pre>
+<p>Gateway ต้อง</p>
+<pre class="language-text"><code>Reject
+Log Error
+Continue Running</code></pre>
+<h2 id="22-66-แบบฝึกหัดที่-5-ble-scan">22.66 แบบฝึกหัดที่ 5 - BLE Scan</h2>
+<p>ใช้</p>
+<pre class="language-bash"><code>bluetoothctl</code></pre>
+<p>Scan หา BLE Sensor บันทึก</p>
+<pre class="language-text"><code>MAC Address
+Device Name
+RSSI ถ้ามี</code></pre>
+<p>ยืนยันว่า Raspberry Pi สามารถรับ Advertisement จาก Sensor ได้</p>
+<h2 id="22-67-แบบฝึกหัดที่-6-bthome-identification">22.67 แบบฝึกหัดที่ 6 - BTHome Identification</h2>
+<p>ตรวจสอบ Sensor ที่ใช้ใน LAB ว่า Broadcast</p>
+<pre class="language-text"><code>BTHome</code></pre>
+<p>ค้นหา</p>
+<pre class="language-text"><code>Service UUID 0xFCD2</code></pre>
+<p>อธิบายความแตกต่างระหว่าง</p>
+<pre class="language-text"><code>BLE</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>BTHome</code></pre>
+<h2 id="22-68-แบบฝึกหัดที่-7-ble-mqtt">22.68 แบบฝึกหัดที่ 7 - BLE → MQTT</h2>
+<p>เมื่อ Decoder สามารถอ่านค่าได้ Publish</p>
+<pre class="language-text"><code>pkru/iot/mijia01/data</code></pre>
+<p>ตัวอย่าง</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:29.6,
+  &quot;humi&quot;:72.5,
+  &quot;battery&quot;:87
+}</code></pre>
+<p>ตรวจสอบด้วย MQTT Subscriber</p>
+<h2 id="22-69-แบบฝึกหัดที่-8-node-red-integration">22.69 แบบฝึกหัดที่ 8 - Node-RED Integration</h2>
+<p>ใช้ MQTT In</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>ให้ Node-RED รับข้อมูลจาก</p>
+<pre class="language-text"><code>UDP Device</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>BLE Device</code></pre>
+<p>ใน Flow เดียว แสดง</p>
+<pre class="language-text"><code>Device ID
+Temp
+Humi</code></pre>
+<p>บน Dashboard</p>
+<h2 id="22-70-แบบฝึกหัดที่-9-systemd">22.70 แบบฝึกหัดที่ 9 - systemd</h2>
+<p>ทำ</p>
+<pre class="language-text"><code>udp_gateway.py</code></pre>
+<p>ให้เป็น Service ทดสอบ</p>
+<pre class="language-text"><code>Start
+Stop
+Restart
+Enable
+Reboot</code></pre>
+<p>หลัง Reboot ต้องสามารถรับ</p>
+<pre class="language-text"><code>UDP</code></pre>
+<p>และ Publish</p>
+<pre class="language-text"><code>MQTT</code></pre>
+<p>โดยไม่ต้อง Run Python ด้วยมือ</p>
+<h2 id="22-71-งานส่ง-lab-22">22.71 งานส่ง LAB 22</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>Architecture Diagram</li>
+</ol>
+<pre class="language-text"><code>   BLE
+    │
+   UDP
+    │
+    └──→ Raspberry Pi Gateway
+                ↓
+               MQTT
+                ↓
+             Node-RED</code></pre>
+<ol>
+<li>Source Code</li>
+</ol>
+<pre class="language-text"><code>   udp_gateway.py</code></pre>
+<ol>
+<li>Screenshot UDP Receiver</li>
+</ol>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-text"><code>   UDP → MQTT</code></pre>
+<ol>
+<li>Screenshot Multi-device</li>
+</ol>
+<pre class="language-text"><code>   001
+   002
+   003</code></pre>
+<ol>
+<li>Screenshot Invalid UDP แล้ว Gateway ยังทำงานต่อ</li>
+</ol>
+<ol>
+<li>Screenshot BLE Scan</li>
+</ol>
+<ol>
+<li>ระบุ MAC Address ของ BLE Sensor ที่ใช้</li>
+</ol>
+<ol>
+<li>หลักฐานว่า Sensor ใช้ BTHome หรือ Advertisement Format ใด</li>
+</ol>
+<ol>
+<li>Screenshot BLE/BTHome Data ที่ Decode ได้</li>
+</ol>
+<ol>
+<li>Screenshot MQTT Topic ของ BLE Sensor</li>
+</ol>
+<ol>
+<li>Screenshot Node-RED รับข้อมูลผ่าน MQTT</li>
+</ol>
+<ol>
+<li>Screenshot</li>
+</ol>
+<pre class="language-bash"><code>   systemctl status udp-gateway</code></pre>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   IoT Node</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   IoT Gateway</code></pre>
+<ol>
+<li>อธิบายความแตกต่างระหว่าง</li>
+</ol>
+<pre class="language-text"><code>   BLE</code></pre>
+<p>และ</p>
+<pre class="language-text"><code>   BTHome</code></pre>
+<ol>
+<li>อธิบายความหมายของ</li>
+</ol>
+<pre class="language-text"><code>   Protocol Translation</code></pre>
+<ol>
+<li>อธิบายว่าเหตุใด MQTT จึงเหมาะเป็น Common Messaging Layer ของ LAB นี้</li>
+</ol>
+<h2 id="22-72-สิ่งที่ต้องเข้าใจ">22.72 สิ่งที่ต้องเข้าใจ</h2>
+<p>ก่อน LAB 22</p>
+<pre class="language-text"><code>MQTT Device
+     ↓
+MQTT Broker
+     ↓
+Application</code></pre>
+<p>หลัง LAB 22</p>
+<pre class="language-text"><code>BLE Device ──┐
+             │
+UDP Device ──┼──→ Gateway
+             │
+MQTT Device ─┘
+                ↓
+               MQTT
+                ↓
+           Applications</code></pre>
+<p>ดังนั้น Raspberry Pi ไม่ได้เป็นเพียง</p>
+<pre class="language-text"><code>MQTT Client</code></pre>
+<p>แต่ทำหน้าที่เป็น</p>
+<pre class="language-text"><code>Multi-protocol IoT Gateway</code></pre>
+<h2 id="22-73-gateway-processing-pipeline">22.73 Gateway Processing Pipeline</h2>
+<p>Pipeline ที่ควรเข้าใจคือ</p>
+<pre class="language-text"><code>Receive
+   ↓
+Identify Device
+   ↓
+Decode Protocol
+   ↓
+Parse Data
+   ↓
+Validate
+   ↓
+Normalize
+   ↓
+Publish MQTT
+   ↓
+Application</code></pre>
+<p>สำหรับ UDP</p>
+<pre class="language-text"><code>UDP Datagram
+     ↓
+   JSON
+     ↓
+  Validate
+     ↓
+  Normalize
+     ↓
+   MQTT</code></pre>
+<p>สำหรับ BTHome</p>
+<pre class="language-text"><code>BLE Advertisement
+      ↓
+  BTHome Decode
+      ↓
+   Measurement
+      ↓
+    Normalize
+      ↓
+     MQTT</code></pre>
+<h2 id="22-74-architecture-หลัง-lab-22">22.74 Architecture หลัง LAB 22</h2>
+<pre class="language-text"><code>                     SENSOR / IoT NODES
+
+    ┌─────────────┐
+    │ Mijia       │
+    │ BLE/BTHome  │
+    └──────┬──────┘
+           │
+           │ BLE
+           │
+    ┌──────┴──────┐
+    │ ESP32       │
+    │ UDP         │
+    └──────┬──────┘
+           │
+           │ Wi-Fi / UDP
+           │
+    ┌──────┴──────┐
+    │ ESP32       │
+    │ MQTT        │
+    └──────┬──────┘
+           │
+           │ MQTT
+           │
+           ▼
+    ┌───────────────────────┐
+    │ Raspberry Pi          │
+    │ Edge / IoT Gateway    │
+    │                       │
+    │ BLE Receiver          │
+    │ UDP Receiver          │
+    │ Protocol Decode       │
+    │ Data Validation       │
+    │ Data Normalization    │
+    │ MQTT Publisher        │
+    └───────────┬───────────┘
+                │
+                ▼
+         ┌──────────────┐
+         │ Mosquitto    │
+         └──────┬───────┘
+                │
+      ┌─────────┼─────────┐
+      ▼         ▼         ▼
+   Node-RED   SQLite   Dashboard
+      │
+      ▼
+    Rule
+      │
+      ▼
+   Control</code></pre>
+<h2 id="22-75-ความสัมพันธ์ของ-lab-20-22">22.75 ความสัมพันธ์ของ LAB 20–22</h2>
+<p>LAB 20</p>
+<pre class="language-text"><code>Python
+  ↓
+MQTT Application</code></pre>
+<p>LAB 21</p>
+<pre class="language-text"><code>systemd
+  ↓
+Managed Python Service</code></pre>
+<p>LAB 22</p>
+<pre class="language-text"><code>BLE / UDP
+    ↓
+Python Gateway
+    ↓
+Protocol Translation
+    ↓
+   MQTT</code></pre>
+<p>เส้นทางจึงเป็น</p>
+<pre class="language-text"><code>Program Gateway
+      ↓
+Run Gateway Autonomously
+      ↓
+Connect Heterogeneous Devices</code></pre>
+<h2 id="22-76-จุดสำคัญที่สุดของ-lab">22.76 จุดสำคัญที่สุดของ LAB</h2>
+<p>คำว่า</p>
+<pre class="language-text"><code>Gateway</code></pre>
+<p>ไม่ได้หมายถึงเพียงเครื่องที่</p>
+<pre class="language-text"><code>&quot;ส่งข้อมูลต่อ&quot;</code></pre>
+<p>Gateway สามารถทำหน้าที่</p>
+<pre class="language-text"><code>Protocol Translation
+Device Identification
+Data Decoding
+Validation
+Normalization
+Local Processing</code></pre>
+<p>ทำให้ Device ที่ใช้ Protocol ต่างกัน</p>
+<pre class="language-text"><code>BLE
+UDP
+MQTT</code></pre>
+<p>สามารถเข้าสู่ระบบเดียวกันผ่าน</p>
+<pre class="language-text"><code>Common MQTT Architecture</code></pre>
+<p>นี่เป็นการเปลี่ยน Raspberry Pi จาก</p>
+<pre class="language-text"><code>Computer ที่ Run MQTT/Python</code></pre>
+<p>ไปสู่</p>
+<pre class="language-text"><code>Edge IoT Gateway</code></pre>
+<p>อย่างชัดเจน</p>
+<h2 id="เชื่อมไป-lab-23-offline-store-and-forward">เชื่อมไป LAB 23 - Offline / Store-and-Forward</h2>
+<p>หลัง LAB 22 Gateway สามารถรับข้อมูลจาก</p>
+<pre class="language-text"><code>BLE
+UDP
+MQTT</code></pre>
+<p>และส่งเข้าสู่ MQTT Processing Pipeline แต่ยังมีปัญหาสำคัญ สมมติ Gateway ต้องส่งข้อมูลต่อไปยัง</p>
+<pre class="language-text"><code>Remote Server
+Cloud MQTT
+Cloud Database</code></pre>
+<p>แล้ว Internet ขาด ถ้าออกแบบเป็น</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Gateway
+   ↓
+Internet
+   X
+   ↓
+ Cloud</code></pre>
+<p>ข้อมูลอาจสูญหาย LAB 23 จะเพิ่ม</p>
+<pre class="language-text"><code>Local Buffer</code></pre>
+<p>ด้วย SQLite Architecture</p>
+<pre class="language-text"><code>Sensor
+   ↓
+Gateway
+   ↓
+Local SQLite
+   │
+   ├── Internet OK
+   │       ↓
+   │     Upload
+   │       ↓
+   │     Cloud
+   │
+   └── Internet DOWN
+           ↓
+        Store Local
+           ↓
+     Wait for Recovery
+           ↓
+         Retry
+           ↓
+        Send Later</code></pre>
+<p>แนวคิดเรียกว่า</p>
+<pre class="language-text"><code>Store-and-Forward</code></pre>
+<p>ทำให้ Gateway สามารถ</p>
+<pre class="language-text"><code>Continue Collecting Data</code></pre>
+<p>แม้ Internet ขาด และเมื่อ Network กลับมา</p>
+<pre class="language-text"><code>Forward Buffered Data</code></pre>
+<p>ได้ภายหลัง นี่จะเพิ่มความสามารถด้าน</p>
+<pre class="language-text"><code>Offline Operation
+Data Persistence
+Network Failure Recovery</code></pre>
+<p>ให้กับ Raspberry Pi IoT Gateway</p>
+    </main>
+  </div>
+</body>
+</html>

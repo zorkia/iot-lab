@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-teaching-guide/03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="../iot-lab-teaching-guide/04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="../iot-lab-teaching-guide/05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="../iot-lab-teaching-guide/06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="../iot-lab-teaching-guide/08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="../iot-lab-teaching-guide/10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="../iot-lab-teaching-guide/11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="../iot-lab-teaching-guide/12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="../iot-lab-teaching-guide/13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="../iot-lab-teaching-guide/14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="../iot-lab-teaching-guide/15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="../iot-lab-teaching-guide/16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="../iot-lab-teaching-guide/17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="../iot-lab-teaching-guide/18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="../iot-lab-teaching-guide/19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="../iot-lab-teaching-guide/20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="../iot-lab-teaching-guide/21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="../iot-lab-teaching-guide/23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="../iot-lab-teaching-guide/24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="../iot-lab-teaching-guide/25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="../iot-lab-teaching-guide/26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="../iot-lab-teaching-guide/28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="../iot-lab-teaching-guide/appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="active" href="02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="ssh-จาก-internet-เข้า-raspberry-pi-ผ่าน-cloudflare-tunnel">SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="01-cloudflare-tunnel-setup.html">ก่อนหน้า: 01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="03-node-red-cloudflare-tunnel.html">ถัดไป: 03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a></nav>
+<h2 id="ความสัมพันธ์กับเอกสารอื่น">ความสัมพันธ์กับเอกสารอื่น</h2>
+<p>เอกสารนี้ต่อยอดจาก <a href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a> โดยเพิ่ม SSH เป็นอีก service ภายใต้ Tunnel <code>kathu</code> เดียวกัน</p>
+<h2 id="ตัวอย่างระบบ">ตัวอย่างระบบ</h2>
+<table>
+<thead><tr>
+<th>รายการ</th>
+<th>ค่า</th>
+</tr></thead><tbody>
+<tr>
+<td>Domain</td>
+<td><code>vodun.cc</code></td>
+</tr>
+<tr>
+<td>Web</td>
+<td><code>pi.vodun.cc</code></td>
+</tr>
+<tr>
+<td>SSH</td>
+<td><code>ssh.vodun.cc</code></td>
+</tr>
+<tr>
+<td>Raspberry Pi hostname</td>
+<td><code>kathu</code></td>
+</tr>
+<tr>
+<td>Linux user</td>
+<td><code>piuser</code></td>
+</tr>
+<tr>
+<td>SSH Server</td>
+<td><code>localhost:22</code></td>
+</tr>
+<tr>
+<td>Tunnel name</td>
+<td><code>kathu</code></td>
+</tr>
+</tbody></table>
+<h2 id="1-โครงสร้างการเชื่อมต่อ">1. โครงสร้างการเชื่อมต่อ</h2>
+<pre class="language-text"><code>เครื่อง Client ภายนอก
+        │
+        │ SSH
+        ▼
+OpenSSH Client
+        │
+        │ ProxyCommand
+        ▼
+cloudflared (Client)
+        │
+        │ Internet
+        ▼
+    Cloudflare
+        │
+        │ Cloudflare Tunnel
+        ▼
+cloudflared (Raspberry Pi)
+        │
+        ▼
+   localhost:22
+        │
+        ▼
+      sshd
+        │
+        ▼
+   piuser@kathu</code></pre>
+<p>ข้อดี:</p>
+<ul>
+<li>ไม่ต้องมี Public IPv4</li>
+<li>ใช้งานได้หลัง NAT / CGNAT</li>
+<li>ไม่ต้อง Port Forward TCP/22 ที่ Router</li>
+<li>Pi กับ Client ไม่ต้องอยู่ Network เดียวกัน</li>
+<li>ใช้ชื่อ Domain แทน IP</li>
+<li>Tunnel เป็นการเชื่อมต่อออกจาก Pi ไปยัง Cloudflare</li>
+</ul>
+<h2 id="2-ตรวจสอบ-ssh-server-บน-raspberry-pi">2. ตรวจสอบ SSH Server บน Raspberry Pi</h2>
+<p>ไฟล์นี้ถือว่า SSH server บน Raspberry Pi ถูกเตรียมไว้แล้ว ขั้นนี้ตรวจเพียงว่า origin สำหรับ Cloudflare Tunnel พร้อมใช้งาน</p>
+<p>ตรวจสอบ:</p>
+<pre class="language-bash"><code>systemctl status ssh --no-pager</code></pre>
+<p>ควรพบ:</p>
+<p>Active: active (running)</p>
+<p>และ:</p>
+<p>Server listening on 0.0.0.0 port 22</p>
+<p>ทดสอบจาก Pi:</p>
+<pre class="language-bash"><code>ssh piuser@localhost</code></pre>
+<p>ออกจาก SSH:</p>
+<pre class="language-text"><code>exit</code></pre>
+<p>ถ้า SSH server ยังไม่ทำงาน ให้กลับไปตั้งค่าในส่วน Raspberry Pi/ระบบปฏิบัติการก่อน แล้วจึงกลับมาทำเฉพาะ Cloudflare Tunnel ในไฟล์นี้</p>
+<h2 id="3-ตรวจสอบ-cloudflare-tunnel">3. ตรวจสอบ Cloudflare Tunnel</h2>
+<p>ดู Tunnel:</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>NAME
+kathu</code></pre>
+<p>ตรวจสอบ cloudflared service:</p>
+<pre class="language-bash"><code>systemctl status cloudflared --no-pager</code></pre>
+<p>ควรพบ:</p>
+<p>Active: active (running)</p>
+<p>และมีข้อความประมาณ:</p>
+<p>Registered tunnel connection</p>
+<h2 id="4-สร้าง-subdomain-สำหรับ-ssh">4. สร้าง Subdomain สำหรับ SSH</h2>
+<p>ไม่ควรใช้:</p>
+<p>pi.vodun.cc</p>
+<p>เพราะเราใช้ hostname นี้กับ Web Server อยู่แล้ว:</p>
+<pre class="language-text"><code>pi.vodun.cc
+       ↓
+http://localhost:80</code></pre>
+<p>สร้าง hostname แยกสำหรับ SSH:</p>
+<pre class="language-bash"><code>ssh.vodun.cc</code></pre>
+<p>ใช้ Tunnel kathu ตัวเดิม:</p>
+<pre class="language-bash"><code>cloudflared tunnel route dns kathu ssh.vodun.cc</code></pre>
+<p>ควรได้ข้อความประมาณ:</p>
+<p>Added CNAME ssh.vodun.cc which will route to this tunnel</p>
+<p>ดังนั้นไม่จำเป็นต้องสร้าง Tunnel ใหม่</p>
+<h2 id="5-กำหนด-ssh-service-ใน-cloudflare-tunnel">5. กำหนด SSH Service ใน Cloudflare Tunnel</h2>
+<p>ถ้า cloudflared ทำงานเป็น systemd service ให้ตรวจสอบก่อนว่า service ใช้ config ตัวไหน:</p>
+<pre class="language-bash"><code>systemctl status cloudflared --no-pager</code></pre>
+<p>ของระบบตัวอย่างนี้พบว่าใช้:</p>
+<p>--config /etc/cloudflared/config.yml</p>
+<p>ดังนั้นแก้:</p>
+<pre class="language-bash"><code>sudo nano /etc/cloudflared/config.yml</code></pre>
+<p>ตัวอย่าง:</p>
+<p>tunnel: TUNNEL_UUID credentials-file: /home/piuser/.cloudflared/TUNNEL_UUID.json</p>
+<p>ingress:</p>
+<p>service: http://localhost:80</p>
+<ul>
+<li>hostname: pi.vodun.cc</li>
+</ul>
+<p>service: ssh://localhost:22</p>
+<ul>
+<li>hostname: ssh.vodun.cc</li>
+</ul>
+<ul>
+<li>service: http_status:404</li>
+</ul>
+<p>ความหมาย:</p>
+<pre class="language-text"><code>pi.vodun.cc
+      ↓
+http://localhost:80
+      ↓
+Web service
+
+ssh.vodun.cc
+      ↓
+ssh://localhost:22
+      ↓
+OpenSSH Server</code></pre>
+<h2 id="6-ตรวจสอบ-tunnel-configuration">6. ตรวจสอบ Tunnel Configuration</h2>
+<p>ใช้ config ตัวเดียวกับที่ systemd ใช้งานจริง:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel ingress validate</code></pre>
+<p>ถ้าถูกต้องควรได้:</p>
+<p>OK</p>
+<h2 id="7-restart-cloudflare-tunnel">7. Restart Cloudflare Tunnel</h2>
+<pre class="language-bash"><code>sudo systemctl restart cloudflared</code></pre>
+<p>ตรวจสอบ:</p>
+<pre class="language-bash"><code>systemctl status cloudflared --no-pager</code></pre>
+<p>ควรพบ:</p>
+<p>Active: active (running)</p>
+<p>และ:</p>
+<p>Registered tunnel connection</p>
+<p>ตอนนี้ฝั่ง Raspberry Pi พร้อมแล้ว:</p>
+<pre class="language-text"><code>                    Cloudflare
+                        │
+                 Tunnel: kathu
+                  /           \
+                 /             \
+pi.vodun.cc                  ssh.vodun.cc
+      │                                │
+      ▼                                ▼
+ Web :80                            SSH :22
+       \                              /
+        └───────── Pi kathu ─────────┘</code></pre>
+<h2 id="8-ป้องกัน-ssh-ด้วย-cloudflare-access">8. ป้องกัน SSH ด้วย Cloudflare Access</h2>
+<p>ก่อนเปิดให้ผู้ใช้หรือผู้ดูแลเชื่อมต่อจาก Internet ต้องสร้าง Cloudflare Access application สำหรับ:</p>
+<pre class="language-text"><code>ssh.vodun.cc</code></pre>
+<p>ขั้นตอนใน Cloudflare Zero Trust Dashboard:</p>
+<ol>
+<li>ไปที่ <strong>Access → Applications</strong> และเพิ่ม application แบบ <strong>Self-hosted</strong></li>
+<li>กำหนด hostname เป็น <code>ssh.vodun.cc</code></li>
+<li>สร้าง policy แบบ <strong>Allow</strong> เฉพาะ email, email domain หรือกลุ่มผู้ใช้ที่อนุญาต</li>
+<li>หลีกเลี่ยง policy ที่อนุญาต <code>Everyone</code></li>
+<li>ทดสอบ policy ก่อนแจก SSH configuration ให้ผู้ใช้</li>
+</ol>
+<p>เมื่อใช้ <code>cloudflared access ssh</code> ระบบจะเปิด Browser ให้ยืนยันตัวตนกับ Cloudflare Access ก่อนส่งต่อการเชื่อมต่อไปยัง <code>sshd</code> จากนั้นผู้ใช้ยังต้องผ่าน SSH key หรือรหัสผ่านของ Linux อย่าดำเนินการทดสอบจาก Internet หากยังไม่มี Access policy</p>
+<h2 id="9-ฝั่ง-client-ต้องมี-cloudflared">9. ฝั่ง Client ต้องมี cloudflared</h2>
+<p>SSH ที่ Publish ผ่าน Cloudflare Tunnel แบบนี้ไม่ได้เชื่อม TCP/22 ของ Pi จาก Internet โดยตรง</p>
+<p>ดังนั้น Client ใช้:</p>
+<pre class="language-text"><code>OpenSSH
+   +
+cloudflared</code></pre>
+<p>โดย cloudflared ทำหน้าที่เป็น Proxy ให้ SSH</p>
+<h2 id="10-ติดตั้งเครื่องมือบน-client">10. ติดตั้งเครื่องมือบน Client</h2>
+<h3 id="macos">macOS</h3>
+<p>ถ้ามี Homebrew:</p>
+<pre class="language-bash"><code>brew install cloudflared</code></pre>
+<p>ตรวจสอบ:</p>
+<pre class="language-bash"><code>cloudflared --version</code></pre>
+<p>ดูตำแหน่ง:</p>
+<pre class="language-bash"><code>which cloudflared</code></pre>
+<p>Mac Apple Silicon โดยทั่วไปจะได้:</p>
+<p>/opt/homebrew/bin/cloudflared</p>
+<h3 id="windows">Windows</h3>
+<p>เปิด PowerShell หรือ Windows Terminal แล้วตรวจ OpenSSH Client:</p>
+<pre class="language-powershell"><code>ssh -V</code></pre>
+<p>ถ้าไม่พบคำสั่ง <code>ssh</code> ให้ติดตั้งจาก <code>Settings &gt; System &gt; Optional features &gt; View features &gt; OpenSSH Client</code> หรือเปิด PowerShell แบบ Administrator แล้วรัน:</p>
+<pre class="language-powershell"><code>Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0</code></pre>
+<p>ติดตั้ง <code>cloudflared</code> ด้วย WinGet:</p>
+<pre class="language-powershell"><code>winget install --id Cloudflare.cloudflared --exact</code></pre>
+<p>ปิดแล้วเปิด Terminal ใหม่ จากนั้นตรวจสอบ:</p>
+<pre class="language-powershell"><code>cloudflared --version
+Get-Command cloudflared
+Get-Command ssh</code></pre>
+<p><code>Get-Command cloudflared</code> จะแสดง path ของโปรแกรม ถ้าคำสั่งยังไม่พบ ให้ตรวจว่า WinGet เพิ่ม directory ของ <code>cloudflared</code> เข้า <code>PATH</code> แล้วหรือยัง</p>
+<h2 id="11-ทดลอง-ssh-ครั้งแรก">11. ทดลอง SSH ครั้งแรก</h2>
+<h3 id="macos">macOS</h3>
+<p>ทดสอบโดยยังไม่แก้ ~/.ssh/config:</p>
+<pre class="language-bash"><code>ssh \
+  -o ProxyCommand=&quot;/opt/homebrew/bin/cloudflared access ssh --hostname ssh.vodun.cc&quot; \
+  piuser@ssh.vodun.cc</code></pre>
+<h3 id="windows">Windows</h3>
+<p>เปิด PowerShell หรือ Windows Terminal แล้วทดสอบโดยยังไม่สร้าง SSH config:</p>
+<pre class="language-powershell"><code>ssh -o &quot;ProxyCommand=cloudflared access ssh --hostname %h&quot; piuser@ssh.vodun.cc</code></pre>
+<p>คำสั่งจะเปิด Browser เพื่อ Login ผ่าน Cloudflare Access ก่อน เมื่อผ่าน policy แล้ว ครั้งแรกที่เชื่อมต่อ SSH อาจพบ:</p>
+<p>The authenticity of host &#x27;ssh.vodun.cc&#x27; can&#x27;t be established.</p>
+<p>ตรวจสอบ fingerprint แล้วตอบ:</p>
+<p>yes</p>
+<p>จากนั้น:</p>
+<p>piuser@ssh.vodun.cc&#x27;s password:</p>
+<p>ใส่ password ของ user piuser บน Raspberry Pi</p>
+<p>ถ้าสำเร็จจะเข้าสู่:</p>
+<p>piuser@kathu:~ $</p>
+<h2 id="12-ทำให้คำสั่งสั้นลงด้วย-ssh-config">12. ทำให้คำสั่งสั้นลงด้วย SSH config</h2>
+<h3 id="macos">macOS</h3>
+<p>ไม่ควรต้องพิมพ์คำสั่งยาวทุกครั้ง</p>
+<p>สร้าง/แก้:</p>
+<pre class="language-bash"><code>nano ~/.ssh/config</code></pre>
+<p>เพิ่ม:</p>
+<pre class="language-sshconfig"><code>Host kathu
+    HostName ssh.vodun.cc
+    User piuser
+    ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h</code></pre>
+<p>จากนั้นใช้งานเพียง:</p>
+<pre class="language-bash"><code>ssh kathu</code></pre>
+<p>แทน:</p>
+<pre class="language-bash"><code>ssh \
+  -o ProxyCommand=&quot;/opt/homebrew/bin/cloudflared access ssh --hostname ssh.vodun.cc&quot; \
+  piuser@ssh.vodun.cc</code></pre>
+<h3 id="windows">Windows</h3>
+<p>สร้าง directory <code>.ssh</code> และเปิดไฟล์ config จาก PowerShell:</p>
+<pre class="language-powershell"><code>New-Item -ItemType Directory -Force &quot;$HOME\.ssh&quot;
+notepad &quot;$HOME\.ssh\config&quot;</code></pre>
+<p>ไฟล์จริงอยู่ที่:</p>
+<pre class="language-text"><code>C:\Users\ชื่อผู้ใช้\.ssh\config</code></pre>
+<p>ชื่อไฟล์ต้องเป็น <code>config</code> โดยไม่มี <code>.txt</code> เพิ่มท้ายไฟล์ แล้วใส่:</p>
+<pre class="language-sshconfig"><code>Host kathu
+    HostName ssh.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h</code></pre>
+<p>จากนั้นใช้งานด้วยคำสั่งเดียวกัน:</p>
+<pre class="language-powershell"><code>ssh kathu</code></pre>
+<p>ถ้า Windows แจ้งว่าไม่พบ <code>cloudflared</code> ใน <code>ProxyCommand</code> ให้ใช้ <code>Get-Command cloudflared</code> หา path แล้วแทนชื่อโปรแกรมด้วย path เต็ม เช่น:</p>
+<pre class="language-sshconfig"><code>ProxyCommand &quot;C:\Program Files\cloudflared\cloudflared.exe&quot; access ssh --hostname %h</code></pre>
+<p>ใช้ path ที่ตรวจพบบนเครื่องจริง ตัวอย่างข้างต้นไม่ใช่ตำแหน่งบังคับของ WinGet</p>
+<h2 id="13-การทำงานของ-ssh-kathu">13. การทำงานของ &quot;ssh kathu&quot;</h2>
+<p>เมื่อสั่ง:</p>
+<pre class="language-bash"><code>ssh kathu</code></pre>
+<p>OpenSSH อ่าน config ตามระบบปฏิบัติการ:</p>
+<table>
+<thead><tr>
+<th>ระบบ</th>
+<th>ไฟล์ config</th>
+</tr></thead><tbody>
+<tr>
+<td>macOS</td>
+<td><code>~/.ssh/config</code></td>
+</tr>
+<tr>
+<td>Windows</td>
+<td><code>C:\Users\ชื่อผู้ใช้\.ssh\config</code></td>
+</tr>
+</tbody></table>
+<p>แล้วแปลงเป็น:</p>
+<pre class="language-text"><code>HostName = ssh.vodun.cc
+User     = piuser</code></pre>
+<p>จากนั้นเรียก:</p>
+<pre class="language-bash"><code>cloudflared access ssh --hostname ssh.vodun.cc</code></pre>
+<p>เส้นทางจึงเป็น:</p>
+<pre class="language-text"><code>ssh kathu
+    │
+    ▼
+OpenSSH
+    │
+    ▼
+cloudflared
+    │
+    ▼
+ssh.vodun.cc
+    │
+    ▼
+Cloudflare
+    │
+    ▼
+Tunnel kathu
+    │
+    ▼
+localhost:22
+    │
+    ▼
+sshd
+    │
+    ▼
+piuser@kathu</code></pre>
+<h2 id="14-ตรวจสอบปัญหาฝั่ง-windows">14. ตรวจสอบปัญหาฝั่ง Windows</h2>
+<p>ตรวจว่า OpenSSH และ <code>cloudflared</code> อยู่ใน <code>PATH</code>:</p>
+<pre class="language-powershell"><code>Get-Command ssh
+Get-Command cloudflared</code></pre>
+<p>ทดสอบ Cloudflare Access แยกจาก SSH:</p>
+<pre class="language-powershell"><code>cloudflared access ssh --hostname ssh.vodun.cc</code></pre>
+<p>ตรวจการเชื่อมต่อ HTTPS ไปยัง Cloudflare Edge:</p>
+<pre class="language-powershell"><code>Test-NetConnection ssh.vodun.cc -Port 443</code></pre>
+<p>ดูรายละเอียดการทำงานของ OpenSSH และ <code>ProxyCommand</code>:</p>
+<pre class="language-powershell"><code>ssh -vvv kathu</code></pre>
+<p>ตรวจว่า OpenSSH อ่าน config ใดอยู่:</p>
+<pre class="language-powershell"><code>ssh -G kathu | Select-String &quot;hostname|user|proxycommand&quot;</code></pre>
+<p>ปัญหาที่พบบ่อย:</p>
+<table>
+<thead><tr>
+<th>อาการ</th>
+<th>จุดตรวจ</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ssh</code> ไม่พบ</td>
+<td>ติดตั้ง OpenSSH Client แล้วเปิด Terminal ใหม่</td>
+</tr>
+<tr>
+<td><code>cloudflared</code> ไม่พบ</td>
+<td>ตรวจ <code>Get-Command cloudflared</code> และ <code>PATH</code></td>
+</tr>
+<tr>
+<td>เปิด Browser ไม่ได้</td>
+<td>รัน <code>cloudflared access ssh --hostname ssh.vodun.cc</code> แยก</td>
+</tr>
+<tr>
+<td>config ไม่ทำงาน</td>
+<td>ตรวจชื่อไฟล์ว่าเป็น <code>config</code> ไม่ใช่ <code>config.txt</code></td>
+</tr>
+<tr>
+<td>Access denied</td>
+<td>ตรวจ Cloudflare Access application และ policy</td>
+</tr>
+</tbody></table>
+<h2 id="15-การใช้งานหลาย-raspberry-pi">15. การใช้งานหลาย Raspberry Pi</h2>
+<p>สามารถใช้ Domain <code>vodun.cc</code> ร่วมกัน แล้วแยก SSH hostname และ Tunnel ตาม Raspberry Pi:</p>
+<table>
+<thead><tr>
+<th>SSH hostname</th>
+<th>Tunnel</th>
+<th>Raspberry Pi</th>
+</tr></thead><tbody>
+<tr>
+<td><code>ssh.vodun.cc</code></td>
+<td><code>kathu</code></td>
+<td><code>kathu</code></td>
+</tr>
+<tr>
+<td><code>ssh-kata.vodun.cc</code></td>
+<td><code>kata</code></td>
+<td><code>kata</code></td>
+</tr>
+<tr>
+<td><code>ssh-karon.vodun.cc</code></td>
+<td><code>karon</code></td>
+<td><code>karon</code></td>
+</tr>
+<tr>
+<td><code>ssh-ranee.vodun.cc</code></td>
+<td><code>ranee</code></td>
+<td><code>ranee</code></td>
+</tr>
+</tbody></table>
+<h2 id="16-กำหนด-ssh-config-สำหรับหลายเครื่อง">16. กำหนด SSH config สำหรับหลายเครื่อง</h2>
+<h3 id="macos">macOS</h3>
+<pre class="language-sshconfig"><code>Host kathu
+    HostName ssh.vodun.cc
+    User piuser
+    ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h
+
+Host kata
+    HostName ssh-kata.vodun.cc
+    User piuser
+    ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h
+
+Host karon
+    HostName ssh-karon.vodun.cc
+    User piuser
+    ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h
+
+Host ranee
+    HostName ssh-ranee.vodun.cc
+    User piuser
+    ProxyCommand /opt/homebrew/bin/cloudflared access ssh --hostname %h</code></pre>
+<h3 id="windows">Windows</h3>
+<pre class="language-sshconfig"><code>Host kathu
+    HostName ssh.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h
+
+Host kata
+    HostName ssh-kata.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h
+
+Host karon
+    HostName ssh-karon.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h
+
+Host ranee
+    HostName ssh-ranee.vodun.cc
+    User piuser
+    ProxyCommand cloudflared access ssh --hostname %h</code></pre>
+<p>จากนั้นใช้งานได้ง่าย:</p>
+<pre class="language-bash"><code>ssh kathu
+ssh kata
+ssh karon
+ssh ranee</code></pre>
+<h2 id="17-คำสั่งตรวจสอบเมื่อ-ssh-ไม่ได้">17. คำสั่งตรวจสอบเมื่อ SSH ไม่ได้</h2>
+<p>[บน Raspberry Pi]</p>
+<p>ตรวจ SSH:</p>
+<pre class="language-bash"><code>systemctl status ssh --no-pager</code></pre>
+<p>ตรวจ Port 22:</p>
+<pre class="language-bash"><code>ss -lntp | grep :22</code></pre>
+<p>ตรวจ cloudflared:</p>
+<pre class="language-bash"><code>systemctl status cloudflared --no-pager</code></pre>
+<p>ดู Log:</p>
+<pre class="language-bash"><code>journalctl -u cloudflared -n 50 --no-pager</code></pre>
+<p>ดู Log แบบ Real-time:</p>
+<pre class="language-bash"><code>journalctl -u cloudflared -f</code></pre>
+<p>ตรวจ config:</p>
+<pre class="language-bash"><code>cloudflared --config /etc/cloudflared/config.yml tunnel ingress validate</code></pre>
+<p>ดู Tunnel:</p>
+<pre class="language-bash"><code>cloudflared tunnel list</code></pre>
+<p>ดู Tunnel kathu:</p>
+<pre class="language-bash"><code>cloudflared tunnel info kathu</code></pre>
+<h2 id="18-สิ่งที่ไม่ต้องทำ">18. สิ่งที่ไม่ต้องทำ</h2>
+<p>ไม่ต้องเปิด:</p>
+<ul>
+<li><code>TCP/22</code> บน Router</li>
+</ul>
+<p>ไม่ต้องทำ:</p>
+<ul>
+<li>Port Forwarding</li>
+</ul>
+<p>ไม่ต้องมี:</p>
+<ul>
+<li>Public IPv4</li>
+<li>Static Public IP</li>
+<li>DDNS</li>
+</ul>
+<p>และไม่จำเป็นต้องใช้:</p>
+<pre class="language-bash"><code>ssh piuser@192.168.x.x</code></pre>
+<p>เมื่อเชื่อมจาก Internet</p>
+<h2 id="19-security">19. Security</h2>
+<p>Cloudflare Tunnel ไม่ได้หมายความว่าไม่ต้องรักษาความปลอดภัย SSH</p>
+<p>อย่างน้อยควร:</p>
+<ul>
+<li>ใช้ password ที่แข็งแรง</li>
+<li>หรือใช้ SSH Public Key แทน password</li>
+<li>ไม่ใช้ root login</li>
+<li>เก็บ Tunnel credential ให้เป็นความลับ</li>
+</ul>
+<p>ไฟล์สำคัญที่ห้ามเผยแพร่:</p>
+<ul>
+<li><code>/home/piuser/.cloudflared/TUNNEL_UUID.json</code></li>
+<li><code>~/.cloudflared/cert.pem</code></li>
+</ul>
+<p>สำหรับระบบที่เปิดให้ผู้ใช้เข้าจาก Internet ต้องตรวจว่า Cloudflare Access application และ Allow policy ยังทำงานอยู่เสมอ ควรใช้ SSH Public Key แทนรหัสผ่านเมื่อพร้อม และยกเลิกสิทธิ์ Access เมื่อผู้ใช้ไม่จำเป็นต้องเข้าเครื่องแล้ว</p>
+<h2 id="20-สถาปัตยกรรมสุดท้าย">20. สถาปัตยกรรมสุดท้าย</h2>
+<pre class="language-text"><code>                INTERNET
+                    │
+                    │
+              ┌─────▼─────┐
+              │ Cloudflare │
+              └─────┬─────┘
+                    │
+             Cloudflare Tunnel
+                    │
+             ┌──────▼──────┐
+             │   Pi kathu   │
+             │              │
+             │ cloudflared  │
+             │      │       │
+             │      ▼       │
+             │ localhost:22 │
+             │      │       │
+             │      ▼       │
+             │    sshd      │
+             └──────▲───────┘
+                    │
+                    │
+          ssh.vodun.cc
+                    ▲
+                    │
+              cloudflared
+                    ▲
+                    │
+                OpenSSH
+                    ▲
+                    │
+                 Client</code></pre>
+<p>บน macOS หรือ Windows หลังตั้ง SSH config แล้ว:</p>
+<pre class="language-bash"><code>ssh kathu</code></pre>
+<p>เพียงคำสั่งเดียวก็สามารถ SSH จาก Internet เข้า Raspberry Pi kathu ผ่าน Cloudflare Tunnel ได้ โดยไม่เปิด Port 22 จาก Internet โดยตรง</p>
+    </main>
+  </div>
+</body>
+</html>

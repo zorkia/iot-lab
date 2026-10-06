@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 16 - MQTT Topic Design for Multi-device IoT</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="active" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-16-mqtt-topic-design-for-multi-device-iot">LAB 16 - MQTT Topic Design for Multi-device IoT</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="15-lab-15-automatic-control.html">ก่อนหน้า: LAB 15 - Automatic Control</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="17-lab-17-multi-device-dashboard.html">ถัดไป: LAB 17 - Multi-device Dashboard</a></nav>
+<h2 id="16-1-แนวคิดของ-lab">16.1 แนวคิดของ LAB</h2>
+<p>LAB 01-15 ใช้ MQTT Topic แบบง่าย เช่น:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/cmd</code></pre>
+<p>เมื่อระบบมีอุปกรณ์เพียงตัวเดียว Topic ลักษณะนี้ยังใช้งานได้ แต่ระบบ IoT จริงมักมีหลาย Device เช่น:</p>
+<pre class="language-text"><code>ESP32-001
+ESP32-002
+ESP32-003
+...
+ESP32-100</code></pre>
+<p>ถ้าไม่มีการออกแบบ Topic ที่ดี ระบบจะเริ่มมีปัญหา:</p>
+<ul>
+<li>แยก Device ยาก</li>
+<li>Subscribe ข้อมูลหลาย Device ยาก</li>
+<li>แยก Data / Status / Command ไม่ชัดเจน</li>
+<li>Node-RED Flow ซับซ้อน</li>
+<li>เพิ่ม Device ใหม่ได้ยาก</li>
+<li>กำหนด MQTT Permission ในอนาคตได้ยาก</li>
+</ul>
+<p>ดังนั้น LAB นี้จะเปลี่ยนจาก:</p>
+<pre class="language-text"><code>Single-device MQTT</code></pre>
+<p>ไปสู่:</p>
+<pre class="language-text"><code>Structured Multi-device MQTT</code></pre>
+<p>แนวคิดหลักคือ:</p>
+<pre class="language-text"><code>MQTT Topic = Address ของข้อมูลในระบบ IoT</code></pre>
+<h2 id="16-2-วัตถุประสงค์">16.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ:</p>
+<ul>
+<li>อธิบาย MQTT Topic Hierarchy</li>
+<li>ออกแบบ Topic สำหรับหลาย Device</li>
+<li>แยก Data, Status และ Command Topic</li>
+<li>ใช้ Device ID ใน Topic</li>
+<li>ใช้ Single-level Wildcard <code>+</code></li>
+<li>ใช้ Multi-level Wildcard <code>#</code></li>
+<li>Subscribe ข้อมูลจากหลาย Device</li>
+<li>ใช้ Node-RED รับข้อมูลจากหลาย Device</li>
+<li>แยก Device ID จาก <code>msg.topic</code></li>
+<li>เข้าใจพื้นฐานของ Scalable MQTT Architecture</li>
+</ul>
+<h2 id="16-3-ปัญหาของ-single-device-design">16.3 ปัญหาของ Single-device Design</h2>
+<p>สมมติระบบเดิมมี:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/cmd</code></pre>
+<p>เมื่อเพิ่ม Device ใหม่อาจสร้าง:</p>
+<pre class="language-text"><code>pkru/iot/002/data
+pkru/iot/002/cmd
+
+pkru/iot/003/data
+pkru/iot/003/cmd</code></pre>
+<p>โครงสร้างนี้ยังใช้งานได้ แต่ต้องกำหนดมาตรฐานให้ชัดเจนตั้งแต่ต้น Topic ที่ดีควรตอบได้ว่า:</p>
+<pre class="language-text"><code>ข้อมูลมาจากระบบใด?
+มาจาก Device ใด?
+เป็นข้อมูลประเภทใด?</code></pre>
+<h2 id="16-4-topic-hierarchy">16.4 Topic Hierarchy</h2>
+<p>กำหนดโครงสร้างหลัก:</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/{channel}</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/status
+pkru/iot/001/cmd</code></pre>
+<p>Device 002:</p>
+<pre class="language-text"><code>pkru/iot/002/data
+pkru/iot/002/status
+pkru/iot/002/cmd</code></pre>
+<p>Device 003:</p>
+<pre class="language-text"><code>pkru/iot/003/data
+pkru/iot/003/status
+pkru/iot/003/cmd</code></pre>
+<p>โครงสร้างจึงเป็น:</p>
+<pre class="language-text"><code>pkru
+ │
+ └── iot
+      │
+      ├── 001
+      │    ├── data
+      │    ├── status
+      │    └── cmd
+      │
+      ├── 002
+      │    ├── data
+      │    ├── status
+      │    └── cmd
+      │
+      └── 003
+           ├── data
+           ├── status
+           └── cmd</code></pre>
+<h2 id="16-5-ความหมายของแต่ละ-topic">16.5 ความหมายของแต่ละ Topic</h2>
+<h3 id="data-topic">Data Topic</h3>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ใช้สำหรับ Sensor Data / Telemetry ตัวอย่าง:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32.5,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>ทิศทางหลัก:</p>
+<pre class="language-text"><code>Device → Gateway</code></pre>
+<h3 id="status-topic">Status Topic</h3>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>ใช้สำหรับสถานะของ Device ตัวอย่าง:</p>
+<pre class="language-text"><code>ONLINE
+OFFLINE</code></pre>
+<p>ทิศทางหลัก:</p>
+<pre class="language-text"><code>Device → Gateway</code></pre>
+<p>Status Topic จะถูกนำไปใช้ต่อใน LAB 18 - Device Status &amp; Offline Detection</p>
+<h3 id="command-topic">Command Topic</h3>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>ใช้สำหรับส่งคำสั่งไปยัง Device ตัวอย่าง:</p>
+<pre class="language-text"><code>ON
+OFF</code></pre>
+<p>ทิศทางหลัก:</p>
+<pre class="language-text"><code>Gateway → Device</code></pre>
+<h2 id="16-6-data-path-และ-control-path">16.6 Data Path และ Control Path</h2>
+<p>Topic Structure ทำให้เห็นทิศทางของข้อมูลชัดเจน</p>
+<h3 id="data-path">Data Path</h3>
+<pre class="language-text"><code>ESP32-001
+    │
+    │ pkru/iot/001/data
+    ▼
+  MQTT
+    │
+    ▼
+Raspberry Pi
+
+
+ESP32-002
+    │
+    │ pkru/iot/002/data
+    ▼
+  MQTT
+    │
+    ▼
+Raspberry Pi</code></pre>
+<h3 id="control-path">Control Path</h3>
+<pre class="language-text"><code>Raspberry Pi
+    │
+    │ pkru/iot/001/cmd
+    ▼
+  MQTT
+    │
+    ▼
+ESP32-001
+
+
+Raspberry Pi
+    │
+    │ pkru/iot/002/cmd
+    ▼
+  MQTT
+    │
+    ▼
+ESP32-002</code></pre>
+<h2 id="16-7-จำลอง-device-001">16.7 จำลอง Device 001</h2>
+<p>เปิด Terminal:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}&#x27;</code></pre>
+<h2 id="16-8-จำลอง-device-002">16.8 จำลอง Device 002</h2>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/002/data&quot; \
+  -m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}&#x27;</code></pre>
+<h2 id="16-9-จำลอง-device-003">16.9 จำลอง Device 003</h2>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/003/data&quot; \
+  -m &#x27;{&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:2000}&#x27;</code></pre>
+<p>ตอนนี้ MQTT Broker มีข้อมูลจากหลาย Device:</p>
+<pre class="language-text"><code>Device 001
+   ↓
+pkru/iot/001/data
+
+Device 002
+   ↓
+pkru/iot/002/data
+
+Device 003
+   ↓
+pkru/iot/003/data</code></pre>
+<h2 id="16-10-subscribe-แบบระบุ-device">16.10 Subscribe แบบระบุ Device</h2>
+<p>ต้องการดูเฉพาะ Device 001:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -v</code></pre>
+<p>จะได้รับเฉพาะ:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ข้อมูลจาก Device 002 และ 003 จะไม่ถูกส่งมายัง Subscriber นี้</p>
+<h2 id="16-11-mqtt-single-level-wildcard">16.11 MQTT Single-level Wildcard <code>+</code></h2>
+<p>เครื่องหมาย:</p>
+<pre class="language-text"><code>+</code></pre>
+<p>แทน Topic Level ได้หนึ่งระดับ ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>หมายถึง:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/002/data
+pkru/iot/003/data
+pkru/iot/004/data
+...</code></pre>
+<p>ใช้คำสั่ง:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/data&quot; \
+  -v</code></pre>
+<p>จากนั้นส่ง:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}&#x27;
+
+mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/002/data&quot; \
+  -m &#x27;{&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}&#x27;
+
+mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/003/data&quot; \
+  -m &#x27;{&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:2000}&#x27;</code></pre>
+<p>ผล:</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1000}
+pkru/iot/002/data {&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}
+pkru/iot/003/data {&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:2000}</code></pre>
+<p>นี่เป็นแนวคิดสำคัญมากสำหรับ Multi-device MQTT</p>
+<p>Subscriber ไม่จำเป็นต้องสร้าง Subscription แยกทุก Device</p>
+<h2 id="16-12-ความหมายของ">16.12 ความหมายของ <code>+</code></h2>
+<p>Topic:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>แบ่งเป็น:</p>
+<pre class="language-text"><code>pkru
+ │
+iot
+ │
+ +
+ │
+data</code></pre>
+<p><code>+</code> แทนได้หนึ่ง Topic Level ดังนั้นตรงกับ:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/abc/data</code></pre>
+<p>แต่ไม่ตรงกับ:</p>
+<pre class="language-text"><code>pkru/iot/001/status
+pkru/iot/site1/001/data</code></pre>
+<p>เพราะจำนวน Topic Level ไม่ตรงกัน</p>
+<h2 id="16-13-mqtt-multi-level-wildcard">16.13 MQTT Multi-level Wildcard <code>#</code></h2>
+<p>เครื่องหมาย:</p>
+<pre class="language-text"><code>#</code></pre>
+<p>ใช้แทน Topic ตั้งแต่ระดับตำแหน่งนั้นลงไปทั้งหมด ตัวอย่าง:</p>
+<pre class="language-text"><code>pkru/iot/#</code></pre>
+<p>ใช้คำสั่ง:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/#&quot; \
+  -v</code></pre>
+<p>จะสามารถรับ:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/001/status
+pkru/iot/001/cmd
+
+pkru/iot/002/data
+pkru/iot/002/status
+pkru/iot/002/cmd</code></pre>
+<p>รวมถึง Topic ที่มีระดับย่อยเพิ่มเติมภายใต้:</p>
+<pre class="language-text"><code>pkru/iot/</code></pre>
+<h2 id="16-14-ทดลอง">16.14 ทดลอง <code>#</code></h2>
+<p>เปิด:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/#&quot; \
+  -v</code></pre>
+<p>จากนั้นส่ง:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/data&quot; \
+  -m &#x27;{&quot;temp&quot;:30}&#x27;</code></pre>
+<p>ส่ง Status:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/status&quot; \
+  -m &quot;ONLINE&quot;</code></pre>
+<p>ส่ง Command:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/cmd&quot; \
+  -m &quot;ON&quot;</code></pre>
+<p>Subscriber จะเห็นทั้งหมด:</p>
+<pre class="language-text"><code>pkru/iot/001/data {&quot;temp&quot;:30}
+pkru/iot/001/status ONLINE
+pkru/iot/001/cmd ON</code></pre>
+<h2 id="16-15-เปรียบเทียบ-และ">16.15 เปรียบเทียบ <code>+</code> และ <code>#</code></h2>
+<h3 id="page"><code>+</code></h3>
+<p>แทนหนึ่ง Topic Level:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>เหมาะสำหรับ:</p>
+<pre class="language-text"><code>รับ data ของทุก Device</code></pre>
+<h3 id="page"><code>#</code></h3>
+<p>แทนทุก Topic Level ตั้งแต่ตำแหน่งนั้นลงไป:</p>
+<pre class="language-text"><code>pkru/iot/#</code></pre>
+<p>เหมาะสำหรับ:</p>
+<pre class="language-text"><code>Debug
+Monitoring
+ตรวจสอบ MQTT Traffic ของระบบ</code></pre>
+<p>ไม่ควรใช้ <code>#</code> โดยไม่จำเป็นใน Application จริง หาก Application ต้องการข้อมูลเพียงบางประเภท หลักการคือ:</p>
+<blockquote>
+Subscribe เฉพาะข้อมูลที่ Application ต้องใช้
+</blockquote>
+<h2 id="16-16-node-red-multi-device-mqtt-input">16.16 Node-RED Multi-device MQTT Input</h2>
+<p>ใน Node-RED สร้าง:</p>
+<pre class="language-text"><code>[MQTT In]
+    │
+    ▼
+  [JSON]
+    │
+    ▼
+  [Debug]</code></pre>
+<p>ตั้ง MQTT In Topic:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>Broker:</p>
+<pre class="language-text"><code>localhost:1883</code></pre>
+<p>เมื่อ Device หลายตัวส่งข้อมูล:</p>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┼──→ MQTT ──→ Node-RED
+ESP32-003 ─┘</code></pre>
+<p>Node-RED ใช้ MQTT In เพียง Node เดียวรับข้อมูลได้ทุก Device</p>
+<h2 id="16-17-msg-topic">16.17 <code>msg.topic</code></h2>
+<p>เมื่อ Node-RED รับ MQTT Message ตัวอย่าง:</p>
+<pre class="language-text"><code>Topic:
+pkru/iot/002/data
+
+Payload:
+{&quot;temp&quot;:32,&quot;humi&quot;:75,&quot;light&quot;:1500}</code></pre>
+<p>Node-RED จะมี:</p>
+<pre class="language-text"><code>msg.topic</code></pre>
+<p>เท่ากับ:</p>
+<pre class="language-text"><code>pkru/iot/002/data</code></pre>
+<p>ดังนั้น Topic ไม่ได้ใช้แค่ Routing แต่ยังสามารถใช้ระบุ Source ของข้อมูลได้ด้วย</p>
+<h2 id="16-18-แยก-device-id-จาก-topic">16.18 แยก Device ID จาก Topic</h2>
+<p>เพิ่ม Function Node ชื่อ:</p>
+<pre class="language-text"><code>Extract Device ID</code></pre>
+<p>ใช้:</p>
+<pre class="language-javascript"><code>let parts = msg.topic.split(&quot;/&quot;);
+
+msg.device_id = parts[2];
+
+return msg;</code></pre>
+<p>ตัวอย่าง <code>msg.topic</code> คือ:</p>
+<pre class="language-text"><code>pkru/iot/002/data</code></pre>
+<p>เมื่อ:</p>
+<pre class="language-javascript"><code>split(&quot;/&quot;)</code></pre>
+<p>จะได้:</p>
+<pre class="language-text"><code>parts[0] = pkru
+parts[1] = iot
+parts[2] = 002
+parts[3] = data</code></pre>
+<p>ดังนั้น:</p>
+<pre class="language-text"><code>msg.device_id = &quot;002&quot;</code></pre>
+<h2 id="16-19-ตรวจสอบ-device-id">16.19 ตรวจสอบ Device ID</h2>
+<p>Flow:</p>
+<pre class="language-text"><code>[MQTT In]
+     │
+     ▼
+   [JSON]
+     │
+     ▼
+[Extract Device ID]
+     │
+     ▼
+   [Debug]</code></pre>
+<p>เมื่อรับ:</p>
+<pre class="language-text"><code>pkru/iot/003/data</code></pre>
+<p>Node-RED จะได้:</p>
+<pre class="language-text"><code>msg.device_id = &quot;003&quot;</code></pre>
+<p>และ:</p>
+<pre class="language-text"><code>msg.payload.temp
+msg.payload.humi
+msg.payload.light</code></pre>
+<p>ทำให้ Processing Layer รู้ทั้ง:</p>
+<pre class="language-text"><code>ข้อมูลคืออะไร
+ข้อมูลมาจาก Device ใด</code></pre>
+<h2 id="16-20-แยก-device-ด้วย-switch-node">16.20 แยก Device ด้วย Switch Node</h2>
+<p>สามารถใช้:</p>
+<pre class="language-text"><code>msg.device_id</code></pre>
+<p>ใน Switch Node Flow:</p>
+<pre class="language-text"><code>                      ┌── 001 ──→ Device 001
+                      │
+MQTT → Extract ID ────┼── 002 ──→ Device 002
+                      │
+                      └── 003 ──→ Device 003</code></pre>
+<p>ตั้ง Switch Property:</p>
+<pre class="language-text"><code>msg.device_id</code></pre>
+<p>Rules:</p>
+<pre class="language-text"><code>== 001
+== 002
+== 003</code></pre>
+<p>วิธีนี้เหมาะสำหรับการทดลองให้เห็น Routing แต่เมื่อมี Device จำนวนมาก ไม่ควรสร้าง Output แยกทีละ Device เพราะจะทำให้ Flow ไม่สามารถ Scale ได้ดี</p>
+<h2 id="16-21-หลักการ-scalable-processing">16.21 หลักการ Scalable Processing</h2>
+<p>ระบบขนาดเล็กอาจทำ:</p>
+<pre class="language-text"><code>Device 001 → Flow 001
+Device 002 → Flow 002
+Device 003 → Flow 003</code></pre>
+<p>แต่ถ้ามี 100 Device:</p>
+<pre class="language-text"><code>Device 001 → Flow 001
+Device 002 → Flow 002
+...
+Device 100 → Flow 100</code></pre>
+<p>จะดูแลยากมาก แนวทางที่ดีกว่าคือ:</p>
+<pre class="language-text"><code>All Devices
+     ↓
+pkru/iot/+/data
+     ↓
+Common Processing
+     ↓
+Extract Device ID
+     ↓
+Process by device_id</code></pre>
+<p>หรือ:</p>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┤
+ESP32-003 ─┼──→ MQTT
+ESP32-004 ─┤       │
+   ...     │       ▼
+ESP32-100 ─┘   Node-RED
+                   │
+                   ▼
+            Common Processing</code></pre>
+<p>นี่คือพื้นฐานของ Scalable Multi-device Architecture</p>
+<h2 id="16-22-จำลองหลาย-device-อัตโนมัติ">16.22 จำลองหลาย Device อัตโนมัติ</h2>
+<p>สามารถใช้ Raspberry Pi จำลอง ESP32 จำนวน 3 ตัว ใช้ Terminal หรือสร้าง Script:</p>
+<pre class="language-bash"><code>while true
+do
+    temp1=$((25 + RANDOM % 11))
+    temp2=$((25 + RANDOM % 11))
+    temp3=$((25 + RANDOM % 11))
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/001/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp1,\&quot;humi\&quot;:70,\&quot;light\&quot;:1000}&quot;
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/002/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp2,\&quot;humi\&quot;:75,\&quot;light\&quot;:1500}&quot;
+
+    mosquitto_pub \
+        -h localhost \
+        -t &quot;pkru/iot/003/data&quot; \
+        -m &quot;{\&quot;temp\&quot;:$temp3,\&quot;humi\&quot;:80,\&quot;light\&quot;:2000}&quot;
+
+    sleep 2
+done</code></pre>
+<p>เปิดอีก Terminal:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/data&quot; \
+  -v</code></pre>
+<p>จะเห็นข้อมูลจาก Device ทั้งสาม</p>
+<h2 id="16-23-ส่ง-command-ไป-device-เฉพาะตัว">16.23 ส่ง Command ไป Device เฉพาะตัว</h2>
+<p>ต้องการเปิด Actuator ของ Device 001:</p>
+<pre class="language-bash"><code>mosquitto_pub -h localhost \
+  -t &quot;pkru/iot/001/cmd&quot; \
+  -m &quot;ON&quot;</code></pre>
+<p>Device 001 Subscribe:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>จึงได้รับคำสั่ง แต่ Device 002 Subscribe:</p>
+<pre class="language-text"><code>pkru/iot/002/cmd</code></pre>
+<p>จะไม่ได้รับคำสั่งนี้ ทำให้สามารถควบคุม Device แต่ละตัวแยกกันได้</p>
+<h2 id="16-24-device-side-subscription">16.24 Device-side Subscription</h2>
+<p>แต่ละ ESP32 ควร Subscribe เฉพาะ Command ของตัวเอง ESP32-001:</p>
+<pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
+<p>ESP32-002:</p>
+<pre class="language-text"><code>pkru/iot/002/cmd</code></pre>
+<p>ESP32-003:</p>
+<pre class="language-text"><code>pkru/iot/003/cmd</code></pre>
+<p>ไม่ควรให้ทุก ESP32 Subscribe:</p>
+<pre class="language-text"><code>pkru/iot/+/cmd</code></pre>
+<p>โดยไม่มีเหตุผล เพราะแต่ละ Device ไม่จำเป็นต้องรับ Command ของ Device อื่น หลักการคือ:</p>
+<pre class="language-text"><code>Publish only what is necessary
+Subscribe only what is necessary</code></pre>
+<h2 id="16-25-device-id-ต้องไม่ซ้ำ">16.25 Device ID ต้องไม่ซ้ำ</h2>
+<p>ในระบบ Multi-device:</p>
+<pre class="language-text"><code>device_id</code></pre>
+<p>ต้องระบุ Device ได้อย่างไม่กำกวมภายในระบบที่ออกแบบ ตัวอย่าง:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>ห้ามมี ESP32 สองตัวใช้:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>โดยไม่ตั้งใจ เพราะ Gateway จะไม่สามารถแยกได้ว่าข้อมูลมาจาก Device ใด สำหรับ LAB ใช้เลข:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>เพื่อให้อ่านง่าย ระบบจริงอาจใช้:</p>
+<pre class="language-text"><code>esp01
+room101
+greenhouse01
+meter01</code></pre>
+<p>ตามมาตรฐานของระบบ</p>
+<h2 id="16-26-topic-naming-rules">16.26 Topic Naming Rules</h2>
+<p>ควรกำหนดมาตรฐาน Topic ตั้งแต่ต้น แนะนำ:</p>
+<pre class="language-text"><code>lowercase</code></pre>
+<p>เช่น:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>หลีกเลี่ยง:</p>
+<pre class="language-text"><code>PKRU/IoT/001/Data</code></pre>
+<p>เพราะ MQTT Topic เป็น Case-sensitive ดังนั้น:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+PKRU/IOT/001/DATA</code></pre>
+<p>เป็นคนละ Topic ไม่ควรใช้ Space หลีกเลี่ยง:</p>
+<pre class="language-text"><code>pkru/iot/device 001/data</code></pre>
+<p>ใช้:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ชื่อควรสั้นแต่สื่อความหมาย ดี:</p>
+<pre class="language-text"><code>pkru/iot/001/status</code></pre>
+<p>ไม่ควรยาวโดยไม่มีประโยชน์ เช่น:</p>
+<pre class="language-text"><code>pkru/internet_of_things/device_number_001/device_status_information</code></pre>
+<h2 id="16-27-topic-กับ-payload-มีหน้าที่ต่างกัน">16.27 Topic กับ Payload มีหน้าที่ต่างกัน</h2>
+<p>ไม่ควรใส่ข้อมูลทุกอย่างลงใน Topic ตัวอย่างที่ไม่เหมาะสำหรับ LAB นี้:</p>
+<pre class="language-text"><code>pkru/iot/001/temp/32/humi/70/light/1500</code></pre>
+<p>เพราะค่าของ Sensor เปลี่ยนตลอดเวลาและควรอยู่ใน Payload แนวทางที่เหมาะสม Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>Payload:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>หลักการคือ:</p>
+<pre class="language-text"><code>Topic
+  ↓
+ใช้ระบุเส้นทาง / ประเภท / Source
+
+Payload
+  ↓
+ใช้เก็บข้อมูล</code></pre>
+<h2 id="16-28-topic-ไม่ใช่-folder-จริง">16.28 Topic ไม่ใช่ Folder จริง</h2>
+<p>แม้ Topic:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>จะดูเหมือน Directory:</p>
+<pre class="language-text"><code>pkru
+  └── iot
+       └── 001
+            └── data</code></pre>
+<p>แต่ MQTT Broker ไม่ได้สร้าง Folder จริง เครื่องหมาย:</p>
+<pre class="language-text"><code>/</code></pre>
+<p>เป็นเพียง Topic Level Separator ใช้สร้าง Logical Hierarchy</p>
+<h2 id="16-29-ระวัง-leading-slash">16.29 ระวัง Leading Slash</h2>
+<p>ควรใช้:</p>
+<pre class="language-text"><code>pkru/iot/001/data</code></pre>
+<p>ไม่ควรใช้:</p>
+<pre class="language-text"><code>/pkru/iot/001/data</code></pre>
+<p>เพราะ Leading Slash จะสร้าง Topic Level ว่างขึ้นมาอีกหนึ่งระดับ และทำให้ Topic Structure ไม่สม่ำเสมอ</p>
+<h2 id="16-30-wildcard-ใช้กับ-subscription">16.30 Wildcard ใช้กับ Subscription</h2>
+<p>Wildcard:</p>
+<pre class="language-text"><code>+
+#</code></pre>
+<p>ใช้สำหรับ Topic Filter ตอน Subscribe ตัวอย่าง:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/+/data&quot;</code></pre>
+<p>หรือ:</p>
+<pre class="language-bash"><code>mosquitto_sub -h localhost \
+  -t &quot;pkru/iot/#&quot;</code></pre>
+<p>ไม่ใช้ Wildcard เพื่อ Publish ข้อมูลไปยังหลาย Topic ตัวอย่างนี้ไม่ใช่วิธี Publish ที่ถูกต้อง:</p>
+<pre class="language-bash"><code>mosquitto_pub \
+  -t &quot;pkru/iot/+/cmd&quot; \
+  -m &quot;ON&quot;</code></pre>
+<p>ถ้าต้องการส่ง Command ให้ Device หลายตัว ควรออกแบบ Broadcast / Group Topic โดยตั้งใจ ซึ่งยังไม่จำเป็นใน LAB นี้</p>
+<h2 id="16-31-architecture-หลัง-lab-16">16.31 Architecture หลัง LAB 16</h2>
+<pre class="language-text"><code>                  MQTT Broker
+                       │
+      ┌────────────────┼────────────────┐
+      │                │                │
+      │                │                │
+   ESP32-001        ESP32-002        ESP32-003
+      │                │                │
+      │ data           │ data           │ data
+      ▼                ▼                ▼
+pkru/iot/001/data pkru/iot/002/data pkru/iot/003/data
+      │                │                │
+      └────────────────┼────────────────┘
+                       │
+                       ▼
+               pkru/iot/+/data
+                       │
+                       ▼
+                   Node-RED
+                       │
+                Extract Device ID
+                       │
+                       ▼
+               Common Processing</code></pre>
+<p>Control Path:</p>
+<pre class="language-text"><code>                   Node-RED
+                       │
+      ┌────────────────┼────────────────┐
+      │                │                │
+      ▼                ▼                ▼
+001/cmd           002/cmd           003/cmd
+      │                │                │
+      ▼                ▼                ▼
+  ESP32-001        ESP32-002        ESP32-003</code></pre>
+<h2 id="16-32-แบบฝึกหัดที่-1-multi-device-data">16.32 แบบฝึกหัดที่ 1 - Multi-device Data</h2>
+<p>จำลอง Device จำนวน 3 ตัว:</p>
+<pre class="language-text"><code>001
+002
+003</code></pre>
+<p>ให้แต่ละ Device ส่ง:</p>
+<pre class="language-text"><code>temp
+humi
+light</code></pre>
+<p>ไปยัง:</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/data</code></pre>
+<p>ใช้:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>รับข้อมูลทุก Device ตรวจสอบด้วย:</p>
+<pre class="language-text"><code>mosquitto_sub</code></pre>
+<h2 id="16-33-แบบฝึกหัดที่-2-extract-device-id">16.33 แบบฝึกหัดที่ 2 - Extract Device ID</h2>
+<p>สร้าง Node-RED Flow:</p>
+<pre class="language-text"><code>MQTT In
+   ↓
+  JSON
+   ↓
+Extract Device ID
+   ↓
+  Debug</code></pre>
+<p>ให้ Debug แสดง:</p>
+<pre class="language-text"><code>device_id
+temp
+humi
+light</code></pre>
+<p>ตัวอย่าง:</p>
+<pre class="language-text"><code>device_id = 002
+temp      = 32
+humi      = 75
+light     = 1500</code></pre>
+<h2 id="16-34-แบบฝึกหัดที่-3-device-specific-command">16.34 แบบฝึกหัดที่ 3 - Device-specific Command</h2>
+<p>ส่ง:</p>
+<pre class="language-text"><code>ON</code></pre>
+<p>ไปยัง:</p>
+<pre class="language-text"><code>pkru/iot/002/cmd</code></pre>
+<p>ตรวจสอบว่า:</p>
+<pre class="language-text"><code>ESP32-002</code></pre>
+<p>ได้รับ Command แต่:</p>
+<pre class="language-text"><code>ESP32-001
+ESP32-003</code></pre>
+<p>ไม่ได้รับ Command</p>
+<h2 id="16-35-แบบฝึกหัดที่-4-wildcard">16.35 แบบฝึกหัดที่ 4 - Wildcard</h2>
+<p>อธิบายความแตกต่างระหว่าง:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/+/data
+pkru/iot/#</code></pre>
+<p>และระบุว่าแต่ละแบบเหมาะกับงานประเภทใด</p>
+<h2 id="16-36-งานส่ง-lab-16">16.36 งานส่ง LAB 16</h2>
+<p>สิ่งที่ต้องส่ง:</p>
+<ol>
+<li>MQTT Topic Structure ของระบบ</li>
+<li>Screenshot <code>mosquitto_sub</code> ที่ใช้ <code>pkru/iot/+/data</code> และได้รับข้อมูลจาก Device อย่างน้อย 3 ตัว</li>
+<li>Screenshot Node-RED Flow: <code>MQTT In → JSON → Extract Device ID → Debug</code></li>
+<li>แสดงผลว่า Node-RED สามารถแยก <code>001</code>, <code>002</code>, <code>003</code> ได้ถูกต้อง</li>
+<li>ทดสอบส่ง Command ไปยัง Device เฉพาะตัว</li>
+<li>อธิบายความแตกต่างของ <code>+</code> และ <code>#</code></li>
+<li>อธิบายความแตกต่างระหว่าง <code>data</code>, <code>status</code>, <code>cmd</code></li>
+<li>วาด Architecture ของระบบ Multi-device MQTT</li>
+</ol>
+<h2 id="16-37-สิ่งที่ต้องเข้าใจ">16.37 สิ่งที่ต้องเข้าใจ</h2>
+<p>ก่อน LAB 16:</p>
+<pre class="language-text"><code>ESP32
+   ↓
+  MQTT
+   ↓
+Node-RED</code></pre>
+<p>เป็นการคิดแบบ:</p>
+<pre class="language-text"><code>Single Device</code></pre>
+<p>หลัง LAB 16:</p>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┤
+ESP32-003 ─┼──→ MQTT ──→ Gateway
+ESP32-004 ─┤
+   ...     │
+ESP32-N ───┘</code></pre>
+<p>เป็นการคิดแบบ:</p>
+<pre class="language-text"><code>Multi-device System</code></pre>
+<p>หัวใจสำคัญคือ:</p>
+<pre class="language-text"><code>Topic Hierarchy
+      +
+   Device ID
+      +
+Topic Wildcard
+      ↓
+Scalable MQTT Architecture</code></pre>
+<h2 id="16-38-ความสัมพันธ์ของ-lab-13-16">16.38 ความสัมพันธ์ของ LAB 13-16</h2>
+<p>LAB 13 - Rule &amp; Alert:</p>
+<pre class="language-text"><code>Data
+  ↓
+ Rule
+  ↓
+Decision</code></pre>
+<p>LAB 14 - Manual Control:</p>
+<pre class="language-text"><code>Human
+  ↓
+Command
+  ↓
+Actuator</code></pre>
+<p>LAB 15 - Automatic Control:</p>
+<pre class="language-text"><code>Sensor
+  ↓
+ Rule
+  ↓
+Decision
+  ↓
+Command
+  ↓
+Actuator</code></pre>
+<p>LAB 16 - MQTT Topic Design:</p>
+<pre class="language-text"><code>Device 001 ─┐
+Device 002 ─┼──→ Structured MQTT
+Device 003 ─┘
+                   ↓
+            Multi-device System</code></pre>
+<p>เส้นทางการเรียนจึงเปลี่ยนจาก:</p>
+<pre class="language-text"><code>Processing
+   ↓
+Control
+   ↓
+Automatic Control
+   ↓
+Multi-device Architecture</code></pre>
+<h2 id="16-39-ผลลัพธ์ของ-lab-16">16.39 ผลลัพธ์ของ LAB 16</h2>
+<p>เมื่อจบ LAB นี้ คุณควรมอง MQTT ไม่ใช่เพียงคำสั่ง:</p>
+<pre class="language-text"><code>mosquitto_pub
+mosquitto_sub</code></pre>
+<p>แต่ต้องเข้าใจว่า MQTT Topic เป็นส่วนหนึ่งของการออกแบบ Architecture ระบบที่ออกแบบดีสามารถเพิ่ม Device จาก:</p>
+<pre class="language-text"><code>3 Devices</code></pre>
+<p>เป็น:</p>
+<pre class="language-text"><code>10 Devices</code></pre>
+<p>หรือมากกว่านั้นโดยไม่ต้องสร้าง Processing Flow ใหม่สำหรับทุก Device แนวคิดสำคัญคือ:</p>
+<pre class="language-text"><code>Device
+   ↓
+Structured Topic
+   ↓
+MQTT Broker
+   ↓
+Wildcard Subscription
+   ↓
+Common Processing
+   ↓
+Device Identification</code></pre>
+<p>นี่คือพื้นฐานของ <strong>Scalable Multi-device IoT Architecture</strong></p>
+<h2 id="16-40-เชื่อมไป-lab-17-multi-device-dashboard">16.40 เชื่อมไป LAB 17 - Multi-device Dashboard</h2>
+<p>LAB 16 ทำให้ Gateway สามารถรับข้อมูลจากหลาย Device ผ่าน:</p>
+<pre class="language-text"><code>pkru/iot/+/data</code></pre>
+<p>และสามารถระบุ Device จาก:</p>
+<pre class="language-text"><code>msg.topic</code></pre>
+<p>เช่น:</p>
+<pre class="language-text"><code>pkru/iot/001/data
+pkru/iot/002/data
+pkru/iot/003/data</code></pre>
+<p>ขั้นต่อไปคือการนำข้อมูลเหล่านี้มาแสดงบน Dashboard โดยไม่สร้าง Dashboard แยกแบบไร้โครงสร้าง สำหรับทุก Device LAB 17 จะนำ Architecture นี้ไปสร้าง:</p>
+<pre class="language-text"><code>ESP32-001 ─┐
+ESP32-002 ─┼──→ MQTT
+ESP32-003 ─┘
+                 ↓
+              Node-RED
+                 ↓
+          Device Identification
+                 ↓
+          Multi-device Dashboard
+                 │
+         ┌───────┼───────┐
+         ▼       ▼       ▼
+        TEMP    HUMI    LIGHT</code></pre>
+<p>โดยเริ่มเข้าสู่แนวคิด:</p>
+<pre class="language-text"><code>Device Selection
+Multi-device Monitoring
+Device Comparison
+Shared Dashboard</code></pre>
+<p>ซึ่งจะทำให้ระบบจาก LAB 16 ที่รองรับ Multi-device ในระดับ Communication สามารถรองรับ Multi-device ในระดับ Monitoring ได้จริง</p>
+    </main>
+  </div>
+</body>
+</html>

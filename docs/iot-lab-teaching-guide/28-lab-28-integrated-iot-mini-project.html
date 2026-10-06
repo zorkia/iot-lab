@@ -1,0 +1,1406 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAB 28 - Integrated IoT Mini Project</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../index.html">IoT Lab</a>
+    <span class="subtitle">Raspberry Pi IoT Gateway</span>
+  </header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Site navigation">
+      <section class="sidebar-section">
+<div class="sidebar-heading">Overview</div>
+<a class="" href="../index.html">IoT Lab Overview</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Teaching Guide</div>
+<a class="" href="00-iot-lab-teaching-guide-hub.html">IoT Lab Teaching Guide - Hub</a>
+<a class="" href="01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a>
+<a class="" href="02-lab-02-ติดตั้งและทดสอบ-mosquitto-mqtt-broker.html">LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</a>
+<a class="" href="03-lab-03-ส่งข้อมูล-sensor-ผ่าน-mqtt-จาก-command-line.html">LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</a>
+<a class="" href="04-lab-04-ตั้งค่า-node-red-สำหรับ-mqtt.html">LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</a>
+<a class="" href="05-lab-05-แยกข้อมูล-sensor-ใน-node-red.html">LAB 05 - แยกข้อมูล Sensor ใน Node-RED</a>
+<a class="" href="06-lab-06-สร้าง-flowfuse-dashboard.html">LAB 06 - สร้าง FlowFuse Dashboard</a>
+<a class="" href="07-lab-07-สร้าง-real-time-chart.html">LAB 07 - สร้าง Real-time Chart</a>
+<a class="" href="08-lab-08-สร้างฐานข้อมูลและบันทึกข้อมูล-mqtt-ลง-sqlite.html">LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</a>
+<a class="" href="09-lab-09-จัดการเวลา-utc-และเวลาไทย.html">LAB 09 - จัดการเวลา UTC และเวลาไทย</a>
+<a class="" href="10-lab-10-สืบค้น-sensor-data-ด้วย-sql.html">LAB 10 - สืบค้น Sensor Data ด้วย SQL</a>
+<a class="" href="11-lab-11-คำนวณ-rolling-statistics-5-นาทีล่าสุด.html">LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</a>
+<a class="" href="12-lab-12-แยก-sqlite-write-และ-statistics-flow.html">LAB 12 - แยก SQLite Write และ Statistics Flow</a>
+<a class="" href="13-lab-13-rule-and-alert-processing.html">LAB 13 - Rule &amp; Alert Processing</a>
+<a class="" href="14-lab-14-mqtt-manual-control.html">LAB 14 - MQTT Manual Control</a>
+<a class="" href="15-lab-15-automatic-control.html">LAB 15 - Automatic Control</a>
+<a class="" href="16-lab-16-mqtt-topic-design-for-multi-device-iot.html">LAB 16 - MQTT Topic Design for Multi-device IoT</a>
+<a class="" href="17-lab-17-multi-device-dashboard.html">LAB 17 - Multi-device Dashboard</a>
+<a class="" href="18-lab-18-device-status-and-offline-detection.html">LAB 18 - Device Status and Offline Detection</a>
+<a class="" href="19-lab-19-data-quality-valid-invalid-stale.html">LAB 19 - Data Quality: VALID / INVALID / STALE</a>
+<a class="" href="20-lab-20-python-mqtt-application-on-raspberry-pi.html">LAB 20 - Python MQTT Application on Raspberry Pi</a>
+<a class="" href="21-lab-21-systemd-service-autonomous-python-iot-gateway.html">LAB 21 - systemd Service: Autonomous Python IoT Gateway</a>
+<a class="" href="22-lab-22-iot-gateway-ble-udp-mqtt-protocol-translation.html">LAB 22 - IoT Gateway: BLE / UDP / MQTT Protocol Translation</a>
+<a class="" href="23-lab-23-offline-store-and-forward-with-sqlite.html">LAB 23 - Offline / Store-and-Forward with SQLite</a>
+<a class="" href="24-lab-24-mqtt-security-authentication-and-acl.html">LAB 24 - MQTT Security: Authentication + ACL</a>
+<a class="" href="25-lab-25-remote-access-with-cloudflare-tunnel.html">LAB 25 - Remote Access with Cloudflare Tunnel</a>
+<a class="" href="26-lab-26-backup-and-recovery-for-raspberry-pi-iot-gateway.html">LAB 26 - Backup &amp; Recovery for Raspberry Pi IoT Gateway</a>
+<a class="" href="27-lab-27-fault-tolerant-iot-gateway.html">LAB 27 - Fault-Tolerant IoT Gateway</a>
+<a class="active" href="28-lab-28-integrated-iot-mini-project.html">LAB 28 - Integrated IoT Mini Project</a>
+<a class="" href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a>
+<a class="" href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">IoT Lab Knowledge Base</div>
+<a class="" href="../iot-lab-knowledge-base/01-installation-roadmap.html">01 - Installation Roadmap</a>
+<a class="" href="../iot-lab-knowledge-base/02-raspberry-pi-setup.html">02 - Raspberry Pi Setup</a>
+<a class="" href="../iot-lab-knowledge-base/03-raspberry-pi-network-and-wi-fi.html">03 - Raspberry Pi Network and Wi-Fi</a>
+<a class="" href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">04 - Raspberry Pi IoT Architecture</a>
+<a class="" href="../iot-lab-knowledge-base/05-mosquitto-mqtt-broker.html">05 - Mosquitto MQTT Broker</a>
+<a class="" href="../iot-lab-knowledge-base/06-mqtt-topic-design.html">06 - MQTT Topic Design</a>
+<a class="" href="../iot-lab-knowledge-base/07-mqtt-testing.html">07 - MQTT Testing</a>
+<a class="" href="../iot-lab-knowledge-base/08-node-red-mqtt.html">08 - Node-RED MQTT</a>
+<a class="" href="../iot-lab-knowledge-base/09-flowfuse-dashboard.html">09 - FlowFuse Dashboard</a>
+<a class="" href="../iot-lab-knowledge-base/10-sqlite-sensor-data.html">10 - SQLite Sensor Data</a>
+<a class="" href="../iot-lab-knowledge-base/11-sql-statistics.html">11 - SQL Statistics</a>
+<a class="" href="../iot-lab-knowledge-base/12-bluetooth-setup.html">12 - Bluetooth Setup</a>
+<a class="" href="../iot-lab-knowledge-base/13-bthome-scan.html">13 - BTHome Scan</a>
+<a class="" href="../iot-lab-knowledge-base/14-mijia-bthome-decode.html">14 - Mijia BTHome Decode</a>
+<a class="" href="../iot-lab-knowledge-base/15-troubleshooting.html">15 - Troubleshooting</a>
+<a class="" href="../iot-lab-knowledge-base/16-python-ble-environment-and-libraries.html">16 - Python BLE Environment and Libraries</a>
+<a class="" href="../iot-lab-knowledge-base/17-ssh-from-mac-or-windows-over-direct-lan.html">17 - SSH from Mac or Windows over Direct LAN</a>
+</section>
+<section class="sidebar-section">
+<div class="sidebar-heading">Cloudflare</div>
+<a class="" href="../cloudflare/01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a>
+<a class="" href="../cloudflare/02-ssh-cloudflare-tunnel.html">02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/03-node-red-cloudflare-tunnel.html">03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</a>
+<a class="" href="../cloudflare/04-root-domain-และ-www-redirect.html">04 - Root Domain และ WWW Redirect</a>
+<a class="" href="../cloudflare/05-multi-pi-cloudflare-architecture.html">05 - Multi-Pi Cloudflare Architecture</a>
+</section>
+    </nav>
+    <main class="content">
+      <h1 id="lab-28-integrated-iot-mini-project">LAB 28 - Integrated IoT Mini Project</h1>
+<nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="27-lab-27-fault-tolerant-iot-gateway.html">ก่อนหน้า: LAB 27 - Fault-Tolerant IoT Gateway</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="appendix-troubleshooting-checklist.html">ถัดไป: Appendix - Troubleshooting Checklist</a></nav>
+<p>End-to-End Raspberry Pi IoT System</p>
+<h2 id="28-1-แนวคิดของ-lab">28.1 แนวคิดของ LAB</h2>
+<p>LAB 28 เป็น LAB สุดท้ายของชุด Raspberry Pi IoT Lab เป้าหมายไม่ใช่การเรียน Technology ใหม่ แต่เป็นการนำความรู้จาก LAB ก่อนหน้ามาประกอบเป็นระบบ IoT ที่ทำงานครบวงจร ระบบต้องทำงานตามลำดับต่อไปนี้:</p>
+<pre class="language-text"><code>Sense
+  ↓
+Communicate
+  ↓
+Validate
+  ↓
+Process
+  ↓
+Store
+  ↓
+Visualize
+  ↓
+Decide
+  ↓
+Control
+  ↓
+Verify
+  ↓
+Detect Failure
+  ↓
+Recover</code></pre>
+<p>คุณต้องแสดงให้เห็นว่า &quot;ระบบทำงานได้&quot; และ &quot;เมื่อเกิด Failure ระบบสามารถตรวจพบและจัดการได้&quot;</p>
+<h2 id="28-2-วัตถุประสงค์">28.2 วัตถุประสงค์</h2>
+<p>หลังจบ LAB นี้ คุณจะสามารถ</p>
+<ul>
+<li>ออกแบบ End-to-End IoT Architecture</li>
+<li>เชื่อมต่อหลาย IoT Device</li>
+<li>ออกแบบ MQTT Topic</li>
+<li>รับและประมวลผล Sensor Data</li>
+<li>ตรวจสอบ Data Quality</li>
+<li>ตรวจ Device ONLINE/OFFLINE</li>
+<li>บันทึกข้อมูลลง SQLite</li>
+<li>แสดงข้อมูลผ่าน Dashboard</li>
+<li>สร้าง Rule/Alert</li>
+<li>Manual Control</li>
+<li>Automatic Control</li>
+<li>ตรวจสอบ Actual Device State</li>
+<li>ใช้ Raspberry Pi เป็น IoT Gateway</li>
+<li>ทำงานต่อได้เมื่อ Internet ขาด</li>
+<li>ใช้ Store-and-Forward</li>
+<li>ใช้ MQTT Authentication/ACL</li>
+<li>Remote Access</li>
+<li>Auto-start หลัง Reboot</li>
+<li>Backup/Recovery</li>
+<li>Fault Detection/Recovery</li>
+<li>ทดสอบระบบด้วย Fault Injection</li>
+</ul>
+<h2 id="28-3-project-requirement">28.3 Project Requirement</h2>
+<p>แต่ละกลุ่มต้องสร้าง Integrated IoT System ซึ่งมีองค์ประกอบขั้นต่ำดังนี้:</p>
+<ul>
+<li>Raspberry Pi 1 เครื่อง</li>
+<li>ESP32 อย่างน้อย 2 ตัว</li>
+<li>Sensor Data อย่างน้อย 3 ค่า</li>
+<li>Actuator อย่างน้อย 1 ตัว</li>
+</ul>
+<p>ถ้าไม่มี Sensor จริง สามารถใช้ ESP32 Sensor Simulator ในช่วงพัฒนาได้</p>
+<h2 id="28-4-architecture-ขั้นต่ำ">28.4 Architecture ขั้นต่ำ</h2>
+<pre class="language-text"><code>             ESP32-001
+             Sensor Node
+                  │
+                  │ MQTT
+                  ▼
+             ┌─────────┐
+             │         │
+ESP32-002 ──►│   AP    │
+             │         │
+             └────┬────┘
+                  │
+                  ▼
+┌──────────────────────────────────────┐
+│       RASPBERRY PI IoT GATEWAY       │
+│                                      │
+│ Mosquitto                            │
+│      │                               │
+│      ▼                               │
+│ Python / Node-RED                    │
+│      │                               │
+│      ├── Validation                  │
+│      ├── Rule Processing             │
+│      ├── Device Status               │
+│      └── Control                     │
+│                                      │
+│ SQLite                               │
+│                                      │
+│ Node-RED Dashboard                   │
+│                                      │
+│ Store-and-Forward                    │
+│                                      │
+│ systemd                              │
+│                                      │
+│ MQTT Security                        │
+│                                      │
+│ Cloudflare Tunnel                    │
+│                                      │
+└──────────────────────────────────────┘
+          │
+          │ MQTT Command
+          ▼
+       ESP32
+          │
+          ▼
+      Actuator</code></pre>
+<h2 id="28-5-mqtt-topic-design">28.5 MQTT Topic Design</h2>
+<p>ใช้โครงสร้างจาก LAB 16:</p>
+<pre class="language-text"><code>pkru/iot/{device_id}/{channel}</code></pre>
+<table>
+<thead><tr>
+<th>เจ้าของ Topic</th>
+<th>Data</th>
+<th>Status</th>
+<th>Command</th>
+<th>Actual State</th>
+</tr></thead><tbody>
+<tr>
+<td>Device 001</td>
+<td><code>pkru/iot/001/data</code></td>
+<td><code>pkru/iot/001/status</code></td>
+<td><code>pkru/iot/001/cmd</code></td>
+<td><code>pkru/iot/001/state</code></td>
+</tr>
+<tr>
+<td>Device 002</td>
+<td><code>pkru/iot/002/data</code></td>
+<td><code>pkru/iot/002/status</code></td>
+<td><code>pkru/iot/002/cmd</code></td>
+<td><code>pkru/iot/002/state</code></td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td>-</td>
+<td><code>pkru/gateway/status</code></td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<h2 id="28-6-sensor-data">28.6 Sensor Data</h2>
+<p>รูปแบบหลัก</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;: 32.5,
+  &quot;humi&quot;: 70,
+  &quot;light&quot;: 1500
+}</code></pre>
+<p>แต่ละ Device ส่งข้อมูลทุก 5 วินาที ตัวอย่างจาก ESP32-001:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:31.2,
+  &quot;humi&quot;:72,
+  &quot;light&quot;:1800
+}</code></pre>
+<p>ตัวอย่างจาก ESP32-002:</p>
+<pre class="language-json"><code>{
+  &quot;temp&quot;:33.1,
+  &quot;humi&quot;:68,
+  &quot;light&quot;:2100
+}</code></pre>
+<h2 id="28-7-data-path">28.7 Data Path</h2>
+<pre class="language-text"><code>ESP32
+   ↓
+Sensor
+   ↓
+MQTT
+   ↓
+Mosquitto
+   ↓
+Validation
+   ↓
+Processing
+   ↓
+SQLite
+   ↓
+Dashboard</code></pre>
+<p>คุณต้องสามารถอธิบาย Data Path ของระบบได้</p>
+<h2 id="28-8-control-path">28.8 Control Path</h2>
+<p>Manual Control</p>
+<pre class="language-text"><code>User
+  ↓
+Dashboard
+  ↓
+Node-RED
+  ↓
+MQTT Command
+  ↓
+ESP32
+  ↓
+Actuator</code></pre>
+<p>Automatic Control</p>
+<pre class="language-text"><code>Sensor
+  ↓
+MQTT
+  ↓
+Validation
+  ↓
+Rule
+  ↓
+Control Decision
+  ↓
+MQTT Command
+  ↓
+ESP32
+  ↓
+Actuator</code></pre>
+<h2 id="28-9-manual-automatic-mode">28.9 Manual / Automatic Mode</h2>
+<p>ระบบต้องมีโหมด <code>MANUAL</code> และ <code>AUTO</code></p>
+<p>โหมด <code>MANUAL</code>:</p>
+<pre class="language-text"><code>User
+  ↓
+Dashboard
+  ↓
+ON / OFF</code></pre>
+<p>โหมด <code>AUTO</code>:</p>
+<pre class="language-text"><code>Sensor
+  ↓
+Rule
+  ↓
+ON / OFF</code></pre>
+<p>ต้องป้องกันไม่ให้ MANUAL และ AUTO แย่งกันควบคุม Actuator</p>
+<h2 id="28-10-ตัวอย่าง-automatic-control">28.10 ตัวอย่าง Automatic Control</h2>
+<p>ตัวอย่างการควบคุมอุณหภูมิ:</p>
+<pre class="language-text"><code>temp &gt; 35
+    → FAN ON</code></pre>
+<pre class="language-text"><code>temp &lt; 30
+    → FAN OFF</code></pre>
+<pre class="language-text"><code>30 ≤ temp ≤ 35
+    → KEEP PREVIOUS STATE</code></pre>
+<p>เงื่อนไขนี้เป็น Hysteresis ซึ่งช่วยลดการสลับสถานะถี่ ๆ บริเวณ Threshold:</p>
+<pre class="language-text"><code>ON
+OFF
+ON
+OFF</code></pre>
+<h2 id="28-11-commanded-state">28.11 Commanded State</h2>
+<p>Gateway ส่งคำสั่ง <code>ON</code> ไปยัง <code>pkru/iot/001/cmd</code> แต่การส่งคำสั่งไม่ได้ยืนยันว่า Actuator เปลี่ยนสถานะแล้ว:</p>
+<pre class="language-text"><code>Command Sent
+    ≠
+Actuator Changed</code></pre>
+<p>ดังนั้น ESP32 ต้องรายงาน Actual State เช่น <code>ON</code> กลับมาที่ <code>pkru/iot/001/state</code></p>
+<h2 id="28-12-control-verification">28.12 Control Verification</h2>
+<p>Control Path ที่สมบูรณ์</p>
+<pre class="language-text"><code>Gateway
+   │
+   │ cmd = ON
+   ▼
+ESP32
+   │
+   ▼
+Actuator
+   │
+   │ state = ON
+   ▼
+Gateway</code></pre>
+<p>Gateway จึงสามารถเปรียบเทียบ Commanded State กับ Actual State</p>
+<h2 id="28-13-data-validation">28.13 Data Validation</h2>
+<p>ก่อนใช้ข้อมูลต้องตรวจเงื่อนไขต่อไปนี้:</p>
+<ul>
+<li>Missing Field</li>
+<li><code>null</code></li>
+<li>Wrong Type</li>
+<li><code>NaN</code></li>
+<li>Sentinel Value</li>
+<li>Out-of-range</li>
+</ul>
+<p>ตัวอย่าง: <code>temp = -99</code> ต้องถูกจัดสถานะเป็น <code>INVALID</code></p>
+<h2 id="28-14-data-quality">28.14 Data Quality</h2>
+<p>ระบบต้องแยก Data Quality เป็น <code>VALID</code>, <code>INVALID</code> และ <code>STALE</code></p>
+<p>ตัวอย่าง Device 001:</p>
+<pre class="language-text"><code>ONLINE
+VALID</code></pre>
+<p>ตัวอย่าง Device 002:</p>
+<pre class="language-text"><code>ONLINE
+INVALID</code></pre>
+<p>ตัวอย่าง Device 003:</p>
+<pre class="language-text"><code>ONLINE
+STALE</code></pre>
+<h2 id="28-15-device-availability">28.15 Device Availability</h2>
+<p>ระบบต้องตรวจสถานะ <code>ONLINE/OFFLINE</code> โดยใช้ Heartbeat, MQTT LWT หรือ Timeout</p>
+<p>ค่าตัวอย่าง:</p>
+<table>
+<thead><tr>
+<th>ค่า</th>
+<th>ระยะเวลา</th>
+</tr></thead><tbody>
+<tr>
+<td>Heartbeat interval</td>
+<td>5 วินาที</td>
+</tr>
+<tr>
+<td>Offline timeout</td>
+<td>15 วินาที</td>
+</tr>
+</tbody></table>
+<h2 id="28-16-availability-quality">28.16 Availability ≠ Quality</h2>
+<p>ต้องแยก Device Availability ออกจาก Data Quality เพราะ</p>
+<pre class="language-text"><code>ONLINE
+   ≠
+VALID</code></pre>
+<p>ตัวอย่าง ESP32 ยังเชื่อม MQTT อยู่ แต่ Sensor เสีย ผลคือ</p>
+<pre class="language-text"><code>ONLINE
+INVALID</code></pre>
+<h2 id="28-17-sqlite">28.17 SQLite</h2>
+<p>ระบบต้องบันทึกข้อมูลลง SQLite อย่างน้อย 6 ค่า ได้แก่ <code>device_id</code>, <code>timestamp</code>, <code>temp</code>, <code>humi</code>, <code>light</code> และ <code>quality</code></p>
+<p>ตัวอย่างคอลัมน์ในตาราง <code>sensor_data</code>:</p>
+<pre class="language-text"><code>id
+device_id
+timestamp
+temp
+humi
+light
+quality</code></pre>
+<h2 id="28-18-sql-query">28.18 SQL Query</h2>
+<p>คุณต้องสามารถ Query ข้อมูลล่าสุด, ข้อมูลย้อนหลัง และค่าสถิติ <code>AVG</code>, <code>MIN</code>, <code>MAX</code> ตัวอย่าง:</p>
+<pre class="language-sql"><code>SELECT
+    device_id,
+    AVG(temp),
+    MIN(temp),
+    MAX(temp)
+FROM sensor_data
+WHERE timestamp &gt;= datetime(
+    &#x27;now&#x27;,
+    &#x27;-5 minutes&#x27;
+)
+GROUP BY device_id;</code></pre>
+<h2 id="28-19-dashboard">28.19 Dashboard</h2>
+<p>Dashboard ต้องแสดงข้อมูลอย่างน้อยดังนี้:</p>
+<ul>
+<li>Gateway Status</li>
+<li>Device Status</li>
+<li>Data Quality</li>
+<li>Temperature, Humidity และ Light</li>
+<li>Actuator State</li>
+<li>Control Mode</li>
+<li>Historical Chart</li>
+</ul>
+<h2 id="28-20-multi-device-dashboard">28.20 Multi-device Dashboard</h2>
+<p>Dashboard ต้องรองรับอย่างน้อย Device 001 และ Device 002 โดยผู้ใช้ต้องเลือกดูรายอุปกรณ์หรือเปรียบเทียบระหว่างอุปกรณ์ได้</p>
+<p>ตัวอย่าง Temperature Chart</p>
+<pre class="language-text"><code>Temp
+ ^
+ |       001
+ |    /-------
+ |   /
+ |  /    002
+ | /   ------
+ +----------------→ Time</code></pre>
+<h2 id="28-21-rule-and-alert">28.21 Rule &amp; Alert</h2>
+<p>ระบบต้องมีสถานะอย่างน้อย <code>NORMAL</code>, <code>WARNING</code> และ <code>ALERT</code></p>
+<table>
+<thead><tr>
+<th>เงื่อนไข</th>
+<th>สถานะ</th>
+</tr></thead><tbody>
+<tr>
+<td><code>temp &lt; 30</code></td>
+<td><code>NORMAL</code></td>
+</tr>
+<tr>
+<td><code>30 ≤ temp ≤ 35</code></td>
+<td><code>WARNING</code></td>
+</tr>
+<tr>
+<td><code>temp &gt; 35</code></td>
+<td><code>ALERT</code></td>
+</tr>
+</tbody></table>
+<h2 id="28-22-alert-ไม่เท่ากับ-control">28.22 Alert ไม่เท่ากับ Control</h2>
+<p><code>ALERT</code> คือสถานะที่ระบบตีความจากข้อมูล Sensor ส่วน <code>ON/OFF</code> คือคำสั่งควบคุม Actuator ทั้งสองอย่างจึงไม่ใช่เหตุการณ์เดียวกัน</p>
+<p>ตัวอย่างเมื่อ <code>temp = 38</code> ระบบประเมินสถานะเป็น <code>ALERT</code>:</p>
+<table>
+<thead><tr>
+<th>Control Mode</th>
+<th>การทำงาน</th>
+</tr></thead><tbody>
+<tr>
+<td><code>AUTO</code></td>
+<td>ระบบส่งคำสั่ง <code>Fan → ON</code> ตาม Rule ที่กำหนด</td>
+</tr>
+<tr>
+<td><code>MANUAL</code></td>
+<td>ระบบแสดง <code>ALERT</code> แต่รอให้ User เป็นผู้สั่ง <code>ON/OFF</code></td>
+</tr>
+</tbody></table>
+<h2 id="28-23-python-gateway">28.23 Python Gateway</h2>
+<p>อย่างน้อยหนึ่งส่วนของ Processing ต้องพัฒนาด้วย Python บน Raspberry Pi ตัวอย่างงานที่เหมาะกับ Python ได้แก่:</p>
+<ul>
+<li>MQTT Subscribe</li>
+<li>JSON Parsing และ Validation</li>
+<li>Device Identification</li>
+<li>Rule Processing และ Automatic Control</li>
+<li>Health Monitoring</li>
+</ul>
+<p>Node-RED สามารถรับผิดชอบ Dashboard, Visualization และ Manual Control</p>
+<h2 id="28-24-control-authority">28.24 Control Authority</h2>
+<p>ไม่ควรให้ Python และ Node-RED สร้าง Automatic Control Command พร้อมกันโดยไม่มีการกำหนดเจ้าของการตัดสินใจ ต้องระบุ Control Authority ให้ชัดเจน ตัวอย่าง:</p>
+<pre class="language-text"><code>Python
+    → Automatic Control</code></pre>
+<pre class="language-text"><code>Node-RED
+    → Dashboard
+    → Manual Control</code></pre>
+<h2 id="28-25-gateway-protocol">28.25 Gateway Protocol</h2>
+<p>ระดับพื้นฐานใช้ MQTT เป็น Protocol หลัก กลุ่มที่ต้องการเพิ่มความสามารถสามารถใช้ BLE/BTHome หรือ UDP ร่วมกับ Architecture ต่อไปนี้:</p>
+<pre class="language-text"><code>BLE ─┐
+UDP ─┼→ Raspberry Pi → MQTT
+MQTT ┘</code></pre>
+<p>แต่ไม่บังคับให้ทุกกลุ่มต้องใช้ทุก Protocol</p>
+<h2 id="28-26-store-and-forward">28.26 Store-and-Forward</h2>
+<p>เมื่อ Remote Destination ไม่พร้อม ห้ามทิ้งข้อมูลทันที ใช้</p>
+<pre class="language-text"><code>Data
+  ↓
+SQLite Outbox
+  ↓
+PENDING</code></pre>
+<p>เมื่อ Remote กลับมา</p>
+<pre class="language-text"><code>PENDING
+  ↓
+Forward
+  ↓
+Confirm
+  ↓
+SENT</code></pre>
+<h2 id="28-27-local-first-operation">28.27 Local-First Operation</h2>
+<p>Internet Down ต้องไม่ทำให้ Local IoT System หยุดทั้งหมด</p>
+<pre class="language-text"><code>Internet
+   X</code></pre>
+<pre class="language-text"><code>ESP32
+  ↓
+Local MQTT
+  ↓
+Gateway
+  ↓
+Rule
+  ↓
+Actuator</code></pre>
+<p>ยังต้องทำงานได้</p>
+<h2 id="28-28-mqtt-security">28.28 MQTT Security</h2>
+<p>Mosquitto ใน Final Project ต้องใช้ Username, Password และ ACL และต้องไม่ตั้ง <code>allow_anonymous true</code></p>
+<h2 id="28-29-acl">28.29 ACL</h2>
+<p>Device ต้องเข้าถึงเฉพาะ Topic ที่จำเป็น โดย <code>sensor001</code> มีสิทธิ์ดังนี้:</p>
+<table>
+<thead><tr>
+<th>สิทธิ์</th>
+<th>Topic</th>
+</tr></thead><tbody>
+<tr>
+<td>Write</td>
+<td><code>pkru/iot/001/data</code></td>
+</tr>
+<tr>
+<td>Write</td>
+<td><code>pkru/iot/001/status</code></td>
+</tr>
+<tr>
+<td>Write</td>
+<td><code>pkru/iot/001/state</code></td>
+</tr>
+<tr>
+<td>Read</td>
+<td><code>pkru/iot/001/cmd</code></td>
+</tr>
+</tbody></table>
+<p>ตัวอย่าง Mosquitto ACL:</p>
+<pre class="language-conf"><code>user sensor001
+topic write pkru/iot/001/data
+topic write pkru/iot/001/status
+topic write pkru/iot/001/state
+topic read pkru/iot/001/cmd</code></pre>
+<p>เมื่อไม่ได้กำหนดสิทธิ์ข้ามอุปกรณ์ <code>sensor001</code> ต้องไม่สามารถ Publish ไปยัง <code>pkru/iot/002/data</code> หรือ Topic ของ Device อื่นได้</p>
+<h2 id="28-30-remote-access">28.30 Remote Access</h2>
+<p>ใช้แนวคิดจาก LAB 25 เพื่อเข้าถึง Dashboard, Node-RED และ SSH ผ่าน Cloudflare Tunnel โดยไม่เปิด Inbound Port จาก Router โดยตรง</p>
+<h2 id="28-31-systemd">28.31 systemd</h2>
+<p>Python Gateway ต้องทำงานเป็น systemd service เช่น <code>iot-gateway.service</code> ตรวจสถานะด้วย:</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>ตรวจว่า service ถูกตั้งให้เริ่มพร้อมระบบ:</p>
+<pre class="language-bash"><code>systemctl is-enabled iot-gateway</code></pre>
+<p>ผลลัพธ์ที่คาดหวังคือ <code>enabled</code></p>
+<h2 id="28-32-auto-recovery">28.32 Auto Recovery</h2>
+<p>ถ้า Python Crash systemd ต้อง Restart ใช้</p>
+<pre class="language-ini"><code>Restart=on-failure
+
+RestartSec=5</code></pre>
+<h2 id="28-33-mqtt-reconnect">28.33 MQTT Reconnect</h2>
+<p>ถ้า Broker หาย Gateway ต้อง</p>
+<pre class="language-text"><code>Detect
+  ↓
+Reconnect
+  ↓
+Subscribe Again
+  ↓
+Continue</code></pre>
+<p>ไม่ควรต้อง Restart Raspberry Pi</p>
+<h2 id="28-34-fault-tolerance">28.34 Fault Tolerance</h2>
+<p>ระบบต้องรับมือ Failure อย่างน้อยดังนี้:</p>
+<ul>
+<li>Invalid Sensor Data</li>
+<li>Stale Data</li>
+<li>Device Offline</li>
+<li>Python Process Crash</li>
+<li>MQTT Disconnect</li>
+<li>Internet Failure</li>
+<li>Remote Destination Failure</li>
+<li>Raspberry Pi Reboot</li>
+</ul>
+<h2 id="28-35-failsafe">28.35 Failsafe</h2>
+<p>คุณต้องกำหนด Failsafe Policy ให้เหมาะกับ Physical System ตัวอย่างเมื่อ Temperature Sensor เป็น <code>STALE</code> ต้องเลือกและอธิบายเหตุผลว่าจะให้ Fan:</p>
+<ul>
+<li><code>ON</code></li>
+<li><code>OFF</code></li>
+<li><code>KEEP LAST STATE</code></li>
+<li>เข้า <code>SAFE MODE</code></li>
+</ul>
+<h2 id="28-36-backup">28.36 Backup</h2>
+<p>Backup ต้องครอบคลุมอย่างน้อย:</p>
+<ul>
+<li>Mosquitto configuration</li>
+<li>Node-RED flows และ settings</li>
+<li>Python source code และ dependencies</li>
+<li>SQLite database</li>
+<li>systemd service files</li>
+<li>manifest หรือรายการไฟล์ที่สำรอง</li>
+</ul>
+<h2 id="28-37-recovery">28.37 Recovery</h2>
+<p>ไม่จำเป็นต้องทำลายระบบจริง แต่ต้องอธิบายและสาธิตกระบวนการต่อไปนี้อย่างน้อยหนึ่งส่วน:</p>
+<pre class="language-text"><code>Backup
+  ↓
+Restore
+  ↓
+Start
+  ↓
+Verify</code></pre>
+<p>อย่างน้อยต้องสาธิตการกู้คืน Database หรือ Application Configuration หนึ่งส่วน</p>
+<h2 id="28-38-gateway-health">28.38 Gateway Health</h2>
+<p>แนะนำให้ Gateway รายงาน Health ที่ Topic <code>pkru/gateway/status</code> ตัวอย่างเมื่อทุกส่วนทำงานปกติ:</p>
+<pre class="language-json"><code>{
+  &quot;status&quot;:&quot;HEALTHY&quot;,
+  &quot;mqtt&quot;:true,
+  &quot;database&quot;:true,
+  &quot;internet&quot;:true
+}</code></pre>
+<p>เมื่อ Internet หาย</p>
+<pre class="language-json"><code>{
+  &quot;status&quot;:&quot;DEGRADED&quot;,
+  &quot;mqtt&quot;:true,
+  &quot;database&quot;:true,
+  &quot;internet&quot;:false
+}</code></pre>
+<h2 id="28-39-gateway-state">28.39 Gateway State</h2>
+<p>Gateway ต้องรายงานสถานะอย่างน้อย 3 ระดับ:</p>
+<table>
+<thead><tr>
+<th>State</th>
+<th>ความหมาย</th>
+</tr></thead><tbody>
+<tr>
+<td><code>HEALTHY</code></td>
+<td>Critical Components ทำงานปกติ</td>
+</tr>
+<tr>
+<td><code>DEGRADED</code></td>
+<td>บาง Function ใช้งานไม่ได้ แต่ Essential Local Operation ยังทำงาน</td>
+</tr>
+<tr>
+<td><code>FAILED</code></td>
+<td>Essential Operation ไม่สามารถทำงานได้</td>
+</tr>
+</tbody></table>
+<h2 id="28-40-fault-injection-test">28.40 Fault Injection Test</h2>
+<p>คุณต้องจงใจสร้าง Failure เพื่อพิสูจน์ระบบอย่างน้อย 6 กรณี:</p>
+<ol>
+<li>ส่ง Invalid Sensor Data</li>
+<li>หยุด Device</li>
+<li>Kill Python Process</li>
+<li>หยุด Mosquitto</li>
+<li>ตัด Internet</li>
+<li>Reboot Raspberry Pi</li>
+</ol>
+<h2 id="28-41-test-1-invalid-data">28.41 Test 1 - Invalid Data</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub \
+-h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;{&quot;temp&quot;:-99,&quot;humi&quot;:70,&quot;light&quot;:1500}&#x27;</code></pre>
+<p>ผลที่คาดหวัง:</p>
+<ul>
+<li>ข้อมูลถูกจัดสถานะเป็น <code>INVALID</code></li>
+<li>ข้อมูลไม่ถูกส่งเข้าสู่ Automatic Control ตามเส้นทางปกติ</li>
+</ul>
+<h2 id="28-42-test-2-device-offline">28.42 Test 2 - Device Offline</h2>
+<p>หยุด ESP32 หรือ Simulator ผลที่คาดหวัง:</p>
+<pre class="language-text"><code>ONLINE
+  ↓
+OFFLINE</code></pre>
+<p>Device อื่นต้องยังทำงานต่อได้</p>
+<h2 id="28-43-test-3-python-crash">28.43 Test 3 - Python Crash</h2>
+<p>หา PID</p>
+<pre class="language-bash"><code>pid=$(systemctl show \
+-p MainPID \
+--value \
+iot-gateway)</code></pre>
+<p>Kill</p>
+<pre class="language-bash"><code>sudo kill -9 &quot;$pid&quot;</code></pre>
+<p>Expected</p>
+<pre class="language-text"><code>systemd
+  ↓
+Restart
+  ↓
+MQTT Reconnect
+  ↓
+System Resume</code></pre>
+<h2 id="28-44-test-4-mqtt-failure">28.44 Test 4 - MQTT Failure</h2>
+<p>หยุด Broker</p>
+<pre class="language-bash"><code>sudo systemctl stop mosquitto</code></pre>
+<p>ผลที่คาดหวังคือ Gateway ตรวจพบการตัดการเชื่อมต่อ จากนั้นเปิด Broker กลับ:</p>
+<pre class="language-bash"><code>sudo systemctl start mosquitto</code></pre>
+<p>หลัง Broker กลับมา ระบบต้อง:</p>
+<pre class="language-text"><code>Reconnect
+  ↓
+Subscribe
+  ↓
+Resume</code></pre>
+<h2 id="28-45-test-5-internet-failure">28.45 Test 5 - Internet Failure</h2>
+<p>ตัด Internet Upstream โดยไม่ปิด Local Network แล้วตรวจสอบผลดังนี้:</p>
+<table>
+<thead><tr>
+<th>ส่วนประกอบ</th>
+<th>ผลที่คาดหวัง</th>
+</tr></thead><tbody>
+<tr>
+<td>Remote Access</td>
+<td>ใช้งานไม่ได้</td>
+</tr>
+<tr>
+<td>Remote Upload</td>
+<td>ใช้งานไม่ได้</td>
+</tr>
+<tr>
+<td>Local MQTT</td>
+<td>ยังทำงาน</td>
+</tr>
+<tr>
+<td>Local Dashboard</td>
+<td>ยังทำงาน</td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td>ยังทำงาน</td>
+</tr>
+<tr>
+<td>Automatic Control</td>
+<td>ยังทำงาน</td>
+</tr>
+</tbody></table>
+<p>ข้อมูลที่ยังส่งไปยัง Remote Destination ไม่สำเร็จต้องมีสถานะ <code>PENDING</code></p>
+<h2 id="28-46-test-6-reboot">28.46 Test 6 - Reboot</h2>
+<pre class="language-bash"><code>sudo reboot</code></pre>
+<p>หลัง Boot ตรวจ</p>
+<pre class="language-bash"><code>systemctl is-active mosquitto</code></pre>
+<pre class="language-bash"><code>systemctl is-active iot-gateway</code></pre>
+<pre class="language-bash"><code>systemctl is-active nodered</code></pre>
+<p>ผลที่คาดหวังคือระบบกลับมาทำงานโดยไม่ต้อง Run Python ด้วยมือ</p>
+<h2 id="28-47-test-7-store-and-forward">28.47 Test 7 - Store-and-Forward</h2>
+<p>ถ้ามี Remote Destination ให้หยุดปลายทางชั่วคราว จำนวนรายการ <code>PENDING</code> ต้องเพิ่มขึ้น เมื่อเปิดปลายทางอีกครั้ง สถานะต้องเปลี่ยนดังนี้:</p>
+<pre class="language-text"><code>PENDING
+  ↓
+SENT</code></pre>
+<h2 id="28-48-test-8-malformed-json">28.48 Test 8 - Malformed JSON</h2>
+<p>ส่ง</p>
+<pre class="language-bash"><code>mosquitto_pub \
+-h localhost \
+-t &quot;pkru/iot/001/data&quot; \
+-m &#x27;HELLO&#x27;</code></pre>
+<p>ผลที่คาดหวัง:</p>
+<ul>
+<li>Reject payload</li>
+<li>บันทึก Error ลง Log</li>
+<li>Gateway ทำงานต่อโดยไม่ Crash</li>
+</ul>
+<h2 id="28-49-test-9-acl">28.49 Test 9 - ACL</h2>
+<p>ใช้ Account ของ Device 001 พยายาม Publish ไปยัง <code>pkru/iot/002/data</code> ผลที่คาดหวังคือ <code>DENIED</code></p>
+<h2 id="28-50-test-10-command-verification">28.50 Test 10 - Command Verification</h2>
+<p>ส่งคำสั่ง <code>ON</code> แล้วตรวจ <code>pkru/iot/001/state</code> ผลที่คาดหวังคือ <code>ON</code> หาก Commanded State กับ Actual State ไม่ตรงกัน ระบบต้องแสดงความผิดปกติได้</p>
+<h2 id="28-51-fault-test-matrix">28.51 Fault Test Matrix</h2>
+<p>คุณต้องบันทึกวิธีตรวจจับ วิธีฟื้นตัว ผลที่คาดหวัง และผลที่เกิดขึ้นจริงของแต่ละ Failure ตัวอย่าง:</p>
+<table>
+<thead><tr>
+<th>Fault</th>
+<th>Detection</th>
+<th>Recovery</th>
+<th>Expected Result</th>
+<th>Actual Result</th>
+</tr></thead><tbody>
+<tr>
+<td>Invalid Data</td>
+<td>Validation</td>
+<td>Reject ข้อมูล</td>
+<td>Gateway ทำงานต่อ</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Device Offline</td>
+<td>Timeout หรือ LWT</td>
+<td>กำหนดสถานะ <code>OFFLINE</code></td>
+<td>Device อื่นยังทำงาน</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Python Crash</td>
+<td>systemd</td>
+<td>Restart Process</td>
+<td>Gateway กลับมาทำงาน</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>MQTT Down</td>
+<td>Disconnect Callback</td>
+<td>Reconnect</td>
+<td>ระบบทำงานต่อหลังเชื่อมใหม่</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Internet Down</td>
+<td>Connectivity Check</td>
+<td>เก็บข้อมูลไว้ในเครื่อง</td>
+<td>Local Operation ยังทำงาน</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>Pi Reboot</td>
+<td>systemd</td>
+<td>Auto-start Services</td>
+<td>Services กลับมาทำงาน</td>
+<td>PASS</td>
+</tr>
+</tbody></table>
+<h2 id="28-52-requirement-matrix">28.52 Requirement Matrix</h2>
+<p>Project ต้องผ่านอย่างน้อย</p>
+<pre class="language-text"><code>[ ] ESP32 ≥ 2
+[ ] Sensor Data ≥ 3 ค่า
+[ ] MQTT
+[ ] Topic Hierarchy
+[ ] Multi-device
+[ ] Node-RED
+[ ] Dashboard
+[ ] Real-time Chart
+[ ] SQLite
+[ ] SQL Statistics
+[ ] Rule/Alert
+[ ] Manual Control
+[ ] Automatic Control
+[ ] MANUAL/AUTO Mode
+[ ] Hysteresis
+[ ] Actual State Feedback
+[ ] ONLINE/OFFLINE
+[ ] VALID/INVALID/STALE
+[ ] Python Gateway
+[ ] systemd
+[ ] Store-and-Forward
+[ ] MQTT Authentication
+[ ] ACL
+[ ] Remote Access
+[ ] Backup
+[ ] Fault Recovery</code></pre>
+<h2 id="28-53-project-example">28.53 Project Example</h2>
+<p>ตัวอย่างโครงการ: <strong>Smart Environment Control</strong></p>
+<p>ข้อมูลจาก <code>ESP32-001</code>:</p>
+<pre class="language-text"><code>Temperature
+Humidity
+Light</code></pre>
+<p>ข้อมูลจาก <code>ESP32-002</code>:</p>
+<pre class="language-text"><code>Temperature
+Humidity
+Light</code></pre>
+<p>Actuator ที่ควบคุมคือพัดลม ส่วน Raspberry Pi ให้บริการต่อไปนี้:</p>
+<pre class="language-text"><code>MQTT
+Node-RED
+Python
+SQLite
+Dashboard</code></pre>
+<p>Automatic Rule</p>
+<pre class="language-text"><code>temp &gt; 35
+    → Fan ON</code></pre>
+<pre class="language-text"><code>temp &lt; 30
+    → Fan OFF</code></pre>
+<h2 id="28-54-ตัวอย่างอีก-project">28.54 ตัวอย่างอีก Project</h2>
+<p>ตัวอย่างโครงการ: <strong>Smart Greenhouse</strong></p>
+<p>ข้อมูลจาก Sensors:</p>
+<pre class="language-text"><code>Temperature
+Humidity
+Light
+Soil Moisture</code></pre>
+<p>Actuators:</p>
+<pre class="language-text"><code>Fan
+Pump</code></pre>
+<p>ตัวอย่าง Rules:</p>
+<pre class="language-text"><code>High Temperature
+    → Fan</code></pre>
+<pre class="language-text"><code>Low Soil Moisture
+    → Pump</code></pre>
+<p>แต่ต้องเพิ่ม Failsafe เช่น</p>
+<pre class="language-text"><code>Soil Sensor INVALID
+    ↓
+Do not blindly run pump</code></pre>
+<h2 id="28-55-project-proposal">28.55 Project Proposal</h2>
+<p>ก่อนเริ่ม Project ให้ส่ง Proposal ซึ่งประกอบด้วย:</p>
+<ul>
+<li>Project Name, Problem และ Objective</li>
+<li>Sensor, Actuator และ Device List</li>
+<li>Architecture และ MQTT Topics</li>
+<li>Database Design</li>
+<li>Control Rules และ Failsafe Policy</li>
+<li>Failure Scenarios ที่จะใช้ทดสอบ</li>
+</ul>
+<h2 id="28-56-architecture-diagram">28.56 Architecture Diagram</h2>
+<p>Architecture Diagram ต้องแสดงองค์ประกอบต่อไปนี้:</p>
+<ul>
+<li>IoT Nodes</li>
+<li>Network และ Protocols</li>
+<li>Raspberry Pi และ MQTT</li>
+<li>Processing และ Database</li>
+<li>Dashboard และ Control</li>
+<li>Remote Access</li>
+</ul>
+<p>ไม่ควรวาดเพียง:</p>
+<pre class="language-text"><code>ESP32 → Raspberry Pi</code></pre>
+<h2 id="28-57-data-flow-diagram">28.57 Data Flow Diagram</h2>
+<p>ต้องแยก Data Path</p>
+<pre class="language-text"><code>Sensor
+  ↓
+ESP32
+  ↓
+MQTT
+  ↓
+Gateway
+  ↓
+Validation
+  ↓
+Database/Dashboard</code></pre>
+<p>และ Control Path</p>
+<pre class="language-text"><code>User/Rule
+  ↓
+Control Decision
+  ↓
+MQTT
+  ↓
+ESP32
+  ↓
+Actuator
+  ↓
+Feedback</code></pre>
+<h2 id="28-58-database-design">28.58 Database Design</h2>
+<p>ตัวอย่าง sensor_data</p>
+<pre class="language-text"><code>id
+device_id
+timestamp
+temp
+humi
+light
+quality</code></pre>
+<p>device_status</p>
+<pre class="language-text"><code>device_id
+status
+last_seen</code></pre>
+<p>control_log</p>
+<pre class="language-text"><code>id
+device_id
+timestamp
+mode
+command
+actual_state</code></pre>
+<p>ไม่บังคับว่าต้องใช้ Schema นี้ตรงทั้งหมด แต่ต้องสามารถอธิบาย Design ได้</p>
+<h2 id="28-59-control-log">28.59 Control Log</h2>
+<p>Control Log ควรตอบได้ว่าเกิดคำสั่งเมื่อใด ใครหรือ Component ใดเป็นผู้สั่ง Device ใด ใช้ Command และ Mode อะไร ตัวอย่าง:</p>
+<pre class="language-text"><code>2026-10-02 10:30:00
+001
+AUTO
+ON</code></pre>
+<p>ช่วยตรวจสอบพฤติกรรมระบบย้อนหลัง</p>
+<h2 id="28-60-verification">28.60 Verification</h2>
+<p>Project ไม่ควรประเมินจากความสวยของ Dashboard เพียงอย่างเดียว ต้องตรวจ:</p>
+<ul>
+<li>Data Correctness</li>
+<li>Control Correctness</li>
+<li>Failure Handling และ Recovery</li>
+<li>Security</li>
+<li>Persistence</li>
+</ul>
+<h2 id="28-61-demonstration-sequence">28.61 Demonstration Sequence</h2>
+<p>แนะนำให้สาธิตตามลำดับ:</p>
+<ol>
+<li>Boot Raspberry Pi และแสดงสถานะ Services</li>
+<li>เปิด Dashboard และ ESP32 Devices</li>
+<li>แสดง Multi-device Data และข้อมูลใน SQLite</li>
+<li>แสดง Rule/Alert</li>
+<li>ทดสอบ Manual Control และ Automatic Control</li>
+<li>แสดง Actual State Feedback</li>
+<li>ทดสอบ Invalid Data และ Device Offline</li>
+<li>ทดสอบ Python Crash และ MQTT Failure</li>
+<li>ทดสอบ Internet Failure และ Store-and-Forward</li>
+<li>แสดง Recovery และ Remote Access</li>
+</ol>
+<h2 id="28-62-demonstration-boot">28.62 Demonstration - Boot</h2>
+<p>หลังเปิด Raspberry Pi ห้าม Run</p>
+<pre class="language-bash"><code>python gateway.py</code></pre>
+<p>ด้วยมือ ต้องตรวจ</p>
+<pre class="language-bash"><code>systemctl status iot-gateway</code></pre>
+<p>และ</p>
+<pre class="language-bash"><code>systemctl status mosquitto</code></pre>
+<p>เพื่อพิสูจน์ Autonomous Startup</p>
+<h2 id="28-63-demonstration-multi-device">28.63 Demonstration - Multi-device</h2>
+<p>Dashboard ต้องแสดง Device <code>001</code> และ <code>002</code> เป็นอย่างน้อย และต้องแยกข้อมูลของแต่ละ Device ได้ถูกต้อง</p>
+<h2 id="28-64-demonstration-manual-control">28.64 Demonstration - Manual Control</h2>
+<p>เลือกโหมด <code>MANUAL</code> แล้วกด <code>ON</code> ผลที่คาดหวัง:</p>
+<pre class="language-text"><code>MQTT cmd
+  ↓
+ESP32
+  ↓
+Actuator ON
+  ↓
+state = ON</code></pre>
+<h2 id="28-65-demonstration-automatic-control">28.65 Demonstration - Automatic Control</h2>
+<p>เลือกโหมด <code>AUTO</code> แล้วส่ง <code>temp = 38</code> ผลที่คาดหวัง:</p>
+<pre class="language-text"><code>ALERT
+  ↓
+Rule
+  ↓
+ON</code></pre>
+<p>เมื่อส่ง <code>temp = 29</code> ผลที่คาดหวังคือ <code>OFF</code></p>
+<h2 id="28-66-demonstration-invalid">28.66 Demonstration - Invalid</h2>
+<p>ส่ง <code>temp = -99</code> ผลที่คาดหวังคือ <code>INVALID</code> และ Automatic Control ต้องไม่ใช้ค่านี้เป็นข้อมูลปกติ</p>
+<h2 id="28-67-demonstration-stale">28.67 Demonstration - Stale</h2>
+<p>หยุดส่ง Sensor Data แล้วรอให้เกิน Timeout ผลที่คาดหวังคือ <code>STALE</code> และ Dashboard ต้องแสดงสถานะนี้</p>
+<h2 id="28-68-demonstration-offline">28.68 Demonstration - Offline</h2>
+<p>หยุด Device หนึ่งตัว ผลที่คาดหวังคือ <code>OFFLINE</code> ส่วน Device อื่นต้องยังทำงานต่อได้</p>
+<h2 id="28-69-demonstration-process-crash">28.69 Demonstration - Process Crash</h2>
+<p>Kill Python Process ผลที่คาดหวังคือ systemd restart service และ Gateway กลับมาทำงาน</p>
+<h2 id="28-70-demonstration-internet-failure">28.70 Demonstration - Internet Failure</h2>
+<p>ตัด Internet ผลที่คาดหวังคือ Gateway เปลี่ยนเป็น <code>DEGRADED</code> แต่ Local System ยังทำงาน</p>
+<h2 id="28-71-demonstration-recovery">28.71 Demonstration - Recovery</h2>
+<p>ต่อ Internet กลับแล้วตรวจว่าระบบฟื้นตัวตามลำดับต่อไปนี้:</p>
+<pre class="language-text"><code>DEGRADED
+   ↓
+HEALTHY</code></pre>
+<p>และถ้ามี Pending Data</p>
+<pre class="language-text"><code>PENDING
+   ↓
+SENT</code></pre>
+<h2 id="28-72-สิ่งที่ต้องส่ง">28.72 สิ่งที่ต้องส่ง</h2>
+<ol>
+<li>Project Proposal</li>
+<li>Architecture Diagram</li>
+<li>Data Path</li>
+<li>Control Path</li>
+<li>Device List</li>
+<li>MQTT Topic Design</li>
+<li>Database Schema</li>
+<li>Node-RED Flow</li>
+<li>Dashboard</li>
+<li>Python Source Code</li>
+<li>ESP32 Code/YAML</li>
+<li>systemd Service</li>
+<li>MQTT Security Configuration</li>
+<li>ACL Design</li>
+<li>Store-and-Forward Design</li>
+<li>Backup Plan</li>
+<li>Failsafe Policy</li>
+<li>Fault Test Matrix</li>
+<li>Test Results</li>
+<li>Demonstration</li>
+</ol>
+<h2 id="28-73-เอกสาร-project">28.73 เอกสาร Project</h2>
+<p>รายงานควรมี</p>
+<ol>
+<li>Introduction</li>
+<li>Problem</li>
+<li>Objectives</li>
+<li>System Architecture</li>
+<li>Hardware</li>
+<li>Software</li>
+<li>Network Architecture</li>
+<li>MQTT Topic Design</li>
+<li>Data Processing</li>
+<li>Database</li>
+<li>Dashboard</li>
+<li>Control</li>
+<li>Security</li>
+<li>Fault Tolerance</li>
+<li>Testing</li>
+<li>Results</li>
+<li>Limitations</li>
+<li>Conclusion</li>
+</ol>
+<h2 id="28-74-rubric-100-คะแนน">28.74 Rubric - 100 คะแนน</h2>
+<table>
+<thead><tr>
+<th>ด้านประเมิน</th>
+<th>คะแนน</th>
+</tr></thead><tbody>
+<tr>
+<td>Architecture &amp; Design</td>
+<td>10</td>
+</tr>
+<tr>
+<td>MQTT &amp; Multi-device</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Data Processing &amp; Validation</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Database &amp; Dashboard</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Manual/Automatic Control</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Device Status &amp; Data Quality</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Fault Tolerance &amp; Recovery</td>
+<td>15</td>
+</tr>
+<tr>
+<td>Documentation</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Demonstration</td>
+<td>5</td>
+</tr>
+<tr>
+<td><strong>รวม</strong></td>
+<td><strong>100</strong></td>
+</tr>
+</tbody></table>
+<h2 id="28-75-architecture-and-design-10">28.75 Architecture &amp; Design - 10</h2>
+<p>พิจารณาความชัดเจนของ Architecture, ความถูกต้องของ Data Path และ Control Path, การแบ่ง Component Responsibility และความเหมาะสมของ Topic Design</p>
+<h2 id="28-76-mqtt-and-multi-device-10">28.76 MQTT &amp; Multi-device - 10</h2>
+<p>ต้องรองรับอย่างน้อย 2 Devices และออกแบบ Topic Hierarchy, Device Identification และ Publish/Subscribe ได้ถูกต้อง</p>
+<h2 id="28-77-data-processing-10">28.77 Data Processing - 10</h2>
+<p>ต้องมี JSON Parsing และ Validation แยก <code>VALID</code>, <code>INVALID</code>, <code>STALE</code> โดยข้อมูลผิดต้องไม่ทำให้ Gateway Crash</p>
+<h2 id="28-78-database-and-dashboard-10">28.78 Database &amp; Dashboard - 10</h2>
+<p>ต้องมี SQLite, Historical Data, Statistics, Real-time Dashboard, Chart และ Multi-device Display</p>
+<h2 id="28-79-control-15">28.79 Control - 15</h2>
+<p>ต้องมี Manual Control, Automatic Control, Mode Selection, Hysteresis, Command และ Actual State Feedback</p>
+<h2 id="28-80-device-status-and-quality-10">28.80 Device Status &amp; Quality - 10</h2>
+<p>ต้องแสดง <code>ONLINE</code>, <code>OFFLINE</code>, <code>VALID</code>, <code>INVALID</code>, <code>STALE</code> และแยก Availability ออกจาก Data Quality อย่างถูกต้อง</p>
+<h2 id="28-81-security-10">28.81 Security - 10</h2>
+<p>ต้องมี MQTT Authentication, ACL, การปิด Anonymous Access และ Credential Protection รวมถึง Remote Access ที่ไม่เปิด Service ภายในออกสู่ Internet โดยไม่จำเป็น</p>
+<h2 id="28-82-fault-tolerance-15">28.82 Fault Tolerance - 15</h2>
+<p>ต้องทดสอบ Device Failure, Invalid Data, Process Crash, MQTT Failure, Internet Failure และ Reboot พร้อมแสดง Detection, Recovery และ Continued Operation</p>
+<h2 id="28-83-documentation-5">28.83 Documentation - 5</h2>
+<p>เอกสารต้องใช้ทำความเข้าใจและ Rebuild ระบบได้ ไม่ใช่มีเพียง Screenshot</p>
+<h2 id="28-84-demonstration-5">28.84 Demonstration - 5</h2>
+<p>คุณต้องอธิบาย Architecture, สาธิต Data Flow และ Control, สร้าง Failure และอธิบาย Recovery ได้</p>
+<h2 id="28-85-เงื่อนไขสำคัญ">28.85 เงื่อนไขสำคัญ</h2>
+<p>แม้คะแนนรวมสูง Project ไม่ควรถือว่าสมบูรณ์หากพบข้อใดข้อหนึ่ง:</p>
+<ul>
+<li>Automatic Control ใช้ Invalid Data</li>
+<li>ไม่มีวิธีตรวจ Device Offline</li>
+<li>ไม่มี Security</li>
+<li>ระบบไม่สามารถกลับมาทำงานหลัง Reboot</li>
+</ul>
+<p>รายการเหล่านี้เป็น Requirement หลักของ Architecture ที่เรียนมา</p>
+<h2 id="28-86-สิ่งที่ไม่ควรทำ">28.86 สิ่งที่ไม่ควรทำ</h2>
+<p>ไม่ควรเน้นเพียง Dashboard, Cloud หรือ Mobile App ที่สวยงาม แต่ขาด Validation, Device Status, Control Verification, Security และ Recovery เพราะ Project นี้วัด System Engineering มากกว่า UI Design</p>
+<h2 id="28-87-ระดับพื้นฐาน">28.87 ระดับพื้นฐาน</h2>
+<p>Minimum Project ต้องมี:</p>
+<ul>
+<li>ESP32 × 2 และ Raspberry Pi × 1</li>
+<li>MQTT, Node-RED, SQLite และ Dashboard</li>
+<li>Manual Control และ Automatic Control</li>
+<li><code>ONLINE/OFFLINE</code> และ <code>VALID/INVALID/STALE</code></li>
+<li>systemd, Security และ Fault Test</li>
+</ul>
+<h2 id="28-88-ระดับเพิ่มเติม">28.88 ระดับเพิ่มเติม</h2>
+<p>กลุ่มที่ต้องการพัฒนาเพิ่มสามารถเลือก Feature ต่อไปนี้:</p>
+<ul>
+<li>BLE/BTHome หรือ UDP Gateway</li>
+<li>Multiple Sensor Types</li>
+<li>Store-and-Forward ไปยัง Remote Server</li>
+<li>Control Feedback</li>
+<li>Advanced Health Monitoring</li>
+<li>Multiple Actuators</li>
+</ul>
+<p>Feature เพิ่มเติมต้องไม่ทำให้ Core Requirement ขาด</p>
+<h2 id="28-89-หลักสำคัญ">28.89 หลักสำคัญ</h2>
+<p>จำนวน Technology ไม่ใช่เป้าหมาย ระบบที่มี ESP32 2 ตัวแต่ทำ Data Validation, Control, Security และ Recovery ได้ถูกต้อง มีคุณค่ามากกว่าระบบที่มี Device จำนวนมากแต่ไม่มี Reliability</p>
+<h2 id="28-90-final-architecture">28.90 Final Architecture</h2>
+<pre class="language-text"><code>                  REMOTE USER
+                       │
+                       ▼
+                Cloudflare Tunnel
+                       │
+                       ▼
+┌───────────────────────────────────────────────┐
+│          RASPBERRY PI IoT GATEWAY             │
+│                                               │
+│  Mosquitto                                    │
+│     ├── Authentication                        │
+│     └── ACL                                   │
+│                                               │
+│  Python Gateway                               │
+│     ├── Validation                            │
+│     ├── Device Status                         │
+│     ├── Data Quality                          │
+│     ├── Rule Processing                       │
+│     ├── Control                               │
+│     ├── Reconnect                             │
+│     └── Health Monitoring                     │
+│                                               │
+│  Node-RED                                     │
+│     ├── Dashboard                             │
+│     ├── Manual Control                        │
+│     └── Alert                                 │
+│                                               │
+│  SQLite                                       │
+│     ├── Sensor History                        │
+│     └── Store-and-Forward                     │
+│                                               │
+│  systemd                                      │
+│     └── Auto Start / Restart                  │
+│                                               │
+│  Backup &amp; Recovery                            │
+│                                               │
+└──────────────────────┬────────────────────────┘
+                       │
+                      MQTT
+                       │
+             ┌─────────┴─────────┐
+             │                   │
+             ▼                   ▼
+         ESP32-001           ESP32-002
+             │                   │
+           Sensor              Sensor
+             │                   │
+             ▼                   ▼
+         Actuator            Actuator
+             │                   │
+             └──── State ────────┘</code></pre>
+<h2 id="28-91-ภาพรวม-lab-ทั้งชุด">28.91 ภาพรวม LAB ทั้งชุด</h2>
+<pre class="language-text"><code>LAB 01  Raspberry Pi Basics
+   ↓
+LAB 02  Mosquitto MQTT Broker
+   ↓
+LAB 03  MQTT Sensor Simulation
+   ↓
+LAB 04  Node-RED MQTT
+   ↓
+LAB 05  Data Processing
+   ↓
+LAB 06  Dashboard
+   ↓
+LAB 07  Real-time Chart
+   ↓
+LAB 08  SQLite
+   ↓
+LAB 09  Timestamp
+   ↓
+LAB 10  SQL Query
+   ↓
+LAB 11  Statistics
+   ↓
+LAB 12  Data Flow Architecture
+   ↓
+LAB 13  Rule &amp; Alert
+   ↓
+LAB 14  Manual Control
+   ↓
+LAB 15  Automatic Control
+   ↓
+LAB 16  MQTT Topic Design
+   ↓
+LAB 17  Multi-device
+   ↓
+LAB 18  ONLINE / OFFLINE
+   ↓
+LAB 19  VALID / INVALID / STALE
+   ↓
+LAB 20  Python MQTT Application
+   ↓
+LAB 21  systemd Service
+   ↓
+LAB 22  IoT Gateway
+   ↓
+LAB 23  Store-and-Forward
+   ↓
+LAB 24  MQTT Security
+   ↓
+LAB 25  Remote Access
+   ↓
+LAB 26  Backup &amp; Recovery
+   ↓
+LAB 27  Fault-Tolerant IoT
+   ↓
+LAB 28  Integrated IoT Mini Project</code></pre>
+<h2 id="28-92-learning-progression">28.92 Learning Progression</h2>
+<pre class="language-text"><code>Acquire
+   ↓
+Communicate
+   ↓
+Process
+   ↓
+Visualize
+   ↓
+Store
+   ↓
+Analyze
+   ↓
+Decide
+   ↓
+Control
+   ↓
+Scale
+   ↓
+Validate
+   ↓
+Detect
+   ↓
+Gateway
+   ↓
+Operate Offline
+   ↓
+Secure
+   ↓
+Access Remotely
+   ↓
+Recover
+   ↓
+Tolerate Failure
+   ↓
+Integrate</code></pre>
+<h2 id="28-93-ผลลัพธ์สุดท้ายของชุด-lab">28.93 ผลลัพธ์สุดท้ายของชุด LAB</h2>
+<p>หลัง LAB 28 คุณไม่ได้เพียงเรียนวิธีต่อ Sensor กับ Raspberry Pi แต่ได้สร้างระบบที่ประกอบด้วยองค์ประกอบต่อไปนี้:</p>
+<pre class="language-text"><code>IoT Node
++
+Network
++
+MQTT
++
+Gateway
++
+Processing
++
+Database
++
+Dashboard
++
+Control
++
+Security
++
+Remote Access
++
+Reliability</code></pre>
+<p>และเข้าใจว่า IoT System ที่สมบูรณ์ไม่ใช่เพียง</p>
+<pre class="language-text"><code>Sensor → Internet</code></pre>
+<p>แต่เป็น</p>
+<pre class="language-text"><code>Sense
+  ↓
+Communicate
+  ↓
+Validate
+  ↓
+Store
+  ↓
+Analyze
+  ↓
+Decide
+  ↓
+Control
+  ↓
+Verify
+  ↓
+Detect Failure
+  ↓
+Recover</code></pre>
+<h2 id="28-94-จุดจบของ-core-lab">28.94 จุดจบของ Core Lab</h2>
+<p>LAB 28 เป็น Final Lab ของ Raspberry Pi IoT Core Series ซึ่งครอบคลุม LAB 01–28 หากต้องการเรียนต่อควรแยกเป็น Advanced IoT Lab แทนการเพิ่มหมายเลขต่อท้าย Core Series</p>
+<p>Advanced Topics อาจประกอบด้วย:</p>
+<ul>
+<li>MQTT TLS และ Certificates</li>
+<li>Docker</li>
+<li>InfluxDB และ Grafana</li>
+<li>Prometheus และ Advanced Observability</li>
+<li>OTA</li>
+<li>Advanced BLE Gateway</li>
+<li>Gateway Redundancy</li>
+<li>Multiple Brokers และ High Availability</li>
+<li>Distributed Edge Computing</li>
+</ul>
+<h2 id="28-95-บทสรุป">28.95 บทสรุป</h2>
+<p>LAB 28 พิสูจน์ว่าองค์ความรู้จาก LAB 01–27 สามารถประกอบเป็น End-to-End IoT System ที่ทำงานตามลำดับต่อไปนี้:</p>
+<pre class="language-text"><code>Monitor
+   ↓
+Analyze
+   ↓
+Decide
+   ↓
+Control
+   ↓
+Verify
+   ↓
+Detect Failure
+   ↓
+Recover
+   ↓
+Continue Operation</code></pre>
+<p>ดังนั้นชุด LAB หลักจบที่ LAB 28 - Integrated IoT Mini Project และถือว่า</p>
+<pre class="language-text"><code>Raspberry Pi IoT Lab
+LAB 01–28</code></pre>
+<p>ครบชุดแล้ว</p>
+    </main>
+  </div>
+</body>
+</html>
