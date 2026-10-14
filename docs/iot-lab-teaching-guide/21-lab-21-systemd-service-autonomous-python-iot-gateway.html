@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 21 - systemd Service: Autonomous Python IoT Gateway</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -782,29 +783,33 @@ journalctl</code></pre>
 </ol>
 <pre class="language-bash"><code>   sudo reboot</code></pre>
 <ol>
-<li>ห้าม Run Python ด้วยมือ</li>
-</ol>
-<ol>
-<li>หลัง Boot ตรวจสอบ</li>
+<li>
+<p>ห้าม Run Python ด้วยมือ</p>
+</li>
+<li>
+<p>หลัง Boot ตรวจสอบ</p>
+</li>
 </ol>
 <pre class="language-bash"><code>   systemctl status iot-gateway</code></pre>
 <ol>
-<li>ส่ง MQTT Sensor Data</li>
-</ol>
-<ol>
-<li>ตรวจสอบ MQTT Command</li>
-</ol>
-<ol>
-<li>Kill Python Process</li>
-</ol>
-<ol>
-<li>รอ Automatic Restart</li>
-</ol>
-<ol>
-<li>ส่ง Sensor Data ใหม่</li>
-</ol>
-<ol>
-<li>ตรวจสอบว่า Gateway กลับมาทำงาน</li>
+<li>
+<p>ส่ง MQTT Sensor Data</p>
+</li>
+<li>
+<p>ตรวจสอบ MQTT Command</p>
+</li>
+<li>
+<p>Kill Python Process</p>
+</li>
+<li>
+<p>รอ Automatic Restart</p>
+</li>
+<li>
+<p>ส่ง Sensor Data ใหม่</p>
+</li>
+<li>
+<p>ตรวจสอบว่า Gateway กลับมาทำงาน</p>
+</li>
 </ol>
 <p>นี่จึงถือว่าผ่าน LAB</p>
 <h2 id="21-55-autonomous-gateway-test">21.55 Autonomous Gateway Test</h2>
@@ -906,22 +911,24 @@ INVALID Data</code></pre>
 </ol>
 <pre class="language-bash"><code>   journalctl -u iot-gateway</code></pre>
 <ol>
-<li>Screenshot PID ก่อนจำลอง Failure</li>
-</ol>
-<ol>
-<li>Screenshot PID หลัง Automatic Restart</li>
-</ol>
-<ol>
-<li>Screenshot Service หลัง Reboot</li>
-</ol>
-<ol>
-<li>หลักฐาน MQTT Processing หลัง Reboot</li>
-</ol>
-<ol>
-<li>หลักฐาน MQTT Processing หลัง Process Failure และ Recovery</li>
-</ol>
-<ol>
-<li>อธิบายความหมายของ</li>
+<li>
+<p>Screenshot PID ก่อนจำลอง Failure</p>
+</li>
+<li>
+<p>Screenshot PID หลัง Automatic Restart</p>
+</li>
+<li>
+<p>Screenshot Service หลัง Reboot</p>
+</li>
+<li>
+<p>หลักฐาน MQTT Processing หลัง Reboot</p>
+</li>
+<li>
+<p>หลักฐาน MQTT Processing หลัง Process Failure และ Recovery</p>
+</li>
+<li>
+<p>อธิบายความหมายของ</p>
+</li>
 </ol>
 <pre class="language-text"><code>   ExecStart
    WorkingDirectory
@@ -1151,6 +1158,7 @@ MQTT Device ───┘          ▼
 <p>ไปเป็น</p>
 <pre class="language-text"><code>Multi-protocol IoT Gateway</code></pre>
 <p>ซึ่งเป็นบทบาทของ Raspberry Pi ใน Edge/IoT Architecture ที่ชัดเจนยิ่งขึ้น</p>
+
     </main>
   </div>
 </body>

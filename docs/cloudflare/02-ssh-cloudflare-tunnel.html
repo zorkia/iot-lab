@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>02 - SSH จาก Internet เข้า Raspberry Pi ผ่าน Cloudflare Tunnel</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -87,10 +88,13 @@
 <p>เอกสารนี้ต่อยอดจาก <a href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a> โดยเพิ่ม SSH เป็นอีก service ภายใต้ Tunnel <code>kathu</code> เดียวกัน</p>
 <h2 id="ตัวอย่างระบบ">ตัวอย่างระบบ</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ค่า</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Domain</td>
 <td><code>vodun.cc</code></td>
@@ -119,7 +123,8 @@
 <td>Tunnel name</td>
 <td><code>kathu</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="1-โครงสร้างการเชื่อมต่อ">1. โครงสร้างการเชื่อมต่อ</h2>
 <pre class="language-text"><code>เครื่อง Client ภายนอก
         │
@@ -211,10 +216,12 @@ http://localhost:80</code></pre>
 </ul>
 <p>service: ssh://localhost:22</p>
 <ul>
-<li>hostname: ssh.vodun.cc</li>
-</ul>
-<ul>
-<li>service: http_status:404</li>
+<li>
+<p>hostname: ssh.vodun.cc</p>
+</li>
+<li>
+<p>service: http_status:404</p>
+</li>
 </ul>
 <p>ความหมาย:</p>
 <pre class="language-text"><code>pi.vodun.cc
@@ -304,11 +311,11 @@ Get-Command ssh</code></pre>
 <p>เปิด PowerShell หรือ Windows Terminal แล้วทดสอบโดยยังไม่สร้าง SSH config:</p>
 <pre class="language-powershell"><code>ssh -o &quot;ProxyCommand=cloudflared access ssh --hostname %h&quot; piuser@ssh.vodun.cc</code></pre>
 <p>คำสั่งจะเปิด Browser เพื่อ Login ผ่าน Cloudflare Access ก่อน เมื่อผ่าน policy แล้ว ครั้งแรกที่เชื่อมต่อ SSH อาจพบ:</p>
-<p>The authenticity of host &#x27;ssh.vodun.cc&#x27; can&#x27;t be established.</p>
+<p>The authenticity of host 'ssh.vodun.cc' can't be established.</p>
 <p>ตรวจสอบ fingerprint แล้วตอบ:</p>
 <p>yes</p>
 <p>จากนั้น:</p>
-<p>piuser@ssh.vodun.cc&#x27;s password:</p>
+<p>piuser@ssh.vodun.cc's password:</p>
 <p>ใส่ password ของ user piuser บน Raspberry Pi</p>
 <p>ถ้าสำเร็จจะเข้าสู่:</p>
 <p>piuser@kathu:~ $</p>
@@ -349,10 +356,13 @@ notepad &quot;$HOME\.ssh\config&quot;</code></pre>
 <pre class="language-bash"><code>ssh kathu</code></pre>
 <p>OpenSSH อ่าน config ตามระบบปฏิบัติการ:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ระบบ</th>
 <th>ไฟล์ config</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>macOS</td>
 <td><code>~/.ssh/config</code></td>
@@ -361,7 +371,8 @@ notepad &quot;$HOME\.ssh\config&quot;</code></pre>
 <td>Windows</td>
 <td><code>C:\Users\ชื่อผู้ใช้\.ssh\config</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>แล้วแปลงเป็น:</p>
 <pre class="language-text"><code>HostName = ssh.vodun.cc
 User     = piuser</code></pre>
@@ -407,10 +418,13 @@ Get-Command cloudflared</code></pre>
 <pre class="language-powershell"><code>ssh -G kathu | Select-String &quot;hostname|user|proxycommand&quot;</code></pre>
 <p>ปัญหาที่พบบ่อย:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>ssh</code> ไม่พบ</td>
 <td>ติดตั้ง OpenSSH Client แล้วเปิด Terminal ใหม่</td>
@@ -431,15 +445,19 @@ Get-Command cloudflared</code></pre>
 <td>Access denied</td>
 <td>ตรวจ Cloudflare Access application และ policy</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="15-การใช้งานหลาย-raspberry-pi">15. การใช้งานหลาย Raspberry Pi</h2>
 <p>สามารถใช้ Domain <code>vodun.cc</code> ร่วมกัน แล้วแยก SSH hostname และ Tunnel ตาม Raspberry Pi:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>SSH hostname</th>
 <th>Tunnel</th>
 <th>Raspberry Pi</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>ssh.vodun.cc</code></td>
 <td><code>kathu</code></td>
@@ -460,7 +478,8 @@ Get-Command cloudflared</code></pre>
 <td><code>ranee</code></td>
 <td><code>ranee</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="16-กำหนด-ssh-config-สำหรับหลายเครื่อง">16. กำหนด SSH config สำหรับหลายเครื่อง</h2>
 <h3 id="macos">macOS</h3>
 <pre class="language-sshconfig"><code>Host kathu
@@ -594,6 +613,7 @@ ssh ranee</code></pre>
 <p>บน macOS หรือ Windows หลังตั้ง SSH config แล้ว:</p>
 <pre class="language-bash"><code>ssh kathu</code></pre>
 <p>เพียงคำสั่งเดียวก็สามารถ SSH จาก Internet เข้า Raspberry Pi kathu ผ่าน Cloudflare Tunnel ได้ โดยไม่เปิด Port 22 จาก Internet โดยตรง</p>
+
     </main>
   </div>
 </body>

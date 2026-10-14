@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>03 - Raspberry Pi Network and Wi-Fi</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -86,7 +87,9 @@
 <p>คำสั่งตรวจการเชื่อมต่อ LAN/Wi-Fi, IP address, default route และการจัดการ Wi-Fi profile บน Raspberry Pi ที่ใช้ NetworkManager</p>
 <aside class="callout callout-important">
 <div class="callout-title">ตรวจ Network Manager ก่อน</div>
-<p>คำสั่ง <code>nmcli</code> ใช้ได้เมื่อ interface ถูกจัดการโดย NetworkManager ตรวจด้วย<br><code>systemctl is-active NetworkManager</code> หากใช้ระบบอื่น เช่น <code>dhcpcd</code> หรือ<br><code>systemd-networkd</code> ขั้นตอนจัดการ profile จะแตกต่างกัน</p>
+<p>คำสั่ง <code>nmcli</code> ใช้ได้เมื่อ interface ถูกจัดการโดย NetworkManager ตรวจด้วย<br />
+<code>systemctl is-active NetworkManager</code> หากใช้ระบบอื่น เช่น <code>dhcpcd</code> หรือ<br />
+<code>systemd-networkd</code> ขั้นตอนจัดการ profile จะแตกต่างกัน</p>
 </aside>
 <h2 id="ตรวจสถานะเครือข่าย">ตรวจสถานะเครือข่าย</h2>
 <p>ดูว่า LAN/Wi-Fi interface ใดเชื่อมต่ออยู่:</p>
@@ -125,7 +128,8 @@ sudo nmcli connection modify &quot;PROFILE_NAME&quot; \
 sudo nmcli connection up &quot;PROFILE_NAME&quot;</code></pre>
 <aside class="callout callout-warning">
 <div class="callout-title">รักษาความลับของรหัสผ่าน</div>
-<p>อย่าใส่รหัสผ่านจริงลงในโน้ต, screenshot หรือ repository คำสั่งที่มีรหัสผ่านอาจถูกเก็บ ใน shell history หากไม่ต้องการพิมพ์รหัสผ่านบน command line ให้ใช้<br><code>sudo nmcli --ask device wifi connect &quot;WIFI_SSID&quot; ifname wlan0 name &quot;PROFILE_NAME&quot;</code></p>
+<p>อย่าใส่รหัสผ่านจริงลงในโน้ต, screenshot หรือ repository คำสั่งที่มีรหัสผ่านอาจถูกเก็บ ใน shell history หากไม่ต้องการพิมพ์รหัสผ่านบน command line ให้ใช้<br />
+<code>sudo nmcli --ask device wifi connect &quot;WIFI_SSID&quot; ifname wlan0 name &quot;PROFILE_NAME&quot;</code></p>
 </aside>
 <h2 id="ตรวจ-profile-ที่บันทึกไว้">ตรวจ Profile ที่บันทึกไว้</h2>
 <pre class="language-bash"><code>nmcli connection show
@@ -176,6 +180,7 @@ ip route get 8.8.8.8</code></pre>
 <li><a href="../cloudflare/01-cloudflare-tunnel-setup.html">Cloudflare Tunnel Setup</a></li>
 </ul>
 <p>กลับไป <a href="../index.html">IoT Lab Overview</a></p>
+
     </main>
   </div>
 </body>

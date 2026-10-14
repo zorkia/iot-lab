@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 10 - สืบค้น Sensor Data ด้วย SQL</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -204,10 +205,13 @@ WHERE humi &lt; 0 OR humi &gt; 100
 ORDER BY created_at DESC;</code></pre>
 <h2 id="10-13-ปัญหาที่พบบ่อย">10.13 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>query ได้ 0 record</td>
 <td>database ไม่มีข้อมูล หรือ query ช่วงเวลาแคบเกินไป</td>
@@ -228,7 +232,8 @@ ORDER BY created_at DESC;</code></pre>
 <td>group by แปลก</td>
 <td>device_id ว่างหรือไม่คงที่</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="10-14-checklist-ก่อนจบ-lab">10.14 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>query จำนวน record ได้</li>
@@ -247,6 +252,7 @@ ORDER BY created_at DESC;</code></pre>
 5. อธิบายว่าค่าใดใน database ดูผิดปกติหรือไม่</code></pre>
 <h2 id="10-16-เชื่อมไป-lab-ถัดไป">10.16 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 11 จะนำ query จาก LAB นี้ไปทำ Rolling Statistics 5 นาทีล่าสุด และแสดงผลใน Node-RED Dashboard</p>
+
     </main>
   </div>
 </body>

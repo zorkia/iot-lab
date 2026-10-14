@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 11 - คำนวณ Rolling Statistics 5 นาทีล่าสุด</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -260,10 +261,13 @@ avg/min/max อาจเป็น null</code></pre>
 <p>นี่คือสัญญาณว่าไม่มีข้อมูลล่าสุด ไม่ใช่ sensor วัดค่าเป็น 0</p>
 <h2 id="11-14-ปัญหาที่พบบ่อย">11.14 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>records เป็น 0 ตลอด</td>
 <td>simulator ไม่ส่งข้อมูล หรือเวลาระบบผิด</td>
@@ -288,7 +292,8 @@ avg/min/max อาจเป็น null</code></pre>
 <td>เวลาใน Chart เหลื่อม</td>
 <td>ไม่ได้ระบุว่า <code>created_at</code> เป็น UTC ก่อนสร้าง JavaScript Date</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="11-15-เพิ่ม-index-เพื่อ-query-เร็วขึ้น">11.15 เพิ่ม Index เพื่อ Query เร็วขึ้น</h2>
 <p>ถ้าข้อมูลเริ่มมาก ให้เพิ่ม index:</p>
 <pre class="language-sql"><code>CREATE INDEX IF NOT EXISTS idx_sensor_data_created_at
@@ -314,6 +319,7 @@ ON sensor_data(created_at);</code></pre>
 6. อธิบายความต่างระหว่าง latest value, rolling statistics และ historical data</code></pre>
 <h2 id="11-18-เชื่อมไป-lab-ถัดไป">11.18 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 12 จะปรับโครงสร้าง flow ให้แยกงานเขียน database ออกจากงานอ่าน statistics เพื่อไม่ให้ผลจาก INSERT ไปรบกวน Dashboard</p>
+
     </main>
   </div>
 </body>

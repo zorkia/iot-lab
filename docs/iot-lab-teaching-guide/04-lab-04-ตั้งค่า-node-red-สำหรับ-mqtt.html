@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 04 - ตั้งค่า Node-RED สำหรับ MQTT</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -136,7 +137,7 @@ Debug Node</code></pre>
 <p>ถ้าเปิดผ่าน Cloudflare Tunnel ที่ตั้งไว้แล้ว:</p>
 <pre class="language-text"><code>https://node-red.vodun.cc</code></pre>
 <blockquote>
-เปลี่ยน <code>kathu-IP</code> เป็น IP จริงจาก LAB 01
+<p>เปลี่ยน <code>kathu-IP</code> เป็น IP จริงจาก LAB 01</p>
 </blockquote>
 <h2 id="4-6-ตั้งค่า-mqtt-broker-ใน-node-red">4.6 ตั้งค่า MQTT Broker ใน Node-RED</h2>
 <p>เพิ่ม node <code>mqtt in</code> แล้วตั้งค่า server:</p>
@@ -195,10 +196,13 @@ Node-RED อาจแสดง error ใน sidebar หรือ log</code></pre
 <p>ใช้ log เมื่อตรวจใน editor แล้วไม่เห็นสาเหตุ เช่น node หาย, credential ผิด หรือ service restart เอง</p>
 <h2 id="4-11-ปัญหาที่พบบ่อย">4.11 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>เปิด editor ไม่ได้</td>
 <td>service, port <code>1880</code>, network</td>
@@ -219,7 +223,8 @@ Node-RED อาจแสดง error ใน sidebar หรือ log</code></pre
 <td>เห็น string ไม่ใช่ object</td>
 <td>ยังไม่ได้ผ่าน JSON node</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="4-12-checklist-ก่อนจบ-lab">4.12 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>เปิด Node-RED editor ได้</li>
@@ -237,6 +242,7 @@ Node-RED อาจแสดง error ใน sidebar หรือ log</code></pre
 4. อธิบายว่า JSON node มีหน้าที่อะไร</code></pre>
 <h2 id="4-14-เชื่อมไป-lab-ถัดไป">4.14 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 05 จะนำ object จาก <code>msg.payload</code> มาแยกเป็นค่า sensor แต่ละตัว เพื่อส่งต่อให้ gauge, chart และ database ได้ถูกต้อง</p>
+
     </main>
   </div>
 </body>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 02 - ติดตั้งและทดสอบ Mosquitto MQTT Broker</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -134,10 +135,13 @@ mosquitto_sub                   mosquitto_pub
 <pre class="language-json"><code>{&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:1200}</code></pre>
 <p>องค์ประกอบ MQTT:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>คำ</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Broker</td>
 <td>ตัวกลางรับส่ง message</td>
@@ -158,16 +162,20 @@ mosquitto_sub                   mosquitto_pub
 <td>Payload</td>
 <td>ข้อมูลที่อยู่ใน message</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="2-6-ทดสอบ-subscriber">2.6 ทดสอบ Subscriber</h2>
 <p>เปิด terminal แรกบน Raspberry Pi:</p>
 <pre class="language-bash"><code>mosquitto_sub -h localhost -t &quot;pkru/iot/001/data&quot; -v</code></pre>
 <p>คำอธิบาย option:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Option</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>-h localhost</code></td>
 <td>broker อยู่เครื่องเดียวกัน</td>
@@ -180,7 +188,8 @@ mosquitto_sub                   mosquitto_pub
 <td><code>-v</code></td>
 <td>แสดง topic พร้อม payload</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="2-7-ทดสอบ-publisher">2.7 ทดสอบ Publisher</h2>
 <p>เปิด terminal ที่สองแล้วส่ง message:</p>
 <pre class="language-bash"><code>mosquitto_pub -h localhost \
@@ -198,7 +207,7 @@ mosquitto_sub                   mosquitto_pub
   -t &quot;pkru/iot/001/data&quot; \
   -m &#x27;{&quot;temp&quot;:29.1,&quot;humi&quot;:68,&quot;light&quot;:900}&#x27;</code></pre>
 <blockquote>
-เปลี่ยน <code>192.168.1.50</code> เป็น IP จริงจาก LAB 01
+<p>เปลี่ยน <code>192.168.1.50</code> เป็น IP จริงจาก LAB 01</p>
 </blockquote>
 <h2 id="2-9-authentication-พื้นฐาน">2.9 Authentication พื้นฐาน</h2>
 <p>ไฟล์รหัสผ่านที่ใช้ใน lab:</p>
@@ -242,10 +251,13 @@ systemctl status mosquitto --no-pager</code></pre>
 <pre class="language-bash"><code>journalctl -u mosquitto -f</code></pre>
 <p>ปัญหาที่พบบ่อย:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>สาเหตุที่เป็นไปได้</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>connection refused</td>
 <td>service ไม่ทำงานหรือ port ไม่เปิด</td>
@@ -262,7 +274,8 @@ systemctl status mosquitto --no-pager</code></pre>
 <td>subscribe แล้วไม่เห็นข้อมูล</td>
 <td>topic ไม่ตรงกัน</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="2-13-checklist-ก่อนจบ-lab">2.13 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>Mosquitto service เป็น <code>active</code></li>
@@ -280,6 +293,7 @@ systemctl status mosquitto --no-pager</code></pre>
 4. สรุปปัญหาที่พบและวิธีตรวจสอบ</code></pre>
 <h2 id="2-15-เชื่อมไป-lab-ถัดไป">2.15 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 03 จะใช้ Mosquitto ที่ตั้งค่าไว้ใน LAB นี้เพื่อจำลอง sensor data จาก command line แล้วส่งเข้า topic เดียวกันอย่างต่อเนื่อง</p>
+
     </main>
   </div>
 </body>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 17 - Multi-device Dashboard</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -203,10 +204,13 @@ pkru/iot/003/data {&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:200
    [Debug]</code></pre>
 <p>ตั้ง MQTT In:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>รายละเอียด</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Broker</td>
 <td><code>localhost:1883</code></td>
@@ -215,7 +219,8 @@ pkru/iot/003/data {&quot;temp&quot;:35,&quot;humi&quot;:80,&quot;light&quot;:200
 <td>Topic</td>
 <td><code>pkru/iot/+/data</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="17-7-แยก-device-id">17.7 แยก Device ID</h2>
 <p>MQTT Topic ตัวอย่าง:</p>
 <pre class="language-text"><code>pkru/iot/002/data</code></pre>
@@ -980,6 +985,7 @@ MQTT Last Will and Testament (LWT)</code></pre>
 <p>ไปสู่:</p>
 <pre class="language-text"><code>&quot;รู้ว่า Device ยังทำงานอยู่หรือไม่&quot;</code></pre>
 <p>ซึ่งเป็นพื้นฐานสำคัญของระบบ IoT ที่สามารถตรวจสอบความพร้อมใช้งานของอุปกรณ์ได้จริง</p>
+
     </main>
   </div>
 </body>

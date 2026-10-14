@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -93,16 +94,21 @@
 </ul>
 <aside class="callout callout-note">
 <div class="callout-title">รูปแบบ Tunnel ที่ใช้ในเอกสาร</div>
-<p>เอกสารชุดนี้ใช้ <strong>Locally-managed Tunnel</strong> โดยเก็บ ingress configuration ไว้ที่ <code>/etc/cloudflared/config.yml</code> เพื่อให้คุณเห็นและตรวจสอบ routing ได้จาก command line โดยตรง ส่วน Cloudflare แนะนำ <strong>Remotely-managed Tunnel</strong> สำหรับระบบทั่วไปที่ต้องการจัดการ configuration ผ่าน Dashboard, API หรือ Terraform<br><br>เอกสารอ้างอิง: <a href="https://developers.cloudflare.com/tunnel/features/locally-managed-tunnels/">Locally-managed tunnels</a></p>
+<p>เอกสารชุดนี้ใช้ <strong>Locally-managed Tunnel</strong> โดยเก็บ ingress configuration ไว้ที่ <code>/etc/cloudflared/config.yml</code> เพื่อให้คุณเห็นและตรวจสอบ routing ได้จาก command line โดยตรง ส่วน Cloudflare แนะนำ <strong>Remotely-managed Tunnel</strong> สำหรับระบบทั่วไปที่ต้องการจัดการ configuration ผ่าน Dashboard, API หรือ Terraform<br />
+<br />
+เอกสารอ้างอิง: <a href="https://developers.cloudflare.com/tunnel/features/locally-managed-tunnels/">Locally-managed tunnels</a></p>
 </aside>
 <h2 id="เป้าหมาย">เป้าหมาย</h2>
 <p>เปิด Web Server ที่มีอยู่แล้วบน Raspberry Pi ให้สามารถเข้าจาก Internet โดยไม่ต้องใช้ Public IP, DDNS หรือ Port Forwarding</p>
 <p>ตัวอย่างที่ใช้ในเอกสาร:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ค่า</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Domain</td>
 <td><code>vodun.cc</code></td>
@@ -123,7 +129,8 @@
 <td>Origin URL</td>
 <td><code>http://localhost:80</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <aside class="callout callout-info">
 <div class="callout-title">ชื่อเหล่านี้เป็นคนละค่า</div>
 <p><code>kathu</code> ในช่อง <strong>Pi hostname</strong> คือชื่อเครื่องที่ผู้ดูแลตั้งขึ้น ส่วน Tunnel name และ public hostname เป็นชื่อที่กำหนดแยกกัน ใน เอกสารนี้ตั้งให้คล้ายกันเพื่อให้จำง่าย ดูคำอธิบายทั้งหมดที่ <a href="../iot-lab-teaching-guide/00-iot-lab-teaching-guide-hub.html#ชื่อที่ใช้ในเอกสาร">ชื่อที่ใช้ในเอกสาร</a></p>
@@ -386,11 +393,14 @@ systemctl status cloudflared --no-pager</code></pre>
 <pre class="language-bash"><code>journalctl -u cloudflared -f</code></pre>
 <h2 id="19-ไฟล์สำคัญ">19. ไฟล์สำคัญ</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ไฟล์</th>
 <th>Path</th>
 <th>หน้าที่</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Cloudflare certificate</td>
 <td><code>~/.cloudflared/cert.pem</code></td>
@@ -406,7 +416,8 @@ systemctl status cloudflared --no-pager</code></pre>
 <td><code>/etc/cloudflared/config.yml</code></td>
 <td>กำหนด Tunnel และ ingress rules</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="20-สิ่งที่-cloudflare-tunnel-ไม่ต้องใช้">20. สิ่งที่ Cloudflare Tunnel ไม่ต้องใช้</h2>
 <p>ไม่ต้องมี:</p>
 <ul>
@@ -437,11 +448,14 @@ systemctl status cloudflared --no-pager</code></pre>
 <p>ตราบใดที่เครือข่ายนั้นอนุญาตให้ cloudflared เชื่อมต่อออกไปยัง Cloudflare</p>
 <h2 id="21-quick-tunnel-vs-named-tunnel">21. Quick Tunnel vs Named Tunnel</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>หัวข้อ</th>
 <th>Quick Tunnel</th>
 <th>Named Tunnel</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>วิธีเริ่ม</td>
 <td><code>cloudflared tunnel --url http://localhost:80</code></td>
@@ -462,7 +476,8 @@ systemctl status cloudflared --no-pager</code></pre>
 <td>ทดลอง, ตรวจ Network, Demo ชั่วคราว</td>
 <td>Lab จริง, Dashboard, IoT Web Application, Production/Test Server</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="22-architecture-สุดท้ายของ-lab">22. Architecture สุดท้ายของ Lab</h2>
 <p>เส้นทางการเชื่อมต่อสุดท้าย:</p>
 <pre class="language-text"><code>Internet user
@@ -486,11 +501,14 @@ Web service / Local application</code></pre>
 <h2 id="23-สำหรับ-pi-หลายเครื่อง">23. สำหรับ Pi หลายเครื่อง</h2>
 <p>สามารถใช้ Domain เดียว แล้วแยก subdomain:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Hostname</th>
 <th>Tunnel</th>
 <th>Raspberry Pi</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>pi.vodun.cc</code></td>
 <td><code>kathu</code></td>
@@ -511,15 +529,19 @@ Web service / Local application</code></pre>
 <td><code>kathu</code></td>
 <td>Pi <code>kathu</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ตัวอย่าง:</p>
 <p><code>Internet → Cloudflare → Hostname → Tunnel → Raspberry Pi</code></p>
 <p>แต่ละ Pi สามารถอยู่คนละ Network ได้ ตัวอย่าง:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Raspberry Pi</th>
 <th>Network</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>kathu</code></td>
 <td>University Wi-Fi หรือ Home Internet</td>
@@ -532,7 +554,8 @@ Web service / Local application</code></pre>
 <td><code>karon</code></td>
 <td>4G Router</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ไม่จำเป็นต้องอยู่ LAN เดียวกัน</p>
 <h2 id="ข้อควรระวังด้าน-security">ข้อควรระวังด้าน Security</h2>
 <p>ห้ามเผยแพร่:</p>
@@ -557,6 +580,7 @@ Web service / Local application</code></pre>
 <li>MQTT Management Interface</li>
 </ul>
 <p>ไม่ควรเปิด Public โดยไม่มี Authentication</p>
+
     </main>
   </div>
 </body>

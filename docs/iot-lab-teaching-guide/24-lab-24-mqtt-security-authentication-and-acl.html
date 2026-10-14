@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 24 - MQTT Security: Authentication + ACL</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -115,7 +116,7 @@ Authorization</code></pre>
 <pre class="language-text"><code>Username / Password
       +
      ACL</code></pre>
-<hr>
+<hr />
 <h2 id="24-2-วัตถุประสงค์">24.2 วัตถุประสงค์</h2>
 <p>หลังจบ LAB นี้ คุณจะสามารถ</p>
 <ul>
@@ -133,7 +134,7 @@ Authorization</code></pre>
 <li>เข้าใจ Principle of Least Privilege</li>
 <li>เข้าใจข้อจำกัดของ Username/Password เมื่อไม่มี TLS</li>
 </ul>
-<hr>
+<hr />
 <h2 id="24-3-security-model">24.3 Security Model</h2>
 <p>LAB นี้แบ่ง Security เป็นสองคำถาม</p>
 <h3 id="authentication">Authentication</h3>
@@ -149,7 +150,7 @@ Password</code></pre>
 <pre class="language-text"><code>CONNECT</code></pre>
 <p>ถ้าไม่ถูกต้อง</p>
 <pre class="language-text"><code>DENY</code></pre>
-<hr>
+<hr />
 <h3 id="authorization">Authorization</h3>
 <p>ถามว่า</p>
 <pre class="language-text"><code>&quot;คุณมีสิทธิ์ทำอะไร?&quot;</code></pre>
@@ -170,7 +171,7 @@ pkru/iot/002/data</code></pre>
 <p>นี่คือหน้าที่ของ</p>
 <pre class="language-text"><code>ACL
 Access Control List</code></pre>
-<hr>
+<hr />
 <h2 id="24-4-architecture">24.4 Architecture</h2>
 <pre class="language-text"><code>ESP32-001
    │
@@ -195,7 +196,7 @@ Gateway  Dashboard  Actuator</code></pre>
 <p>ก่อน จากนั้น Broker ตรวจสอบ</p>
 <pre class="language-text"><code>ACL</code></pre>
 <p>ทุกครั้งที่ Client พยายาม Read หรือ Write Topic</p>
-<hr>
+<hr />
 <h2 id="24-5-security-pipeline">24.5 Security Pipeline</h2>
 <pre class="language-text"><code>MQTT Client
      │
@@ -220,7 +221,7 @@ FAIL      PASS
        │          │
        X          ▼
               MQTT Topic</code></pre>
-<hr>
+<hr />
 <h2 id="24-6-ตรวจสอบ-mosquitto">24.6 ตรวจสอบ Mosquitto</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>mosquitto -h</code></pre>
@@ -232,7 +233,7 @@ FAIL      PASS
 <pre class="language-bash"><code>sudo ss -lntp | grep 1883</code></pre>
 <p>ควรเห็น Mosquitto Listen ที่ Port</p>
 <pre class="language-text"><code>1883</code></pre>
-<hr>
+<hr />
 <h2 id="24-7-สำรอง-configuration-ก่อนแก้ไข">24.7 สำรอง Configuration ก่อนแก้ไข</h2>
 <p>ก่อนทำ Security Configuration สร้าง Backup</p>
 <pre class="language-bash"><code>sudo cp -a \
@@ -248,7 +249,7 @@ FAIL      PASS
         ↓
     Roll Back
     if required</code></pre>
-<hr>
+<hr />
 <h2 id="24-8-ตรวจสอบ-configuration-ปัจจุบัน">24.8 ตรวจสอบ Configuration ปัจจุบัน</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo grep -R \
@@ -260,7 +261,7 @@ allow_anonymous
 password_file
 acl_file</code></pre>
 <p>เพื่อหลีกเลี่ยง Configuration ซ้ำหรือขัดแย้งกัน</p>
-<hr>
+<hr />
 <h2 id="24-9-สร้าง-password-file">24.9 สร้าง Password File</h2>
 <p>สร้าง Account แรก ตัวอย่าง</p>
 <pre class="language-text"><code>sensor001</code></pre>
@@ -274,7 +275,7 @@ Reenter password:</code></pre>
 <p>ข้อสำคัญ</p>
 <pre class="language-text"><code>-c</code></pre>
 <p>หมายถึงสร้าง Password File ใหม่ ดังนั้นใช้เฉพาะครั้งแรก</p>
-<hr>
+<hr />
 <h2 id="24-10-เพิ่ม-user-คนต่อไป">24.10 เพิ่ม User คนต่อไป</h2>
 <p>เพิ่ม</p>
 <pre class="language-text"><code>sensor002</code></pre>
@@ -302,7 +303,7 @@ sensor002
 sensor003
 gateway
 dashboard</code></pre>
-<hr>
+<hr />
 <h2 id="24-11-ระวัง-c">24.11 ระวัง <code>-c</code></h2>
 <p>ห้ามใช้</p>
 <pre class="language-bash"><code>mosquitto_passwd -c ...</code></pre>
@@ -312,7 +313,7 @@ dashboard</code></pre>
 <pre class="language-bash"><code>mosquitto_passwd -c FILE USER</code></pre>
 <p>User ต่อไป</p>
 <pre class="language-bash"><code>mosquitto_passwd FILE USER</code></pre>
-<hr>
+<hr />
 <h2 id="24-12-ตรวจสอบ-password-file">24.12 ตรวจสอบ Password File</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo cat /etc/mosquitto/passwd</code></pre>
@@ -323,7 +324,7 @@ sensor003:$7$...
 gateway:$7$...
 dashboard:$7$...</code></pre>
 <p>Password ไม่ได้ถูกเก็บเป็น Plain Text ไม่ควรเห็น Password จริงใน File</p>
-<hr>
+<hr />
 <h2 id="24-13-กำหนด-permission-ของ-password-file">24.13 กำหนด Permission ของ Password File</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo chown root:mosquitto \
@@ -334,7 +335,7 @@ sudo chmod 640 \
 <p>ตรวจสอบ</p>
 <pre class="language-bash"><code>ls -l /etc/mosquitto/passwd</code></pre>
 <p>Mosquitto ต้องสามารถอ่าน File ได้ แต่ไม่ควรเปิดให้ User ทั่วไปอ่านโดยไม่จำเป็น</p>
-<hr>
+<hr />
 <h2 id="24-14-สร้าง-security-configuration">24.14 สร้าง Security Configuration</h2>
 <p>สร้าง</p>
 <pre class="language-bash"><code>sudo nano \
@@ -350,16 +351,16 @@ acl_file /etc/mosquitto/acl</code></pre>
 <p>ความหมาย</p>
 <pre class="language-conf"><code>listener 1883</code></pre>
 <p>เปิด MQTT Listener Port 1883</p>
-<hr>
+<hr />
 <pre class="language-conf"><code>allow_anonymous false</code></pre>
 <p>ไม่อนุญาต Client ที่ไม่มี Authentication</p>
-<hr>
+<hr />
 <pre class="language-text"><code>password_file</code></pre>
 <p>กำหนด Username/Password Database</p>
-<hr>
+<hr />
 <pre class="language-text"><code>acl_file</code></pre>
 <p>กำหนด Authorization Rules</p>
-<hr>
+<hr />
 <h2 id="24-15-ระวัง-listener-ซ้ำ">24.15 ระวัง Listener ซ้ำ</h2>
 <p>ถ้ามี Configuration เดิม เช่น</p>
 <pre class="language-conf"><code>listener 1883</code></pre>
@@ -370,7 +371,7 @@ acl_file /etc/mosquitto/acl</code></pre>
 &quot;listener 1883&quot; \
 /etc/mosquitto</code></pre>
 <p>ถ้าพบ Listener เดิม ให้ปรับ Configuration เดิมหรือหลีกเลี่ยงการประกาศ Listener ซ้ำ เป้าหมายคือให้มี Configuration ที่ชัดเจนเพียงชุดเดียวสำหรับ Listener ที่ใช้ใน LAB</p>
-<hr>
+<hr />
 <h2 id="24-16-ออกแบบ-acl">24.16 ออกแบบ ACL</h2>
 <p>เราจะกำหนดสิทธิ์ตามบทบาท</p>
 <h3 id="sensor001">sensor001</h3>
@@ -383,7 +384,7 @@ pkru/iot/001/status</code></pre>
 <p>Receive Command</p>
 <pre class="language-text"><code>READ
 pkru/iot/001/cmd</code></pre>
-<hr>
+<hr />
 <h3 id="sensor002">sensor002</h3>
 <pre class="language-text"><code>WRITE
 pkru/iot/002/data
@@ -393,7 +394,7 @@ pkru/iot/002/status
 
 READ
 pkru/iot/002/cmd</code></pre>
-<hr>
+<hr />
 <h3 id="sensor003">sensor003</h3>
 <pre class="language-text"><code>WRITE
 pkru/iot/003/data
@@ -403,7 +404,7 @@ pkru/iot/003/status
 
 READ
 pkru/iot/003/cmd</code></pre>
-<hr>
+<hr />
 <h3 id="gateway">gateway</h3>
 <p>ต้องประมวลผลหลาย Device จึงอาจ</p>
 <pre class="language-text"><code>READ
@@ -414,7 +415,7 @@ pkru/iot/+/status
 
 WRITE
 pkru/iot/+/cmd</code></pre>
-<hr>
+<hr />
 <h3 id="dashboard">dashboard</h3>
 <p>สำหรับ LAB กำหนดให้ Dashboard</p>
 <pre class="language-text"><code>READ
@@ -426,7 +427,7 @@ pkru/iot/+/status</code></pre>
 <pre class="language-text"><code>WRITE
 pkru/iot/+/cmd</code></pre>
 <p>ไม่ควรให้สิทธิ์ Write ถ้าไม่จำเป็น</p>
-<hr>
+<hr />
 <h2 id="24-17-สร้าง-acl-file">24.17 สร้าง ACL File</h2>
 <p>สร้าง</p>
 <pre class="language-bash"><code>sudo nano /etc/mosquitto/acl</code></pre>
@@ -454,7 +455,7 @@ topic write pkru/iot/+/cmd
 user dashboard
 topic read pkru/iot/+/data
 topic read pkru/iot/+/status</code></pre>
-<hr>
+<hr />
 <h2 id="24-18-กำหนด-permission-acl-file">24.18 กำหนด Permission ACL File</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo chown root:mosquitto \
@@ -464,7 +465,7 @@ sudo chmod 640 \
 /etc/mosquitto/acl</code></pre>
 <p>ตรวจสอบ</p>
 <pre class="language-bash"><code>ls -l /etc/mosquitto/acl</code></pre>
-<hr>
+<hr />
 <h2 id="24-19-principle-of-least-privilege">24.19 Principle of Least Privilege</h2>
 <p>หลักสำคัญคือ</p>
 <pre class="language-text"><code>Client ควรได้รับสิทธิ์
@@ -481,14 +482,14 @@ Write ทุก Topic</code></pre>
 <pre class="language-text"><code>pkru/iot/002/cmd
 pkru/iot/003/cmd</code></pre>
 <p>ซึ่งไม่จำเป็น</p>
-<hr>
+<hr />
 <h2 id="24-20-ตรวจสอบ-configuration-ก่อน-restart">24.20 ตรวจสอบ Configuration ก่อน Restart</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo mosquitto \
 -c /etc/mosquitto/mosquitto.conf \
 -v</code></pre>
 <p>ถ้า Broker ตัวเดิมกำลังใช้ Port 1883 อยู่ การทดสอบแบบนี้อาจแจ้งว่า Port ถูกใช้งานแล้ว ดังนั้นอย่างน้อยควรตรวจสอบ Log หลัง Restart อย่างระมัดระวัง และเก็บ SSH Session เดิมไว้ขณะเปลี่ยน Configuration</p>
-<hr>
+<hr />
 <h2 id="24-21-restart-mosquitto">24.21 Restart Mosquitto</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo systemctl restart mosquitto</code></pre>
@@ -502,7 +503,7 @@ pkru/iot/003/cmd</code></pre>
 -n 50 \
 --no-pager</code></pre>
 <p>อย่าแก้แบบสุ่ม ให้อ่าน Error ก่อน</p>
-<hr>
+<hr />
 <h2 id="24-22-ทดสอบ-anonymous-access">24.22 ทดสอบ Anonymous Access</h2>
 <p>หลัง</p>
 <pre class="language-conf"><code>allow_anonymous false</code></pre>
@@ -515,7 +516,7 @@ pkru/iot/003/cmd</code></pre>
 <pre class="language-text"><code>Username
 Password</code></pre>
 <p>นี่เป็น Test แรกที่ต้องผ่าน</p>
-<hr>
+<hr />
 <h2 id="24-23-mqtt-cli-authentication">24.23 MQTT CLI Authentication</h2>
 <p>เพิ่ม</p>
 <pre class="language-text"><code>-u</code></pre>
@@ -529,7 +530,7 @@ Password</code></pre>
 -P &#x27;PASSWORD&#x27; \
 -v</code></pre>
 <p>หมายเหตุ การใส่ Password ด้วย <code>-P</code> สะดวกสำหรับ LAB แต่ Password อาจปรากฏใน Shell History หรือ Process Information ในบางสถานการณ์ สำหรับระบบจริงควรจัดการ Credential อย่างเหมาะสมกว่านี้</p>
-<hr>
+<hr />
 <h2 id="24-24-test-1-sensor001-publish-topic-ของตัวเอง">24.24 Test 1 - sensor001 Publish Topic ของตัวเอง</h2>
 <p>เปิด Subscriber ด้วย Gateway</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -550,7 +551,7 @@ Password</code></pre>
 <p>แสดงว่า</p>
 <pre class="language-text"><code>Authentication = PASS
 Authorization  = PASS</code></pre>
-<hr>
+<hr />
 <h2 id="24-25-test-2-sensor001-publish-topic-ของ-device-002">24.25 Test 2 - sensor001 Publish Topic ของ Device 002</h2>
 <p>ลอง</p>
 <pre class="language-bash"><code>mosquitto_pub \
@@ -565,7 +566,7 @@ Authorization  = PASS</code></pre>
 WRITE
 pkru/iot/002/data</code></pre>
 <p>ดังนั้น Message ต้องไม่ถูกส่งผ่าน Broker ไปยัง Subscriber ที่ไม่มีสิทธิ์ตาม Rule นี้ ตรวจสอบ Broker Log ประกอบการทดสอบ</p>
-<hr>
+<hr />
 <h2 id="24-26-test-3-sensor001-subscribe-command-ของตัวเอง">24.26 Test 3 - sensor001 Subscribe Command ของตัวเอง</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -583,7 +584,7 @@ pkru/iot/002/data</code></pre>
 -P &#x27;GATEWAY_PASSWORD&#x27;</code></pre>
 <p>sensor001 ควรได้รับ</p>
 <pre class="language-text"><code>pkru/iot/001/cmd ON</code></pre>
-<hr>
+<hr />
 <h2 id="24-27-test-4-sensor001-subscribe-command-ของ-device-002">24.27 Test 4 - sensor001 Subscribe Command ของ Device 002</h2>
 <p>ลอง</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -594,7 +595,7 @@ pkru/iot/002/data</code></pre>
 -v</code></pre>
 <p>sensor001 ไม่ควรได้รับ Message ของ Device 002 เพราะ ACL อนุญาตเฉพาะ</p>
 <pre class="language-text"><code>pkru/iot/001/cmd</code></pre>
-<hr>
+<hr />
 <h2 id="24-28-test-5-gateway-อ่านข้อมูลหลาย-device">24.28 Test 5 - Gateway อ่านข้อมูลหลาย Device</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -622,7 +623,7 @@ pkru/iot/002/data</code></pre>
 002</code></pre>
 <p>เพราะ ACL ให้</p>
 <pre class="language-conf"><code>topic read pkru/iot/+/data</code></pre>
-<hr>
+<hr />
 <h2 id="24-29-test-6-dashboard-read">24.29 Test 6 - Dashboard Read</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -635,7 +636,7 @@ pkru/iot/002/data</code></pre>
 <pre class="language-text"><code>WRITE cmd</code></pre>
 <p>นี่เป็นตัวอย่างของ</p>
 <pre class="language-text"><code>Read-only Client</code></pre>
-<hr>
+<hr />
 <h2 id="24-30-test-7-dashboard-พยายาม-control">24.30 Test 7 - Dashboard พยายาม Control</h2>
 <p>ลอง</p>
 <pre class="language-bash"><code>mosquitto_pub \
@@ -652,7 +653,7 @@ pkru/iot/002/data</code></pre>
 <pre class="language-text"><code>Authentication ผ่าน</code></pre>
 <p>ไม่ได้หมายความว่า</p>
 <pre class="language-text"><code>มีสิทธิ์ทุกอย่าง</code></pre>
-<hr>
+<hr />
 <h2 id="24-31-authentication-authorization">24.31 Authentication ≠ Authorization</h2>
 <p>ตัวอย่าง</p>
 <pre class="language-text"><code>Username = dashboard
@@ -672,7 +673,7 @@ Authenticated
    ACL Check
       ↓
 Permission Denied</code></pre>
-<hr>
+<hr />
 <h2 id="24-32-acl-กับ-mqtt-wildcard">24.32 ACL กับ MQTT Wildcard</h2>
 <p>ACL สามารถใช้ Topic Pattern เช่น</p>
 <pre class="language-text"><code>pkru/iot/+/data</code></pre>
@@ -683,7 +684,7 @@ Permission Denied</code></pre>
 <p>ไม่ควรใช้</p>
 <pre class="language-text"><code>pkru/iot/+/data</code></pre>
 <p>เพราะจะกว้างเกินหน้าที่</p>
-<hr>
+<hr />
 <h2 id="24-33-dynamic-acl-ด้วย-u">24.33 Dynamic ACL ด้วย <code>%u</code></h2>
 <p>Mosquitto ACL สามารถใช้ Pattern ที่อ้างอิง Username ได้ เช่น</p>
 <pre class="language-conf"><code>pattern write pkru/iot/%u/data</code></pre>
@@ -696,7 +697,7 @@ Permission Denied</code></pre>
 <p>จะเขียนได้ที่</p>
 <pre class="language-text"><code>pkru/iot/002/data</code></pre>
 <p>ช่วยลดการเขียน ACL ซ้ำจำนวนมาก</p>
-<hr>
+<hr />
 <h2 id="24-34-ออกแบบ-username-ให้สัมพันธ์กับ-device-id">24.34 ออกแบบ Username ให้สัมพันธ์กับ Device ID</h2>
 <p>ถ้าต้องการใช้ <code>%u</code> สามารถตั้ง Account เป็น</p>
 <pre class="language-text"><code>001
@@ -713,7 +714,7 @@ pattern read pkru/iot/%u/cmd</code></pre>
 WRITE pkru/iot/001/status
 READ  pkru/iot/001/cmd</code></pre>
 <p>โดยอัตโนมัติ</p>
-<hr>
+<hr />
 <h2 id="24-35-static-acl-vs-pattern-acl">24.35 Static ACL vs Pattern ACL</h2>
 <h3 id="static-acl">Static ACL</h3>
 <pre class="language-conf"><code>user sensor001
@@ -728,7 +729,7 @@ topic write pkru/iot/001/data</code></pre>
 <ul>
 <li>Device เยอะแล้ว File ยาว</li>
 </ul>
-<hr>
+<hr />
 <h3 id="pattern-acl">Pattern ACL</h3>
 <pre class="language-conf"><code>pattern write pkru/iot/%u/data</code></pre>
 <p>ข้อดี</p>
@@ -743,7 +744,7 @@ topic write pkru/iot/001/data</code></pre>
 <p>สำหรับ LAB 24 แนะนำให้เริ่มจาก</p>
 <pre class="language-text"><code>Static ACL</code></pre>
 <p>ก่อน แล้วใช้ Pattern ACL เป็นแบบฝึกหัดขั้นสูง</p>
-<hr>
+<hr />
 <h2 id="24-36-python-mqtt-authentication">24.36 Python MQTT Authentication</h2>
 <p>Python Gateway จาก LAB 20–23 ต้องเพิ่ม Credentials ก่อน</p>
 <pre class="language-text"><code>connect()</code></pre>
@@ -774,7 +775,7 @@ client.connect(
     1883,
     60
 )</code></pre>
-<hr>
+<hr />
 <h2 id="24-37-store-and-forward-ต้องเพิ่ม-authentication-เช่นกัน">24.37 Store-and-Forward ต้องเพิ่ม Authentication เช่นกัน</h2>
 <p>LAB 23 มี</p>
 <pre class="language-text"><code>local_client</code></pre>
@@ -791,7 +792,7 @@ client.connect(
     &quot;REMOTE_PASSWORD&quot;
 )</code></pre>
 <p>ไม่จำเป็นต้องใช้ Password เดียวกัน และในระบบจริงไม่ควรสมมติว่า Credential ของ Local Broker กับ Remote Broker เหมือนกัน</p>
-<hr>
+<hr />
 <h2 id="24-38-node-red-mqtt-authentication">24.38 Node-RED MQTT Authentication</h2>
 <p>ใน MQTT Broker Configuration ของ Node-RED กำหนด</p>
 <pre class="language-text"><code>Username
@@ -801,7 +802,7 @@ Password</code></pre>
 <p>สำหรับ Flow ที่อ่านข้อมูล ถ้า Flow ต้องควบคุม Device อาจใช้ Account ที่ได้รับ</p>
 <pre class="language-text"><code>WRITE cmd</code></pre>
 <p>ตาม ACL แต่ไม่ควรใช้ Account ที่มีสิทธิ์กว้างเกินความจำเป็นเพียงเพราะตั้งค่าง่าย</p>
-<hr>
+<hr />
 <h2 id="24-39-แยก-account-ตามบทบาท">24.39 แยก Account ตามบทบาท</h2>
 <p>แนวทางที่ดี</p>
 <pre class="language-text"><code>sensor001
@@ -824,17 +825,20 @@ dashboard
 <pre class="language-text"><code>READ data
 WRITE cmd</code></pre>
 <p>แยกจาก Dashboard แบบ Read-only</p>
-<hr>
+<hr />
 <h2 id="24-40-role-based-design">24.40 Role-based Design</h2>
 <p>ตัวอย่าง</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Account</th>
 <th>Read Data</th>
 <th>Write Data</th>
 <th>Read Cmd</th>
 <th>Write Cmd</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>sensor001</td>
 <td>No</td>
@@ -870,9 +874,10 @@ WRITE cmd</code></pre>
 <td>No</td>
 <td>All</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>นี่เป็นเพียงตัวอย่าง Architecture Permission จริงต้องกำหนดตามหน้าที่ของระบบ</p>
-<hr>
+<hr />
 <h2 id="24-41-device-ไม่ควร-publish-command">24.41 Device ไม่ควร Publish Command</h2>
 <p>Device 001 มีหน้าที่</p>
 <pre class="language-text"><code>Publish Data
@@ -883,7 +888,7 @@ Subscribe Command</code></pre>
 pkru/iot/001/cmd</code></pre>
 <p>เพราะ Device ไม่ใช่ Control Authority</p>
 <p>การแยกสิทธิ์แบบนี้ช่วยลดความเสียหายหาก Device Account ถูกนำไปใช้ผิดวัตถุประสงค์</p>
-<hr>
+<hr />
 <h2 id="24-42-gateway-ไม่จำเป็นต้องมี">24.42 Gateway ไม่จำเป็นต้องมี <code>#</code></h2>
 <p>วิธีง่ายแต่กว้างเกินไปคือ</p>
 <pre class="language-conf"><code>user gateway
@@ -898,7 +903,7 @@ topic read pkru/iot/+/status
 topic write pkru/iot/+/cmd</code></pre>
 <p>นี่คือ</p>
 <pre class="language-text"><code>Least Privilege</code></pre>
-<hr>
+<hr />
 <h2 id="24-43-ทดสอบ-wrong-password">24.43 ทดสอบ Wrong Password</h2>
 <p>ลอง</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -909,7 +914,7 @@ topic write pkru/iot/+/cmd</code></pre>
 -v</code></pre>
 <p>Broker ต้องไม่อนุญาตให้เชื่อมต่อสำเร็จ นี่คือ</p>
 <pre class="language-text"><code>Authentication Failure</code></pre>
-<hr>
+<hr />
 <h2 id="24-44-ทดสอบ-unknown-user">24.44 ทดสอบ Unknown User</h2>
 <p>ลอง</p>
 <pre class="language-bash"><code>mosquitto_sub \
@@ -921,7 +926,7 @@ topic write pkru/iot/+/cmd</code></pre>
 <p>Broker ต้องปฏิเสธ เพราะไม่มี Account</p>
 <pre class="language-text"><code>unknown</code></pre>
 <p>ใน Password File</p>
-<hr>
+<hr />
 <h2 id="24-45-ดู-mosquitto-log">24.45 ดู Mosquitto Log</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>journalctl \
@@ -936,7 +941,7 @@ Unauthorized Topic</code></pre>
       +
 Broker Log</code></pre>
 <p>ไม่ควรดูเพียงฝั่ง Client</p>
-<hr>
+<hr />
 <h2 id="24-46-ตรวจสอบ-client-ที่ใช้งานอยู่หลังเปิด-security">24.46 ตรวจสอบ Client ที่ใช้งานอยู่หลังเปิด Security</h2>
 <p>เมื่อเปิด</p>
 <pre class="language-conf"><code>allow_anonymous false</code></pre>
@@ -947,7 +952,7 @@ Node-RED
 Simulator
 Store-and-Forward Service</code></pre>
 <p>ดังนั้นหลังเปิด Authentication ต้องตรวจสอบทุก Component</p>
-<hr>
+<hr />
 <h2 id="24-47-migration-checklist">24.47 Migration Checklist</h2>
 <p>หลังเปิด Security ตรวจสอบ</p>
 <pre class="language-text"><code>[ ] ESP32 credentials
@@ -966,7 +971,7 @@ Store-and-Forward Service</code></pre>
 
 [ ] Dashboard ACL</code></pre>
 <p>ถ้าลืม Client ใด Client หนึ่ง ระบบส่วนนั้นอาจหยุดทำงาน</p>
-<hr>
+<hr />
 <h2 id="24-48-security-testing-ต้องทดสอบทั้ง-pass-และ-fail">24.48 Security Testing ต้องทดสอบทั้ง PASS และ FAIL</h2>
 <p>อย่าทดสอบเพียง</p>
 <pre class="language-text"><code>sensor001 → own topic → PASS</code></pre>
@@ -976,13 +981,16 @@ Store-and-Forward Service</code></pre>
 <pre class="language-text"><code>Allowed Action Works</code></pre>
 <p>และ</p>
 <pre class="language-text"><code>Forbidden Action Fails</code></pre>
-<hr>
+<hr />
 <h2 id="24-49-security-test-matrix">24.49 Security Test Matrix</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Test</th>
 <th>Expected</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Anonymous connect</td>
 <td>DENY</td>
@@ -1023,9 +1031,10 @@ Store-and-Forward Service</code></pre>
 <td>dashboard → 001/cmd</td>
 <td>DENY</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>คุณต้องทดสอบตาม Matrix นี้</p>
-<hr>
+<hr />
 <h2 id="24-50-password-authentication-ยังไม่เข้ารหัส-traffic">24.50 Password Authentication ยังไม่เข้ารหัส Traffic</h2>
 <p>จุดสำคัญมาก การเปิด</p>
 <pre class="language-text"><code>Username / Password</code></pre>
@@ -1036,7 +1045,7 @@ Port 1883</code></pre>
 <pre class="language-text"><code>Authentication
     ≠
 Encryption</code></pre>
-<hr>
+<hr />
 <h2 id="24-51-security-layers">24.51 Security Layers</h2>
 <p>ระบบสามารถแบ่งเป็น</p>
 <pre class="language-text"><code>Layer 1
@@ -1061,7 +1070,7 @@ TLS</code></pre>
 <pre class="language-text"><code>Layer 1
 Layer 2</code></pre>
 <p>ส่วน TLS สามารถเพิ่มเป็น Advanced LAB หรือส่วนขยายภายหลัง</p>
-<hr>
+<hr />
 <h2 id="24-52-port-1883-และ-8883">24.52 Port 1883 และ 8883</h2>
 <p>โดยทั่วไป</p>
 <pre class="language-text"><code>1883</code></pre>
@@ -1072,7 +1081,7 @@ Layer 2</code></pre>
 TLS Configuration
 Client Verification</code></pre>
 <p>อย่างถูกต้องด้วย</p>
-<hr>
+<hr />
 <h2 id="24-53-local-only-mqtt-ยังควรมี-authentication-หรือไม่">24.53 Local-only MQTT ยังควรมี Authentication หรือไม่</h2>
 <p>ถ้า Broker อยู่ใน LAN ที่ควบคุมได้ ความเสี่ยงต่ำกว่า Public Broker แต่ยังมีเหตุผลให้ใช้ Authentication เช่น</p>
 <ul>
@@ -1087,7 +1096,7 @@ Client Verification</code></pre>
 <pre class="language-text"><code>Internal Network</code></pre>
 <p>ไม่ได้แปลว่า</p>
 <pre class="language-text"><code>Trust Everyone</code></pre>
-<hr>
+<hr />
 <h2 id="24-54-authentication-ช่วยเรื่อง-human-error-ด้วย">24.54 Authentication ช่วยเรื่อง Human Error ด้วย</h2>
 <p>ACL ไม่ได้ช่วยเฉพาะการโจมตี แต่ช่วยป้องกัน</p>
 <pre class="language-text"><code>Configuration Error</code></pre>
@@ -1096,7 +1105,7 @@ Client Verification</code></pre>
 <p>ถ้ามี ACL Broker จะไม่ยอมให้ sensor001 เขียน Topic ของ sensor002 จึงช่วยเพิ่ม</p>
 <pre class="language-text"><code>System Integrity</code></pre>
 <p>ด้วย</p>
-<hr>
+<hr />
 <h2 id="24-55-mqtt-security-architecture">24.55 MQTT Security Architecture</h2>
 <pre class="language-text"><code>┌──────────────┐
 │ ESP32-001    │
@@ -1120,7 +1129,7 @@ Client Verification</code></pre>
    ┌────────┼────────┐
    ▼        ▼        ▼
 Gateway  Dashboard Controller</code></pre>
-<hr>
+<hr />
 <h2 id="24-56-password-ไม่ควร-hard-code-ใน-source-code">24.56 Password ไม่ควร Hard-code ใน Source Code</h2>
 <p>ตัวอย่างที่ง่ายแต่ไม่เหมาะกับ Production</p>
 <pre class="language-python"><code>mqtt_password = &quot;MyPassword123&quot;</code></pre>
@@ -1134,7 +1143,7 @@ Backup</code></pre>
 Secrets
 Source Code</code></pre>
 <p>ออกจากกัน</p>
-<hr>
+<hr />
 <h2 id="24-57-environment-file-สำหรับ-python-service">24.57 Environment File สำหรับ Python Service</h2>
 <p>สามารถสร้าง</p>
 <pre class="language-bash"><code>sudo nano \
@@ -1150,7 +1159,7 @@ sudo chmod 600 \
 /etc/iot-gateway.env</code></pre>
 <p>แล้ว Service สามารถใช้</p>
 <pre class="language-ini"><code>EnvironmentFile=/etc/iot-gateway.env</code></pre>
-<hr>
+<hr />
 <h2 id="24-58-systemd-service-พร้อม-environment-file">24.58 systemd Service พร้อม Environment File</h2>
 <p>ตัวอย่าง</p>
 <pre class="language-ini"><code>[Unit]
@@ -1180,7 +1189,7 @@ mqtt_username = os.environ[
 mqtt_password = os.environ[
     &quot;MQTT_PASSWORD&quot;
 ]</code></pre>
-<hr>
+<hr />
 <h2 id="24-59-python-credentials-จาก-environment">24.59 Python Credentials จาก Environment</h2>
 <p>ตัวอย่าง</p>
 <pre class="language-python"><code>import os
@@ -1213,7 +1222,7 @@ client.connect(
     60
 )</code></pre>
 <p>Source Code จึงไม่มี Password โดยตรง</p>
-<hr>
+<hr />
 <h2 id="24-60-หลังแก้-systemd-service">24.60 หลังแก้ systemd Service</h2>
 <p>ถ้าเพิ่ม</p>
 <pre class="language-ini"><code>EnvironmentFile=</code></pre>
@@ -1229,7 +1238,7 @@ iot-gateway</code></pre>
 <pre class="language-bash"><code>journalctl \
 -u iot-gateway \
 -n 50</code></pre>
-<hr>
+<hr />
 <h2 id="24-61-ห้ามแสดง-password-ใน-log">24.61 ห้ามแสดง Password ใน Log</h2>
 <p>ไม่ควรเขียน</p>
 <pre class="language-python"><code>print(mqtt_password)</code></pre>
@@ -1241,7 +1250,7 @@ iot-gateway</code></pre>
 <p>Log อาจถูกเก็บไว้นาน และอาจถูกผู้ใช้อื่นอ่านได้ตาม Permission ของระบบ หลักการคือ</p>
 <pre class="language-text"><code>Log Events
 Not Secrets</code></pre>
-<hr>
+<hr />
 <h2 id="24-62-เปลี่ยน-password">24.62 เปลี่ยน Password</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo mosquitto_passwd \
@@ -1249,7 +1258,7 @@ Not Secrets</code></pre>
 sensor001</code></pre>
 <p>กำหนด Password ใหม่ จากนั้น Client ที่ใช้ Password เก่าจะเชื่อมต่อไม่ได้ ต้อง Update Credential ใน Device ที่เกี่ยวข้อง นี่คือ</p>
 <pre class="language-text"><code>Credential Rotation</code></pre>
-<hr>
+<hr />
 <h2 id="24-63-ลบ-user">24.63 ลบ User</h2>
 <p>ใช้</p>
 <pre class="language-bash"><code>sudo mosquitto_passwd \
@@ -1259,7 +1268,7 @@ sensor003</code></pre>
 <p>จากนั้นตรวจสอบ ACL ด้วย ถ้า User ถูกลบจาก Password File แม้ ACL ยังมี</p>
 <pre class="language-conf"><code>user sensor003</code></pre>
 <p>Client ก็ไม่สามารถ Authenticate ด้วย Account นั้นได้ แต่ควรลบ ACL ที่ไม่ใช้เพื่อให้ Configuration สะอาดและตรวจสอบง่าย</p>
-<hr>
+<hr />
 <h2 id="24-64-เพิ่ม-device-ใหม่">24.64 เพิ่ม Device ใหม่</h2>
 <p>สมมติเพิ่ม</p>
 <pre class="language-text"><code>Device 004</code></pre>
@@ -1276,7 +1285,7 @@ topic read pkru/iot/004/cmd</code></pre>
 <pre class="language-text"><code>ALLOW
 DENY</code></pre>
 <p>ทั้งสองกรณี</p>
-<hr>
+<hr />
 <h2 id="24-65-device-provisioning">24.65 Device Provisioning</h2>
 <p>ขั้นตอนเพิ่ม Device จึงเป็น</p>
 <pre class="language-text"><code>Create Device ID
@@ -1294,7 +1303,7 @@ Test Authentication
 Test Authorization</code></pre>
 <p>นี่คือพื้นฐานของ</p>
 <pre class="language-text"><code>Device Provisioning</code></pre>
-<hr>
+<hr />
 <h2 id="24-66-แยก-identity-ของแต่ละ-device">24.66 แยก Identity ของแต่ละ Device</h2>
 <p>ไม่ควรใช้ Account เดียวกัน เช่น</p>
 <pre class="language-text"><code>iotuser</code></pre>
@@ -1305,7 +1314,7 @@ Test Authorization</code></pre>
 sensor002
 sensor003</code></pre>
 <p>หรือใช้ Identity Scheme ที่สัมพันธ์กับ Device ID</p>
-<hr>
+<hr />
 <h2 id="24-67-shared-account-ใช้ได้เมื่อใด">24.67 Shared Account ใช้ได้เมื่อใด</h2>
 <p>สำหรับ LAB เบื้องต้นหรือระบบเล็กมาก อาจใช้</p>
 <pre class="language-text"><code>iotuser</code></pre>
@@ -1317,7 +1326,7 @@ Least Privilege</code></pre>
 <p>ควรเปลี่ยนเป็น</p>
 <pre class="language-text"><code>Per-device Account</code></pre>
 <p>เพื่อให้คุณเข้าใจ Architecture ที่เหมาะกับระบบที่ขยายได้</p>
-<hr>
+<hr />
 <h2 id="24-68-security-กับ-lwt">24.68 Security กับ LWT</h2>
 <p>LAB 18 ใช้</p>
 <pre class="language-text"><code>pkru/iot/001/status</code></pre>
@@ -1330,7 +1339,7 @@ Least Privilege</code></pre>
 <p>ถูก Publish ภายใต้ Identity ของ Device ดังนั้น ACL ต้องอนุญาต</p>
 <pre class="language-conf"><code>topic write pkru/iot/001/status</code></pre>
 <p>ไม่เช่นนั้น Status Architecture อาจทำงานไม่ครบ</p>
-<hr>
+<hr />
 <h2 id="24-69-security-กับ-command">24.69 Security กับ Command</h2>
 <p>Command Topic มีความสำคัญสูงกว่า Sensor Data ในหลายระบบ เพราะ</p>
 <pre class="language-text"><code>Sensor Data</code></pre>
@@ -1344,7 +1353,7 @@ Valve OPEN</code></pre>
 <p>ดังนั้น</p>
 <pre class="language-text"><code>WRITE cmd</code></pre>
 <p>ควรให้เฉพาะ Client ที่มีหน้าที่ Control</p>
-<hr>
+<hr />
 <h2 id="24-70-security-กับ-store-and-forward">24.70 Security กับ Store-and-Forward</h2>
 <p>LAB 23 มี Remote Broker ดังนั้น Security Architecture อาจเป็น</p>
 <pre class="language-text"><code>Local Broker
@@ -1361,7 +1370,7 @@ Remote Broker</code></pre>
 <p>และ</p>
 <pre class="language-text"><code>Remote Account</code></pre>
 <p>ตามระบบ ไม่ควรใช้ Credential ชุดเดียวทุก Layer โดยไม่จำเป็น</p>
-<hr>
+<hr />
 <h2 id="24-71-security-ไม่ควรทำให้-offline-operation-หยุด">24.71 Security ไม่ควรทำให้ Offline Operation หยุด</h2>
 <p>แม้ Remote Authentication มีปัญหา เช่น</p>
 <pre class="language-text"><code>Wrong Password
@@ -1377,7 +1386,7 @@ Local Control</code></pre>
   ↓
 Keep PENDING</code></pre>
 <p>นี่เป็นการรวมแนวคิด LAB 23 กับ LAB 24</p>
-<hr>
+<hr />
 <h2 id="24-72-ตัวอย่าง-failure">24.72 ตัวอย่าง Failure</h2>
 <p>สมมติ Remote MQTT Password ถูกเปลี่ยน Gateway ใช้ Password เก่า ผล</p>
 <pre class="language-text"><code>Remote Authentication
@@ -1398,13 +1407,13 @@ PENDING</code></pre>
        ↓
       SENT</code></pre>
 <p>ระบบจึงไม่ควรทิ้ง Data เพียงเพราะ Authentication ของ Remote Service มีปัญหาชั่วคราว</p>
-<hr>
+<hr />
 <h2 id="24-73-แบบฝึกหัดที่-1-disable-anonymous">24.73 แบบฝึกหัดที่ 1 - Disable Anonymous</h2>
 <p>ตั้ง</p>
 <pre class="language-conf"><code>allow_anonymous false</code></pre>
 <p>ทดสอบ Client ที่ไม่มี Username/Password ผลต้องเป็น</p>
 <pre class="language-text"><code>DENY</code></pre>
-<hr>
+<hr />
 <h2 id="24-74-แบบฝึกหัดที่-2-authentication">24.74 แบบฝึกหัดที่ 2 - Authentication</h2>
 <p>สร้าง</p>
 <pre class="language-text"><code>sensor001
@@ -1416,7 +1425,7 @@ dashboard</code></pre>
 Wrong Password → DENY
 
 Unknown User → DENY</code></pre>
-<hr>
+<hr />
 <h2 id="24-75-แบบฝึกหัดที่-3-device-acl">24.75 แบบฝึกหัดที่ 3 - Device ACL</h2>
 <p>กำหนด</p>
 <pre class="language-text"><code>sensor001</code></pre>
@@ -1430,7 +1439,7 @@ pkru/iot/001/cmd</code></pre>
 <pre class="language-text"><code>001/data → ALLOW
 
 002/data → DENY</code></pre>
-<hr>
+<hr />
 <h2 id="24-76-แบบฝึกหัดที่-4-gateway-acl">24.76 แบบฝึกหัดที่ 4 - Gateway ACL</h2>
 <p>กำหนด</p>
 <pre class="language-text"><code>gateway</code></pre>
@@ -1447,7 +1456,7 @@ pkru/iot/+/cmd</code></pre>
 <pre class="language-text"><code>001
 002
 003</code></pre>
-<hr>
+<hr />
 <h2 id="24-77-แบบฝึกหัดที่-5-read-only-dashboard">24.77 แบบฝึกหัดที่ 5 - Read-only Dashboard</h2>
 <p>กำหนด</p>
 <pre class="language-text"><code>dashboard</code></pre>
@@ -1463,14 +1472,14 @@ pkru/iot/+/status</code></pre>
 <pre class="language-text"><code>Dashboard Read → ALLOW
 
 Dashboard Control → DENY</code></pre>
-<hr>
+<hr />
 <h2 id="24-78-แบบฝึกหัดที่-6-python-authentication">24.78 แบบฝึกหัดที่ 6 - Python Authentication</h2>
 <p>แก้</p>
 <pre class="language-text"><code>gateway.py</code></pre>
 <p>ให้ใช้ Username/Password ทดสอบว่า</p>
 <pre class="language-text"><code>Python Gateway</code></pre>
 <p>ยัง Subscribe Sensor Data และ Publish Command ได้</p>
-<hr>
+<hr />
 <h2 id="24-79-แบบฝึกหัดที่-7-environment-file">24.79 แบบฝึกหัดที่ 7 - Environment File</h2>
 <p>ย้าย</p>
 <pre class="language-text"><code>MQTT Username
@@ -1480,7 +1489,7 @@ MQTT Password</code></pre>
 <p>จากนั้น Run ผ่าน</p>
 <pre class="language-text"><code>systemd</code></pre>
 <p>ตรวจสอบว่า Service ทำงานได้</p>
-<hr>
+<hr />
 <h2 id="24-80-แบบฝึกหัดที่-8-security-test-matrix">24.80 แบบฝึกหัดที่ 8 - Security Test Matrix</h2>
 <p>ทดสอบ</p>
 <pre class="language-text"><code>Anonymous          → DENY
@@ -1505,7 +1514,7 @@ dashboard/+/data   → READ ALLOW
 
 dashboard/001/cmd  → WRITE DENY</code></pre>
 <p>บันทึกผลเป็นตาราง</p>
-<hr>
+<hr />
 <h2 id="24-81-แบบฝึกหัดขั้นสูง-pattern-acl">24.81 แบบฝึกหัดขั้นสูง - Pattern ACL</h2>
 <p>เปลี่ยน Device Account เป็น</p>
 <pre class="language-text"><code>001
@@ -1522,7 +1531,7 @@ pattern read pkru/iot/%u/cmd</code></pre>
 pkru/iot/002/data
     → DENY</code></pre>
 <p>อธิบายข้อดีของ Pattern ACL เมื่อมี Device จำนวนมาก</p>
-<hr>
+<hr />
 <h2 id="24-82-งานส่ง-lab-24">24.82 งานส่ง LAB 24</h2>
 <p>สิ่งที่ต้องส่ง:</p>
 <ol>
@@ -1548,13 +1557,15 @@ pkru/iot/002/data
 </ol>
 <pre class="language-conf"><code>   allow_anonymous false</code></pre>
 <ol>
-<li>Screenshot Anonymous Client ถูกปฏิเสธ</li>
-</ol>
-<ol>
-<li>Screenshot Wrong Password ถูกปฏิเสธ</li>
-</ol>
-<ol>
-<li>Screenshot sensor001 Publish</li>
+<li>
+<p>Screenshot Anonymous Client ถูกปฏิเสธ</p>
+</li>
+<li>
+<p>Screenshot Wrong Password ถูกปฏิเสธ</p>
+</li>
+<li>
+<p>Screenshot sensor001 Publish</p>
+</li>
 </ol>
 <pre class="language-text"><code>   pkru/iot/001/data</code></pre>
 <p>สำเร็จ</p>
@@ -1571,22 +1582,24 @@ pkru/iot/002/data
 </ol>
 <pre class="language-text"><code>   pkru/iot/002/cmd</code></pre>
 <ol>
-<li>Screenshot Gateway รับข้อมูลหลาย Device</li>
-</ol>
-<ol>
-<li>Screenshot Dashboard อ่าน Data ได้</li>
-</ol>
-<ol>
-<li>หลักฐาน Dashboard ไม่สามารถ Publish Command</li>
-</ol>
-<ol>
-<li>Screenshot Mosquitto Log</li>
-</ol>
-<ol>
-<li>Source Code Python ที่ใช้ Authentication</li>
-</ol>
-<ol>
-<li>ถ้าใช้ systemd ให้แสดง</li>
+<li>
+<p>Screenshot Gateway รับข้อมูลหลาย Device</p>
+</li>
+<li>
+<p>Screenshot Dashboard อ่าน Data ได้</p>
+</li>
+<li>
+<p>หลักฐาน Dashboard ไม่สามารถ Publish Command</p>
+</li>
+<li>
+<p>Screenshot Mosquitto Log</p>
+</li>
+<li>
+<p>Source Code Python ที่ใช้ Authentication</p>
+</li>
+<li>
+<p>ถ้าใช้ systemd ให้แสดง</p>
+</li>
 </ol>
 <pre class="language-text"><code>   EnvironmentFile</code></pre>
 <p>โดยไม่เปิดเผย Password ในรายงาน</p>
@@ -1615,7 +1628,7 @@ pkru/iot/002/data
 <ol>
 <li>อธิบายว่าเหตุใด Device แต่ละตัวควรมี Identity แยกกันในระบบที่ต้องการควบคุมสิทธิ์อย่างจริงจัง</li>
 </ol>
-<hr>
+<hr />
 <h2 id="24-83-checklist-ก่อนถือว่าผ่าน-lab">24.83 Checklist ก่อนถือว่าผ่าน LAB</h2>
 <pre class="language-text"><code>[ ] Anonymous Client ถูกปฏิเสธ
 
@@ -1655,7 +1668,7 @@ pkru/iot/002/data
         +
 Topic-level Authorization</code></pre>
 <p>ในระดับพื้นฐานแล้ว</p>
-<hr>
+<hr />
 <h2 id="24-84-สิ่งที่ต้องเข้าใจ">24.84 สิ่งที่ต้องเข้าใจ</h2>
 <p>ก่อน LAB 24</p>
 <pre class="language-text"><code>Client
@@ -1677,7 +1690,7 @@ Authorized Topics</code></pre>
 <pre class="language-text"><code>Who are you?</code></pre>
 <p>และ</p>
 <pre class="language-text"><code>What are you allowed to do?</code></pre>
-<hr>
+<hr />
 <h2 id="24-85-security-model-หลัง-lab-24">24.85 Security Model หลัง LAB 24</h2>
 <p>ตัวอย่าง Device 001</p>
 <pre class="language-text"><code>sensor001
@@ -1720,7 +1733,7 @@ Authorized Topics</code></pre>
     │
     └── READ
         pkru/iot/+/status</code></pre>
-<hr>
+<hr />
 <h2 id="24-86-ความสัมพันธ์ของ-lab-20-24">24.86 ความสัมพันธ์ของ LAB 20–24</h2>
 <p>LAB 20</p>
 <pre class="language-text"><code>Python MQTT Application
@@ -1752,7 +1765,7 @@ Multi-protocol
 Offline-capable
    ↓
 Access-controlled</code></pre>
-<hr>
+<hr />
 <h2 id="24-87-architecture-หลัง-lab-24">24.87 Architecture หลัง LAB 24</h2>
 <pre class="language-text"><code>                     IoT DEVICES
 
@@ -1799,7 +1812,7 @@ Remote MQTT</code></pre>
 Credentials
    +
 Permissions</code></pre>
-<hr>
+<hr />
 <h2 id="24-88-จุดสำคัญที่สุดของ-lab">24.88 จุดสำคัญที่สุดของ LAB</h2>
 <p>Security ของ MQTT ไม่ควรคิดเพียงว่า</p>
 <pre class="language-text"><code>&quot;ใส่ Password แล้วปลอดภัย&quot;</code></pre>
@@ -1830,7 +1843,7 @@ Dashboard
 <pre class="language-text"><code>Unauthorized Access</code></pre>
 <p>และ</p>
 <pre class="language-text"><code>Accidental Misconfiguration</code></pre>
-<hr>
+<hr />
 <h2 id="24-89-ข้อจำกัดที่ต้องจำ">24.89 ข้อจำกัดที่ต้องจำ</h2>
 <p>หลังจบ LAB 24 เรามี</p>
 <pre class="language-text"><code>Username / Password
@@ -1855,7 +1868,7 @@ Logging / Monitoring</code></pre>
 <p>LAB 24 สร้างฐานสำคัญสองส่วนแรกคือ</p>
 <pre class="language-text"><code>Authentication
 Authorization</code></pre>
-<hr>
+<hr />
 <h2 id="เชื่อมไป-lab-25-remote-access-with-cloudflare-tunnel">เชื่อมไป LAB 25 - Remote Access with Cloudflare Tunnel</h2>
 <p>หลัง LAB 24 ระบบภายใน LAN มี</p>
 <pre class="language-text"><code>MQTT Authentication
@@ -1898,6 +1911,7 @@ Raspberry Pi
 <pre class="language-text"><code>Remote Monitoring
 Remote Administration</code></pre>
 <p>ให้กับ IoT Gateway โดยยังแยกเรื่อง Remote Access ออกจาก MQTT Topic Permission อย่างชัดเจน</p>
+
     </main>
   </div>
 </body>

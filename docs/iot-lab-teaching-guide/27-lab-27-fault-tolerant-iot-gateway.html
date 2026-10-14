@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 27 - Fault-Tolerant IoT Gateway</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -723,16 +724,18 @@ Control requires MQTT</code></pre>
 <h2 id="27-38-failsafe">27.38 Failsafe</h2>
 <p>เมื่อข้อมูลที่ใช้ Control ไม่เชื่อถือได้ ระบบต้องตัดสินใจว่า Actuator ควรทำอะไร ตัวอย่าง: Temperature Sensor STALE ทางเลือก:</p>
 <ol>
-<li>Keep Last State</li>
-</ol>
-<ol>
-<li>Turn OFF</li>
-</ol>
-<ol>
-<li>Turn ON</li>
-</ol>
-<ol>
-<li>Switch to Safe Mode</li>
+<li>
+<p>Keep Last State</p>
+</li>
+<li>
+<p>Turn OFF</p>
+</li>
+<li>
+<p>Turn ON</p>
+</li>
+<li>
+<p>Switch to Safe Mode</p>
+</li>
 </ol>
 <p>ไม่มีคำตอบเดียวสำหรับทุกระบบ Failsafe ต้องกำหนดจาก</p>
 <pre class="language-text"><code>Physical System
@@ -1931,82 +1934,84 @@ Actuator</code></pre>
 <h2 id="27-96-งานส่ง-lab-27">27.96 งานส่ง LAB 27</h2>
 <p>สิ่งที่ต้องส่ง:</p>
 <ol>
-<li>Fault-Tolerant Architecture Diagram</li>
-</ol>
-<ol>
-<li>Failure Model ของระบบ</li>
-</ol>
-<ol>
-<li>รายการ Fault อย่างน้อย 8 กรณี</li>
-</ol>
-<ol>
-<li>Safe Processing Pipeline</li>
-</ol>
-<ol>
-<li>Python Gateway Code</li>
-</ol>
-<ol>
-<li>หลักฐาน VALID</li>
-</ol>
-<ol>
-<li>หลักฐาน INVALID</li>
-</ol>
-<ol>
-<li>หลักฐาน STALE</li>
-</ol>
-<ol>
-<li>หลักฐาน Device OFFLINE</li>
-</ol>
-<ol>
-<li>หลักฐานว่า Device อื่นยังทำงาน</li>
-</ol>
-<ol>
-<li>Malformed JSON Test</li>
-</ol>
-<ol>
-<li>Python Crash Test</li>
-</ol>
-<ol>
-<li>systemd Automatic Restart</li>
-</ol>
-<ol>
-<li>MQTT Broker Failure Test</li>
-</ol>
-<ol>
-<li>MQTT Reconnect Test</li>
-</ol>
-<ol>
-<li>Internet Failure Test</li>
-</ol>
-<ol>
-<li>Local Operation During Internet Failure</li>
-</ol>
-<ol>
-<li>Store-and-Forward Test</li>
-</ol>
-<ol>
-<li>Remote Recovery Test</li>
-</ol>
-<ol>
-<li>Reboot Recovery Test</li>
-</ol>
-<ol>
-<li>Gateway Health Status</li>
-</ol>
-<ol>
-<li>Failsafe Policy</li>
-</ol>
-<ol>
-<li>Fault Injection Test Matrix</li>
-</ol>
-<ol>
-<li>Detection Time อย่างน้อย 3 Failure</li>
-</ol>
-<ol>
-<li>Recovery Time อย่างน้อย 3 Failure</li>
-</ol>
-<ol>
-<li>อธิบายความแตกต่าง:</li>
+<li>
+<p>Fault-Tolerant Architecture Diagram</p>
+</li>
+<li>
+<p>Failure Model ของระบบ</p>
+</li>
+<li>
+<p>รายการ Fault อย่างน้อย 8 กรณี</p>
+</li>
+<li>
+<p>Safe Processing Pipeline</p>
+</li>
+<li>
+<p>Python Gateway Code</p>
+</li>
+<li>
+<p>หลักฐาน VALID</p>
+</li>
+<li>
+<p>หลักฐาน INVALID</p>
+</li>
+<li>
+<p>หลักฐาน STALE</p>
+</li>
+<li>
+<p>หลักฐาน Device OFFLINE</p>
+</li>
+<li>
+<p>หลักฐานว่า Device อื่นยังทำงาน</p>
+</li>
+<li>
+<p>Malformed JSON Test</p>
+</li>
+<li>
+<p>Python Crash Test</p>
+</li>
+<li>
+<p>systemd Automatic Restart</p>
+</li>
+<li>
+<p>MQTT Broker Failure Test</p>
+</li>
+<li>
+<p>MQTT Reconnect Test</p>
+</li>
+<li>
+<p>Internet Failure Test</p>
+</li>
+<li>
+<p>Local Operation During Internet Failure</p>
+</li>
+<li>
+<p>Store-and-Forward Test</p>
+</li>
+<li>
+<p>Remote Recovery Test</p>
+</li>
+<li>
+<p>Reboot Recovery Test</p>
+</li>
+<li>
+<p>Gateway Health Status</p>
+</li>
+<li>
+<p>Failsafe Policy</p>
+</li>
+<li>
+<p>Fault Injection Test Matrix</p>
+</li>
+<li>
+<p>Detection Time อย่างน้อย 3 Failure</p>
+</li>
+<li>
+<p>Recovery Time อย่างน้อย 3 Failure</p>
+</li>
+<li>
+<p>อธิบายความแตกต่าง:</p>
+</li>
 </ol>
 <pre class="language-text"><code>Fault
 Error
@@ -2250,6 +2255,7 @@ Access-controlled
 Remotely manageable
 Recoverable
 Fault-tolerant</code></pre>
+
     </main>
   </div>
 </body>

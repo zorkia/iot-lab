@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 01 - ตรวจสอบระบบ Raspberry Pi</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -132,10 +133,13 @@
 <pre class="language-bash"><code>ip route</code></pre>
 <p>ผลที่ควรตีความ:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>สิ่งที่ตรวจ</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>hostname</code></td>
 <td>ชื่อเครื่องที่ใช้เรียกใน lab</td>
@@ -148,9 +152,10 @@
 <td><code>ip route</code></td>
 <td>เส้นทางออก Internet ของ Pi</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <blockquote>
-ถ้าไม่มี IP address ให้แก้ปัญหา network ก่อน ไม่ควรข้ามไปทำ MQTT หรือ Node-RED
+<p>ถ้าไม่มี IP address ให้แก้ปัญหา network ก่อน ไม่ควรข้ามไปทำ MQTT หรือ Node-RED</p>
 </blockquote>
 <h2 id="1-5-ตรวจระบบปฏิบัติการและ-hardware">1.5 ตรวจระบบปฏิบัติการและ Hardware</h2>
 <p>ตรวจรุ่นระบบปฏิบัติการ:</p>
@@ -174,10 +179,13 @@ load สูงผิดปกติ     อาจกระทบ Node-RED หร
 <pre class="language-bash"><code>du -sh /home/piuser</code></pre>
 <p>ค่าที่ควรระวัง:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>อาการที่ต้องระวัง</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>RAM เหลือน้อยมาก</td>
 <td>Node-RED อาจช้า หรือ service restart เอง</td>
@@ -194,7 +202,8 @@ load สูงผิดปกติ     อาจกระทบ Node-RED หร
 <td>Home directory โตเร็ว</td>
 <td>log หรือ database อาจขยายตัวผิดปกติ</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="1-7-ตรวจเวลาและ-timezone">1.7 ตรวจเวลาและ Timezone</h2>
 <p>ตรวจเวลาระบบ:</p>
 <pre class="language-bash"><code>timedatectl</code></pre>
@@ -219,10 +228,13 @@ Rolling statistics ใน LAB 11 เชื่อถือได้</code></pre>
 <pre class="language-bash"><code>ping -c 4 cloudflare.com</code></pre>
 <p>แปลผล:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ผลทดสอบ</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>ping IP ได้ แต่ ping domain ไม่ได้</td>
 <td>DNS มีปัญหา</td>
@@ -235,7 +247,8 @@ Rolling statistics ใน LAB 11 เชื่อถือได้</code></pre>
 <td>ping ได้ทั้งสองแบบ</td>
 <td>พร้อมทำ lab ถัดไป</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="1-9-ตรวจ-systemd-service">1.9 ตรวจ systemd Service</h2>
 <p>คำสั่งพื้นฐานที่ต้องใช้ตลอดชุด lab:</p>
 <pre class="language-bash"><code>systemctl status ssh --no-pager
@@ -247,17 +260,20 @@ sudo systemctl stop mosquitto
 sudo systemctl restart mosquitto
 sudo systemctl enable mosquitto</code></pre>
 <blockquote>
-LAB นี้ให้เข้าใจความหมายของคำสั่งก่อน ไม่จำเป็นต้อง restart service ถ้ายังไม่มีเหตุผล
+<p>LAB นี้ให้เข้าใจความหมายของคำสั่งก่อน ไม่จำเป็นต้อง restart service ถ้ายังไม่มีเหตุผล</p>
 </blockquote>
 <h2 id="1-10-ตรวจ-port-ที่เปิดใช้งาน">1.10 ตรวจ Port ที่เปิดใช้งาน</h2>
 <p>ดู port ที่กำลัง listen:</p>
 <pre class="language-bash"><code>ss -lntp</code></pre>
 <p>ตัวอย่าง port ที่จะพบใน lab นี้และ lab ถัดไป:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Port</th>
 <th>Service</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>22</code></td>
 <td>SSH</td>
@@ -270,7 +286,8 @@ LAB นี้ให้เข้าใจความหมายของคำ�
 <td><code>1880</code></td>
 <td>Node-RED</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>กรองเฉพาะ port ที่สนใจ:</p>
 <pre class="language-bash"><code>ss -lntp | grep 1883
 ss -lntp | grep 1880</code></pre>
@@ -306,6 +323,7 @@ DNS test:
 ปัญหาที่พบ:</code></pre>
 <h2 id="1-14-เชื่อมไป-lab-ถัดไป">1.14 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 02 จะใช้ Raspberry Pi เครื่องนี้เป็น MQTT Broker ด้วย Mosquitto ดังนั้นสิ่งที่ต้องพร้อมก่อนเริ่มคือ network, time, service และ port monitoring จาก LAB นี้</p>
+
     </main>
   </div>
 </body>

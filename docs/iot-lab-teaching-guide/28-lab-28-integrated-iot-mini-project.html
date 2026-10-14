@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 28 - Integrated IoT Mini Project</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -192,13 +193,16 @@ ESP32-002 ──►│   AP    │
 <p>ใช้โครงสร้างจาก LAB 16:</p>
 <pre class="language-text"><code>pkru/iot/{device_id}/{channel}</code></pre>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>เจ้าของ Topic</th>
 <th>Data</th>
 <th>Status</th>
 <th>Command</th>
 <th>Actual State</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Device 001</td>
 <td><code>pkru/iot/001/data</code></td>
@@ -220,7 +224,8 @@ ESP32-002 ──►│   AP    │
 <td>-</td>
 <td>-</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-6-sensor-data">28.6 Sensor Data</h2>
 <p>รูปแบบหลัก</p>
 <pre class="language-json"><code>{
@@ -361,10 +366,13 @@ STALE</code></pre>
 <p>ระบบต้องตรวจสถานะ <code>ONLINE/OFFLINE</code> โดยใช้ Heartbeat, MQTT LWT หรือ Timeout</p>
 <p>ค่าตัวอย่าง:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>ระยะเวลา</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Heartbeat interval</td>
 <td>5 วินาที</td>
@@ -373,7 +381,8 @@ STALE</code></pre>
 <td>Offline timeout</td>
 <td>15 วินาที</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-16-availability-quality">28.16 Availability ≠ Quality</h2>
 <p>ต้องแยก Device Availability ออกจาก Data Quality เพราะ</p>
 <pre class="language-text"><code>ONLINE
@@ -430,10 +439,13 @@ GROUP BY device_id;</code></pre>
 <h2 id="28-21-rule-and-alert">28.21 Rule &amp; Alert</h2>
 <p>ระบบต้องมีสถานะอย่างน้อย <code>NORMAL</code>, <code>WARNING</code> และ <code>ALERT</code></p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>เงื่อนไข</th>
 <th>สถานะ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>temp &lt; 30</code></td>
 <td><code>NORMAL</code></td>
@@ -446,15 +458,19 @@ GROUP BY device_id;</code></pre>
 <td><code>temp &gt; 35</code></td>
 <td><code>ALERT</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-22-alert-ไม่เท่ากับ-control">28.22 Alert ไม่เท่ากับ Control</h2>
 <p><code>ALERT</code> คือสถานะที่ระบบตีความจากข้อมูล Sensor ส่วน <code>ON/OFF</code> คือคำสั่งควบคุม Actuator ทั้งสองอย่างจึงไม่ใช่เหตุการณ์เดียวกัน</p>
 <p>ตัวอย่างเมื่อ <code>temp = 38</code> ระบบประเมินสถานะเป็น <code>ALERT</code>:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Control Mode</th>
 <th>การทำงาน</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>AUTO</code></td>
 <td>ระบบส่งคำสั่ง <code>Fan → ON</code> ตาม Rule ที่กำหนด</td>
@@ -463,7 +479,8 @@ GROUP BY device_id;</code></pre>
 <td><code>MANUAL</code></td>
 <td>ระบบแสดง <code>ALERT</code> แต่รอให้ User เป็นผู้สั่ง <code>ON/OFF</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-23-python-gateway">28.23 Python Gateway</h2>
 <p>อย่างน้อยหนึ่งส่วนของ Processing ต้องพัฒนาด้วย Python บน Raspberry Pi ตัวอย่างงานที่เหมาะกับ Python ได้แก่:</p>
 <ul>
@@ -521,10 +538,13 @@ Actuator</code></pre>
 <h2 id="28-29-acl">28.29 ACL</h2>
 <p>Device ต้องเข้าถึงเฉพาะ Topic ที่จำเป็น โดย <code>sensor001</code> มีสิทธิ์ดังนี้:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>สิทธิ์</th>
 <th>Topic</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Write</td>
 <td><code>pkru/iot/001/data</code></td>
@@ -541,7 +561,8 @@ Actuator</code></pre>
 <td>Read</td>
 <td><code>pkru/iot/001/cmd</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ตัวอย่าง Mosquitto ACL:</p>
 <pre class="language-conf"><code>user sensor001
 topic write pkru/iot/001/data
@@ -630,10 +651,13 @@ Verify</code></pre>
 <h2 id="28-39-gateway-state">28.39 Gateway State</h2>
 <p>Gateway ต้องรายงานสถานะอย่างน้อย 3 ระดับ:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>State</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>HEALTHY</code></td>
 <td>Critical Components ทำงานปกติ</td>
@@ -646,7 +670,8 @@ Verify</code></pre>
 <td><code>FAILED</code></td>
 <td>Essential Operation ไม่สามารถทำงานได้</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-40-fault-injection-test">28.40 Fault Injection Test</h2>
 <p>คุณต้องจงใจสร้าง Failure เพื่อพิสูจน์ระบบอย่างน้อย 6 กรณี:</p>
 <ol>
@@ -704,10 +729,13 @@ Resume</code></pre>
 <h2 id="28-45-test-5-internet-failure">28.45 Test 5 - Internet Failure</h2>
 <p>ตัด Internet Upstream โดยไม่ปิด Local Network แล้วตรวจสอบผลดังนี้:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ส่วนประกอบ</th>
 <th>ผลที่คาดหวัง</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Remote Access</td>
 <td>ใช้งานไม่ได้</td>
@@ -732,7 +760,8 @@ Resume</code></pre>
 <td>Automatic Control</td>
 <td>ยังทำงาน</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ข้อมูลที่ยังส่งไปยัง Remote Destination ไม่สำเร็จต้องมีสถานะ <code>PENDING</code></p>
 <h2 id="28-46-test-6-reboot">28.46 Test 6 - Reboot</h2>
 <pre class="language-bash"><code>sudo reboot</code></pre>
@@ -765,13 +794,16 @@ SENT</code></pre>
 <h2 id="28-51-fault-test-matrix">28.51 Fault Test Matrix</h2>
 <p>คุณต้องบันทึกวิธีตรวจจับ วิธีฟื้นตัว ผลที่คาดหวัง และผลที่เกิดขึ้นจริงของแต่ละ Failure ตัวอย่าง:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Fault</th>
 <th>Detection</th>
 <th>Recovery</th>
 <th>Expected Result</th>
 <th>Actual Result</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Invalid Data</td>
 <td>Validation</td>
@@ -814,7 +846,8 @@ SENT</code></pre>
 <td>Services กลับมาทำงาน</td>
 <td>PASS</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-52-requirement-matrix">28.52 Requirement Matrix</h2>
 <p>Project ต้องผ่านอย่างน้อย</p>
 <pre class="language-text"><code>[ ] ESP32 ≥ 2
@@ -1074,10 +1107,13 @@ SENT</code></pre>
 </ol>
 <h2 id="28-74-rubric-100-คะแนน">28.74 Rubric - 100 คะแนน</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ด้านประเมิน</th>
 <th>คะแนน</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Architecture &amp; Design</td>
 <td>10</td>
@@ -1122,7 +1158,8 @@ SENT</code></pre>
 <td><strong>รวม</strong></td>
 <td><strong>100</strong></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="28-75-architecture-and-design-10">28.75 Architecture &amp; Design - 10</h2>
 <p>พิจารณาความชัดเจนของ Architecture, ความถูกต้องของ Data Path และ Control Path, การแบ่ง Component Responsibility และความเหมาะสมของ Topic Design</p>
 <h2 id="28-76-mqtt-and-multi-device-10">28.76 MQTT &amp; Multi-device - 10</h2>
@@ -1400,6 +1437,7 @@ Continue Operation</code></pre>
 <pre class="language-text"><code>Raspberry Pi IoT Lab
 LAB 01–28</code></pre>
 <p>ครบชุดแล้ว</p>
+
     </main>
   </div>
 </body>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 09 - จัดการเวลา UTC และเวลาไทย</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -117,10 +118,13 @@ SQL SELECT converts to Thai time for display</code></pre>
 <pre class="language-bash"><code>date -u</code></pre>
 <p>สิ่งที่ต้องดู:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Local time</td>
 <td>เวลาท้องถิ่นของเครื่อง</td>
@@ -137,7 +141,8 @@ SQL SELECT converts to Thai time for display</code></pre>
 <td>NTP service</td>
 <td>การ sync เวลา</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="9-5-ตรวจเวลาใน-sqlite">9.5 ตรวจเวลาใน SQLite</h2>
 <p>เปิด SQLite:</p>
 <pre class="language-bash"><code>sqlite3 /home/piuser/iot.db</code></pre>
@@ -186,10 +191,13 @@ ORDER BY created_at DESC;</code></pre>
 <h2 id="9-8-ทำไมไม่ควรเก็บเวลาไทยลงฐานข้อมูลโดยตรง">9.8 ทำไมไม่ควรเก็บเวลาไทยลงฐานข้อมูลโดยตรง</h2>
 <p>เหตุผล:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>เหตุผล</th>
 <th>รายละเอียด</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>วิเคราะห์ข้าม timezone ง่ายกว่า</td>
 <td>UTC เป็นมาตรฐานกลาง</td>
@@ -206,7 +214,8 @@ ORDER BY created_at DESC;</code></pre>
 <td>ย้ายระบบง่ายกว่า</td>
 <td>database ไม่ผูกกับ locale เดิม</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>แม้ประเทศไทยไม่มี daylight saving แต่การเก็บ UTC ยังเป็นแนวปฏิบัติที่ดีสำหรับระบบ IoT</p>
 <h2 id="9-9-ปรับ-dashboard-ให้แสดงเวลาอ่านง่าย">9.9 ปรับ Dashboard ให้แสดงเวลาอ่านง่าย</h2>
 <p>ถ้าต้องส่งเวลาไทยไป Dashboard ให้เตรียมข้อความใน Function node หรือ query SQL แล้วส่งเฉพาะเวลาที่ต้องการแสดง ตัวอย่างข้อความ:</p>
@@ -216,10 +225,13 @@ ORDER BY created_at DESC;</code></pre>
 Dashboard displays local time</code></pre>
 <h2 id="9-10-ปัญหาที่พบบ่อย">9.10 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>สาเหตุ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>เวลาดูช้ากว่าไทย 7 ชั่วโมง</td>
 <td>กำลังดู UTC โดยตรง</td>
@@ -236,7 +248,8 @@ Dashboard displays local time</code></pre>
 <td>created_at เป็น null</td>
 <td>schema table ไม่มี default เวลา</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="9-11-checklist-ก่อนจบ-lab">9.11 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>ตรวจเวลาเครื่องได้</li>
@@ -254,6 +267,7 @@ Dashboard displays local time</code></pre>
 4. สรุปว่าทำไมควรเก็บเวลาแบบ UTC</code></pre>
 <h2 id="9-13-เชื่อมไป-lab-ถัดไป">9.13 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 10 จะใช้ข้อมูลที่มี timestamp แล้วมาฝึกสืบค้นด้วย SQL เพื่อหาค่า count, average, minimum และ maximum</p>
+
     </main>
   </div>
 </body>

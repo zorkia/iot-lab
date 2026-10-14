@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 12 - แยก SQLite Write และ Statistics Flow</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -126,10 +127,13 @@ Dashboard จึงอาจได้ empty output หรือข้อมู�
 [Inject every 10s] -&gt; [Prepare SELECT] -&gt; [SQLite] -&gt; [Format Stats] -&gt; [Dashboard]</code></pre>
 <p>แบ่งเป็น 2 path หลัก:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Path</th>
 <th>หน้าที่</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Write Path</td>
 <td>รับ MQTT แล้วเขียนลง SQLite</td>
@@ -138,7 +142,8 @@ Dashboard จึงอาจได้ empty output หรือข้อมู�
 <td>Read Path</td>
 <td>อ่าน SQLite แล้วทำ statistics</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="12-5-write-path">12.5 Write Path</h2>
 <p>ต่อ flow สำหรับเขียนข้อมูล:</p>
 <pre class="language-text"><code>[MQTT In]
@@ -214,10 +219,13 @@ WHERE created_at &gt;= datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;)
 return msg;</code></pre>
 <h2 id="12-8-เหตุผลที่ต้องแยก-sqlite-write-และ-read">12.8 เหตุผลที่ต้องแยก SQLite Write และ Read</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>เหตุผล</th>
 <th>รายละเอียด</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>ลดผลข้างเคียง</td>
 <td>INSERT ไม่ไปรบกวน Dashboard</td>
@@ -234,7 +242,8 @@ return msg;</code></pre>
 <td>อ่านง่าย</td>
 <td>เห็นหน้าที่ของแต่ละส่วนได้ชัดเจน</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="12-9-วิธีจัดหน้า-flow-ใน-node-red">12.9 วิธีจัดหน้า Flow ใน Node-RED</h2>
 <p>จัดกลุ่ม node ด้วย comment หรือ group:</p>
 <pre class="language-text"><code>Group 1: MQTT Input
@@ -261,10 +270,13 @@ Format Rolling Statistics</code></pre>
 Statistics เปลี่ยนตามรอบ Inject</code></pre>
 <h2 id="12-11-ปัญหาที่พบบ่อย">12.11 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Dashboard ค่าหายหลัง INSERT</td>
 <td>เอา output SQLite Write ไปต่อ widget</td>
@@ -285,7 +297,8 @@ Statistics เปลี่ยนตามรอบ Inject</code></pre>
 <td>Debug สับสน</td>
 <td>node ไม่ได้ตั้งชื่อชัดเจน</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="12-12-checklist-ก่อนจบ-lab">12.12 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>แยก Write Path และ Read Path แล้ว</li>
@@ -304,6 +317,7 @@ Statistics เปลี่ยนตามรอบ Inject</code></pre>
 5. อธิบายว่าทำไมไม่ควรต่อ Dashboard หลัง SQLite INSERT โดยตรง</code></pre>
 <h2 id="12-14-เชื่อมไป-lab-ถัดไป">12.14 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 13 จะเพิ่ม Rule &amp; Alert Processing โดยใช้ flow ที่จัดระเบียบแล้วจาก LAB นี้ เพื่อเปลี่ยนระบบจาก monitoring ไปสู่การตัดสินใจจากข้อมูล</p>
+
     </main>
   </div>
 </body>

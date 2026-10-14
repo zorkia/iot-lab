@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>03 - Node-RED บน Raspberry Pi และเปิดใช้งานจากภายนอกผ่าน Cloudflare Tunnel</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -87,10 +88,13 @@
 <p>เอกสารนี้ต่อยอดจาก <a href="01-cloudflare-tunnel-setup.html">01 - สร้าง Cloudflare Tunnel เพื่อเปิด Web Server บน Raspberry Pi จาก Internet</a> โดยเพิ่ม Node-RED เป็นอีก origin service ภายใต้ Tunnel <code>kathu</code> เดียวกัน</p>
 <p>สรุประบบที่ใช้ในเอกสาร:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ค่า</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Application</td>
 <td>Node-RED</td>
@@ -111,7 +115,8 @@
 <td>Public URL</td>
 <td><code>https://node-red.vodun.cc</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="เป้าหมาย">เป้าหมาย</h2>
 <pre class="language-text"><code>Internet
    │
@@ -155,10 +160,13 @@ Raspberry Pi: kathu
 <h2 id="2-การเปิด-node-red-จาก-internet">2. การเปิด Node-RED จาก Internet</h2>
 <p>ระบบ <code>kathu</code> ใช้ Cloudflare Tunnel ดังนี้:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ค่า</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Tunnel name</td>
 <td><code>kathu</code></td>
@@ -167,7 +175,8 @@ Raspberry Pi: kathu
 <td>Tunnel UUID</td>
 <td>ตรวจค่าจริงด้วย <code>cloudflared tunnel list</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="3-สร้าง-dns-สำหรับ-node-red">3. สร้าง DNS สำหรับ Node-RED</h2>
 <p>บน Raspberry Pi:</p>
 <pre class="language-bash"><code>cloudflared tunnel route dns kathu node-red.vodun.cc</code></pre>
@@ -263,10 +272,13 @@ Node-RED</code></pre>
 <p>ไฟล์ตั้งค่า: <code>/home/piuser/.node-red/settings.js</code></p>
 <p>ระบบ <code>kathu</code> ได้ตั้ง Node-RED User Security ไว้แล้ว:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ค่า</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Username</td>
 <td><code>admin</code></td>
@@ -275,7 +287,8 @@ Node-RED</code></pre>
 <td>Password</td>
 <td>รหัสผ่านที่ตั้งไว้ใน Node-RED</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ดังนั้นผู้ที่ผ่าน Cloudflare Access และเปิด <code>https://node-red.vodun.cc</code></p>
 <p>ต้อง Login ด้วยบัญชี Node-RED อีกครั้งก่อนเข้า Editor การใช้ Access และ Node-RED Authentication ร่วมกันเป็นการป้องกันสองชั้น ไม่ควรปิดอย่างใดอย่างหนึ่ง</p>
 <h2 id="14-architecture-ปัจจุบัน">14. Architecture ปัจจุบัน</h2>
@@ -297,10 +310,13 @@ Node-RED</code></pre>
  Web :80        Node-RED :1880       SSH :22</code></pre>
 <h2 id="15-จุดสำคัญสำหรับการเปิดจากภายนอก">15. จุดสำคัญสำหรับการเปิดจากภายนอก</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ช่องทาง</th>
 <th>URL</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>LAN</td>
 <td><code>http://IP-RASPBERRY-PI:1880</code></td>
@@ -309,7 +325,8 @@ Node-RED</code></pre>
 <td>Internet</td>
 <td><code>https://node-red.vodun.cc</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <pre class="language-text"><code>Internet
    │
    │ HTTPS
@@ -337,6 +354,7 @@ Node-RED :1880</code></pre>
 <p>ตรวจ Tunnel</p>
 <pre class="language-bash"><code>systemctl status cloudflared --no-pager</code></pre>
 <p>เปิดจากภายนอก: <code>https://node-red.vodun.cc</code></p>
+
     </main>
   </div>
 </body>

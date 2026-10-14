@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 13 - Rule &amp; Alert Processing</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -159,10 +160,13 @@ Status
 }</code></pre>
 <p>LAB นี้ใช้ <code>temp</code> เป็นตัวแปรหลักในการทดลอง Rule Processing กำหนด Rule:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Temperature</th>
 <th>Status</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>&lt; 30 °C</code></td>
 <td>NORMAL</td>
@@ -175,10 +179,11 @@ Status
 <td><code>&gt; 35 °C</code></td>
 <td>ALERT</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>สิ่งสำคัญที่ต้องเข้าใจคือ:</p>
 <blockquote>
-Threshold เป็นกฎที่ระบบกำหนดขึ้น ไม่ใช่คุณสมบัติของ Sensor
+<p>Threshold เป็นกฎที่ระบบกำหนดขึ้น ไม่ใช่คุณสมบัติของ Sensor</p>
 </blockquote>
 <p>Sensor มีหน้าที่วัดข้อมูล ส่วน Gateway / Processing Layer มีหน้าที่ตีความข้อมูล</p>
 <h2 id="13-5-ทดสอบ-mqtt-ก่อนสร้าง-rule">13.5 ทดสอบ MQTT ก่อนสร้าง Rule</h2>
@@ -214,10 +219,13 @@ Threshold เป็นกฎที่ระบบกำหนดขึ้น ไ
    [Debug]</code></pre>
 <p>ตั้งค่า MQTT In:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>รายละเอียด</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Broker</td>
 <td><code>localhost:1883</code></td>
@@ -226,7 +234,8 @@ Threshold เป็นกฎที่ระบบกำหนดขึ้น ไ
 <td>Topic</td>
 <td><code>pkru/iot/001/data</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="13-7-temperature-rule">13.7 Temperature Rule</h2>
 <p>เพิ่ม <code>function</code> node แล้วตั้งชื่อ:</p>
 <pre class="language-text"><code>Temperature Rule</code></pre>
@@ -373,10 +382,13 @@ temp &lt;= 35      → WARNING
 temp &gt; 35       → ALERT</code></pre>
 <p>ควรทดสอบอย่างน้อย:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>temp</th>
 <th>Expected</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>29</td>
 <td>NORMAL</td>
@@ -393,7 +405,8 @@ temp &gt; 35       → ALERT</code></pre>
 <td>36</td>
 <td>ALERT</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>Boundary Test ช่วยตรวจสอบความผิดพลาดจากการใช้:</p>
 <pre class="language-text"><code>&lt;
 &lt;=
@@ -472,11 +485,14 @@ Humidity    = NORMAL
 </ol>
 <p>ตัวอย่างผลการทดสอบ:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>temp</th>
 <th>Expected</th>
 <th>Actual</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>25</td>
 <td>NORMAL</td>
@@ -502,7 +518,8 @@ Humidity    = NORMAL
 <td>ALERT</td>
 <td>ALERT</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="13-17-สิ่งที่ควรเข้าใจ">13.17 สิ่งที่ควรเข้าใจ</h2>
 <p>ก่อน LAB 13:</p>
 <pre class="language-text"><code>Sensor
@@ -599,6 +616,7 @@ MQTT Command
 Actuator</code></pre>
 <p>หรือ:</p>
 <pre class="language-text"><code>Automatic Control</code></pre>
+
     </main>
   </div>
 </body>

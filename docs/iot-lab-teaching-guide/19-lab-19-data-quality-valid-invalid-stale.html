@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 19 - Data Quality: VALID / INVALID / STALE</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -163,11 +164,14 @@ INVALID
 STALE</code></pre>
 <p>ตัวอย่าง</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Device</th>
 <th>Device Status</th>
 <th>Data Quality</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>001</td>
 <td>ONLINE</td>
@@ -188,7 +192,8 @@ STALE</code></pre>
 <td>OFFLINE</td>
 <td>STALE</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ดังนั้น Device อาจ</p>
 <pre class="language-text"><code>ONLINE + VALID</code></pre>
 <p>หรือ</p>
@@ -1014,11 +1019,14 @@ Device 002 → INVALID
 Device 003 → STALE</code></pre>
 <p>ผลที่ต้องได้</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Device</th>
 <th>Device Status</th>
 <th>Data Quality</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>001</td>
 <td>ONLINE</td>
@@ -1034,7 +1042,8 @@ Device 003 → STALE</code></pre>
 <td>ONLINE</td>
 <td>STALE</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ช่วยให้คุณเห็นความแตกต่างของ Quality State ได้ชัดเจน</p>
 <h2 id="19-41-แบบฝึกหัดที่-1-valid-range">19.41 แบบฝึกหัดที่ 1 - Valid Range</h2>
 <p>กำหนด</p>
@@ -1053,10 +1062,13 @@ Device 003 → STALE</code></pre>
 <pre class="language-text"><code>INVALID</code></pre>
 <p>ผลที่คาดหวัง</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>temp</th>
 <th>Quality</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>25</td>
 <td>VALID</td>
@@ -1081,7 +1093,8 @@ Device 003 → STALE</code></pre>
 <td>-99</td>
 <td>INVALID</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="19-42-แบบฝึกหัดที่-2-missing-data">19.42 แบบฝึกหัดที่ 2 - Missing Data</h2>
 <p>ทดสอบ</p>
 <pre class="language-json"><code>{&quot;temp&quot;:30,&quot;humi&quot;:70,&quot;light&quot;:1500}
@@ -1199,10 +1212,12 @@ light_quality</code></pre>
    002 → INVALID
    003 → STALE</code></pre>
 <ol>
-<li>แสดง Boundary Test ของ Temperature</li>
-</ol>
-<ol>
-<li>อธิบายความแตกต่างระหว่าง</li>
+<li>
+<p>แสดง Boundary Test ของ Temperature</p>
+</li>
+<li>
+<p>อธิบายความแตกต่างระหว่าง</p>
+</li>
 </ol>
 <pre class="language-text"><code>   VALID
    INVALID
@@ -1375,6 +1390,7 @@ Application Logic</code></pre>
 Auto Start / Restart
       ↓
 Autonomous IoT Gateway</code></pre>
+
     </main>
   </div>
 </body>

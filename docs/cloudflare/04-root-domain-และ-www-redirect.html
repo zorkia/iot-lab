@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>04 - Root Domain และ WWW Redirect</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -116,10 +117,13 @@ https://vodun.cc</code></pre>
 <p>เว็บไซต์จริงให้บริการที่ <code>https://vodun.cc</code> เพียงแห่งเดียว ส่วน <code>https://www.vodun.cc</code> ทำหน้าที่ redirect ไปยังโดเมนหลัก</p>
 <h2 id="tunnel-ที่ใช้">Tunnel ที่ใช้</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>รายการ</th>
 <th>ค่า</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Raspberry Pi hostname</td>
 <td><code>ranee</code></td>
@@ -140,17 +144,21 @@ https://vodun.cc</code></pre>
 <td>Configuration file</td>
 <td><code>/etc/cloudflared/config.yml</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>Locally-managed Tunnel กำหนด Published Applications หรือ ingress routes จากไฟล์ configuration บน Raspberry Pi ไม่ได้แก้รายการ routes จาก Cloudflare Dashboard โดยตรง</p>
 <p>ตรวจชื่อและ ID ของ Tunnel ที่มีอยู่ในระบบ:</p>
 <pre class="language-bash"><code>cloudflared tunnel list</code></pre>
 <p>Tunnel ID เป็นค่าประจำ Tunnel แต่ไม่ใช่ credentials อย่างไรก็ตามไม่ควรคัดลอก ID จากเอกสารไปใช้กับเครื่องอื่น ให้ใช้ค่าที่คำสั่งด้านบนแสดงสำหรับ Tunnel <code>ranee</code></p>
 <p>ก่อนเพิ่ม root domain มี Published Applications ดังนี้:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Public hostname</th>
 <th>Origin service</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>ranee.vodun.cc</code></td>
 <td><code>http://localhost:80</code></td>
@@ -163,7 +171,8 @@ https://vodun.cc</code></pre>
 <td><code>ssh-ranee.vodun.cc</code></td>
 <td><code>ssh://localhost:22</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="เพิ่ม-root-domain">เพิ่ม Root Domain</h2>
 <p>เปิดไฟล์ configuration บน Raspberry Pi <code>ranee</code>:</p>
 <pre class="language-bash"><code>sudo nano /etc/cloudflared/config.yml</code></pre>
@@ -214,10 +223,13 @@ sudo systemctl status cloudflared --no-pager</code></pre>
 <h2 id="สร้าง-dns-สำหรับ-www">สร้าง DNS สำหรับ WWW</h2>
 <p>ใน Cloudflare Dashboard ไปที่ <strong>Domains &gt; vodun.cc &gt; DNS &gt; Records &gt; Add record</strong> แล้วกำหนดค่า:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>กำหนดเป็น</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Type</td>
 <td><code>CNAME</code></td>
@@ -238,16 +250,20 @@ sudo systemctl status cloudflared --no-pager</code></pre>
 <td>TTL</td>
 <td>Auto</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p><code>www.vodun.cc</code> ต้องผ่าน Cloudflare Proxy เพื่อให้ Redirect Rule ทำงานที่ Cloudflare Edge</p>
 <h2 id="สร้าง-www-redirect">สร้าง WWW Redirect</h2>
 <p>ใน Cloudflare Dashboard ไปที่ <strong>Rules &gt; Redirect Rules &gt; Create new Single Redirect</strong> แล้วเลือก Template <strong>Redirect from WWW to root</strong></p>
 <p>กำหนดค่า:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>กำหนดเป็น</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Rule name</td>
 <td><code>Redirect www.vodun.cc to vodun.cc</code></td>
@@ -272,15 +288,19 @@ sudo systemctl status cloudflared --no-pager</code></pre>
 <td>Preserve query string</td>
 <td>เปิด</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ตรวจให้พบข้อความ <code>Rule validation passed</code> แล้วกด <strong>Deploy</strong></p>
 <h2 id="ผลของ-redirect">ผลของ Redirect</h2>
 <p>Redirect ต้องรักษา path และ query string เดิมไว้:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>URL ที่เรียก</th>
 <th>URL ปลายทาง</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>https://www.vodun.cc/</code></td>
 <td><code>https://vodun.cc/</code></td>
@@ -297,7 +317,8 @@ sudo systemctl status cloudflared --no-pager</code></pre>
 <td><code>https://www.vodun.cc/test?id=123</code></td>
 <td><code>https://vodun.cc/test?id=123</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="ทดสอบ-redirect">ทดสอบ Redirect</h2>
 <p>ทดสอบหน้าแรก:</p>
 <pre class="language-bash"><code>curl -I https://www.vodun.cc</code></pre>
@@ -339,10 +360,13 @@ sudo systemctl status cloudflared --no-pager</code></pre>
 </ul>
 <h2 id="ผลลัพธ์">ผลลัพธ์</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>บริการ</th>
 <th>URL</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>เว็บไซต์หลัก</td>
 <td><code>https://vodun.cc</code></td>
@@ -363,8 +387,10 @@ sudo systemctl status cloudflared --no-pager</code></pre>
 <td>SSH</td>
 <td><code>ssh-ranee.vodun.cc</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>แนวทางนี้ทำให้ <code>vodun.cc</code> เป็นโดเมนหลัก ขณะที่ Raspberry Pi และบริการแต่ละประเภทใช้ subdomain แยกกันภายใต้โดเมนเดียวกัน</p>
+
     </main>
   </div>
 </body>

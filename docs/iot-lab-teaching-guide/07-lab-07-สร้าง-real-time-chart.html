@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 07 - สร้าง Real-time Chart</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -173,10 +174,13 @@ done</code></pre>
 <h2 id="7-9-การอ่านกราฟ">7.9 การอ่านกราฟ</h2>
 <p>สิ่งที่ควรสังเกต:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ลักษณะกราฟ</th>
 <th>ความหมายที่เป็นไปได้</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>เส้นนิ่งนาน</td>
 <td>sensor ไม่เปลี่ยนค่า หรือข้อมูลหยุด</td>
@@ -193,13 +197,17 @@ done</code></pre>
 <td>หลายเส้นทับกัน</td>
 <td>scale ไม่เหมาะ หรือ topic ไม่ชัด</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="7-10-ปัญหาที่พบบ่อย">7.10 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Chart มีเส้นเดียว</td>
 <td><code>msg.topic</code> ไม่ต่างกัน</td>
@@ -216,7 +224,8 @@ done</code></pre>
 <td>กราฟอ่านยาก</td>
 <td>ค่าแต่ละ sensor scale ต่างกันมาก</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="7-11-checklist-ก่อนจบ-lab">7.11 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>Chart แสดงข้อมูลแบบ real-time</li>
@@ -233,6 +242,7 @@ done</code></pre>
 4. ระบุปัญหาที่พบจากการอ่านกราฟ</code></pre>
 <h2 id="7-13-เชื่อมไป-lab-ถัดไป">7.13 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 08 จะเพิ่ม database เพื่อเก็บข้อมูลย้อนหลัง เพราะ Gauge และ Chart ใน dashboard ไม่ใช่แหล่งข้อมูลถาวร</p>
+
     </main>
   </div>
 </body>

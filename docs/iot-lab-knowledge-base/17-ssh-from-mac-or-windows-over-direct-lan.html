@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>17 - SSH from Mac or Windows over Direct LAN</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -149,7 +150,7 @@ ip -br addr</code></pre>
 <li>กด <code>Win + R</code> พิมพ์ <code>ncpa.cpl</code> แล้วกด Enter</li>
 <li>คลิกขวา adapter ที่เชื่อมต่อ Internet เช่น <code>Wi-Fi</code> แล้วเลือก <code>Properties</code></li>
 <li>เปิดแท็บ <code>Sharing</code></li>
-<li>เลือก <code>Allow other network users to connect through this computer&#x27;s Internet connection</code></li>
+<li>เลือก <code>Allow other network users to connect through this computer's Internet connection</code></li>
 <li>เลือก Ethernet adapter ที่ต่อกับ Raspberry Pi แล้วกด <code>OK</code></li>
 <li>รอให้ Raspberry Pi ขอ IP address แล้วตรวจด้วย <code>arp -a</code> หรือ <code>ipconfig</code></li>
 </ol>
@@ -176,11 +177,14 @@ ip -br addr</code></pre>
 nmcli -f NAME,AUTOCONNECT,AUTOCONNECT-PRIORITY connection show</code></pre>
 <h2 id="7-สรุปค่าตัวอย่าง">7. สรุปค่าตัวอย่าง</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>ตัวอย่าง</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>User</td>
 <td><code>piuser</code></td>
@@ -201,7 +205,8 @@ nmcli -f NAME,AUTOCONNECT,AUTOCONNECT-PRIORITY connection show</code></pre>
 <td><code>22</code></td>
 <td>port มาตรฐานของ SSH server</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>คำสั่งหลักของเครื่องตัวอย่างจึงเป็น:</p>
 <pre class="language-bash"><code>ssh piuser@kathu.local</code></pre>
 <h2 id="notes-ที่เกี่ยวข้อง">Notes ที่เกี่ยวข้อง</h2>
@@ -211,6 +216,7 @@ nmcli -f NAME,AUTOCONNECT,AUTOCONNECT-PRIORITY connection show</code></pre>
 <li><a href="../cloudflare/02-ssh-cloudflare-tunnel.html">SSH Cloudflare Tunnel</a></li>
 </ul>
 <p>กลับไป <a href="../index.html">IoT Lab Overview</a></p>
+
     </main>
   </div>
 </body>

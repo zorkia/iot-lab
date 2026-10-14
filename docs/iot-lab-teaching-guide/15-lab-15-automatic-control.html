@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 15 - Automatic Control</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -187,10 +188,13 @@ OFF</code></pre>
 <h2 id="15-5-control-requirement">15.5 Control Requirement</h2>
 <p>ใน LAB นี้ใช้ LED แทน Fan / Actuator กำหนด Rule:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Temperature</th>
 <th>Action</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>&gt; 35 °C</code></td>
 <td>ON</td>
@@ -203,7 +207,8 @@ OFF</code></pre>
 <td><code>&lt; 30 °C</code></td>
 <td>OFF</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ตัวอย่าง:</p>
 <pre class="language-text"><code>temp = 38
    ↓
@@ -279,10 +284,13 @@ temp = 30-35
 KEEP PREVIOUS STATE</code></pre>
 <p>ตัวอย่าง:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Temperature</th>
 <th>Fan</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>28</td>
 <td>OFF</td>
@@ -319,7 +327,8 @@ KEEP PREVIOUS STATE</code></pre>
 <td>29</td>
 <td>OFF</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>สังเกตว่าเมื่อ Fan เปิดที่ <code>36 °C</code> อุณหภูมิลดลงเป็น:</p>
 <pre class="language-text"><code>34
 32
@@ -622,10 +631,13 @@ temp = 30-35 °C
 29</code></pre>
 <p>ผลที่ควรได้:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Temp</th>
 <th>Fan</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>28</td>
 <td>OFF</td>
@@ -662,7 +674,8 @@ temp = 30-35 °C
 <td>29</td>
 <td>OFF</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ค่าที่ <code>30 °C</code> ต้องยังเป็น <code>ON</code> เพราะเงื่อนไขปิดคือ:</p>
 <pre class="language-text"><code>temp &lt; 30</code></pre>
 <p>ไม่ใช่:</p>
@@ -682,11 +695,14 @@ temp = 30-35 °C
 </ol>
 <p>ตารางผลการทดลอง:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Temp</th>
 <th>Expected Fan</th>
 <th>Actual Fan</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>28</td>
 <td>OFF</td>
@@ -732,7 +748,8 @@ temp = 30-35 °C
 <td>OFF</td>
 <td></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="15-21-สิ่งที่ควรเข้าใจ">15.21 สิ่งที่ควรเข้าใจ</h2>
 <p>LAB 13:</p>
 <pre class="language-text"><code>Data
@@ -824,6 +841,7 @@ ESP32-100</code></pre>
 <pre class="language-text"><code>+
 #</code></pre>
 <p>อย่างเป็นระบบ</p>
+
     </main>
   </div>
 </body>

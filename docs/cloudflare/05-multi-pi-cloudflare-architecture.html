@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>05 - Multi-Pi Cloudflare Architecture</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -130,10 +131,13 @@
 <p>Tunnel หนึ่งตัวสามารถกำหนด ingress หลาย hostname เพื่อส่งไปยังหลายบริการบน Pi เดียวกัน</p>
 <p>ตัวอย่างเครื่อง <code>ranee</code>:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Public hostname</th>
 <th>Origin บน Pi</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>ranee.vodun.cc</code></td>
 <td>Nginx <code>http://localhost:80</code></td>
@@ -146,15 +150,19 @@
 <td><code>ssh-ranee.vodun.cc</code></td>
 <td>SSH <code>ssh://localhost:22</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>รูปแบบเดียวกันใช้กับเครื่องอื่นได้ เช่น:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Raspberry Pi</th>
 <th>Web</th>
 <th>Node-RED</th>
 <th>SSH</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>arjun</code></td>
 <td><code>arjun.vodun.cc</code></td>
@@ -167,14 +175,18 @@
 <td><code>node-red-kata.vodun.cc</code></td>
 <td><code>ssh-kata.vodun.cc</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="naming-convention">Naming Convention</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ประเภท</th>
 <th>รูปแบบ</th>
 <th>ตัวอย่าง</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Web หลัก</td>
 <td><code>{device}.vodun.cc</code></td>
@@ -200,7 +212,8 @@
 <td><code>{device}-setup</code></td>
 <td><code>ranee-setup</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ใช้ชื่อ device เดียวกันกับ hostname และ Tunnel เมื่อทำได้ เพื่อให้อ่าน log และ Dashboard ง่าย</p>
 <h2 id="การย้าย-pi-ไปเครือข่ายใหม่">การย้าย Pi ไปเครือข่ายใหม่</h2>
 <p>Raspberry Pi แบบ headless อาจขาดการเชื่อมต่อเมื่อ Known Wi-Fi เดิมไม่มีอยู่ในสถานที่ใหม่:</p>
@@ -247,10 +260,13 @@ Remote SSH และ Node-RED ใช้ไม่ได้</code></pre>
 </aside>
 <p>ค่าตัวอย่างของ Setup AP:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>ตัวอย่าง</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>SSID</td>
 <td><code>ranee-setup</code></td>
@@ -263,7 +279,8 @@ Remote SSH และ Node-RED ใช้ไม่ได้</code></pre>
 <td>Client address</td>
 <td><code>192.168.50.x</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>เมื่อ Setup AP ทำงาน:</p>
 <ol>
 <li>เชื่อม Notebook หรือ Mobile เข้ากับ <code>ranee-setup</code></li>
@@ -404,6 +421,7 @@ Mosquitto             Mosquitto             Mosquitto</code></pre>
 <li><a href="../iot-lab-knowledge-base/04-raspberry-pi-iot-architecture.html">Raspberry Pi IoT Architecture</a></li>
 </ul>
 <p>กลับไป <a href="../index.html">IoT Lab Overview</a></p>
+
     </main>
   </div>
 </body>

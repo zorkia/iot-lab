@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>09 - FlowFuse Dashboard</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -98,12 +99,15 @@ Change Humi  → Humidity Gauge / Chart
 Change Light → Light Gauge / Chart</code></pre>
 <p>ช่วงตัวอย่างที่ใช้ใน Lab:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Sensor</th>
 <th>Min</th>
 <th>Max</th>
 <th>Unit</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Temperature</td>
 <td>0</td>
@@ -122,7 +126,8 @@ Change Light → Light Gauge / Chart</code></pre>
 <td>1000</td>
 <td>lx</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="real-time-chart">Real-time Chart</h2>
 <p>ใช้ Line chart, X-axis แบบ Timescale และ Append ข้อมูลใหม่ จำกัดหน้าต่างเวลา เช่น 5 นาที และกำหนดชื่อ Series เป็นค่าคงที่ <code>Temperature</code>, <code>Humidity</code>, <code>Light</code> เพื่อไม่ให้ชื่อ topic MQTT กลายเป็นชื่อทุกเส้น</p>
 <h2 id="lab-ที่เกี่ยวข้อง">Lab ที่เกี่ยวข้อง</h2>
@@ -133,6 +138,7 @@ Change Light → Light Gauge / Chart</code></pre>
 <li><a href="08-node-red-mqtt.html">Node-RED MQTT</a></li>
 </ul>
 <p>กลับไป <a href="../index.html">IoT Lab Overview</a></p>
+
     </main>
   </div>
 </body>

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 08 - สร้างฐานข้อมูลและบันทึกข้อมูล MQTT ลง SQLite</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -208,10 +209,13 @@ return msg;</code></pre>
 <pre class="language-bash"><code>sqlite3 /home/piuser/iot.db &quot;SELECT * FROM sensor_data ORDER BY id DESC LIMIT 1;&quot;</code></pre>
 <h2 id="8-12-ปัญหาที่พบบ่อย">8.12 ปัญหาที่พบบ่อย</h2>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>อาการ</th>
 <th>จุดตรวจ</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>SQLite node error</td>
 <td>path database ผิด หรือ node ไม่ได้ติดตั้ง</td>
@@ -232,7 +236,8 @@ return msg;</code></pre>
 <td>SQL syntax error</td>
 <td>string ใน <code>msg.topic</code> ผิด</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="8-13-checklist-ก่อนจบ-lab">8.13 Checklist ก่อนจบ LAB</h2>
 <ul>
 <li>มีไฟล์ <code>/home/piuser/iot.db</code></li>
@@ -250,6 +255,7 @@ return msg;</code></pre>
 4. อธิบายว่า SQLite ต่างจาก Dashboard อย่างไร</code></pre>
 <h2 id="8-15-เชื่อมไป-lab-ถัดไป">8.15 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 09 จะจัดการเรื่องเวลา เพราะข้อมูลที่บันทึกลง SQLite ต้องมี timestamp ที่ตีความได้ถูกต้องทั้ง UTC และเวลาไทย</p>
+
     </main>
   </div>
 </body>

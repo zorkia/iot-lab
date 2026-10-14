@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 14 - MQTT Manual Control</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -152,10 +153,13 @@ OFF</code></pre>
 [OFF Button] ─┘</code></pre>
 <p>ตั้งค่า MQTT Out:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>รายละเอียด</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>MQTT Broker</td>
 <td><code>localhost:1883</code></td>
@@ -164,7 +168,8 @@ OFF</code></pre>
 <td>Topic</td>
 <td><code>pkru/iot/001/cmd</code></td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ON Button ส่ง:</p>
 <pre class="language-text"><code>ON</code></pre>
 <p>OFF Button ส่ง:</p>
@@ -401,6 +406,7 @@ Control
    ↓
 Physical System</code></pre>
 <p>ซึ่งเป็นพื้นฐานของ Closed-loop IoT Control System</p>
+
     </main>
   </div>
 </body>

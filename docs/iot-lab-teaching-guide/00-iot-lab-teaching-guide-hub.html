@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>IoT Lab Teaching Guide - Hub</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -90,10 +91,13 @@
 </aside>
 <p>คำที่คล้ายกันในเอกสารมีความหมายต่างกัน:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ค่า</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>kathu</code></td>
 <td>hostname ของ Raspberry Pi เครื่องหลัก</td>
@@ -118,7 +122,8 @@
 <td><code>192.168.1.50</code></td>
 <td>IP address ตัวอย่างภายใน LAN ของเครื่อง <code>kathu</code>; ค่าจริงอาจเปลี่ยนเมื่อได้รับค่าใหม่จาก DHCP</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>ถ้าใช้ Raspberry Pi เครื่องอื่น ให้แทน <code>kathu</code>, <code>192.168.1.50</code>, Tunnel name และ public hostname ด้วยค่าของเครื่องนั้น โดยตรวจ hostname และ IP ด้วย:</p>
 <pre class="language-bash"><code>hostname
 hostname -I</code></pre>
@@ -227,9 +232,9 @@ Mijia #3 ----/                                  |
 <li><strong>MQTT account สำหรับ Lab:</strong> username <code>iotuser</code> / password ที่ผู้สอนกำหนด</li>
 </ul>
 <blockquote>
-<code>192.168.1.50</code> เป็น IP ตัวอย่างของ Raspberry Pi <code>kathu</code> ใน LAN ให้ตรวจ IP ปัจจุบันด้วย <code>hostname -I</code> เพราะ DHCP อาจกำหนด address ค่าใหม่ให้เครื่อง
+<p><code>192.168.1.50</code> เป็น IP ตัวอย่างของ Raspberry Pi <code>kathu</code> ใน LAN ให้ตรวจ IP ปัจจุบันด้วย <code>hostname -I</code> เพราะ DHCP อาจกำหนด address ค่าใหม่ให้เครื่อง</p>
 </blockquote>
-<hr>
+<hr />
 <h2 id="สารบัญโน้ตย่อย">สารบัญโน้ตย่อย</h2>
 <h3 id="ภาพรวม-architecture">ภาพรวม Architecture</h3>
 <ul>
@@ -271,6 +276,7 @@ Mijia #3 ----/                                  |
 <li><a href="appendix-อ่านค่า-mijia-bthome-ผ่าน-ble.html">Appendix - อ่านค่า Mijia BTHome ผ่าน BLE</a></li>
 <li><a href="appendix-troubleshooting-checklist.html">Appendix - Troubleshooting Checklist</a></li>
 </ul>
+
     </main>
   </div>
 </body>

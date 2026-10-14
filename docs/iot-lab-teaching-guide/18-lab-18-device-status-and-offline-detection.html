@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 18 - Device Status and Offline Detection</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -509,7 +510,7 @@ ONLINE</code></pre>
 <pre class="language-text"><code>LWT</code></pre>
 <p>แนวคิดคือ ตอน Device เชื่อมต่อกับ Broker จะบอก Broker ล่วงหน้าว่า:</p>
 <blockquote>
-ถ้าการเชื่อมต่อของฉันขาดแบบผิดปกติ ให้ Broker Publish Message นี้แทนฉัน
+<p>ถ้าการเชื่อมต่อของฉันขาดแบบผิดปกติ ให้ Broker Publish Message นี้แทนฉัน</p>
 </blockquote>
 <p>ตัวอย่าง Topic:</p>
 <pre class="language-text"><code>pkru/iot/001/status</code></pre>
@@ -1030,6 +1031,7 @@ STALE</code></pre>
 <pre class="language-text"><code>Device ยังทำงานอยู่หรือไม่?
 ข้อมูลที่ได้รับยังเชื่อถือได้หรือไม่?</code></pre>
 <p>นี่คือพื้นฐานของระบบ IoT ที่สามารถตรวจสอบทั้งอุปกรณ์และคุณภาพข้อมูลได้อย่างเป็นระบบ</p>
+
     </main>
   </div>
 </body>

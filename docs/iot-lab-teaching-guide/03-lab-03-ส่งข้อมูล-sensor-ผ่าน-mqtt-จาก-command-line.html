@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LAB 03 - ส่งข้อมูล Sensor ผ่าน MQTT จาก Command Line</title>
   <link rel="stylesheet" href="../assets/site.css">
+  <script src="../assets/site.js" defer></script>
 </head>
 <body>
   <header class="topbar">
@@ -123,10 +124,13 @@ Subscriber / Node-RED ใน lab ถัดไป</code></pre>
 <pre class="language-text"><code>pkru/iot/001/data</code></pre>
 <p>โครงสร้าง topic:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>ส่วน</th>
 <th>ความหมาย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>pkru</code></td>
 <td>namespace ของ lab</td>
@@ -143,7 +147,8 @@ Subscriber / Node-RED ใน lab ถัดไป</code></pre>
 <td><code>data</code></td>
 <td>ประเภท message</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>หลักคิด:</p>
 <pre class="language-text"><code>Topic = ช่องทาง
 Payload = ข้อมูล</code></pre>
@@ -152,11 +157,14 @@ Payload = ข้อมูล</code></pre>
 <pre class="language-json"><code>{&quot;temp&quot;:28.5,&quot;humi&quot;:70,&quot;light&quot;:1200}</code></pre>
 <p>ความหมาย:</p>
 <table>
-<thead><tr>
+<thead>
+<tr>
 <th>Field</th>
 <th>ความหมาย</th>
 <th>ตัวอย่างหน่วย</th>
-</tr></thead><tbody>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><code>temp</code></td>
 <td>อุณหภูมิ</td>
@@ -172,7 +180,8 @@ Payload = ข้อมูล</code></pre>
 <td>ค่าแสง</td>
 <td>lux หรือค่าจำลอง</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <h2 id="3-6-เปิด-subscriber-เพื่อตรวจข้อมูล">3.6 เปิด Subscriber เพื่อตรวจข้อมูล</h2>
 <p>เปิด terminal แรก:</p>
 <pre class="language-bash"><code>mosquitto_sub -h localhost \
@@ -247,6 +256,7 @@ Node-RED หรือ application layer ต้องเป็นฝ่ายต�
 ข้อสรุปเรื่อง topic และ payload:</code></pre>
 <h2 id="3-14-เชื่อมไป-lab-ถัดไป">3.14 เชื่อมไป LAB ถัดไป</h2>
 <p>LAB 04 จะนำ topic และ JSON payload จาก LAB นี้ไปรับด้วย Node-RED ผ่าน MQTT In node แล้วแสดงผลใน debug sidebar</p>
+
     </main>
   </div>
 </body>
