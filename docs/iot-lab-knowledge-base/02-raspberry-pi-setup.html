@@ -111,6 +111,10 @@
 <td><code>piuser</code></td>
 </tr>
 <tr>
+<td>Hostname</td>
+<td><code>s001</code> ตามภาพ ใช้ชื่อไม่ซ้ำกันสำหรับแต่ละเครื่อง</td>
+</tr>
+<tr>
 <td>รหัสผ่านบัญชี Pi</td>
 <td>รหัสผ่านที่ตั้งไว้</td>
 </tr>
@@ -132,7 +136,7 @@
 </tr>
 </tbody>
 </table>
-<p>Hostname ใช้ <code>kathu</code> เป็นตัวอย่างให้สอดคล้องกับแล็บอื่น ชื่อนี้ไม่ใช่ค่ามาตรฐานของ Pi หากเรียนพร้อมกันหลายเครื่อง ให้ใช้ชื่อไม่ซ้ำตามที่กำหนด เช่น <code>kathu-01</code> แล้วเปลี่ยนชื่อในคำสั่ง SSH ให้ตรงกับเครื่องของตน</p>
+<p>Hostname ในหน้านี้ใช้ <code>s001</code> ตามภาพ ไม่ใช่ค่ามาตรฐานของ Pi หากเรียนพร้อมกันหลายเครื่อง ให้ใช้ชื่อไม่ซ้ำตามที่กำหนด เช่น <code>s001</code>, <code>s002</code>, <code>s003</code> แล้วเปลี่ยนชื่อในคำสั่ง SSH ให้ตรงกับเครื่องของตน หากพบชื่อเครื่องตัวอย่างอื่นในแล็บถัดไป ให้ใช้ชื่อที่ตั้งไว้จริงแทน</p>
 <h2 id="ลำดับการติดตั้งพื้นฐาน">ลำดับการติดตั้งพื้นฐาน</h2>
 <p>ก่อนเข้าสู่ MQTT, Node-RED หรือ SQLite ให้เตรียม Pi ตามลำดับนี้:</p>
 <p>เตรียม Imager บน Windows/macOS, เลือก Pi 3 และ OS Lite 64-bit, เลือก microSD, ตั้งค่าบัญชีและเครือข่าย, เขียนและตรวจสอบการ์ด, บูต Pi แล้วจึง SSH เข้าไปตรวจระบบ ขั้นตอนต่อไปนี้ไม่ได้ทำใน Docker Container</p>
@@ -159,7 +163,9 @@
 </aside>
 <p>ชื่อแท็บและปุ่มอาจต่างกันเล็กน้อยตามรุ่น Imager แต่ให้ยึดชื่ออุปกรณ์ OS และค่าการตั้งค่าตามภาพในหน้านี้</p>
 <h2 id="2-เลือก-device-เป็น-raspberry-pi-3">2. เลือก Device เป็น Raspberry Pi 3</h2>
-<p>ในหน้า Device เลือก <strong>Raspberry Pi 3</strong> ตามภาพ แล้วไปขั้นตอนถัดไป</p>
+<p>เมื่อเปิด Raspberry Pi Imager จะเห็นขั้นตอนด้านซ้าย เริ่มที่ <strong>Device</strong> เพื่อระบุรุ่นบอร์ดที่ใช้ ภาพหน้าจอนี้เป็น Imager v2.0.12 โดยยังไม่ได้เลือกรุ่น จึงเห็นปุ่ม <strong>NEXT</strong> เป็นสีเทา:</p>
+<p><img src="../assets/raspberry-pi-setup/imager-device-selection.png" alt="หน้าจอ Raspberry Pi Imager ในขั้น Device แสดงรายการรุ่น Raspberry Pi และปุ่ม NEXT ก่อนเลือกรุ่น" /></p>
+<p>คลิกรายการ <strong>Raspberry Pi 3</strong> ให้ตรงกับบอร์ดของชุดเรียน ไม่ใช่ Raspberry Pi 5 หรือ Pi 4 ที่อยู่เหนือขึ้นไป หากยังไม่เห็นรายการ ให้เลื่อนภายในรายการรุ่น เมื่อเลือกแล้วจึงกด <strong>NEXT</strong> ไปขั้น OS ภาพขยายด้านล่างช่วยให้ตรวจชื่อรายการได้ชัดเจน:</p>
 <p><img src="../assets/raspberry-pi-setup/01-device-pi-3.png" alt="Raspberry Pi Imager เลือก Device เป็น Raspberry Pi 3" /></p>
 <p>รายการนี้เป็นกลุ่ม Pi 3 ไม่ใช่ Pi 4 หรือ Pi 5 ให้ตรวจรุ่นที่พิมพ์อยู่บนบอร์ดก่อนเริ่ม หากบอร์ดไม่ใช่ Pi 3 อย่าเลือกให้ตรงภาพโดยไม่ตรวจฮาร์ดแวร์จริง</p>
 <h2 id="3-เลือก-raspberry-pi-os-lite-64-bit">3. เลือก Raspberry Pi OS Lite (64-bit)</h2>
@@ -178,7 +184,10 @@
 </ol>
 <p>ถ้ามีตัวเลือก <strong>Exclude system drives</strong> ให้คงการป้องกันนี้ไว้</p>
 <h2 id="5-ตั้ง-hostname-และเขตเวลา">5. ตั้ง Hostname และเขตเวลา</h2>
-<p>ในหน้า Hostname ใช้ชื่อของเครื่อง เช่น <code>kathu</code> ชื่อควรจำง่ายและไม่ซ้ำกับ Pi เครื่องอื่นบนเครือข่ายเดียวกัน</p>
+<p>ในขั้น <strong>Customisation: Choose hostname</strong> กรอก <code>s001</code> ตามภาพ หรือชื่อประจำเครื่องที่ผู้สอนกำหนด Hostname คือชื่อของ Raspberry Pi บนเครือข่าย ไม่ใช่ชื่อผู้ใช้ <code>piuser</code> และไม่ใช่ชื่อ Wi-Fi <code>phuket-iot</code>:</p>
+<p><img src="../assets/raspberry-pi-setup/imager-hostname-s001.png" alt="หน้า Customisation Choose hostname ใน Raspberry Pi Imager กรอกชื่อเครื่อง s001" /></p>
+<p>ใช้ตัวอักษรภาษาอังกฤษ ตัวเลข และขีดกลาง <code>-</code> โดยไม่เว้นวรรค สำหรับชุดเรียนแนะนำตัวพิมพ์เล็กและชื่อสั้นที่จำง่าย แต่ละเครื่องต้องมีชื่อไม่ซ้ำกัน เช่น <code>s001</code> และ <code>s002</code> อย่าให้นักศึกษาทุกเครื่องตั้งเป็น <code>s001</code> พร้อมกัน</p>
+<p>ในช่องนี้ใส่เพียง <code>s001</code> ไม่ต้องเติม <code>.local</code> ส่วนเวลาเชื่อมต่อ SSH บน Notebook จะใช้ <code>ssh piuser@s001.local</code> ถ้าเครื่องมี OS อยู่แล้วและจะเปลี่ยน hostname ภายหลัง ไม่จำเป็นต้องเขียน microSD ใหม่เพียงเพื่อเปลี่ยนชื่อ</p>
 <p>ในหน้า Localisation เลือกประเทศ/เมืองให้ตรงสถานที่ใช้งาน สำหรับห้องเรียนในประเทศไทยใช้ <strong>Thailand / Bangkok</strong> และเขตเวลา <strong>Asia/Bangkok</strong> ส่วน keyboard layout ให้ตรงกับคีย์บอร์ดที่ใช้ เช่น US</p>
 <p>การตั้งประเทศเกี่ยวข้องกับช่องสัญญาณ Wi-Fi ที่อนุญาตด้วย จึงไม่ควรปล่อยเป็นประเทศอื่นเพียงเพราะเป็นค่าเดิมที่โปรแกรมจำไว้</p>
 <h2 id="6-สร้างผู้ใช้-piuser">6. สร้างผู้ใช้ piuser</h2>
@@ -281,12 +290,12 @@
 <p>OS Lite ไม่มี Desktop หากต่อจอจะเห็นหน้าจอข้อความหรือ login prompt ซึ่งเป็นพฤติกรรมปกติ ไม่ได้แปลว่าติดตั้งผิด</p>
 <h2 id="12-ssh-เข้า-pi-จาก-windows-macos">12. SSH เข้า Pi จาก Windows/macOS</h2>
 <p>เปิด <strong>Windows Terminal / PowerShell</strong> บน Windows หรือ <strong>Terminal</strong> บน macOS แล้วรันคำสั่งนี้บน Notebook:</p>
-<pre class="language-bash"><code>ssh piuser@kathu.local</code></pre>
-<p>หากตั้ง hostname อื่น ให้แทน <code>kathu</code> ด้วยชื่อที่ตั้งไว้ เมื่อเชื่อมต่อครั้งแรก ให้ตรวจ fingerprint ของเครื่องกับผู้สอนหรือจากจอ Pi ก่อนตอบ <code>yes</code> แล้วใส่รหัสผ่านบัญชี <code>piuser</code> ระหว่างพิมพ์รหัสผ่าน Terminal จะไม่แสดงจุดหรือดอกจัน เป็นเรื่องปกติ</p>
+<pre class="language-bash"><code>ssh piuser@s001.local</code></pre>
+<p>หากตั้ง hostname อื่น ให้แทน <code>s001</code> ด้วยชื่อที่ตั้งไว้ เมื่อเชื่อมต่อครั้งแรก ให้ตรวจ fingerprint ของเครื่องกับผู้สอนหรือจากจอ Pi ก่อนตอบ <code>yes</code> แล้วใส่รหัสผ่านบัญชี <code>piuser</code> ระหว่างพิมพ์รหัสผ่าน Terminal จะไม่แสดงจุดหรือดอกจัน เป็นเรื่องปกติ</p>
 <p>หากชื่อ <code>.local</code> หาไม่พบ ให้ดู IP ของ Pi จากหน้า DHCP client ของ Router หรือใช้จอกับคีย์บอร์ดบน Pi รัน <code>hostname -I</code> แล้ว SSH ด้วย IP จริง เช่น:</p>
 <pre class="language-bash"><code>ssh piuser@192.168.1.50</code></pre>
 <p><code>192.168.1.50</code> เป็นตัวอย่าง ไม่ใช่ IP ที่ทุกเครื่องจะได้ เมื่อเข้าได้แล้วควรเห็น prompt คล้าย:</p>
-<pre class="language-text"><code>piuser@kathu:~ $</code></pre>
+<pre class="language-text"><code>piuser@s001:~ $</code></pre>
 <p>ดูการติดตั้ง OpenSSH Client บน Windows และวิธีต่อ LAN โดยตรงเพิ่มเติมใน <a href="17-ssh-from-mac-or-windows-over-direct-lan.html">SSH from Mac or Windows over Direct LAN</a></p>
 <h2 id="13-ตรวจว่า-os-และบัญชีตรงกับที่เลือก">13. ตรวจว่า OS และบัญชีตรงกับที่เลือก</h2>
 <p>คำสั่งต่อไปนี้รันภายใน SSH session บน Raspberry Pi ไม่ใช่บน Notebook:</p>
@@ -312,7 +321,7 @@ systemctl status ssh --no-pager</code></pre>
 </tr>
 <tr>
 <td><code>hostname</code></td>
-<td>ชื่อที่ตั้ง เช่น <code>kathu</code></td>
+<td>ชื่อที่ตั้ง เช่น <code>s001</code></td>
 </tr>
 <tr>
 <td><code>hostname -I</code></td>
