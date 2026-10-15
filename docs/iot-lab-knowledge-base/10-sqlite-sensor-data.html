@@ -106,6 +106,31 @@ sqlite3 --version</code></pre>
     light REAL
 );</code></pre>
 <p>เก็บเวลาเป็น UTC เพื่อให้ข้อมูลสม่ำเสมอ แล้วแปลงเป็นเวลาท้องถิ่นเมื่อนำเสนอ</p>
+<h2 id="เพิ่มข้อมูลตัวอย่าง-10-แถว">เพิ่มข้อมูลตัวอย่าง 10 แถว</h2>
+<p>หลังสร้างตาราง <code>sensor_data</code> แล้ว เปิดฐานข้อมูลจาก Terminal บน Raspberry Pi:</p>
+<pre class="language-bash"><code>sqlite3 /home/piuser/iot.db</code></pre>
+<p>ที่ prompt <code>sqlite&gt;</code> วางคำสั่ง SQL ต่อไปนี้ทั้งชุด ไม่ต้องพิมพ์คำว่า <code>sqlite&gt;</code> นำหน้า ค่าทั้งหมดเป็นข้อมูลจำลองสำหรับทดลอง ไม่ใช่ค่าที่อ่านจาก sensor จริง โดย <code>temp</code> เป็นอุณหภูมิหน่วย °C, <code>humi</code> เป็นความชื้นสัมพัทธ์หน่วย % และ <code>light</code> สมมติเป็นค่าความสว่างหน่วย lux:</p>
+<pre class="language-sql"><code>INSERT INTO sensor_data (timestamp, temp, humi, light)
+VALUES
+    (datetime(&#x27;now&#x27;, &#x27;-9 minutes&#x27;), 28.1, 65.0, 120.0),
+    (datetime(&#x27;now&#x27;, &#x27;-8 minutes&#x27;), 28.3, 64.8, 135.0),
+    (datetime(&#x27;now&#x27;, &#x27;-7 minutes&#x27;), 28.5, 64.5, 150.0),
+    (datetime(&#x27;now&#x27;, &#x27;-6 minutes&#x27;), 28.7, 64.2, 165.0),
+    (datetime(&#x27;now&#x27;, &#x27;-5 minutes&#x27;), 29.0, 63.8, 180.0),
+    (datetime(&#x27;now&#x27;, &#x27;-4 minutes&#x27;), 29.2, 63.5, 200.0),
+    (datetime(&#x27;now&#x27;, &#x27;-3 minutes&#x27;), 29.4, 63.0, 225.0),
+    (datetime(&#x27;now&#x27;, &#x27;-2 minutes&#x27;), 29.1, 63.4, 210.0),
+    (datetime(&#x27;now&#x27;, &#x27;-1 minute&#x27;),  28.8, 64.0, 190.0),
+    (datetime(&#x27;now&#x27;),              28.6, 64.3, 175.0);</code></pre>
+<p>ไม่ต้องใส่ <code>id</code> เพราะ SQLite กำหนดให้อัตโนมัติ ส่วน <code>datetime('now', ...)</code> สร้างเวลา UTC ย้อนหลังจากเวลาที่รันจริง แถวละ 1 นาที จึงใช้ทดลอง query ช่วง 5 นาทีล่าสุดใน <a href="11-sql-statistics.html">SQL Statistics</a> ได้ทันที หากทิ้งไว้นานข้อมูลชุดนี้จะอยู่นอกช่วง 5 นาทีตามปกติ</p>
+<p>ตรวจจำนวนแถวที่เพิ่มทันทีหลังคำสั่ง INSERT:</p>
+<pre class="language-sql"><code>SELECT changes() AS inserted_rows;</code></pre>
+<p>ควรได้ <code>10</code> จากนั้นแสดงข้อมูล 10 แถวที่เพิ่งเพิ่ม:</p>
+<pre class="language-sql"><code>SELECT id, timestamp, temp, humi, light
+FROM sensor_data
+ORDER BY id DESC
+LIMIT 10;</code></pre>
+<p>คำสั่ง INSERT นี้เพิ่มข้อมูลใหม่ 10 แถวทุกครั้งที่รัน ไม่ลบหรือเขียนทับแถวเดิม หากมีข้อมูลอยู่แล้ว <code>id</code> จะนับต่อจากข้อมูลเดิม ไม่จำเป็นต้องเริ่มที่ 1</p>
 <h2 id="ตรวจข้อมูลจาก-command-line">ตรวจข้อมูลจาก Command Line</h2>
 <pre class="language-bash"><code>sqlite3 /home/piuser/iot.db</code></pre>
 <pre class="language-sql"><code>.tables
