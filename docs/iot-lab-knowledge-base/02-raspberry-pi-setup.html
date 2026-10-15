@@ -84,35 +84,309 @@
     <main class="content">
       <h1 id="raspberry-pi-setup">Raspberry Pi Setup</h1>
 <nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="01-installation-roadmap.html">ก่อนหน้า: 01 - Installation Roadmap</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="03-raspberry-pi-network-and-wi-fi.html">ถัดไป: 03 - Raspberry Pi Network and Wi-Fi</a></nav>
-<p>รายการตรวจพื้นฐานก่อนเริ่ม IoT Lab เพื่อยืนยันว่าเครื่องมีทรัพยากรเพียงพอ และ service ที่จำเป็นทำงานตามปกติ</p>
+<p>เตรียม Raspberry Pi จริงตั้งแต่ติดตั้งระบบปฏิบัติการลง microSD จนถึง SSH เข้าเครื่องครั้งแรก เพื่อให้พร้อมเรียน MQTT, Node-RED, SQLite และ Python ในแล็บถัดไป ใช้แบบ headless คือไม่ต้องต่อจอ คีย์บอร์ด หรือเมาส์กับ Pi ระหว่างใช้งานตามปกติ</p>
+<p>ค่าของชุดเรียนนี้ยึดตามภาพ Raspberry Pi Imager ที่ให้มา:</p>
+<table>
+<thead>
+<tr>
+<th>รายการ</th>
+<th>ค่าที่เลือก</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Device</td>
+<td>Raspberry Pi 3</td>
+</tr>
+<tr>
+<td>หมวด OS</td>
+<td>Raspberry Pi OS (other)</td>
+</tr>
+<tr>
+<td>OS</td>
+<td>Raspberry Pi OS Lite (64-bit), Debian Trixie</td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>piuser</code></td>
+</tr>
+<tr>
+<td>รหัสผ่านบัญชี Pi</td>
+<td>รหัสผ่านที่ตั้งไว้</td>
+</tr>
+<tr>
+<td>Wi-Fi</td>
+<td>SECURE NETWORK, SSID <code>phuket-iot</code></td>
+</tr>
+<tr>
+<td>Hidden SSID</td>
+<td>ไม่เลือก สำหรับเครือข่ายที่ประกาศชื่อ SSID ตามปกติ</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>Enable SSH และ Use password authentication</td>
+</tr>
+<tr>
+<td>Raspberry Pi Connect</td>
+<td>ปิด</td>
+</tr>
+</tbody>
+</table>
+<p>Hostname ใช้ <code>kathu</code> เป็นตัวอย่างให้สอดคล้องกับแล็บอื่น ชื่อนี้ไม่ใช่ค่ามาตรฐานของ Pi หากเรียนพร้อมกันหลายเครื่อง ให้ใช้ชื่อไม่ซ้ำตามที่กำหนด เช่น <code>kathu-01</code> แล้วเปลี่ยนชื่อในคำสั่ง SSH ให้ตรงกับเครื่องของตน</p>
 <h2 id="ลำดับการติดตั้งพื้นฐาน">ลำดับการติดตั้งพื้นฐาน</h2>
 <p>ก่อนเข้าสู่ MQTT, Node-RED หรือ SQLite ให้เตรียม Pi ตามลำดับนี้:</p>
+<p>เตรียม Imager บน Windows/macOS, เลือก Pi 3 และ OS Lite 64-bit, เลือก microSD, ตั้งค่าบัญชีและเครือข่าย, เขียนและตรวจสอบการ์ด, บูต Pi แล้วจึง SSH เข้าไปตรวจระบบ ขั้นตอนต่อไปนี้ไม่ได้ทำใน Docker Container</p>
+<h2 id="1-เตรียมอุปกรณ์และ-raspberry-pi-imager">1. เตรียมอุปกรณ์และ Raspberry Pi Imager</h2>
+<ul>
+<li>Raspberry Pi 3 ที่จะใช้เรียน</li>
+<li>microSD สำหรับติดตั้ง OS และเครื่องอ่านการ์ด ชุดแล็บนี้แนะนำ 32 GB ขึ้นไปเพื่อมีพื้นที่สำหรับฐานข้อมูลและ log</li>
+<li>แหล่งจ่ายไฟ micro USB ที่เหมาะกับ Pi 3 เช่น 5 V 2.5 A และสายไฟที่จ่ายกระแสได้เพียงพอ</li>
+<li>Notebook Windows หรือ Mac ที่ต่อ Internet ได้สำหรับดาวน์โหลดและเขียน image</li>
+<li>ข้อมูล Wi-Fi <code>phuket-iot</code> และรหัสผ่านเครือข่าย หากไม่ได้อยู่ในห้องเรียนให้ใช้เครือข่ายที่เข้าถึงได้จริงแทน</li>
+</ul>
+<p>ดาวน์โหลด <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager จากเว็บไซต์ Raspberry Pi</a> แล้วติดตั้งบน Notebook จากนั้นเปิดโปรแกรมและเสียบ microSD ผ่านเครื่องอ่านการ์ด</p>
+<aside class="callout callout-warning">
+<div class="callout-title">สำรองข้อมูลในการ์ดก่อน</div>
+<p>การเขียน OS จะลบข้อมูลบนอุปกรณ์ปลายทางทั้งหมด ต้องใช้การ์ดที่สำรองข้อมูลแล้ว และตรวจชื่อกับความจุให้ถูกต้อง ไม่เลือกดิสก์ระบบของ Notebook หรือไดรฟ์สำรองข้อมูล</p>
+</aside>
+<p>ชื่อแท็บและปุ่มอาจต่างกันเล็กน้อยตามรุ่น Imager แต่ให้ยึดชื่ออุปกรณ์ OS และค่าการตั้งค่าตามภาพในหน้านี้</p>
+<h2 id="2-เลือก-device-เป็น-raspberry-pi-3">2. เลือก Device เป็น Raspberry Pi 3</h2>
+<p>ในหน้า Device เลือก <strong>Raspberry Pi 3</strong> ตามภาพ แล้วไปขั้นตอนถัดไป</p>
+<p><img src="../assets/raspberry-pi-setup/01-device-pi-3.png" alt="Raspberry Pi Imager เลือก Device เป็น Raspberry Pi 3" /></p>
+<p>รายการนี้เป็นกลุ่ม Pi 3 ไม่ใช่ Pi 4 หรือ Pi 5 ให้ตรวจรุ่นที่พิมพ์อยู่บนบอร์ดก่อนเริ่ม หากบอร์ดไม่ใช่ Pi 3 อย่าเลือกให้ตรงภาพโดยไม่ตรวจฮาร์ดแวร์จริง</p>
+<h2 id="3-เลือก-raspberry-pi-os-lite-64-bit">3. เลือก Raspberry Pi OS Lite (64-bit)</h2>
+<p>ในหน้า OS เปิดหมวด <strong>Raspberry Pi OS (other)</strong>:</p>
+<p><img src="../assets/raspberry-pi-setup/02-os-other.png" alt="เปิดหมวด Raspberry Pi OS other" /></p>
+<p>จากนั้นเลือก <strong>Raspberry Pi OS Lite (64-bit)</strong> ซึ่งในภาพระบุว่าเป็น Debian Trixie และไม่มี desktop environment:</p>
+<p><img src="../assets/raspberry-pi-setup/03-os-lite-64-bit.png" alt="เลือก Raspberry Pi OS Lite 64-bit ที่ระบุ Debian Trixie" /></p>
+<p><strong>Lite</strong> ไม่มีหน้าจอ Desktop แบบกราฟิก แต่ยังใช้ Linux, SSH และบริการ IoT ได้ ส่วน <strong>64-bit</strong> คือสถาปัตยกรรมของ OS ไม่ใช่ความจุของการ์ด จึงอย่าเลือก Lite (32-bit), รุ่น Desktop หรือ Legacy แทนสำหรับชุดเรียนนี้</p>
+<p>วันเผยแพร่ <code>2026-10-06</code> และขนาดดาวน์โหลดในภาพเป็นข้อมูลของ image ที่ถ่ายไว้ หากรายการอัปเดต ให้ตรวจชื่อ Lite, 64-bit และฐาน Debian Trixie เป็นหลัก ไม่จำเป็นต้องมีวันหรือขนาดดาวน์โหลดตรงภาพทุกตัว</p>
+<h2 id="4-เลือก-storage-ให้ถูกใบ">4. เลือก Storage ให้ถูกใบ</h2>
 <ol>
-<li>ติดตั้ง Raspberry Pi OS ลง microSD/SSD</li>
-<li>เปิด SSH ตั้งแต่ขั้นเตรียม image หรือเปิดหลัง boot ด้วย <code>raspi-config</code></li>
-<li>ตั้ง hostname ให้จำง่าย เช่น <code>kathu</code></li>
-<li>ตั้ง user หลักของ Lab เช่น <code>piuser</code></li>
-<li>เชื่อม LAN หรือ Wi-Fi แล้วตรวจ IP</li>
-<li>อัปเดต package พื้นฐาน</li>
-<li>reboot หนึ่งครั้งก่อนเริ่มติดตั้ง service</li>
+<li>เปิดหน้า Storage แล้วเลือก microSD ที่เสียบไว้</li>
+<li>ตรวจยี่ห้อหรือชื่ออุปกรณ์และความจุอีกครั้ง</li>
+<li>ถ้าไม่แน่ใจ ให้ถอดการ์ดแล้วดูว่าอุปกรณ์ใดหายไป จากนั้นเสียบกลับและเลือกใหม่</li>
+<li>ไปขั้นตอน Customisation โดยยังไม่ข้ามการตั้งค่าบัญชี เครือข่าย และ SSH</li>
 </ol>
-<p>คำสั่งหลังเข้าเครื่องได้แล้ว:</p>
-<pre class="language-bash"><code>hostname
+<p>ถ้ามีตัวเลือก <strong>Exclude system drives</strong> ให้คงการป้องกันนี้ไว้</p>
+<h2 id="5-ตั้ง-hostname-และเขตเวลา">5. ตั้ง Hostname และเขตเวลา</h2>
+<p>ในหน้า Hostname ใช้ชื่อของเครื่อง เช่น <code>kathu</code> ชื่อควรจำง่ายและไม่ซ้ำกับ Pi เครื่องอื่นบนเครือข่ายเดียวกัน</p>
+<p>ในหน้า Localisation เลือกประเทศ/เมืองให้ตรงสถานที่ใช้งาน สำหรับห้องเรียนในประเทศไทยใช้ <strong>Thailand / Bangkok</strong> และเขตเวลา <strong>Asia/Bangkok</strong> ส่วน keyboard layout ให้ตรงกับคีย์บอร์ดที่ใช้ เช่น US</p>
+<p>การตั้งประเทศเกี่ยวข้องกับช่องสัญญาณ Wi-Fi ที่อนุญาตด้วย จึงไม่ควรปล่อยเป็นประเทศอื่นเพียงเพราะเป็นค่าเดิมที่โปรแกรมจำไว้</p>
+<h2 id="6-สร้างผู้ใช้-piuser">6. สร้างผู้ใช้ piuser</h2>
+<p>ในหน้า <strong>Customisation: Choose username</strong> กำหนดดังนี้:</p>
+<table>
+<thead>
+<tr>
+<th>ช่อง</th>
+<th>ค่าที่ใส่</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Username</td>
+<td><code>piuser</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td>รหัสผ่านที่ตั้งไว้สำหรับบัญชีนี้</td>
+</tr>
+<tr>
+<td>Confirm password</td>
+<td>พิมพ์รหัสผ่านบัญชีนี้ซ้ำให้ตรงกัน</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../assets/raspberry-pi-setup/04-user-piuser.png" alt="ตั้ง Username เป็น piuser และยืนยันรหัสผ่านบัญชี Raspberry Pi" /></p>
+<p>รหัสนี้ใช้เข้าบัญชี Linux ผ่าน SSH และอาจถูกถามเมื่อใช้ <code>sudo</code> ไม่ใช่รหัส Wi-Fi และไม่ใช่ MQTT password ที่จะตั้งในแล็บหลัง ภาพแสดงเพียงจุดปิดบัง ไม่ได้ให้รหัสผ่านจริงมา ห้ามใช้ข้อความ <code>รหัสผ่านที่ตั้งไว้</code> เป็นรหัสผ่านตามตัวอักษร</p>
+<p>ใช้ตัวอักษรพิมพ์เล็กตามภาพ ชื่อ <code>piuser</code> เป็นบัญชีที่เราสร้างขึ้นเอง จึงไม่ควรทดลองเข้าด้วย <code>pi</code> หรือสมมติว่ามี default password</p>
+<h2 id="7-ตั้ง-wi-fi-phuket-iot">7. ตั้ง Wi-Fi phuket-iot</h2>
+<p>ในหน้า <strong>Customisation: Choose Wi-Fi</strong> เลือกและกรอกตามภาพ:</p>
+<table>
+<thead>
+<tr>
+<th>รายการ</th>
+<th>ค่าที่ใช้</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ประเภทเครือข่าย</td>
+<td>SECURE NETWORK</td>
+</tr>
+<tr>
+<td>SSID</td>
+<td><code>phuket-iot</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td>รหัสผ่านจริงของ Wi-Fi <code>phuket-iot</code></td>
+</tr>
+<tr>
+<td>Confirm password</td>
+<td>พิมพ์รหัสผ่าน Wi-Fi ซ้ำให้ตรงกัน</td>
+</tr>
+<tr>
+<td>Hidden SSID</td>
+<td>ไม่เลือก เว้นแต่เครือข่ายนั้นซ่อนชื่อจริง</td>
+</tr>
+</tbody>
+</table>
+<p><img src="../assets/raspberry-pi-setup/05-wifi-phuket-iot.png" alt="เลือก SECURE NETWORK และ Wi-Fi SSID phuket-iot โดยไม่เลือก Hidden SSID" /></p>
+<p>SSID และรหัสผ่านแยกตัวพิมพ์ใหญ่/เล็ก ต้องไม่มีช่องว่างเกินมา และ Notebook ที่จะ SSH ควรอยู่ในเครือข่ายที่เข้าถึง Pi ได้</p>
+<aside class="callout callout-important">
+<div class="callout-title">ตรวจคลื่น Wi-Fi ของ Pi 3</div>
+<p>Raspberry Pi 3 Model B รองรับ Wi-Fi 2.4 GHz เท่านั้น ส่วน 3B+ และ 3A+ รองรับ 5 GHz เพิ่มด้วย หากยังไม่ทราบรุ่นย่อย ให้ตรวจว่า <code>phuket-iot</code> เปิด 2.4 GHz และไม่ใช่เครือข่ายที่ต้องเปิดหน้าเว็บกดยอมรับก่อนใช้งาน หากเครือข่ายแยก Client ออกจากกัน อาจต่อ Wi-Fi ได้แต่ SSH หากันไม่ได้</p>
+</aside>
+<h2 id="8-เปิด-ssh-และใช้-password-authentication">8. เปิด SSH และใช้ Password Authentication</h2>
+<p>ในหน้า <strong>Customisation: SSH authentication</strong>:</p>
+<ol>
+<li>เปิด <strong>Enable SSH</strong></li>
+<li>เลือก <strong>Use password authentication</strong></li>
+<li>ไม่เลือก Use public key authentication ในขั้นเริ่มต้นของชุดเรียนนี้</li>
+</ol>
+<p><img src="../assets/raspberry-pi-setup/06-ssh-password.png" alt="เปิด Enable SSH และเลือก Use password authentication" /></p>
+<p>เมื่อ SSH เข้าเครื่อง ให้ใช้ user <code>piuser</code> และรหัสบัญชีที่ตั้งในหัวข้อ 6 ไม่ใช่รหัส Wi-Fi การใช้ SSH key สามารถเรียนเพิ่มภายหลังได้ แต่การตั้งค่ารอบนี้ให้ตรงภาพก่อน</p>
+<h2 id="9-ปิด-raspberry-pi-connect">9. ปิด Raspberry Pi Connect</h2>
+<p>ในหน้า <strong>Customisation: Raspberry Pi Connect</strong> ให้ <strong>Enable Raspberry Pi Connect เป็น Off</strong> ตามภาพ ไม่ต้อง Sign in หรือขอ token:</p>
+<p><img src="../assets/raspberry-pi-setup/07-connect-off.png" alt="ปิด Enable Raspberry Pi Connect" /></p>
+<p>การปิด Connect ไม่ได้ปิด SSH ที่เปิดในหัวข้อก่อน เราจะเริ่มจาก SSH ภายใน LAN/Wi-Fi และใช้ Cloudflare Tunnel ในแล็บ Remote Access ภายหลัง</p>
+<h2 id="10-ตรวจค่าก่อน-write-และรอ-verify">10. ตรวจค่าก่อน Write และรอ Verify</h2>
+<p>ตรวจหน้าสรุปอีกครั้งว่าเป็น Pi 3, Lite 64-bit, microSD ถูกใบ, user <code>piuser</code>, Wi-Fi <code>phuket-iot</code>, SSH แบบรหัสผ่าน และ Connect ปิดอยู่</p>
+<ol>
+<li>กด <strong>Write</strong> หรือปุ่มเริ่มเขียนของ Imager</li>
+<li>เมื่อโปรแกรมเตือนว่าจะลบข้อมูล ให้ยืนยันเฉพาะหลังตรวจ Storage ถูกต้องแล้ว</li>
+<li>หาก Windows/macOS ขอสิทธิ์เข้าถึงอุปกรณ์ ให้สิทธิ์กับ Imager เพื่อเขียนการ์ด</li>
+<li>รอการดาวน์โหลด เขียน และ <strong>Verify</strong> ให้ครบ ไม่ดึงการ์ดออกระหว่างทำงาน</li>
+<li>เมื่อขึ้น Done/Finish ให้จบงานและ eject การ์ดอย่างปลอดภัย หากมีหน้าต่างชวน Format การ์ดหลังเขียน OS ให้ยกเลิก ไม่ Format ซ้ำ</li>
+</ol>
+<h2 id="11-ใส่การ์ดและบูตครั้งแรก">11. ใส่การ์ดและบูตครั้งแรก</h2>
+<ol>
+<li>ขณะ Pi ยังไม่ได้เสียบไฟ ให้นำ microSD ที่เขียนเสร็จใส่ใน Pi</li>
+<li>ถ้าจะใช้สาย LAN และบอร์ดมีพอร์ต Ethernet ให้ต่อ Pi เข้ากับ Router/Switch ที่ Notebook เข้าถึงได้</li>
+<li>เสียบแหล่งจ่ายไฟ micro USB ที่ช่องจ่ายไฟของ Pi</li>
+<li>รอการตั้งค่าครั้งแรกหลาย ๆ นาที อาจมีการ reboot ระหว่างเตรียมระบบ อย่าถอดไฟเพียงเพราะยัง SSH ไม่ติดทันที</li>
+</ol>
+<p>OS Lite ไม่มี Desktop หากต่อจอจะเห็นหน้าจอข้อความหรือ login prompt ซึ่งเป็นพฤติกรรมปกติ ไม่ได้แปลว่าติดตั้งผิด</p>
+<h2 id="12-ssh-เข้า-pi-จาก-windows-macos">12. SSH เข้า Pi จาก Windows/macOS</h2>
+<p>เปิด <strong>Windows Terminal / PowerShell</strong> บน Windows หรือ <strong>Terminal</strong> บน macOS แล้วรันคำสั่งนี้บน Notebook:</p>
+<pre class="language-bash"><code>ssh piuser@kathu.local</code></pre>
+<p>หากตั้ง hostname อื่น ให้แทน <code>kathu</code> ด้วยชื่อที่ตั้งไว้ เมื่อเชื่อมต่อครั้งแรก ให้ตรวจ fingerprint ของเครื่องกับผู้สอนหรือจากจอ Pi ก่อนตอบ <code>yes</code> แล้วใส่รหัสผ่านบัญชี <code>piuser</code> ระหว่างพิมพ์รหัสผ่าน Terminal จะไม่แสดงจุดหรือดอกจัน เป็นเรื่องปกติ</p>
+<p>หากชื่อ <code>.local</code> หาไม่พบ ให้ดู IP ของ Pi จากหน้า DHCP client ของ Router หรือใช้จอกับคีย์บอร์ดบน Pi รัน <code>hostname -I</code> แล้ว SSH ด้วย IP จริง เช่น:</p>
+<pre class="language-bash"><code>ssh piuser@192.168.1.50</code></pre>
+<p><code>192.168.1.50</code> เป็นตัวอย่าง ไม่ใช่ IP ที่ทุกเครื่องจะได้ เมื่อเข้าได้แล้วควรเห็น prompt คล้าย:</p>
+<pre class="language-text"><code>piuser@kathu:~ $</code></pre>
+<p>ดูการติดตั้ง OpenSSH Client บน Windows และวิธีต่อ LAN โดยตรงเพิ่มเติมใน <a href="17-ssh-from-mac-or-windows-over-direct-lan.html">SSH from Mac or Windows over Direct LAN</a></p>
+<h2 id="13-ตรวจว่า-os-และบัญชีตรงกับที่เลือก">13. ตรวจว่า OS และบัญชีตรงกับที่เลือก</h2>
+<p>คำสั่งต่อไปนี้รันภายใน SSH session บน Raspberry Pi ไม่ใช่บน Notebook:</p>
+<pre class="language-bash"><code>whoami
+hostname
 hostname -I
-sudo apt update
+cat /etc/os-release
+uname -m
+getconf LONG_BIT
+timedatectl
+systemctl status ssh --no-pager</code></pre>
+<table>
+<thead>
+<tr>
+<th>สิ่งที่ตรวจ</th>
+<th>ผลที่คาดหวัง</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>whoami</code></td>
+<td><code>piuser</code></td>
+</tr>
+<tr>
+<td><code>hostname</code></td>
+<td>ชื่อที่ตั้ง เช่น <code>kathu</code></td>
+</tr>
+<tr>
+<td><code>hostname -I</code></td>
+<td>มี IP ที่ Notebook เข้าถึงได้</td>
+</tr>
+<tr>
+<td><code>/etc/os-release</code></td>
+<td>มี codename <code>trixie</code></td>
+</tr>
+<tr>
+<td><code>uname -m</code></td>
+<td><code>aarch64</code></td>
+</tr>
+<tr>
+<td><code>getconf LONG_BIT</code></td>
+<td><code>64</code></td>
+</tr>
+<tr>
+<td>เขตเวลา</td>
+<td><code>Asia/Bangkok</code> สำหรับเครื่องในประเทศไทย</td>
+</tr>
+<tr>
+<td>SSH service</td>
+<td><code>active (running)</code></td>
+</tr>
+</tbody>
+</table>
+<p>ถ้า <code>uname -m</code> เป็น <code>armv7l</code> หรือ <code>LONG_BIT</code> เป็น <code>32</code> ให้กลับไปตรวจว่าได้เลือก OS Lite (64-bit) จริงหรือไม่ ก่อนเดินหน้าไปแล็บอื่น</p>
+<h2 id="14-อัปเดตระบบหลังเข้าเครื่องได้แล้ว">14. อัปเดตระบบหลังเข้าเครื่องได้แล้ว</h2>
+<p>ต้องต่อ Internet ได้ก่อน จาก SSH session รัน:</p>
+<pre class="language-bash"><code>sudo apt update
 sudo apt full-upgrade -y
 sudo reboot</code></pre>
-<p>หลัง reboot ให้ SSH กลับเข้าเครื่อง แล้วค่อยตรวจทรัพยากรและติดตั้ง service ถัดไป</p>
+<p>หลังสั่ง reboot การเชื่อมต่อ SSH จะขาด รอ Pi กลับมาแล้ว SSH เข้าใหม่ด้วยคำสั่งเดิม หากเชื่อมด้วย IP แล้วไม่ติด ให้ตรวจ IP อีกครั้งเพราะ DHCP อาจแจกค่าใหม่</p>
+<h2 id="ปัญหาที่พบบ่อยในการเริ่มต้น">ปัญหาที่พบบ่อยในการเริ่มต้น</h2>
+<table>
+<thead>
+<tr>
+<th>อาการ</th>
+<th>ตรวจอะไร</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ไม่พบ <code>phuket-iot</code> หรือ Pi ไม่ได้ IP</td>
+<td>SSID/รหัส Wi-Fi ถูกต้อง, เปิด 2.4 GHz สำหรับ 3B, ประเทศถูกต้อง, Router เปิดอยู่</td>
+</tr>
+<tr>
+<td><code>Could not resolve hostname</code></td>
+<td>สะกด hostname, อยู่เครือข่ายที่เข้าถึงกันได้, ลองใช้ IP จริงแทน <code>.local</code></td>
+</tr>
+<tr>
+<td><code>Connection timed out</code></td>
+<td>IP ถูกต้อง, Pi บูตเสร็จ, ไฟเพียงพอ, Firewall/Client isolation ไม่ขวาง</td>
+</tr>
+<tr>
+<td><code>Connection refused</code></td>
+<td>ตรวจว่าเปิด SSH ใน Imager และ OS บูตสมบูรณ์แล้ว</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>ใช้ <code>piuser</code> และรหัสบัญชี Pi ไม่ใช่รหัส Wi-Fi; ตรวจตัวพิมพ์/keyboard layout</td>
+</tr>
+<tr>
+<td><code>REMOTE HOST IDENTIFICATION HAS CHANGED</code> หลังเขียน OS ใหม่</td>
+<td>ยืนยันว่าเป็น Pi ของตนและมีการลง OS ใหม่จริงก่อนจัดการรายการ host key เก่า อย่าข้ามคำเตือนโดยไม่ตรวจ</td>
+</tr>
+<tr>
+<td>เข้าระบบได้แต่ไม่มี Desktop</td>
+<td>เป็น OS Lite ตามที่เลือกไว้ ใช้งานผ่านคำสั่งและเว็บบริการต่อไป</td>
+</tr>
+</tbody>
+</table>
+<p>ถ้ายังเข้าไม่ได้ ให้ต่อจอกับคีย์บอร์ดชั่วคราวเพื่อตรวจ hostname, IP และ SSH หรือดู <a href="15-troubleshooting.html">Troubleshooting</a></p>
 <h2 id="ตรวจทรัพยากร">ตรวจทรัพยากร</h2>
 <pre class="language-bash"><code>free -h
 df -h
 hostname -I</code></pre>
 <h2 id="ตรวจ-service-port-และ-log">ตรวจ Service, Port และ Log</h2>
-<pre class="language-bash"><code>systemctl status SERVICE --no-pager
+<p>ตัวอย่างนี้ตรวจ service <code>ssh</code> ซึ่งเปิดไว้ใน Imager เมื่อตรวจ service อื่นในแล็บถัดไป ให้เปลี่ยนชื่อหลัง <code>status</code> หรือ <code>-u</code> ให้ตรงกับ service นั้น</p>
+<pre class="language-bash"><code>systemctl status ssh --no-pager
 ss -lntp
-journalctl -u SERVICE -n 50 --no-pager</code></pre>
-<p><code>enable</code> ทำให้ service เริ่มพร้อมระบบ ส่วน <code>--now</code> สั่งให้เริ่มในรอบปัจจุบันด้วย:</p>
-<pre class="language-bash"><code>sudo systemctl enable --now SERVICE</code></pre>
+journalctl -u ssh -n 50 --no-pager</code></pre>
+<p><code>enable</code> ทำให้ service เริ่มพร้อมระบบ ส่วน <code>--now</code> สั่งให้เริ่มในรอบปัจจุบันด้วย เช่น:</p>
+<pre class="language-bash"><code>sudo systemctl enable --now ssh</code></pre>
 <p>เมื่อตรวจปัญหา ให้เริ่มจาก service และ log จากนั้นตรวจ listening port และทดสอบผ่าน <code>localhost</code> ก่อนทดสอบจากเครื่องอื่นใน LAN</p>
 <h2 id="ตรวจ-lan-และ-wi-fi">ตรวจ LAN และ Wi-Fi</h2>
 <pre class="language-bash"><code>nmcli device status
@@ -121,6 +395,23 @@ ip route get 8.8.8.8
 hostname
 hostname -I</code></pre>
 <p>การสร้าง Wi-Fi profile, ตรวจ SSID และจัดการ Netplan อยู่ที่ <a href="03-raspberry-pi-network-and-wi-fi.html">Raspberry Pi Network and Wi-Fi</a></p>
+<h2 id="checklist-ก่อนเริ่ม-lab-01">Checklist ก่อนเริ่ม LAB 01</h2>
+<ul>
+<li>ใช้ Raspberry Pi OS Lite (64-bit) และตรวจได้ว่าเป็น Trixie / <code>aarch64</code> / <code>64</code></li>
+<li>เข้าด้วย <code>piuser</code> ได้ และจำรหัสผ่านบัญชี Pi แยกจากรหัส Wi-Fi</li>
+<li>Notebook ติดต่อ Pi ผ่านเครือข่ายได้ และ SSH เข้าเครื่องได้จริง</li>
+<li>Hostname ไม่ซ้ำกับเครื่องอื่น รู้ทั้ง hostname และ IP ของเครื่องตน</li>
+<li>เขตเวลาถูกต้อง อัปเดตระบบแล้ว และ SSH กลับเข้าได้หลัง reboot</li>
+<li>ตรวจ RAM, disk และ network พื้นฐานแล้ว จึงเริ่ม <a href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a></li>
+</ul>
+<h2 id="แหล่งอ้างอิง">แหล่งอ้างอิง</h2>
+<ul>
+<li><a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager สำหรับ Windows/macOS/Linux</a></li>
+<li><a href="https://www.raspberrypi.com/documentation/computers/getting-started.html#install-using-imager">คู่มือทางการ: เตรียมอุปกรณ์ เขียน OS และตั้งค่า Imager</a></li>
+<li><a href="https://www.raspberrypi.com/documentation/computers/remote-access.html#ssh">คู่มือทางการ: SSH และ Remote Access</a></li>
+<li><a href="https://www.raspberrypi.com/products/raspberry-pi-3-model-b/">ข้อมูล Raspberry Pi 3 Model B</a></li>
+</ul>
+<p>ภาพประกอบทั้ง 7 ภาพเป็นหน้าจอที่ใช้กำหนดค่าของชุดเรียนนี้ รหัสผ่านในภาพถูกปิดบัง และไม่ได้เก็บรหัสผ่านจริงไว้ในเอกสาร</p>
 <h2 id="lab-ที่เกี่ยวข้อง">Lab ที่เกี่ยวข้อง</h2>
 <ul>
 <li><a href="01-installation-roadmap.html">Installation Roadmap</a></li>

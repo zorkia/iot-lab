@@ -116,6 +116,15 @@ h4 {
   line-height: 1.25;
 }
 
+.content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 16px 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
 h1 {
   margin-top: 0;
   font-size: 32px;
