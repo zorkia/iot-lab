@@ -144,6 +144,14 @@
 <li>Notebook Windows หรือ Mac ที่ต่อ Internet ได้สำหรับดาวน์โหลดและเขียน image</li>
 <li>ข้อมูล Wi-Fi <code>phuket-iot</code> และรหัสผ่านเครือข่าย หากไม่ได้อยู่ในห้องเรียนให้ใช้เครือข่ายที่เข้าถึงได้จริงแทน</li>
 </ul>
+<h3 id="รู้จักบอร์ด-raspberry-pi-3">รู้จักบอร์ด Raspberry Pi 3</h3>
+<p><img src="../assets/raspberry-pi-setup/raspberry-pi-3-board.png" alt="บอร์ด Raspberry Pi 3 Model B มองจากด้านบน เห็นพอร์ต USB, Ethernet, HDMI และช่องจ่ายไฟ micro USB" /></p>
+<p>ภาพนี้เป็น <strong>Raspberry Pi 3 Model B</strong> ให้สังเกตชื่อรุ่นที่พิมพ์บนบอร์ดก่อนเลือก Device ใน Imager พอร์ต USB และ Ethernet อยู่ด้านขวาของภาพ ส่วน HDMI และช่องจ่ายไฟ micro USB อยู่บริเวณขอบล่าง ช่อง microSD อยู่ด้านใต้บอร์ด จึงไม่เห็นจากมุมนี้</p>
+<p>สำหรับการเรียนแบบ headless เราจะใช้ microSD เก็บระบบปฏิบัติการ ต่อเครือข่ายผ่าน Wi-Fi หรือสาย LAN และจ่ายไฟผ่าน micro USB ไม่จำเป็นต้องต่อจอ HDMI หรือคีย์บอร์ดหลังตั้งค่า SSH เรียบร้อยแล้ว จับบอร์ดบริเวณขอบและวางบนพื้นผิวที่ไม่เป็นสื่อนำไฟฟ้า หรือใส่เคสก่อนใช้งาน</p>
+<h3 id="microsd-คือที่เก็บระบบและข้อมูล">microSD คือที่เก็บระบบและข้อมูล</h3>
+<p><img src="../assets/raspberry-pi-setup/microsd-card.png" alt="ตัวอย่างการ์ด microSD สำหรับเก็บ Raspberry Pi OS และข้อมูลของแล็บ" /></p>
+<p>microSD ทำหน้าที่เป็นที่เก็บข้อมูลของเครื่อง ทั้ง Raspberry Pi OS โปรแกรม ฐานข้อมูล SQLite และไฟล์งาน เมื่อย้ายการ์ดหรือเขียน OS ใหม่จึงมีผลกับข้อมูลเหล่านี้ ไม่ใช่เพียงการเปลี่ยนอุปกรณ์เก็บรูปภาพ</p>
+<p>การ์ดในภาพมีความจุ <strong>128 GB</strong> เป็นเพียงตัวอย่าง ไม่จำเป็นต้องซื้อยี่ห้อหรือความจุตรงภาพ ชุดแล็บนี้แนะนำ 32 GB ขึ้นไปเพื่อเผื่อพื้นที่ข้อมูล เลือกการ์ดที่เชื่อถือได้และเตรียมเครื่องอ่าน microSD แบบ USB หรือ SD adapter ที่ใช้กับช่องอ่านการ์ดของ Notebook ได้ โดย adapter เป็นเพียงตัวแปลงขนาด ส่วนการ์ดที่เสียบเข้า Pi ต้องเป็น microSD</p>
 <p>ดาวน์โหลด <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager จากเว็บไซต์ Raspberry Pi</a> แล้วติดตั้งบน Notebook จากนั้นเปิดโปรแกรมและเสียบ microSD ผ่านเครื่องอ่านการ์ด</p>
 <aside class="callout callout-warning">
 <div class="callout-title">สำรองข้อมูลในการ์ดก่อน</div>
@@ -261,12 +269,15 @@
 <li>เมื่อขึ้น Done/Finish ให้จบงานและ eject การ์ดอย่างปลอดภัย หากมีหน้าต่างชวน Format การ์ดหลังเขียน OS ให้ยกเลิก ไม่ Format ซ้ำ</li>
 </ol>
 <h2 id="11-ใส่การ์ดและบูตครั้งแรก">11. ใส่การ์ดและบูตครั้งแรก</h2>
+<p><img src="../assets/raspberry-pi-setup/insert-microsd-card.png" alt="ตัวอย่างการใส่ microSD ในช่องด้านใต้บอร์ด Raspberry Pi โดยจับการ์ดที่ขอบและเลื่อนเข้าช่อง" /></p>
+<p>ภาพนี้แสดงตำแหน่งช่อง microSD ที่ด้านใต้บอร์ด ให้พลิกดูช่องจริงก่อนเสียบ ไม่สับสนกับพอร์ต USB หรือช่องสายแพด้านบน การ์ดที่ใช้ต้องผ่าน Write และ Verify ใน Imager เรียบร้อยแล้ว และถ้าใช้ SD adapter กับ Notebook ต้องถอดเฉพาะ microSD ออกจาก adapter ก่อน</p>
 <ol>
-<li>ขณะ Pi ยังไม่ได้เสียบไฟ ให้นำ microSD ที่เขียนเสร็จใส่ใน Pi</li>
+<li>ขณะ Pi ยังไม่ได้เสียบไฟ ให้จับ microSD ที่ขอบ หันด้านฉลากออกจากบอร์ด และเลื่อนเข้าช่องตามแนวอย่างเบามือ สำหรับ Pi 3 การ์ดจะเลื่อนจนสุดโดยไม่ต้องรอเสียงคลิก หากติดขัดให้หยุดตรวจทิศทาง ไม่ฝืนกด</li>
 <li>ถ้าจะใช้สาย LAN และบอร์ดมีพอร์ต Ethernet ให้ต่อ Pi เข้ากับ Router/Switch ที่ Notebook เข้าถึงได้</li>
 <li>เสียบแหล่งจ่ายไฟ micro USB ที่ช่องจ่ายไฟของ Pi</li>
 <li>รอการตั้งค่าครั้งแรกหลาย ๆ นาที อาจมีการ reboot ระหว่างเตรียมระบบ อย่าถอดไฟเพียงเพราะยัง SSH ไม่ติดทันที</li>
 </ol>
+<p>อย่าถอดหรือใส่ microSD ขณะ Pi มีไฟ หากต้องถอดหลังใช้งาน ให้สั่ง <code>sudo poweroff</code> รอให้ระบบปิดและหยุดเขียนข้อมูล แล้วถอดแหล่งจ่ายไฟก่อนดึงการ์ดออกอย่างเบามือ เพื่อลดความเสี่ยงที่ระบบไฟล์หรือฐานข้อมูลเสียหาย ดูทิศทางการ์ดเพิ่มเติมใน <a href="https://www.raspberrypi.com/documentation/computers/getting-started.html#inserting-a-microsd-card">คู่มือการใส่ microSD ของ Raspberry Pi</a></p>
 <p>OS Lite ไม่มี Desktop หากต่อจอจะเห็นหน้าจอข้อความหรือ login prompt ซึ่งเป็นพฤติกรรมปกติ ไม่ได้แปลว่าติดตั้งผิด</p>
 <h2 id="12-ssh-เข้า-pi-จาก-windows-macos">12. SSH เข้า Pi จาก Windows/macOS</h2>
 <p>เปิด <strong>Windows Terminal / PowerShell</strong> บน Windows หรือ <strong>Terminal</strong> บน macOS แล้วรันคำสั่งนี้บน Notebook:</p>
