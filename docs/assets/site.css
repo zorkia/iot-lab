@@ -339,6 +339,17 @@ blockquote {
   font-weight: 750;
 }
 
+.callout-danger {
+  border: 2px solid #dc2626;
+  border-left-width: 8px;
+  background: #fee2e2;
+  color: #7f1d1d;
+}
+
+.callout-danger .callout-title {
+  color: #991b1b;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;

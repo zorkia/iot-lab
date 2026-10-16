@@ -84,8 +84,8 @@
     <main class="content">
       <h1 id="raspberry-pi-setup">Raspberry Pi Setup</h1>
 <nav class="page-sequence" aria-label="Page sequence"><a class="prev" href="01-installation-roadmap.html">ก่อนหน้า: 01 - Installation Roadmap</a><a class="home" href="../index.html">กลับหน้าแรก</a><a class="next" href="03-raspberry-pi-network-and-wi-fi.html">ถัดไป: 03 - Raspberry Pi Network and Wi-Fi</a></nav>
-<p>เตรียม Raspberry Pi จริงตั้งแต่ติดตั้งระบบปฏิบัติการลง microSD จนถึง SSH เข้าเครื่องครั้งแรก เพื่อให้พร้อมเรียน MQTT, Node-RED, SQLite และ Python ในแล็บถัดไป ใช้แบบ headless คือไม่ต้องต่อจอ คีย์บอร์ด หรือเมาส์กับ Pi ระหว่างใช้งานตามปกติ</p>
-<p>ค่าของชุดเรียนนี้ยึดตามภาพ Raspberry Pi Imager ที่ให้มา:</p>
+<p>เอกสารนี้อธิบายการเตรียม Raspberry Pi ตั้งแต่การติดตั้งระบบปฏิบัติการบน microSD จนถึงการเชื่อมต่อผ่าน SSH ครั้งแรก เพื่อเป็นพื้นฐานสำหรับการศึกษา MQTT, Node-RED, SQLite และ Python ในบทปฏิบัติการถัดไป การใช้งานเป็นรูปแบบ headless ซึ่งควบคุมเครื่องผ่านเครือข่ายโดยไม่จำเป็นต้องเชื่อมต่อจอภาพ แป้นพิมพ์ หรือเมาส์กับ Raspberry Pi ระหว่างการใช้งานตามปกติ</p>
+<p>ค่าการกำหนดค่าสำหรับบทปฏิบัติการนี้แสดงในตารางต่อไปนี้ และสอดคล้องกับภาพประกอบ Raspberry Pi Imager:</p>
 <table>
 <thead>
 <tr>
@@ -136,67 +136,76 @@
 </tr>
 </tbody>
 </table>
-<p>Hostname ในหน้านี้ใช้ <code>s001</code> ตามภาพ ไม่ใช่ค่ามาตรฐานของ Pi หากเรียนพร้อมกันหลายเครื่อง ให้ใช้ชื่อไม่ซ้ำตามที่กำหนด เช่น <code>s001</code>, <code>s002</code>, <code>s003</code> แล้วเปลี่ยนชื่อในคำสั่ง SSH ให้ตรงกับเครื่องของตน หากพบชื่อเครื่องตัวอย่างอื่นในแล็บถัดไป ให้ใช้ชื่อที่ตั้งไว้จริงแทน</p>
+<p>เอกสารนี้กำหนด Hostname ตัวอย่างเป็น <code>s001</code> ซึ่งไม่ใช่ค่าเริ่มต้นของ Raspberry Pi การใช้งานหลายเครื่องบนเครือข่ายเดียวกันต้องกำหนดชื่อเฉพาะสำหรับแต่ละเครื่อง เช่น <code>s001</code>, <code>s002</code> และ <code>s003</code> โดยปรับชื่อปลายทางในคำสั่ง SSH ให้สอดคล้องกับชื่อที่กำหนดจริง หลักการเดียวกันนี้ใช้กับชื่อเครื่องตัวอย่างในบทปฏิบัติการถัดไป</p>
 <h2 id="ลำดับการติดตั้งพื้นฐาน">ลำดับการติดตั้งพื้นฐาน</h2>
-<p>ก่อนเข้าสู่ MQTT, Node-RED หรือ SQLite ให้เตรียม Pi ตามลำดับนี้:</p>
-<p>เตรียม Imager บน Windows/macOS, เลือก Pi 3 และ OS Lite 64-bit, เลือก microSD, ตั้งค่าบัญชีและเครือข่าย, เขียนและตรวจสอบการ์ด, บูต Pi แล้วจึง SSH เข้าไปตรวจระบบ ขั้นตอนต่อไปนี้ไม่ได้ทำใน Docker Container</p>
+<p>ก่อนศึกษาการใช้งาน MQTT, Node-RED หรือ SQLite จำเป็นต้องเตรียม Raspberry Pi ตามลำดับต่อไปนี้:</p>
+<p>ติดตั้ง Imager บน Windows/macOS เลือก Raspberry Pi 3 และ OS Lite 64-bit ระบุ microSD ปลายทาง กำหนดบัญชีผู้ใช้และเครือข่าย เขียนและตรวจสอบข้อมูลบนการ์ด จากนั้นเริ่มระบบและเชื่อมต่อผ่าน SSH เพื่อตรวจสอบการทำงาน ขั้นตอนในเอกสารนี้ดำเนินการกับ Raspberry Pi จริง ไม่ใช่ภายใน Docker Container</p>
 <h2 id="1-เตรียมอุปกรณ์และ-raspberry-pi-imager">1. เตรียมอุปกรณ์และ Raspberry Pi Imager</h2>
 <ul>
-<li>Raspberry Pi 3 ที่จะใช้เรียน</li>
-<li>microSD สำหรับติดตั้ง OS และเครื่องอ่านการ์ด ชุดแล็บนี้แนะนำ 32 GB ขึ้นไปเพื่อมีพื้นที่สำหรับฐานข้อมูลและ log</li>
+<li>Raspberry Pi 3 สำหรับบทปฏิบัติการ</li>
+<li>microSD สำหรับติดตั้ง OS พร้อมเครื่องอ่านการ์ด บทปฏิบัติการนี้แนะนำความจุ 32 GB ขึ้นไป เพื่อรองรับฐานข้อมูลและบันทึกเหตุการณ์ (log)</li>
 <li>แหล่งจ่ายไฟ micro USB ที่เหมาะกับ Pi 3 เช่น 5 V 2.5 A และสายไฟที่จ่ายกระแสได้เพียงพอ</li>
-<li>Notebook Windows หรือ Mac ที่ต่อ Internet ได้สำหรับดาวน์โหลดและเขียน image</li>
-<li>ข้อมูล Wi-Fi <code>phuket-iot</code> และรหัสผ่านเครือข่าย หากไม่ได้อยู่ในห้องเรียนให้ใช้เครือข่ายที่เข้าถึงได้จริงแทน</li>
+<li>คอมพิวเตอร์ Windows หรือ Mac ที่เชื่อมต่ออินเทอร์เน็ตได้ สำหรับดาวน์โหลดและเขียนอิมเมจระบบปฏิบัติการ</li>
+<li>ชื่อเครือข่าย Wi-Fi <code>phuket-iot</code> และรหัสผ่าน สำหรับการปฏิบัติงานนอกห้องเรียนให้ใช้เครือข่ายที่สามารถเข้าถึงได้ในสถานที่นั้น</li>
 </ul>
-<h3 id="รู้จักบอร์ด-raspberry-pi-3">รู้จักบอร์ด Raspberry Pi 3</h3>
+<p><span id="รู้จักบอร์ด-raspberry-pi-3"></span></p>
+<h3 id="องค์ประกอบของบอร์ด-raspberry-pi-3">องค์ประกอบของบอร์ด Raspberry Pi 3</h3>
 <p><img src="../assets/raspberry-pi-setup/01-raspberry-pi-3-model-b-board.png" alt="บอร์ด Raspberry Pi 3 Model B มองจากด้านบน เห็นพอร์ต USB, Ethernet, HDMI และช่องจ่ายไฟ micro USB" /></p>
-<p>ภาพนี้เป็น <strong>Raspberry Pi 3 Model B</strong> ให้สังเกตชื่อรุ่นที่พิมพ์บนบอร์ดก่อนเลือก Device ใน Imager พอร์ต USB และ Ethernet อยู่ด้านขวาของภาพ ส่วน HDMI และช่องจ่ายไฟ micro USB อยู่บริเวณขอบล่าง ช่อง microSD อยู่ด้านใต้บอร์ด จึงไม่เห็นจากมุมนี้</p>
-<p>สำหรับการเรียนแบบ headless เราจะใช้ microSD เก็บระบบปฏิบัติการ ต่อเครือข่ายผ่าน Wi-Fi หรือสาย LAN และจ่ายไฟผ่าน micro USB ไม่จำเป็นต้องต่อจอ HDMI หรือคีย์บอร์ดหลังตั้งค่า SSH เรียบร้อยแล้ว จับบอร์ดบริเวณขอบและวางบนพื้นผิวที่ไม่เป็นสื่อนำไฟฟ้า หรือใส่เคสก่อนใช้งาน</p>
-<h3 id="microsd-คือที่เก็บระบบและข้อมูล">microSD คือที่เก็บระบบและข้อมูล</h3>
+<p>ภาพประกอบแสดง <strong>Raspberry Pi 3 Model B</strong> ผู้ปฏิบัติงานควรตรวจสอบชื่อรุ่นที่ระบุบนแผงวงจรก่อนเลือก Device ใน Imager พอร์ต USB และ Ethernet อยู่ด้านขวาของภาพ ส่วนพอร์ต HDMI และช่องจ่ายไฟ micro USB อยู่บริเวณขอบล่าง ช่อง microSD อยู่ด้านใต้แผงวงจรและไม่ปรากฏในภาพมุมนี้</p>
+<p>การใช้งานแบบ headless ใช้ microSD เป็นสื่อจัดเก็บระบบปฏิบัติการ เชื่อมต่อเครือข่ายผ่าน Wi-Fi หรือสาย LAN และรับพลังงานผ่าน micro USB เมื่อกำหนดค่า SSH แล้ว ไม่จำเป็นต้องเชื่อมต่อจอภาพ HDMI หรือแป้นพิมพ์ ควรจับแผงวงจรบริเวณขอบและวางบนพื้นผิวที่ไม่นำไฟฟ้า หรือบรรจุในเคสก่อนใช้งาน</p>
+<p><span id="microsd-คือที่เก็บระบบและข้อมูล"></span></p>
+<h3 id="บทบาทของ-microsd-ในการจัดเก็บระบบและข้อมูล">บทบาทของ microSD ในการจัดเก็บระบบและข้อมูล</h3>
 <p><img src="../assets/raspberry-pi-setup/02-microsd-card.png" alt="ตัวอย่างการ์ด microSD สำหรับเก็บ Raspberry Pi OS และข้อมูลของแล็บ" /></p>
-<p>microSD ทำหน้าที่เป็นที่เก็บข้อมูลของเครื่อง ทั้ง Raspberry Pi OS โปรแกรม ฐานข้อมูล SQLite และไฟล์งาน เมื่อย้ายการ์ดหรือเขียน OS ใหม่จึงมีผลกับข้อมูลเหล่านี้ ไม่ใช่เพียงการเปลี่ยนอุปกรณ์เก็บรูปภาพ</p>
-<p>การ์ดในภาพมีความจุ <strong>128 GB</strong> เป็นเพียงตัวอย่าง ไม่จำเป็นต้องซื้อยี่ห้อหรือความจุตรงภาพ ชุดแล็บนี้แนะนำ 32 GB ขึ้นไปเพื่อเผื่อพื้นที่ข้อมูล เลือกการ์ดที่เชื่อถือได้และเตรียมเครื่องอ่าน microSD แบบ USB หรือ SD adapter ที่ใช้กับช่องอ่านการ์ดของ Notebook ได้ โดย adapter เป็นเพียงตัวแปลงขนาด ส่วนการ์ดที่เสียบเข้า Pi ต้องเป็น microSD</p>
-<p>ดาวน์โหลด <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager จากเว็บไซต์ Raspberry Pi</a> แล้วติดตั้งบน Notebook จากนั้นเปิดโปรแกรมและเสียบ microSD ผ่านเครื่องอ่านการ์ด</p>
+<p>microSD เป็นสื่อจัดเก็บข้อมูลหลักของเครื่อง ประกอบด้วย Raspberry Pi OS โปรแกรม ฐานข้อมูล SQLite และไฟล์งาน การเปลี่ยนการ์ดหรือเขียนระบบปฏิบัติการใหม่จึงมีผลต่อทั้งระบบและข้อมูลที่จัดเก็บอยู่บนการ์ด</p>
+<p>การ์ดในภาพมีความจุ <strong>128 GB</strong> ใช้เพื่อประกอบการอธิบายเท่านั้น ไม่ได้กำหนดให้ใช้ยี่ห้อหรือความจุตามภาพ บทปฏิบัติการนี้แนะนำความจุ 32 GB ขึ้นไปเพื่อรองรับการจัดเก็บข้อมูลเพิ่มเติม ควรเลือกการ์ดจากแหล่งที่เชื่อถือได้ พร้อมเครื่องอ่าน microSD แบบ USB หรือ SD adapter ที่รองรับช่องอ่านการ์ดของคอมพิวเตอร์ ทั้งนี้ adapter ทำหน้าที่แปลงขนาดทางกายภาพ ส่วนสื่อที่ติดตั้งใน Raspberry Pi ต้องเป็น microSD</p>
+<p>ดาวน์โหลด <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager จากเว็บไซต์ Raspberry Pi</a> และติดตั้งบนคอมพิวเตอร์ จากนั้นเปิดโปรแกรมและเชื่อมต่อ microSD ผ่านเครื่องอ่านการ์ด</p>
 <aside class="callout callout-warning">
-<div class="callout-title">สำรองข้อมูลในการ์ดก่อน</div>
-<p>การเขียน OS จะลบข้อมูลบนอุปกรณ์ปลายทางทั้งหมด ต้องใช้การ์ดที่สำรองข้อมูลแล้ว และตรวจชื่อกับความจุให้ถูกต้อง ไม่เลือกดิสก์ระบบของ Notebook หรือไดรฟ์สำรองข้อมูล</p>
+<div class="callout-title">สำรองข้อมูลก่อนเขียนระบบปฏิบัติการ</div>
+<p>การเขียน OS จะลบข้อมูลบนอุปกรณ์ปลายทางทั้งหมด ต้องสำรองข้อมูลและตรวจสอบชื่ออุปกรณ์กับความจุก่อนดำเนินการ ห้ามเลือกดิสก์ระบบของคอมพิวเตอร์หรือไดรฟ์สำรองข้อมูลเป็นอุปกรณ์ปลายทาง</p>
 </aside>
-<p>ชื่อแท็บและปุ่มอาจต่างกันเล็กน้อยตามรุ่น Imager แต่ให้ยึดชื่ออุปกรณ์ OS และค่าการตั้งค่าตามภาพในหน้านี้</p>
+<p>ชื่อแท็บและปุ่มอาจแตกต่างกันตามรุ่นของ Imager จึงควรพิจารณาชื่ออุปกรณ์ ระบบปฏิบัติการ และค่าการกำหนดค่าที่ระบุในเอกสารนี้เป็นหลัก</p>
 <h2 id="2-เลือก-device-เป็น-raspberry-pi-3">2. เลือก Device เป็น Raspberry Pi 3</h2>
-<p>เมื่อเปิด Raspberry Pi Imager จะเห็นขั้นตอนด้านซ้าย เริ่มที่ <strong>Device</strong> เพื่อระบุรุ่นบอร์ดที่ใช้ ภาพหน้าจอนี้เป็น Imager v2.0.12 โดยยังไม่ได้เลือกรุ่น จึงเห็นปุ่ม <strong>NEXT</strong> เป็นสีเทา:</p>
+<p>Raspberry Pi Imager แสดงลำดับขั้นตอนบริเวณด้านซ้าย เริ่มต้นที่ <strong>Device</strong> เพื่อระบุรุ่นของแผงวงจร ภาพประกอบเป็น Imager v2.0.12 ในสถานะที่ยังไม่ได้เลือกรุ่นอุปกรณ์ ปุ่ม <strong>NEXT</strong> จึงยังไม่สามารถใช้งานได้:</p>
 <p><img src="../assets/raspberry-pi-setup/03-imager-device-selection.png" alt="หน้าจอ Raspberry Pi Imager ในขั้น Device แสดงรายการรุ่น Raspberry Pi และปุ่ม NEXT ก่อนเลือกรุ่น" /></p>
-<p>คลิกรายการ <strong>Raspberry Pi 3</strong> ให้ตรงกับบอร์ดของชุดเรียน ไม่ใช่ Raspberry Pi 5 หรือ Pi 4 ที่อยู่เหนือขึ้นไป หากยังไม่เห็นรายการ ให้เลื่อนภายในรายการรุ่น เมื่อเลือกแล้วจึงกด <strong>NEXT</strong> ไปขั้น OS ภาพขยายด้านล่างช่วยให้ตรวจชื่อรายการได้ชัดเจน:</p>
+<p>เลือกรายการ <strong>Raspberry Pi 3</strong> ให้สอดคล้องกับอุปกรณ์ของบทปฏิบัติการ ไม่เลือกรายการ Raspberry Pi 5 หรือ Pi 4 หากรายการที่ต้องการยังไม่ปรากฏ ให้เลื่อนรายการรุ่นอุปกรณ์ เมื่อเลือกแล้วจึงกด <strong>NEXT</strong> เพื่อเข้าสู่ขั้น OS ภาพขยายต่อไปนี้แสดงชื่อรายการที่ต้องเลือก:</p>
 <p><img src="../assets/raspberry-pi-setup/04-imager-raspberry-pi-3.png" alt="Raspberry Pi Imager เลือก Device เป็น Raspberry Pi 3" /></p>
-<p>รายการนี้เป็นกลุ่ม Pi 3 ไม่ใช่ Pi 4 หรือ Pi 5 ให้ตรวจรุ่นที่พิมพ์อยู่บนบอร์ดก่อนเริ่ม หากบอร์ดไม่ใช่ Pi 3 อย่าเลือกให้ตรงภาพโดยไม่ตรวจฮาร์ดแวร์จริง</p>
+<p>รายการนี้ครอบคลุมอุปกรณ์ในกลุ่ม Pi 3 ผู้ปฏิบัติงานต้องตรวจสอบรุ่นที่ระบุบนแผงวงจรก่อนดำเนินการ และไม่ควรเลือกอุปกรณ์ตามภาพหากไม่สอดคล้องกับฮาร์ดแวร์ที่ใช้งานจริง</p>
 <h2 id="3-เลือก-raspberry-pi-os-lite-64-bit">3. เลือก Raspberry Pi OS Lite (64-bit)</h2>
 <p>ในหน้า OS เปิดหมวด <strong>Raspberry Pi OS (other)</strong>:</p>
 <p><img src="../assets/raspberry-pi-setup/05-imager-raspberry-pi-os-other.png" alt="เปิดหมวด Raspberry Pi OS other" /></p>
 <p>จากนั้นเลือก <strong>Raspberry Pi OS Lite (64-bit)</strong> ซึ่งในภาพระบุว่าเป็น Debian Trixie และไม่มี desktop environment:</p>
 <p><img src="../assets/raspberry-pi-setup/06-imager-raspberry-pi-os-lite-64-bit.png" alt="เลือก Raspberry Pi OS Lite 64-bit ที่ระบุ Debian Trixie" /></p>
-<p><strong>Lite</strong> ไม่มีหน้าจอ Desktop แบบกราฟิก แต่ยังใช้ Linux, SSH และบริการ IoT ได้ ส่วน <strong>64-bit</strong> คือสถาปัตยกรรมของ OS ไม่ใช่ความจุของการ์ด จึงอย่าเลือก Lite (32-bit), รุ่น Desktop หรือ Legacy แทนสำหรับชุดเรียนนี้</p>
-<p>วันเผยแพร่ <code>2026-10-06</code> และขนาดดาวน์โหลดในภาพเป็นข้อมูลของ image ที่ถ่ายไว้ หากรายการอัปเดต ให้ตรวจชื่อ Lite, 64-bit และฐาน Debian Trixie เป็นหลัก ไม่จำเป็นต้องมีวันหรือขนาดดาวน์โหลดตรงภาพทุกตัว</p>
-<h2 id="4-เลือก-storage-ให้ถูกใบ">4. เลือก Storage ให้ถูกใบ</h2>
+<p><strong>Lite</strong> เป็นระบบปฏิบัติการที่ไม่มีสภาพแวดล้อมเดสก์ท็อปแบบกราฟิก แต่รองรับ Linux, SSH และบริการ IoT ส่วน <strong>64-bit</strong> ระบุสถาปัตยกรรมของระบบปฏิบัติการ ไม่ใช่ความจุของสื่อจัดเก็บข้อมูล บทปฏิบัติการนี้จึงกำหนดให้ใช้ Lite (64-bit) ไม่ใช่ Lite (32-bit), รุ่น Desktop หรือ Legacy</p>
+<p>วันเผยแพร่ <code>2026-10-06</code> และขนาดดาวน์โหลดในภาพเป็นข้อมูลของอิมเมจ ณ เวลาที่บันทึกภาพ รายการที่เผยแพร่ภายหลังอาจมีวันหรือขนาดดาวน์โหลดแตกต่างกัน โดยต้องตรวจสอบชื่อ Lite, สถาปัตยกรรม 64-bit และฐานระบบ Debian Trixie ให้สอดคล้องกับข้อกำหนดของบทปฏิบัติการ</p>
+<p><span id="4-เลือก-storage-ให้ถูกใบ"></span></p>
+<p><span id="4-การเลือกสื่อจัดเก็บข้อมูลปลายทาง"></span></p>
+<h2 id="4-เลือก-storage-ให้ถูกต้อง">4. เลือก Storage ให้ถูกต้อง</h2>
+<aside class="callout callout-danger">
+<div class="callout-title">อันตราย: ห้ามยกเลิก Exclude system drives</div>
+<p><strong>ต้องเลือก Exclude system drives ไว้เสมอ</strong> หากไม่พบ microSD ให้ตรวจสอบการ์ดและเครื่องอ่าน ห้ามยกเลิกตัวเลือกนี้</p>
+<p><strong>หากเลือกไดรฟ์ของคอมพิวเตอร์ผิดแล้วกด Write ข้อมูลและระบบปฏิบัติการอาจถูกเขียนทับ ทำให้เครื่องบูตไม่ได้</strong></p>
+</aside>
+<p><img src="../assets/raspberry-pi-setup/07-imager-storage-system-drive-warning.png" alt="ตัวอย่างการกำหนดค่าที่ไม่ปลอดภัย: Exclude system drives อยู่ในสถานะไม่เลือก และไดรฟ์ C กับ G ของคอมพิวเตอร์ปรากฏในรายการ Storage" /></p>
+<p><strong>ภาพตัวอย่างที่ไม่ปลอดภัย:</strong> Exclude system drives ไม่ได้เลือก จึงแสดงไดรฟ์ <strong>C:</strong> และ <strong>G:</strong> ของคอมพิวเตอร์ ห้ามเลือกไดรฟ์เหล่านี้แทน microSD</p>
 <ol>
-<li>เปิดหน้า Storage แล้วเลือก microSD ที่เสียบไว้</li>
-<li>ตรวจยี่ห้อหรือชื่ออุปกรณ์และความจุอีกครั้ง</li>
-<li>ถ้าไม่แน่ใจ ให้ถอดการ์ดแล้วดูว่าอุปกรณ์ใดหายไป จากนั้นเสียบกลับและเลือกใหม่</li>
-<li>ไปขั้นตอน Customisation โดยยังไม่ข้ามการตั้งค่าบัญชี เครือข่าย และ SSH</li>
+<li>เชื่อมต่อ microSD ผ่านเครื่องอ่านการ์ด แล้วเปิดหน้า <strong>Storage</strong></li>
+<li>เลือก microSD โดยตรวจสอบชื่อและความจุ หากไม่พบหรือไม่แน่ใจ ให้หยุดและแจ้งผู้สอน</li>
+<li>ไปขั้น <strong>Customisation</strong> และตรวจสอบ Storage อีกครั้งก่อนกด <strong>Write</strong></li>
 </ol>
-<p>ถ้ามีตัวเลือก <strong>Exclude system drives</strong> ให้คงการป้องกันนี้ไว้</p>
 <h2 id="5-ตั้ง-hostname-และเขตเวลา">5. ตั้ง Hostname และเขตเวลา</h2>
 <p>ในขั้น <strong>Customisation: Choose hostname</strong> กรอก <code>s001</code> ตามภาพ หรือชื่อประจำเครื่องที่ผู้สอนกำหนด Hostname คือชื่อของ Raspberry Pi บนเครือข่าย ไม่ใช่ชื่อผู้ใช้ <code>piuser</code> และไม่ใช่ชื่อ Wi-Fi <code>phuket-iot</code>:</p>
-<p><img src="../assets/raspberry-pi-setup/07-imager-hostname-s001.png" alt="หน้า Customisation Choose hostname ใน Raspberry Pi Imager กรอกชื่อเครื่อง s001" /></p>
-<p>ใช้ตัวอักษรภาษาอังกฤษ ตัวเลข และขีดกลาง <code>-</code> โดยไม่เว้นวรรค สำหรับชุดเรียนแนะนำตัวพิมพ์เล็กและชื่อสั้นที่จำง่าย แต่ละเครื่องต้องมีชื่อไม่ซ้ำกัน เช่น <code>s001</code> และ <code>s002</code> อย่าให้นักศึกษาทุกเครื่องตั้งเป็น <code>s001</code> พร้อมกัน</p>
-<p>ในช่องนี้ใส่เพียง <code>s001</code> ไม่ต้องเติม <code>.local</code> ส่วนเวลาเชื่อมต่อ SSH บน Notebook จะใช้ <code>ssh piuser@s001.local</code> ถ้าเครื่องมี OS อยู่แล้วและจะเปลี่ยน hostname ภายหลัง ไม่จำเป็นต้องเขียน microSD ใหม่เพียงเพื่อเปลี่ยนชื่อ</p>
+<p><img src="../assets/raspberry-pi-setup/08-imager-hostname-s001.png" alt="หน้า Customisation Choose hostname ใน Raspberry Pi Imager กรอกชื่อเครื่อง s001" /></p>
+<p>กำหนดชื่อด้วยตัวอักษรภาษาอังกฤษ ตัวเลข และขีดกลาง <code>-</code> โดยไม่มีช่องว่าง บทปฏิบัติการนี้แนะนำตัวพิมพ์เล็กและชื่อที่สื่อความหมาย แต่ละเครื่องต้องใช้ชื่อเฉพาะ เช่น <code>s001</code> และ <code>s002</code> ไม่ควรกำหนดชื่อ <code>s001</code> ให้กับทุกเครื่องบนเครือข่ายเดียวกัน</p>
+<p>ช่อง Hostname รับเฉพาะชื่อเครื่อง เช่น <code>s001</code> โดยไม่ระบุส่วนต่อท้าย <code>.local</code> สำหรับการเชื่อมต่อ SSH จากคอมพิวเตอร์ใช้ <code>ssh piuser@s001.local</code> หากต้องการเปลี่ยน Hostname หลังติดตั้งระบบปฏิบัติการ สามารถดำเนินการภายในระบบได้โดยไม่จำเป็นต้องเขียน microSD ใหม่</p>
 <p>ในหน้า Localisation เลือกประเทศ/เมืองให้ตรงสถานที่ใช้งาน สำหรับห้องเรียนในประเทศไทยใช้ <strong>Thailand / Bangkok</strong> และเขตเวลา <strong>Asia/Bangkok</strong> ส่วน keyboard layout ให้ตรงกับคีย์บอร์ดที่ใช้ เช่น US</p>
-<p>การตั้งประเทศเกี่ยวข้องกับช่องสัญญาณ Wi-Fi ที่อนุญาตด้วย จึงไม่ควรปล่อยเป็นประเทศอื่นเพียงเพราะเป็นค่าเดิมที่โปรแกรมจำไว้</p>
+<p>การกำหนดประเทศมีผลต่อช่องสัญญาณ Wi-Fi ที่ได้รับอนุญาต จึงต้องกำหนดให้สอดคล้องกับสถานที่ใช้งานจริง ไม่ควรใช้ค่าจากการกำหนดค่าครั้งก่อนโดยไม่ตรวจสอบ</p>
 <h2 id="6-สร้างผู้ใช้-piuser">6. สร้างผู้ใช้ piuser</h2>
 <p>ในหน้า <strong>Customisation: Choose username</strong> กำหนดดังนี้:</p>
 <table>
 <thead>
 <tr>
 <th>ช่อง</th>
-<th>ค่าที่ใส่</th>
+<th>ค่าที่กำหนด</th>
 </tr>
 </thead>
 <tbody>
@@ -214,9 +223,9 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../assets/raspberry-pi-setup/08-imager-username-piuser.png" alt="ตั้ง Username เป็น piuser และยืนยันรหัสผ่านบัญชี Raspberry Pi" /></p>
-<p>รหัสนี้ใช้เข้าบัญชี Linux ผ่าน SSH และอาจถูกถามเมื่อใช้ <code>sudo</code> ไม่ใช่รหัส Wi-Fi และไม่ใช่ MQTT password ที่จะตั้งในแล็บหลัง ภาพแสดงเพียงจุดปิดบัง ไม่ได้ให้รหัสผ่านจริงมา ห้ามใช้ข้อความ <code>รหัสผ่านที่ตั้งไว้</code> เป็นรหัสผ่านตามตัวอักษร</p>
-<p>ใช้ตัวอักษรพิมพ์เล็กตามภาพ ชื่อ <code>piuser</code> เป็นบัญชีที่เราสร้างขึ้นเอง จึงไม่ควรทดลองเข้าด้วย <code>pi</code> หรือสมมติว่ามี default password</p>
+<p><img src="../assets/raspberry-pi-setup/09-imager-username-piuser.png" alt="ตั้ง Username เป็น piuser และยืนยันรหัสผ่านบัญชี Raspberry Pi" /></p>
+<p>รหัสผ่านนี้ใช้ยืนยันตัวตนเข้าสู่บัญชี Linux ผ่าน SSH และอาจใช้เมื่อเรียกคำสั่ง <code>sudo</code> โดยแยกจากรหัสผ่าน Wi-Fi และรหัสผ่าน MQTT ที่จะกำหนดในบทปฏิบัติการถัดไป สัญลักษณ์ในภาพใช้ปิดบังรหัสผ่าน ไม่ใช่การระบุรหัสผ่านสำหรับใช้งานจริง ข้อความ <code>รหัสผ่านที่ตั้งไว้</code> เป็นคำอธิบายและห้ามนำไปใช้เป็นรหัสผ่านตามตัวอักษร</p>
+<p>ชื่อบัญชี <code>piuser</code> ใช้ตัวอักษรพิมพ์เล็กตามภาพและเป็นบัญชีที่สร้างขึ้นในขั้นตอนนี้ จึงไม่ควรใช้ชื่อ <code>pi</code> หรือสมมติว่ามีรหัสผ่านเริ่มต้นสำหรับการเข้าสู่ระบบ</p>
 <h2 id="7-ตั้ง-wi-fi-phuket-iot">7. ตั้ง Wi-Fi phuket-iot</h2>
 <p>ในหน้า <strong>Customisation: Choose Wi-Fi</strong> เลือกและกรอกตามภาพ:</p>
 <table>
@@ -249,56 +258,58 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../assets/raspberry-pi-setup/09-imager-wifi-phuket-iot.png" alt="เลือก SECURE NETWORK และ Wi-Fi SSID phuket-iot โดยไม่เลือก Hidden SSID" /></p>
-<p>SSID และรหัสผ่านแยกตัวพิมพ์ใหญ่/เล็ก ต้องไม่มีช่องว่างเกินมา และ Notebook ที่จะ SSH ควรอยู่ในเครือข่ายที่เข้าถึง Pi ได้</p>
+<p><img src="../assets/raspberry-pi-setup/10-imager-wifi-phuket-iot.png" alt="เลือก SECURE NETWORK และ Wi-Fi SSID phuket-iot โดยไม่เลือก Hidden SSID" /></p>
+<p>SSID และรหัสผ่านต้องตรงกับการกำหนดค่าของเครือข่าย โดยตรวจสอบตัวพิมพ์ใหญ่ ตัวพิมพ์เล็ก และช่องว่างเพิ่มเติม คอมพิวเตอร์ที่ใช้เชื่อมต่อ SSH ต้องอยู่บนเครือข่ายที่สามารถเข้าถึง Raspberry Pi ได้</p>
 <aside class="callout callout-important">
 <div class="callout-title">ตรวจคลื่น Wi-Fi ของ Pi 3</div>
-<p>Raspberry Pi 3 Model B รองรับ Wi-Fi 2.4 GHz เท่านั้น ส่วน 3B+ และ 3A+ รองรับ 5 GHz เพิ่มด้วย หากยังไม่ทราบรุ่นย่อย ให้ตรวจว่า <code>phuket-iot</code> เปิด 2.4 GHz และไม่ใช่เครือข่ายที่ต้องเปิดหน้าเว็บกดยอมรับก่อนใช้งาน หากเครือข่ายแยก Client ออกจากกัน อาจต่อ Wi-Fi ได้แต่ SSH หากันไม่ได้</p>
+<p>Raspberry Pi 3 Model B รองรับ Wi-Fi เฉพาะย่าน 2.4 GHz ส่วน 3B+ และ 3A+ รองรับย่าน 5 GHz เพิ่มเติม หากยังไม่ทราบรุ่นย่อย ต้องตรวจสอบว่า <code>phuket-iot</code> ให้บริการย่าน 2.4 GHz และไม่ต้องยืนยันการใช้งานผ่านหน้าเว็บก่อนเชื่อมต่อ หากเครือข่ายเปิดใช้การแยกอุปกรณ์ลูกข่าย (Client isolation) อาจเชื่อมต่อ Wi-Fi ได้แต่ไม่สามารถเชื่อมต่อ SSH ระหว่างอุปกรณ์</p>
 </aside>
 <h2 id="8-เปิด-ssh-และใช้-password-authentication">8. เปิด SSH และใช้ Password Authentication</h2>
 <p>ในหน้า <strong>Customisation: SSH authentication</strong>:</p>
 <ol>
 <li>เปิด <strong>Enable SSH</strong></li>
 <li>เลือก <strong>Use password authentication</strong></li>
-<li>ไม่เลือก Use public key authentication ในขั้นเริ่มต้นของชุดเรียนนี้</li>
+<li>ไม่เลือก Use public key authentication สำหรับการกำหนดค่าเริ่มต้นของบทปฏิบัติการนี้</li>
 </ol>
-<p><img src="../assets/raspberry-pi-setup/10-imager-ssh-password-authentication.png" alt="เปิด Enable SSH และเลือก Use password authentication" /></p>
-<p>เมื่อ SSH เข้าเครื่อง ให้ใช้ user <code>piuser</code> และรหัสบัญชีที่ตั้งในหัวข้อ 6 ไม่ใช่รหัส Wi-Fi การใช้ SSH key สามารถเรียนเพิ่มภายหลังได้ แต่การตั้งค่ารอบนี้ให้ตรงภาพก่อน</p>
+<p><img src="../assets/raspberry-pi-setup/11-imager-ssh-password-authentication.png" alt="เปิด Enable SSH และเลือก Use password authentication" /></p>
+<p>การเชื่อมต่อ SSH ใช้บัญชี <code>piuser</code> และรหัสผ่านที่กำหนดในหัวข้อ 6 ไม่ใช่รหัสผ่าน Wi-Fi การยืนยันตัวตนด้วย SSH key สามารถศึกษาเพิ่มเติมภายหลัง โดยการกำหนดค่าเริ่มต้นของบทปฏิบัติการนี้ใช้ Password Authentication ตามภาพ</p>
 <h2 id="9-ปิด-raspberry-pi-connect">9. ปิด Raspberry Pi Connect</h2>
-<p>ในหน้า <strong>Customisation: Raspberry Pi Connect</strong> ให้ <strong>Enable Raspberry Pi Connect เป็น Off</strong> ตามภาพ ไม่ต้อง Sign in หรือขอ token:</p>
-<p><img src="../assets/raspberry-pi-setup/11-imager-raspberry-pi-connect-disabled.png" alt="ปิด Enable Raspberry Pi Connect" /></p>
-<p>การปิด Connect ไม่ได้ปิด SSH ที่เปิดในหัวข้อก่อน เราจะเริ่มจาก SSH ภายใน LAN/Wi-Fi และใช้ Cloudflare Tunnel ในแล็บ Remote Access ภายหลัง</p>
+<p>ในหน้า <strong>Customisation: Raspberry Pi Connect</strong> กำหนด <strong>Enable Raspberry Pi Connect เป็น Off</strong> ตามภาพ โดยไม่จำเป็นต้องลงชื่อเข้าใช้หรือขอ token:</p>
+<p><img src="../assets/raspberry-pi-setup/12-imager-raspberry-pi-connect-disabled.png" alt="ปิด Enable Raspberry Pi Connect" /></p>
+<p>การปิด Raspberry Pi Connect ไม่ส่งผลต่อบริการ SSH ที่เปิดใช้งานในหัวข้อก่อนหน้า บทปฏิบัติการนี้เริ่มจากการเชื่อมต่อ SSH ภายใน LAN/Wi-Fi และศึกษาการเข้าถึงผ่าน Cloudflare Tunnel ในบทปฏิบัติการ Remote Access ภายหลัง</p>
 <h2 id="10-ตรวจค่าก่อน-write-และรอ-verify">10. ตรวจค่าก่อน Write และรอ Verify</h2>
-<p>ตรวจหน้าสรุปอีกครั้งว่าเป็น Pi 3, Lite 64-bit, microSD ถูกใบ, user <code>piuser</code>, Wi-Fi <code>phuket-iot</code>, SSH แบบรหัสผ่าน และ Connect ปิดอยู่</p>
+<p>ตรวจสอบหน้าสรุปให้สอดคล้องกับข้อกำหนด ได้แก่ Raspberry Pi 3, OS Lite 64-bit, microSD ปลายทางที่ยืนยันแล้ว, บัญชี <code>piuser</code>, Wi-Fi <code>phuket-iot</code>, SSH แบบรหัสผ่าน และ Raspberry Pi Connect ในสถานะปิด</p>
 <ol>
 <li>กด <strong>Write</strong> หรือปุ่มเริ่มเขียนของ Imager</li>
 <li>เมื่อโปรแกรมเตือนว่าจะลบข้อมูล ให้ยืนยันเฉพาะหลังตรวจ Storage ถูกต้องแล้ว</li>
 <li>หาก Windows/macOS ขอสิทธิ์เข้าถึงอุปกรณ์ ให้สิทธิ์กับ Imager เพื่อเขียนการ์ด</li>
-<li>รอการดาวน์โหลด เขียน และ <strong>Verify</strong> ให้ครบ ไม่ดึงการ์ดออกระหว่างทำงาน</li>
-<li>เมื่อขึ้น Done/Finish ให้จบงานและ eject การ์ดอย่างปลอดภัย หากมีหน้าต่างชวน Format การ์ดหลังเขียน OS ให้ยกเลิก ไม่ Format ซ้ำ</li>
+<li>รอให้กระบวนการดาวน์โหลด เขียนข้อมูล และ <strong>Verify</strong> เสร็จสมบูรณ์ ห้ามถอดการ์ดระหว่างดำเนินการ</li>
+<li>เมื่อโปรแกรมแสดง Done/Finish ให้สิ้นสุดการทำงานและนำการ์ดออกด้วยคำสั่ง eject หากระบบปฏิบัติการแสดงข้อความให้ Format การ์ดหลังเขียน OS ให้ยกเลิกและไม่ดำเนินการ Format ซ้ำ</li>
 </ol>
 <h2 id="11-ใส่การ์ดและบูตครั้งแรก">11. ใส่การ์ดและบูตครั้งแรก</h2>
-<p><img src="../assets/raspberry-pi-setup/12-insert-microsd-card.png" alt="ตัวอย่างการใส่ microSD ในช่องด้านใต้บอร์ด Raspberry Pi โดยจับการ์ดที่ขอบและเลื่อนเข้าช่อง" /></p>
-<p>ภาพนี้แสดงตำแหน่งช่อง microSD ที่ด้านใต้บอร์ด ให้พลิกดูช่องจริงก่อนเสียบ ไม่สับสนกับพอร์ต USB หรือช่องสายแพด้านบน การ์ดที่ใช้ต้องผ่าน Write และ Verify ใน Imager เรียบร้อยแล้ว และถ้าใช้ SD adapter กับ Notebook ต้องถอดเฉพาะ microSD ออกจาก adapter ก่อน</p>
+<p><img src="../assets/raspberry-pi-setup/13-insert-microsd-card.png" alt="ตัวอย่างการใส่ microSD ในช่องด้านใต้บอร์ด Raspberry Pi โดยจับการ์ดที่ขอบและเลื่อนเข้าช่อง" /></p>
+<p>ภาพประกอบแสดงตำแหน่งช่อง microSD ด้านใต้แผงวงจร ต้องตรวจสอบตำแหน่งช่องก่อนติดตั้ง โดยแยกจากพอร์ต USB และช่องสายแพด้านบน การ์ดที่ใช้ต้องผ่านกระบวนการ Write และ Verify ใน Imager แล้ว หากใช้ SD adapter กับคอมพิวเตอร์ ต้องถอด microSD ออกจาก adapter ก่อนติดตั้งใน Raspberry Pi</p>
 <ol>
-<li>ขณะ Pi ยังไม่ได้เสียบไฟ ให้จับ microSD ที่ขอบ หันด้านฉลากออกจากบอร์ด และเลื่อนเข้าช่องตามแนวอย่างเบามือ สำหรับ Pi 3 การ์ดจะเลื่อนจนสุดโดยไม่ต้องรอเสียงคลิก หากติดขัดให้หยุดตรวจทิศทาง ไม่ฝืนกด</li>
-<li>ถ้าจะใช้สาย LAN และบอร์ดมีพอร์ต Ethernet ให้ต่อ Pi เข้ากับ Router/Switch ที่ Notebook เข้าถึงได้</li>
+<li>ขณะ Raspberry Pi ยังไม่ได้เชื่อมต่อแหล่งจ่ายไฟ ให้จับ microSD บริเวณขอบ หันด้านฉลากออกจากแผงวงจร และเลื่อนเข้าสู่ช่องตามแนวอย่างระมัดระวัง ช่องการ์ดของ Pi 3 ไม่ใช้กลไกล็อกแบบกดให้เกิดเสียงคลิก หากพบแรงต้านผิดปกติต้องหยุดและตรวจสอบทิศทาง ห้ามใช้แรงกดเพิ่มเติม</li>
+<li>หากใช้งานผ่านสาย LAN และแผงวงจรมีพอร์ต Ethernet ให้เชื่อมต่อ Raspberry Pi กับ Router/Switch ที่คอมพิวเตอร์สามารถเข้าถึงได้</li>
 <li>เสียบแหล่งจ่ายไฟ micro USB ที่ช่องจ่ายไฟของ Pi</li>
-<li>รอการตั้งค่าครั้งแรกหลาย ๆ นาที อาจมีการ reboot ระหว่างเตรียมระบบ อย่าถอดไฟเพียงเพราะยัง SSH ไม่ติดทันที</li>
+<li>รอการกำหนดค่าระบบครั้งแรกซึ่งอาจใช้เวลาหลายนาทีและมีการเริ่มระบบใหม่ระหว่างดำเนินการ การเชื่อมต่อ SSH ไม่สำเร็จในทันทีไม่ใช่เหตุผลเพียงพอสำหรับตัดแหล่งจ่ายไฟ</li>
 </ol>
-<p>อย่าถอดหรือใส่ microSD ขณะ Pi มีไฟ หากต้องถอดหลังใช้งาน ให้สั่ง <code>sudo poweroff</code> รอให้ระบบปิดและหยุดเขียนข้อมูล แล้วถอดแหล่งจ่ายไฟก่อนดึงการ์ดออกอย่างเบามือ เพื่อลดความเสี่ยงที่ระบบไฟล์หรือฐานข้อมูลเสียหาย ดูทิศทางการ์ดเพิ่มเติมใน <a href="https://www.raspberrypi.com/documentation/computers/getting-started.html#inserting-a-microsd-card">คู่มือการใส่ microSD ของ Raspberry Pi</a></p>
-<p>OS Lite ไม่มี Desktop หากต่อจอจะเห็นหน้าจอข้อความหรือ login prompt ซึ่งเป็นพฤติกรรมปกติ ไม่ได้แปลว่าติดตั้งผิด</p>
-<h2 id="12-ssh-เข้า-pi-จาก-windows-macos">12. SSH เข้า Pi จาก Windows/macOS</h2>
-<p>เปิด <strong>Windows Terminal / PowerShell</strong> บน Windows หรือ <strong>Terminal</strong> บน macOS แล้วรันคำสั่งนี้บน Notebook:</p>
+<p>ห้ามถอดหรือติดตั้ง microSD ขณะ Raspberry Pi เชื่อมต่อแหล่งจ่ายไฟ เมื่อต้องการถอดการ์ดหลังใช้งาน ให้สั่ง <code>sudo poweroff</code> รอให้ระบบปิดและหยุดเขียนข้อมูล จากนั้นตัดแหล่งจ่ายไฟก่อนถอดการ์ดอย่างระมัดระวัง เพื่อลดความเสี่ยงต่อความเสียหายของระบบไฟล์และฐานข้อมูล รายละเอียดทิศทางการติดตั้งแสดงใน <a href="https://www.raspberrypi.com/documentation/computers/getting-started.html#inserting-a-microsd-card">คู่มือการใส่ microSD ของ Raspberry Pi</a></p>
+<p>OS Lite ไม่มีสภาพแวดล้อมเดสก์ท็อปแบบกราฟิก การเชื่อมต่อจอภาพจึงแสดงข้อความหรือ login prompt ซึ่งเป็นลักษณะการทำงานปกติ ไม่ใช่ข้อบ่งชี้ว่าติดตั้งระบบปฏิบัติการไม่ถูกต้อง</p>
+<p><span id="12-ssh-เข้า-pi-จาก-windows-macos"></span></p>
+<h2 id="12-การเชื่อมต่อ-ssh-จาก-windows-macos">12. การเชื่อมต่อ SSH จาก Windows/macOS</h2>
+<p>เปิด <strong>Windows Terminal / PowerShell</strong> บน Windows หรือ <strong>Terminal</strong> บน macOS แล้วเรียกคำสั่งต่อไปนี้บนคอมพิวเตอร์:</p>
 <pre class="language-bash"><code>ssh piuser@s001.local</code></pre>
-<p>หากตั้ง hostname อื่น ให้แทน <code>s001</code> ด้วยชื่อที่ตั้งไว้ เมื่อเชื่อมต่อครั้งแรก ให้ตรวจ fingerprint ของเครื่องกับผู้สอนหรือจากจอ Pi ก่อนตอบ <code>yes</code> แล้วใส่รหัสผ่านบัญชี <code>piuser</code> ระหว่างพิมพ์รหัสผ่าน Terminal จะไม่แสดงจุดหรือดอกจัน เป็นเรื่องปกติ</p>
-<p>หากชื่อ <code>.local</code> หาไม่พบ ให้ดู IP ของ Pi จากหน้า DHCP client ของ Router หรือใช้จอกับคีย์บอร์ดบน Pi รัน <code>hostname -I</code> แล้ว SSH ด้วย IP จริง เช่น:</p>
+<p>หากกำหนด Hostname อื่น ต้องแทน <code>s001</code> ด้วยชื่อที่กำหนดจริง สำหรับการเชื่อมต่อครั้งแรก ต้องตรวจสอบ fingerprint ของเครื่องปลายทางกับผู้สอนหรือจากจอ Raspberry Pi ก่อนตอบ <code>yes</code> จากนั้นป้อนรหัสผ่านบัญชี <code>piuser</code> ระหว่างป้อนรหัสผ่าน Terminal จะไม่แสดงอักขระหรือสัญลักษณ์แทน ซึ่งเป็นกลไกการทำงานปกติ</p>
+<p>หากไม่สามารถแปลงชื่อ <code>.local</code> เป็น IP ได้ ให้ตรวจสอบ IP ของ Raspberry Pi จากรายการ DHCP client ของ Router หรือเชื่อมต่อจอภาพและแป้นพิมพ์เพื่อเรียกคำสั่ง <code>hostname -I</code> บน Raspberry Pi จากนั้นเชื่อมต่อ SSH ด้วย IP จริง ตัวอย่างเช่น:</p>
 <pre class="language-bash"><code>ssh piuser@192.168.1.50</code></pre>
-<p><code>192.168.1.50</code> เป็นตัวอย่าง ไม่ใช่ IP ที่ทุกเครื่องจะได้ เมื่อเข้าได้แล้วควรเห็น prompt คล้าย:</p>
+<p><code>192.168.1.50</code> เป็น IP ตัวอย่าง ไม่ใช่ค่าที่กำหนดสำหรับทุกเครื่อง เมื่อเชื่อมต่อสำเร็จ Terminal จะแสดง prompt ในรูปแบบต่อไปนี้:</p>
 <pre class="language-text"><code>piuser@s001:~ $</code></pre>
-<p>ดูการติดตั้ง OpenSSH Client บน Windows และวิธีต่อ LAN โดยตรงเพิ่มเติมใน <a href="17-ssh-from-mac-or-windows-over-direct-lan.html">SSH from Mac or Windows over Direct LAN</a></p>
-<h2 id="13-ตรวจว่า-os-และบัญชีตรงกับที่เลือก">13. ตรวจว่า OS และบัญชีตรงกับที่เลือก</h2>
-<p>คำสั่งต่อไปนี้รันภายใน SSH session บน Raspberry Pi ไม่ใช่บน Notebook:</p>
+<p>รายละเอียดการติดตั้ง OpenSSH Client บน Windows และการเชื่อมต่อ LAN โดยตรงแสดงใน <a href="17-ssh-from-mac-or-windows-over-direct-lan.html">SSH from Mac or Windows over Direct LAN</a></p>
+<p><span id="13-ตรวจว่า-os-และบัญชีตรงกับที่เลือก"></span></p>
+<h2 id="13-การตรวจสอบระบบปฏิบัติการและบัญชีผู้ใช้">13. การตรวจสอบระบบปฏิบัติการและบัญชีผู้ใช้</h2>
+<p>เรียกคำสั่งต่อไปนี้ภายใน SSH session บน Raspberry Pi ไม่ใช่บนคอมพิวเตอร์ที่ใช้เชื่อมต่อ:</p>
 <pre class="language-bash"><code>whoami
 hostname
 hostname -I
@@ -349,45 +360,46 @@ systemctl status ssh --no-pager</code></pre>
 </tr>
 </tbody>
 </table>
-<p>ถ้า <code>uname -m</code> เป็น <code>armv7l</code> หรือ <code>LONG_BIT</code> เป็น <code>32</code> ให้กลับไปตรวจว่าได้เลือก OS Lite (64-bit) จริงหรือไม่ ก่อนเดินหน้าไปแล็บอื่น</p>
-<h2 id="14-อัปเดตระบบหลังเข้าเครื่องได้แล้ว">14. อัปเดตระบบหลังเข้าเครื่องได้แล้ว</h2>
-<p>ต้องต่อ Internet ได้ก่อน จาก SSH session รัน:</p>
+<p>หาก <code>uname -m</code> แสดง <code>armv7l</code> หรือ <code>LONG_BIT</code> แสดง <code>32</code> ต้องตรวจสอบการเลือกระบบปฏิบัติการ Lite (64-bit) ก่อนดำเนินการในบทปฏิบัติการถัดไป</p>
+<p><span id="14-อัปเดตระบบหลังเข้าเครื่องได้แล้ว"></span></p>
+<h2 id="14-การอัปเดตระบบหลังเชื่อมต่อสำเร็จ">14. การอัปเดตระบบหลังเชื่อมต่อสำเร็จ</h2>
+<p>ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตก่อนเรียกคำสั่งต่อไปนี้ภายใน SSH session:</p>
 <pre class="language-bash"><code>sudo apt update
 sudo apt full-upgrade -y
 sudo reboot</code></pre>
-<p>หลังสั่ง reboot การเชื่อมต่อ SSH จะขาด รอ Pi กลับมาแล้ว SSH เข้าใหม่ด้วยคำสั่งเดิม หากเชื่อมด้วย IP แล้วไม่ติด ให้ตรวจ IP อีกครั้งเพราะ DHCP อาจแจกค่าใหม่</p>
+<p>คำสั่ง reboot จะยุติการเชื่อมต่อ SSH ชั่วคราว เมื่อ Raspberry Pi เริ่มระบบเสร็จแล้วจึงเชื่อมต่อใหม่ด้วยคำสั่งเดิม หากการเชื่อมต่อผ่าน IP ไม่สำเร็จ ต้องตรวจสอบ IP ปัจจุบัน เนื่องจาก DHCP อาจกำหนด IP ใหม่</p>
 <h2 id="ปัญหาที่พบบ่อยในการเริ่มต้น">ปัญหาที่พบบ่อยในการเริ่มต้น</h2>
 <table>
 <thead>
 <tr>
 <th>อาการ</th>
-<th>ตรวจอะไร</th>
+<th>แนวทางตรวจสอบ</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>ไม่พบ <code>phuket-iot</code> หรือ Pi ไม่ได้ IP</td>
-<td>SSID/รหัส Wi-Fi ถูกต้อง, เปิด 2.4 GHz สำหรับ 3B, ประเทศถูกต้อง, Router เปิดอยู่</td>
+<td>ไม่พบ <code>phuket-iot</code> หรือ Pi ไม่ได้รับ IP</td>
+<td>ตรวจสอบ SSID รหัสผ่าน Wi-Fi ย่าน 2.4 GHz สำหรับ 3B ประเทศที่กำหนด และสถานะการทำงานของ Router</td>
 </tr>
 <tr>
 <td><code>Could not resolve hostname</code></td>
-<td>สะกด hostname, อยู่เครือข่ายที่เข้าถึงกันได้, ลองใช้ IP จริงแทน <code>.local</code></td>
+<td>ตรวจสอบการสะกด Hostname และการเข้าถึงเครือข่าย หรือเชื่อมต่อด้วย IP จริงแทน <code>.local</code></td>
 </tr>
 <tr>
 <td><code>Connection timed out</code></td>
-<td>IP ถูกต้อง, Pi บูตเสร็จ, ไฟเพียงพอ, Firewall/Client isolation ไม่ขวาง</td>
+<td>ตรวจสอบ IP การเริ่มระบบ แหล่งจ่ายไฟ และการอนุญาตการเชื่อมต่อของ Firewall/Client isolation</td>
 </tr>
 <tr>
 <td><code>Connection refused</code></td>
-<td>ตรวจว่าเปิด SSH ใน Imager และ OS บูตสมบูรณ์แล้ว</td>
+<td>ตรวจสอบการเปิดใช้ SSH ใน Imager และความสมบูรณ์ของการเริ่มระบบปฏิบัติการ</td>
 </tr>
 <tr>
 <td><code>Permission denied</code></td>
-<td>ใช้ <code>piuser</code> และรหัสบัญชี Pi ไม่ใช่รหัส Wi-Fi; ตรวจตัวพิมพ์/keyboard layout</td>
+<td>ตรวจสอบชื่อบัญชี <code>piuser</code> รหัสผ่านบัญชี Pi ตัวพิมพ์ และรูปแบบแป้นพิมพ์ โดยไม่ใช้รหัสผ่าน Wi-Fi แทน</td>
 </tr>
 <tr>
 <td><code>REMOTE HOST IDENTIFICATION HAS CHANGED</code> หลังเขียน OS ใหม่</td>
-<td>ยืนยันว่าเป็น Pi ของตนและมีการลง OS ใหม่จริงก่อนจัดการรายการ host key เก่า อย่าข้ามคำเตือนโดยไม่ตรวจ</td>
+<td>ยืนยันเครื่องปลายทางและการติดตั้ง OS ใหม่ก่อนแก้ไขรายการ host key เดิม ห้ามข้ามคำเตือนโดยไม่ตรวจสอบ</td>
 </tr>
 <tr>
 <td>เข้าระบบได้แต่ไม่มี Desktop</td>
@@ -395,19 +407,19 @@ sudo reboot</code></pre>
 </tr>
 </tbody>
 </table>
-<p>ถ้ายังเข้าไม่ได้ ให้ต่อจอกับคีย์บอร์ดชั่วคราวเพื่อตรวจ hostname, IP และ SSH หรือดู <a href="15-troubleshooting.html">Troubleshooting</a></p>
+<p>หากยังไม่สามารถเชื่อมต่อได้ ให้เชื่อมต่อจอภาพและแป้นพิมพ์ชั่วคราวเพื่อตรวจสอบ Hostname, IP และบริการ SSH หรือศึกษาแนวทางเพิ่มเติมใน <a href="15-troubleshooting.html">Troubleshooting</a></p>
 <h2 id="ตรวจทรัพยากร">ตรวจทรัพยากร</h2>
 <pre class="language-bash"><code>free -h
 df -h
 hostname -I</code></pre>
 <h2 id="ตรวจ-service-port-และ-log">ตรวจ Service, Port และ Log</h2>
-<p>ตัวอย่างนี้ตรวจ service <code>ssh</code> ซึ่งเปิดไว้ใน Imager เมื่อตรวจ service อื่นในแล็บถัดไป ให้เปลี่ยนชื่อหลัง <code>status</code> หรือ <code>-u</code> ให้ตรงกับ service นั้น</p>
+<p>ตัวอย่างนี้ตรวจสอบบริการ <code>ssh</code> ที่เปิดใช้งานผ่าน Imager สำหรับบริการอื่นในบทปฏิบัติการถัดไป ต้องเปลี่ยนชื่อหลัง <code>status</code> หรือ <code>-u</code> ให้สอดคล้องกับบริการที่ต้องการตรวจสอบ</p>
 <pre class="language-bash"><code>systemctl status ssh --no-pager
 ss -lntp
 journalctl -u ssh -n 50 --no-pager</code></pre>
-<p><code>enable</code> ทำให้ service เริ่มพร้อมระบบ ส่วน <code>--now</code> สั่งให้เริ่มในรอบปัจจุบันด้วย เช่น:</p>
+<p><code>enable</code> กำหนดให้บริการเริ่มทำงานพร้อมระบบ ส่วน <code>--now</code> เริ่มบริการใน session ปัจจุบันด้วย ตัวอย่างเช่น:</p>
 <pre class="language-bash"><code>sudo systemctl enable --now ssh</code></pre>
-<p>เมื่อตรวจปัญหา ให้เริ่มจาก service และ log จากนั้นตรวจ listening port และทดสอบผ่าน <code>localhost</code> ก่อนทดสอบจากเครื่องอื่นใน LAN</p>
+<p>การวิเคราะห์ปัญหาควรเริ่มจากสถานะบริการและบันทึกเหตุการณ์ จากนั้นตรวจสอบพอร์ตที่รอรับการเชื่อมต่อ และทดสอบผ่าน <code>localhost</code> ก่อนทดสอบจากอุปกรณ์อื่นบน LAN</p>
 <h2 id="ตรวจ-lan-และ-wi-fi">ตรวจ LAN และ Wi-Fi</h2>
 <pre class="language-bash"><code>nmcli device status
 ip -br addr
@@ -415,14 +427,15 @@ ip route get 8.8.8.8
 hostname
 hostname -I</code></pre>
 <p>การสร้าง Wi-Fi profile, ตรวจ SSID และจัดการ Netplan อยู่ที่ <a href="03-raspberry-pi-network-and-wi-fi.html">Raspberry Pi Network and Wi-Fi</a></p>
-<h2 id="checklist-ก่อนเริ่ม-lab-01">Checklist ก่อนเริ่ม LAB 01</h2>
+<p><span id="checklist-ก่อนเริ่ม-lab-01"></span></p>
+<h2 id="รายการตรวจสอบก่อนเริ่ม-lab-01">รายการตรวจสอบก่อนเริ่ม LAB 01</h2>
 <ul>
-<li>ใช้ Raspberry Pi OS Lite (64-bit) และตรวจได้ว่าเป็น Trixie / <code>aarch64</code> / <code>64</code></li>
-<li>เข้าด้วย <code>piuser</code> ได้ และจำรหัสผ่านบัญชี Pi แยกจากรหัส Wi-Fi</li>
-<li>Notebook ติดต่อ Pi ผ่านเครือข่ายได้ และ SSH เข้าเครื่องได้จริง</li>
-<li>Hostname ไม่ซ้ำกับเครื่องอื่น รู้ทั้ง hostname และ IP ของเครื่องตน</li>
-<li>เขตเวลาถูกต้อง อัปเดตระบบแล้ว และ SSH กลับเข้าได้หลัง reboot</li>
-<li>ตรวจ RAM, disk และ network พื้นฐานแล้ว จึงเริ่ม <a href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a></li>
+<li>ใช้ Raspberry Pi OS Lite (64-bit) และยืนยันผลการตรวจสอบเป็น Trixie / <code>aarch64</code> / <code>64</code></li>
+<li>เข้าสู่ระบบด้วยบัญชี <code>piuser</code> ได้ และแยกรหัสผ่านบัญชี Pi ออกจากรหัสผ่าน Wi-Fi ได้อย่างถูกต้อง</li>
+<li>คอมพิวเตอร์สามารถติดต่อ Raspberry Pi ผ่านเครือข่ายและเชื่อมต่อ SSH ได้</li>
+<li>Hostname ไม่ซ้ำกับเครื่องอื่น และผู้ปฏิบัติงานสามารถระบุ Hostname กับ IP ของเครื่องที่ใช้งานได้</li>
+<li>กำหนดเขตเวลาถูกต้อง อัปเดตระบบแล้ว และสามารถเชื่อมต่อ SSH ใหม่หลังเริ่มระบบใหม่</li>
+<li>ตรวจสอบ RAM พื้นที่จัดเก็บข้อมูล และเครือข่ายเบื้องต้นแล้ว ก่อนเริ่ม <a href="../iot-lab-teaching-guide/01-lab-01-ตรวจสอบระบบ-raspberry-pi.html">LAB 01 - ตรวจสอบระบบ Raspberry Pi</a></li>
 </ul>
 <h2 id="แหล่งอ้างอิง">แหล่งอ้างอิง</h2>
 <ul>
@@ -431,7 +444,7 @@ hostname -I</code></pre>
 <li><a href="https://www.raspberrypi.com/documentation/computers/remote-access.html#ssh">คู่มือทางการ: SSH และ Remote Access</a></li>
 <li><a href="https://www.raspberrypi.com/products/raspberry-pi-3-model-b/">ข้อมูล Raspberry Pi 3 Model B</a></li>
 </ul>
-<p>ภาพประกอบทั้ง 7 ภาพเป็นหน้าจอที่ใช้กำหนดค่าของชุดเรียนนี้ รหัสผ่านในภาพถูกปิดบัง และไม่ได้เก็บรหัสผ่านจริงไว้ในเอกสาร</p>
+<p>ภาพประกอบแสดงฮาร์ดแวร์และขั้นตอนการกำหนดค่าที่เกี่ยวข้องกับบทปฏิบัติการนี้ รหัสผ่านในภาพถูกปิดบัง และเอกสารไม่ได้จัดเก็บรหัสผ่านสำหรับใช้งานจริง</p>
 <h2 id="lab-ที่เกี่ยวข้อง">Lab ที่เกี่ยวข้อง</h2>
 <ul>
 <li><a href="01-installation-roadmap.html">Installation Roadmap</a></li>
