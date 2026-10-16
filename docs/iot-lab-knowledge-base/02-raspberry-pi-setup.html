@@ -149,11 +149,11 @@
 <li>ข้อมูล Wi-Fi <code>phuket-iot</code> และรหัสผ่านเครือข่าย หากไม่ได้อยู่ในห้องเรียนให้ใช้เครือข่ายที่เข้าถึงได้จริงแทน</li>
 </ul>
 <h3 id="รู้จักบอร์ด-raspberry-pi-3">รู้จักบอร์ด Raspberry Pi 3</h3>
-<p><img src="../assets/raspberry-pi-setup/raspberry-pi-3-board.png" alt="บอร์ด Raspberry Pi 3 Model B มองจากด้านบน เห็นพอร์ต USB, Ethernet, HDMI และช่องจ่ายไฟ micro USB" /></p>
+<p><img src="../assets/raspberry-pi-setup/01-raspberry-pi-3-model-b-board.png" alt="บอร์ด Raspberry Pi 3 Model B มองจากด้านบน เห็นพอร์ต USB, Ethernet, HDMI และช่องจ่ายไฟ micro USB" /></p>
 <p>ภาพนี้เป็น <strong>Raspberry Pi 3 Model B</strong> ให้สังเกตชื่อรุ่นที่พิมพ์บนบอร์ดก่อนเลือก Device ใน Imager พอร์ต USB และ Ethernet อยู่ด้านขวาของภาพ ส่วน HDMI และช่องจ่ายไฟ micro USB อยู่บริเวณขอบล่าง ช่อง microSD อยู่ด้านใต้บอร์ด จึงไม่เห็นจากมุมนี้</p>
 <p>สำหรับการเรียนแบบ headless เราจะใช้ microSD เก็บระบบปฏิบัติการ ต่อเครือข่ายผ่าน Wi-Fi หรือสาย LAN และจ่ายไฟผ่าน micro USB ไม่จำเป็นต้องต่อจอ HDMI หรือคีย์บอร์ดหลังตั้งค่า SSH เรียบร้อยแล้ว จับบอร์ดบริเวณขอบและวางบนพื้นผิวที่ไม่เป็นสื่อนำไฟฟ้า หรือใส่เคสก่อนใช้งาน</p>
 <h3 id="microsd-คือที่เก็บระบบและข้อมูล">microSD คือที่เก็บระบบและข้อมูล</h3>
-<p><img src="../assets/raspberry-pi-setup/microsd-card.png" alt="ตัวอย่างการ์ด microSD สำหรับเก็บ Raspberry Pi OS และข้อมูลของแล็บ" /></p>
+<p><img src="../assets/raspberry-pi-setup/02-microsd-card.png" alt="ตัวอย่างการ์ด microSD สำหรับเก็บ Raspberry Pi OS และข้อมูลของแล็บ" /></p>
 <p>microSD ทำหน้าที่เป็นที่เก็บข้อมูลของเครื่อง ทั้ง Raspberry Pi OS โปรแกรม ฐานข้อมูล SQLite และไฟล์งาน เมื่อย้ายการ์ดหรือเขียน OS ใหม่จึงมีผลกับข้อมูลเหล่านี้ ไม่ใช่เพียงการเปลี่ยนอุปกรณ์เก็บรูปภาพ</p>
 <p>การ์ดในภาพมีความจุ <strong>128 GB</strong> เป็นเพียงตัวอย่าง ไม่จำเป็นต้องซื้อยี่ห้อหรือความจุตรงภาพ ชุดแล็บนี้แนะนำ 32 GB ขึ้นไปเพื่อเผื่อพื้นที่ข้อมูล เลือกการ์ดที่เชื่อถือได้และเตรียมเครื่องอ่าน microSD แบบ USB หรือ SD adapter ที่ใช้กับช่องอ่านการ์ดของ Notebook ได้ โดย adapter เป็นเพียงตัวแปลงขนาด ส่วนการ์ดที่เสียบเข้า Pi ต้องเป็น microSD</p>
 <p>ดาวน์โหลด <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager จากเว็บไซต์ Raspberry Pi</a> แล้วติดตั้งบน Notebook จากนั้นเปิดโปรแกรมและเสียบ microSD ผ่านเครื่องอ่านการ์ด</p>
@@ -164,15 +164,15 @@
 <p>ชื่อแท็บและปุ่มอาจต่างกันเล็กน้อยตามรุ่น Imager แต่ให้ยึดชื่ออุปกรณ์ OS และค่าการตั้งค่าตามภาพในหน้านี้</p>
 <h2 id="2-เลือก-device-เป็น-raspberry-pi-3">2. เลือก Device เป็น Raspberry Pi 3</h2>
 <p>เมื่อเปิด Raspberry Pi Imager จะเห็นขั้นตอนด้านซ้าย เริ่มที่ <strong>Device</strong> เพื่อระบุรุ่นบอร์ดที่ใช้ ภาพหน้าจอนี้เป็น Imager v2.0.12 โดยยังไม่ได้เลือกรุ่น จึงเห็นปุ่ม <strong>NEXT</strong> เป็นสีเทา:</p>
-<p><img src="../assets/raspberry-pi-setup/imager-device-selection.png" alt="หน้าจอ Raspberry Pi Imager ในขั้น Device แสดงรายการรุ่น Raspberry Pi และปุ่ม NEXT ก่อนเลือกรุ่น" /></p>
+<p><img src="../assets/raspberry-pi-setup/03-imager-device-selection.png" alt="หน้าจอ Raspberry Pi Imager ในขั้น Device แสดงรายการรุ่น Raspberry Pi และปุ่ม NEXT ก่อนเลือกรุ่น" /></p>
 <p>คลิกรายการ <strong>Raspberry Pi 3</strong> ให้ตรงกับบอร์ดของชุดเรียน ไม่ใช่ Raspberry Pi 5 หรือ Pi 4 ที่อยู่เหนือขึ้นไป หากยังไม่เห็นรายการ ให้เลื่อนภายในรายการรุ่น เมื่อเลือกแล้วจึงกด <strong>NEXT</strong> ไปขั้น OS ภาพขยายด้านล่างช่วยให้ตรวจชื่อรายการได้ชัดเจน:</p>
-<p><img src="../assets/raspberry-pi-setup/01-device-pi-3.png" alt="Raspberry Pi Imager เลือก Device เป็น Raspberry Pi 3" /></p>
+<p><img src="../assets/raspberry-pi-setup/04-imager-raspberry-pi-3.png" alt="Raspberry Pi Imager เลือก Device เป็น Raspberry Pi 3" /></p>
 <p>รายการนี้เป็นกลุ่ม Pi 3 ไม่ใช่ Pi 4 หรือ Pi 5 ให้ตรวจรุ่นที่พิมพ์อยู่บนบอร์ดก่อนเริ่ม หากบอร์ดไม่ใช่ Pi 3 อย่าเลือกให้ตรงภาพโดยไม่ตรวจฮาร์ดแวร์จริง</p>
 <h2 id="3-เลือก-raspberry-pi-os-lite-64-bit">3. เลือก Raspberry Pi OS Lite (64-bit)</h2>
 <p>ในหน้า OS เปิดหมวด <strong>Raspberry Pi OS (other)</strong>:</p>
-<p><img src="../assets/raspberry-pi-setup/02-os-other.png" alt="เปิดหมวด Raspberry Pi OS other" /></p>
+<p><img src="../assets/raspberry-pi-setup/05-imager-raspberry-pi-os-other.png" alt="เปิดหมวด Raspberry Pi OS other" /></p>
 <p>จากนั้นเลือก <strong>Raspberry Pi OS Lite (64-bit)</strong> ซึ่งในภาพระบุว่าเป็น Debian Trixie และไม่มี desktop environment:</p>
-<p><img src="../assets/raspberry-pi-setup/03-os-lite-64-bit.png" alt="เลือก Raspberry Pi OS Lite 64-bit ที่ระบุ Debian Trixie" /></p>
+<p><img src="../assets/raspberry-pi-setup/06-imager-raspberry-pi-os-lite-64-bit.png" alt="เลือก Raspberry Pi OS Lite 64-bit ที่ระบุ Debian Trixie" /></p>
 <p><strong>Lite</strong> ไม่มีหน้าจอ Desktop แบบกราฟิก แต่ยังใช้ Linux, SSH และบริการ IoT ได้ ส่วน <strong>64-bit</strong> คือสถาปัตยกรรมของ OS ไม่ใช่ความจุของการ์ด จึงอย่าเลือก Lite (32-bit), รุ่น Desktop หรือ Legacy แทนสำหรับชุดเรียนนี้</p>
 <p>วันเผยแพร่ <code>2026-10-06</code> และขนาดดาวน์โหลดในภาพเป็นข้อมูลของ image ที่ถ่ายไว้ หากรายการอัปเดต ให้ตรวจชื่อ Lite, 64-bit และฐาน Debian Trixie เป็นหลัก ไม่จำเป็นต้องมีวันหรือขนาดดาวน์โหลดตรงภาพทุกตัว</p>
 <h2 id="4-เลือก-storage-ให้ถูกใบ">4. เลือก Storage ให้ถูกใบ</h2>
@@ -185,7 +185,7 @@
 <p>ถ้ามีตัวเลือก <strong>Exclude system drives</strong> ให้คงการป้องกันนี้ไว้</p>
 <h2 id="5-ตั้ง-hostname-และเขตเวลา">5. ตั้ง Hostname และเขตเวลา</h2>
 <p>ในขั้น <strong>Customisation: Choose hostname</strong> กรอก <code>s001</code> ตามภาพ หรือชื่อประจำเครื่องที่ผู้สอนกำหนด Hostname คือชื่อของ Raspberry Pi บนเครือข่าย ไม่ใช่ชื่อผู้ใช้ <code>piuser</code> และไม่ใช่ชื่อ Wi-Fi <code>phuket-iot</code>:</p>
-<p><img src="../assets/raspberry-pi-setup/imager-hostname-s001.png" alt="หน้า Customisation Choose hostname ใน Raspberry Pi Imager กรอกชื่อเครื่อง s001" /></p>
+<p><img src="../assets/raspberry-pi-setup/07-imager-hostname-s001.png" alt="หน้า Customisation Choose hostname ใน Raspberry Pi Imager กรอกชื่อเครื่อง s001" /></p>
 <p>ใช้ตัวอักษรภาษาอังกฤษ ตัวเลข และขีดกลาง <code>-</code> โดยไม่เว้นวรรค สำหรับชุดเรียนแนะนำตัวพิมพ์เล็กและชื่อสั้นที่จำง่าย แต่ละเครื่องต้องมีชื่อไม่ซ้ำกัน เช่น <code>s001</code> และ <code>s002</code> อย่าให้นักศึกษาทุกเครื่องตั้งเป็น <code>s001</code> พร้อมกัน</p>
 <p>ในช่องนี้ใส่เพียง <code>s001</code> ไม่ต้องเติม <code>.local</code> ส่วนเวลาเชื่อมต่อ SSH บน Notebook จะใช้ <code>ssh piuser@s001.local</code> ถ้าเครื่องมี OS อยู่แล้วและจะเปลี่ยน hostname ภายหลัง ไม่จำเป็นต้องเขียน microSD ใหม่เพียงเพื่อเปลี่ยนชื่อ</p>
 <p>ในหน้า Localisation เลือกประเทศ/เมืองให้ตรงสถานที่ใช้งาน สำหรับห้องเรียนในประเทศไทยใช้ <strong>Thailand / Bangkok</strong> และเขตเวลา <strong>Asia/Bangkok</strong> ส่วน keyboard layout ให้ตรงกับคีย์บอร์ดที่ใช้ เช่น US</p>
@@ -214,7 +214,7 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../assets/raspberry-pi-setup/04-user-piuser.png" alt="ตั้ง Username เป็น piuser และยืนยันรหัสผ่านบัญชี Raspberry Pi" /></p>
+<p><img src="../assets/raspberry-pi-setup/08-imager-username-piuser.png" alt="ตั้ง Username เป็น piuser และยืนยันรหัสผ่านบัญชี Raspberry Pi" /></p>
 <p>รหัสนี้ใช้เข้าบัญชี Linux ผ่าน SSH และอาจถูกถามเมื่อใช้ <code>sudo</code> ไม่ใช่รหัส Wi-Fi และไม่ใช่ MQTT password ที่จะตั้งในแล็บหลัง ภาพแสดงเพียงจุดปิดบัง ไม่ได้ให้รหัสผ่านจริงมา ห้ามใช้ข้อความ <code>รหัสผ่านที่ตั้งไว้</code> เป็นรหัสผ่านตามตัวอักษร</p>
 <p>ใช้ตัวอักษรพิมพ์เล็กตามภาพ ชื่อ <code>piuser</code> เป็นบัญชีที่เราสร้างขึ้นเอง จึงไม่ควรทดลองเข้าด้วย <code>pi</code> หรือสมมติว่ามี default password</p>
 <h2 id="7-ตั้ง-wi-fi-phuket-iot">7. ตั้ง Wi-Fi phuket-iot</h2>
@@ -249,7 +249,7 @@
 </tr>
 </tbody>
 </table>
-<p><img src="../assets/raspberry-pi-setup/05-wifi-phuket-iot.png" alt="เลือก SECURE NETWORK และ Wi-Fi SSID phuket-iot โดยไม่เลือก Hidden SSID" /></p>
+<p><img src="../assets/raspberry-pi-setup/09-imager-wifi-phuket-iot.png" alt="เลือก SECURE NETWORK และ Wi-Fi SSID phuket-iot โดยไม่เลือก Hidden SSID" /></p>
 <p>SSID และรหัสผ่านแยกตัวพิมพ์ใหญ่/เล็ก ต้องไม่มีช่องว่างเกินมา และ Notebook ที่จะ SSH ควรอยู่ในเครือข่ายที่เข้าถึง Pi ได้</p>
 <aside class="callout callout-important">
 <div class="callout-title">ตรวจคลื่น Wi-Fi ของ Pi 3</div>
@@ -262,11 +262,11 @@
 <li>เลือก <strong>Use password authentication</strong></li>
 <li>ไม่เลือก Use public key authentication ในขั้นเริ่มต้นของชุดเรียนนี้</li>
 </ol>
-<p><img src="../assets/raspberry-pi-setup/06-ssh-password.png" alt="เปิด Enable SSH และเลือก Use password authentication" /></p>
+<p><img src="../assets/raspberry-pi-setup/10-imager-ssh-password-authentication.png" alt="เปิด Enable SSH และเลือก Use password authentication" /></p>
 <p>เมื่อ SSH เข้าเครื่อง ให้ใช้ user <code>piuser</code> และรหัสบัญชีที่ตั้งในหัวข้อ 6 ไม่ใช่รหัส Wi-Fi การใช้ SSH key สามารถเรียนเพิ่มภายหลังได้ แต่การตั้งค่ารอบนี้ให้ตรงภาพก่อน</p>
 <h2 id="9-ปิด-raspberry-pi-connect">9. ปิด Raspberry Pi Connect</h2>
 <p>ในหน้า <strong>Customisation: Raspberry Pi Connect</strong> ให้ <strong>Enable Raspberry Pi Connect เป็น Off</strong> ตามภาพ ไม่ต้อง Sign in หรือขอ token:</p>
-<p><img src="../assets/raspberry-pi-setup/07-connect-off.png" alt="ปิด Enable Raspberry Pi Connect" /></p>
+<p><img src="../assets/raspberry-pi-setup/11-imager-raspberry-pi-connect-disabled.png" alt="ปิด Enable Raspberry Pi Connect" /></p>
 <p>การปิด Connect ไม่ได้ปิด SSH ที่เปิดในหัวข้อก่อน เราจะเริ่มจาก SSH ภายใน LAN/Wi-Fi และใช้ Cloudflare Tunnel ในแล็บ Remote Access ภายหลัง</p>
 <h2 id="10-ตรวจค่าก่อน-write-และรอ-verify">10. ตรวจค่าก่อน Write และรอ Verify</h2>
 <p>ตรวจหน้าสรุปอีกครั้งว่าเป็น Pi 3, Lite 64-bit, microSD ถูกใบ, user <code>piuser</code>, Wi-Fi <code>phuket-iot</code>, SSH แบบรหัสผ่าน และ Connect ปิดอยู่</p>
@@ -278,7 +278,7 @@
 <li>เมื่อขึ้น Done/Finish ให้จบงานและ eject การ์ดอย่างปลอดภัย หากมีหน้าต่างชวน Format การ์ดหลังเขียน OS ให้ยกเลิก ไม่ Format ซ้ำ</li>
 </ol>
 <h2 id="11-ใส่การ์ดและบูตครั้งแรก">11. ใส่การ์ดและบูตครั้งแรก</h2>
-<p><img src="../assets/raspberry-pi-setup/insert-microsd-card.png" alt="ตัวอย่างการใส่ microSD ในช่องด้านใต้บอร์ด Raspberry Pi โดยจับการ์ดที่ขอบและเลื่อนเข้าช่อง" /></p>
+<p><img src="../assets/raspberry-pi-setup/12-insert-microsd-card.png" alt="ตัวอย่างการใส่ microSD ในช่องด้านใต้บอร์ด Raspberry Pi โดยจับการ์ดที่ขอบและเลื่อนเข้าช่อง" /></p>
 <p>ภาพนี้แสดงตำแหน่งช่อง microSD ที่ด้านใต้บอร์ด ให้พลิกดูช่องจริงก่อนเสียบ ไม่สับสนกับพอร์ต USB หรือช่องสายแพด้านบน การ์ดที่ใช้ต้องผ่าน Write และ Verify ใน Imager เรียบร้อยแล้ว และถ้าใช้ SD adapter กับ Notebook ต้องถอดเฉพาะ microSD ออกจาก adapter ก่อน</p>
 <ol>
 <li>ขณะ Pi ยังไม่ได้เสียบไฟ ให้จับ microSD ที่ขอบ หันด้านฉลากออกจากบอร์ด และเลื่อนเข้าช่องตามแนวอย่างเบามือ สำหรับ Pi 3 การ์ดจะเลื่อนจนสุดโดยไม่ต้องรอเสียงคลิก หากติดขัดให้หยุดตรวจทิศทาง ไม่ฝืนกด</li>
