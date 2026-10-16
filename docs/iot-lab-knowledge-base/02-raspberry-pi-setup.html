@@ -188,9 +188,9 @@
 <p><img src="../assets/raspberry-pi-setup/07-imager-storage-system-drive-warning.png" alt="ตัวอย่างการกำหนดค่าที่ไม่ปลอดภัย: Exclude system drives อยู่ในสถานะไม่เลือก และไดรฟ์ C กับ G ของคอมพิวเตอร์ปรากฏในรายการ Storage" /></p>
 <p><strong>ภาพตัวอย่างที่ไม่ปลอดภัย:</strong> Exclude system drives ไม่ได้เลือก จึงแสดงไดรฟ์ <strong>C:</strong> และ <strong>G:</strong> ของคอมพิวเตอร์ ห้ามเลือกไดรฟ์เหล่านี้แทน microSD</p>
 <ol>
-<li>เชื่อมต่อ microSD ผ่านเครื่องอ่านการ์ด แล้วเปิดหน้า <strong>Storage</strong></li>
-<li>เลือก microSD โดยตรวจสอบชื่อและความจุ หากไม่พบหรือไม่แน่ใจ ให้หยุดและแจ้งผู้สอน</li>
-<li>ไปขั้น <strong>Customisation</strong> และตรวจสอบ Storage อีกครั้งก่อนกด <strong>Write</strong></li>
+<li>เปิดรายการ <strong>Storage</strong> ก่อนเชื่อมต่อ microSD จากนั้นเชื่อมต่อการ์ดและเปิดรายการอีกครั้งเพื่อสังเกตอุปกรณ์ที่เพิ่มเข้ามา</li>
+<li>ตรวจสอบชื่อและความจุให้ตรงกับ microSD การปรากฏอุปกรณ์ใหม่ไม่ได้ยืนยันว่าเลือกถูกต้อง หากไม่พบหรือไม่แน่ใจ ให้หยุดและแจ้งผู้สอน</li>
+<li>หลังตั้งค่า <strong>Customisation</strong> ให้ตรวจสอบอุปกรณ์ปลายทางในหน้าสรุปหรือข้อความยืนยันก่อนกด <strong>Write</strong> หากไม่แสดงรายละเอียด ให้กลับไปตรวจใน <strong>Storage</strong></li>
 </ol>
 <h2 id="5-ตั้ง-hostname-และเขตเวลา">5. ตั้ง Hostname และเขตเวลา</h2>
 <p>ในขั้น <strong>Customisation: Choose hostname</strong> กรอก <code>s001</code> ตามภาพ หรือชื่อประจำเครื่องที่ผู้สอนกำหนด Hostname คือชื่อของ Raspberry Pi บนเครือข่าย ไม่ใช่ชื่อผู้ใช้ <code>piuser</code> และไม่ใช่ชื่อ Wi-Fi <code>phuket-iot</code>:</p>
@@ -279,9 +279,10 @@
 <p>การปิด Raspberry Pi Connect ไม่ส่งผลต่อบริการ SSH ที่เปิดใช้งานในหัวข้อก่อนหน้า บทปฏิบัติการนี้เริ่มจากการเชื่อมต่อ SSH ภายใน LAN/Wi-Fi และศึกษาการเข้าถึงผ่าน Cloudflare Tunnel ในบทปฏิบัติการ Remote Access ภายหลัง</p>
 <h2 id="10-ตรวจค่าก่อน-write-และรอ-verify">10. ตรวจค่าก่อน Write และรอ Verify</h2>
 <p>ตรวจสอบหน้าสรุปให้สอดคล้องกับข้อกำหนด ได้แก่ Raspberry Pi 3, OS Lite 64-bit, microSD ปลายทางที่ยืนยันแล้ว, บัญชี <code>piuser</code>, Wi-Fi <code>phuket-iot</code>, SSH แบบรหัสผ่าน และ Raspberry Pi Connect ในสถานะปิด</p>
+<p><strong>ก่อนกด Write ทุกครั้ง ต้องให้ผู้สอนตรวจชื่ออุปกรณ์ ความจุ และการเลือก Exclude system drives</strong> พร้อมยืนยันว่าได้สำรองข้อมูลในการ์ดแล้ว การเขียน OS จะลบข้อมูลเดิมทั้งหมดบน microSD แม้เลือกอุปกรณ์ถูกต้อง</p>
 <ol>
-<li>กด <strong>Write</strong> หรือปุ่มเริ่มเขียนของ Imager</li>
-<li>เมื่อโปรแกรมเตือนว่าจะลบข้อมูล ให้ยืนยันเฉพาะหลังตรวจ Storage ถูกต้องแล้ว</li>
+<li>กด <strong>Write</strong> หรือปุ่มเริ่มเขียนของ Imager หลังผู้สอนตรวจสอบแล้วเท่านั้น</li>
+<li>ตรวจสอบอุปกรณ์ปลายทางในข้อความยืนยันก่อนอนุญาตให้ลบข้อมูล หากไม่ตรงกับ microSD ให้ยกเลิกทันที</li>
 <li>หาก Windows/macOS ขอสิทธิ์เข้าถึงอุปกรณ์ ให้สิทธิ์กับ Imager เพื่อเขียนการ์ด</li>
 <li>รอให้กระบวนการดาวน์โหลด เขียนข้อมูล และ <strong>Verify</strong> เสร็จสมบูรณ์ ห้ามถอดการ์ดระหว่างดำเนินการ</li>
 <li>เมื่อโปรแกรมแสดง Done/Finish ให้สิ้นสุดการทำงานและนำการ์ดออกด้วยคำสั่ง eject หากระบบปฏิบัติการแสดงข้อความให้ Format การ์ดหลังเขียน OS ให้ยกเลิกและไม่ดำเนินการ Format ซ้ำ</li>
